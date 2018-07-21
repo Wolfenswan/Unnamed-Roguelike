@@ -3,9 +3,12 @@ from random import randint
 import tcod
 
 from common import colors
+from components.AI.basicmonster import BasicMonster
+from components.actors.fighter import Fighter
 from gameobjects.entity import Entity
 from map.rectangle import Rect
 from map.tile import Tile
+from rendering.render_functions import RenderOrder
 
 
 class GameMap:
@@ -102,13 +105,20 @@ class GameMap:
             x = randint(room.x1 + 1, room.x2 - 1)
             y = randint(room.y1 + 1, room.y2 - 1)
 
-            if not any([entity for entity in entities if entity.x == x and entity.y == y]):
-                if randint(0, 100) < 80:
-                    monster = Entity(x, y, 'o', colors.desaturated_green, 'Orc', blocks=True)
-                else:
-                    monster = Entity(x, y, 'T', colors.darker_green, 'Troll', blocks=True)
+            if randint(0, 100) < 80:
+                fighter_component = Fighter(hp=10, defense=0, power=3)
+                ai_component = BasicMonster()
 
-                entities.append(monster)
+                monster = Entity(x, y, 'o', tcod.desaturated_green, 'Orc', blocks=True, render_order=RenderOrder.ACTOR,
+                                 fighter=fighter_component, ai=ai_component)
+            else:
+                fighter_component = Fighter(hp=16, defense=1, power=4)
+                ai_component = BasicMonster()
+
+                monster = Entity(x, y, 'T', tcod.darker_green, 'Troll', blocks=True, render_order=RenderOrder.ACTOR, fighter=fighter_component,
+                                 ai=ai_component)
+
+            entities.append(monster)
 
     def is_blocked(self, x, y):
         if self.tiles[x][y].blocked:

@@ -5,15 +5,24 @@
 import tcod
 
 def handle_keys(key):
-    # Movement keys
-    if key.vk == tcod.KEY_UP:
+    key_char = chr(key.c)
+
+    if key.vk == tcod.KEY_UP or key_char == 'k' or key.vk == tcod.KEY_KP8:
         return {'move': (0, -1)}
-    elif key.vk == tcod.KEY_DOWN:
+    elif key.vk == tcod.KEY_DOWN or key_char == 'j' or key.vk == tcod.KEY_KP2:
         return {'move': (0, 1)}
-    elif key.vk == tcod.KEY_LEFT:
+    elif key.vk == tcod.KEY_LEFT or key_char == 'h' or key.vk == tcod.KEY_KP4:
         return {'move': (-1, 0)}
-    elif key.vk == tcod.KEY_RIGHT:
+    elif key.vk == tcod.KEY_RIGHT or key_char == 'l' or key.vk == tcod.KEY_KP6:
         return {'move': (1, 0)}
+    elif key_char == 'y' or key.vk == tcod.KEY_KP7:
+        return {'move': (-1, -1)}
+    elif key_char == 'u' or key.vk == tcod.KEY_KP9:
+        return {'move': (1, -1)}
+    elif key_char == 'b' or key.vk == tcod.KEY_KP1:
+        return {'move': (-1, 1)}
+    elif key_char == 'n' or key.vk == tcod.KEY_KP3:
+        return {'move': (1, 1)}
 
     if key.vk == tcod.KEY_ENTER and key.lalt:
         # Alt+Enter: toggle full screen
