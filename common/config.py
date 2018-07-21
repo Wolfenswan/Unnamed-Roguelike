@@ -6,10 +6,10 @@ from common import colors
 GAME_NAME = 'VermintideRL'
 
 # Console
-SCREEN_WIDTH = 120
-SCREEN_HEIGHT = 80
-MAP_SCREEN_WIDTH = 94  # Should be at least 20 less than SCREEN_WIDTH
-MAP_SCREEN_HEIGHT = 64
+SCREEN_WIDTH = 80
+SCREEN_HEIGHT = 45
+MAP_SCREEN_WIDTH = 80
+MAP_SCREEN_HEIGHT = 43
 LIMIT_FPS = 30
 
 # Dungeon settings
@@ -75,6 +75,6 @@ MSG_COLOR_ALERT = colors.red
 INVENTORY_WIDTH = 30
 
 # FOV
-FOV_ALGO = 'SHADOW'
+FOV_ALGO = 0
 FOV_LIGHT_WALLS = True
 FOV_RADIUS = 6

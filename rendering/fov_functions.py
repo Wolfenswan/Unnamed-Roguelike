@@ -1,5 +1,5 @@
 import tcod
-
+import common.config as cfg
 
 def initialize_fov(game_map):
     fov_map = tcod.map_new(game_map.width, game_map.height)
@@ -11,5 +11,10 @@ def initialize_fov(game_map):
 
     return fov_map
 
-def recompute_fov(fov_map, x, y, radius, light_walls=True, algorithm=0):
+def recompute_fov(fov_map, x, y):
+
+    algorithm = cfg.FOV_ALGO
+    light_walls = cfg.FOV_LIGHT_WALLS
+    radius = cfg.FOV_RADIUS
+
     tcod.map_compute_fov(fov_map, x, y, radius, light_walls, algorithm)
