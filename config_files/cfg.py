@@ -1,7 +1,7 @@
 #! python3
-""" Constant variables for the tutorial roguelike """
+""" Constant variables """
 
-from common import colors
+from config_files import colors
 
 GAME_NAME = 'VermintideRL'
 
@@ -22,7 +22,7 @@ ROOM_MIN_SIZE = 6
 MAX_ROOMS = 30
 MAX_MONSTERS = MAX_ROOMS/2 # Currently unused
 MAX_ROOM_MONSTERS = 6      # TODO Adjust dynamically to room size
-MAX_ROOM_ITEMS = 3
+MAX_ROOM_ITEMS = 6
 MAX_ROOM_STATICOBJECTS = 4
 
 # Dungeon colors
@@ -42,7 +42,7 @@ SIDE_PANEL_WIDTH = SCREEN_WIDTH - MAP_SCREEN_WIDTH  # Difference between screen 
 SIDE_PANEL_X = SCREEN_WIDTH - SIDE_PANEL_WIDTH
 
 # BOTTOM PANEL
-BOTTOM_PANEL_HEIGHT = SCREEN_HEIGHT - MAP_SCREEN_HEIGHT  # Difference between screen and map height
+BOTTOM_PANEL_HEIGHT = 7#SCREEN_HEIGHT - MAP_SCREEN_HEIGHT  # Difference between screen and map height
 BOTTOM_PANEL_Y = SCREEN_HEIGHT - BOTTOM_PANEL_HEIGHT
 BOTTOM_PANEL_WIDTH = SCREEN_WIDTH
 
@@ -59,9 +59,9 @@ COMBAT_PANEL_WIDTH = BOTTOM_PANEL_WIDTH // 4
 
 # Message panels
 MSG_PANEL_WIDTH = (SCREEN_WIDTH - COMBAT_PANEL_WIDTH) // 2
-MSG_WIDTH = MSG_PANEL_WIDTH - 2
-MSG_HEIGHT = BOTTOM_PANEL_HEIGHT - 2
-MSG_X = 1  # offset for messages
+MSG_WIDTH = SCREEN_WIDTH - 22 #MSG_PANEL_WIDTH - 2
+MSG_HEIGHT = BOTTOM_PANEL_HEIGHT - 1
+MSG_X = 22 # TODO Temporary testing value # offset for messages
 
 # Message colors
 MSG_COLOR_INFO_GAME = colors.turquoise

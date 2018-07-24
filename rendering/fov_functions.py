@@ -1,5 +1,6 @@
 import tcod
-import common.config as cfg
+import config_files.cfg as cfg
+
 
 def initialize_fov(game_map):
     fov_map = tcod.map_new(game_map.width, game_map.height)

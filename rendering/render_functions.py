@@ -1,37 +1,19 @@
-from enum import auto, Enum
-
 import tcod
 
-from common import colors, config as cfg
+from config_files import cfg as cfg, colors
+from game import GameStates
+from gui.menu import inventory_menu
 
-class RenderOrder(Enum):
-    CORPSE = auto()
-    ITEM = auto()
-    ACTOR = auto()
 
-def initialize_window():
-    """ initializes everything relevant to game window """
+def get_names_under_mouse(mouse, entities, fov_map):
+    (x, y) = (mouse.cx, mouse.cy)
 
-    screen_width = cfg.SCREEN_WIDTH
-    screen_height = cfg.SCREEN_HEIGHT
+    names = [entity.name for entity in entities
+             if entity.x == x and entity.y == y and tcod.map_is_in_fov(fov_map, entity.x, entity.y)]
+    names = ', '.join(names)
 
-    # Set custom font
-    fonts = (
-        'arial10x10',  # 0
-        'arial12x12',  # 1,
-        'consolas10x10_gs_tc', # 2
-        'courier10x10_aa_tc',  # 3
-        'lucida10x10_gs_tc',  # 4
-        'prestige10x10_gs_tc',  # 5
-        '',  # 6
-        'terminal8x8_gs_ro',  # 7
-        'terminal10x10_gs_tc',  # 8
-        'terminal12x12_gs_ro'  # 9
-    )
+    return names.capitalize()
 
-    tcod.console_set_custom_font(f'resources/fonts/{fonts[8]}.png', tcod.FONT_TYPE_GREYSCALE | tcod.FONT_LAYOUT_TCOD)
-
-    tcod.console_init_root(screen_width, screen_height, 'libtcod tutorial revised', False)
 
 def render_bar(panel, x, y, total_width, name, value, maximum, bar_color, back_color):
     bar_width = int(float(value) / maximum * total_width)
@@ -45,47 +27,79 @@ def render_bar(panel, x, y, total_width, name, value, maximum, bar_color, back_c
 
     tcod.console_set_default_foreground(panel, tcod.white)
     tcod.console_print_ex(panel, int(x + total_width / 2), y, tcod.BKGND_NONE, tcod.CENTER,
-                             '{0}: {1}/{2}'.format(name, value, maximum))
+                          '{0}: {1}/{2}'.format(name, value, maximum))
 
-def render_all(con, panel, entities, player, game_map, fov_map, fov_recompute):
 
+def render_all(game, fov_map, mouse, debug=False):
     screen_width = cfg.SCREEN_WIDTH
     screen_height = cfg.SCREEN_HEIGHT
     bar_width = 20
     panel_height = cfg.BOTTOM_PANEL_HEIGHT
     panel_y = cfg.BOTTOM_PANEL_Y
 
-    if fov_recompute:
-        for y in range(game_map.height):
-            for x in range(game_map.width):
-                visible = tcod.map_is_in_fov(fov_map, x, y)
-                wall = game_map.tiles[x][y].block_sight
+    player = game.player
+    entities = game.entities
+    game_map = game.map
+    con = game.con
+    panel = game.panel
+    message_log = game.message_log
+    debug = game.debug or debug
 
-                if visible:
-                    if wall:
-                        tcod.console_set_char_background(con, x, y, colors.light_wall, tcod.BKGND_SET)
-                    else:
-                        tcod.console_set_char_background(con, x, y, colors.light_ground, tcod.BKGND_SET)
-                    game_map.tiles[x][y].explored = True
-                elif game_map.tiles[x][y].explored:
-                    if wall:
-                        tcod.console_set_char_background(con, x, y, colors.dark_wall, tcod.BKGND_SET)
-                    else:
-                        tcod.console_set_char_background(con, x, y, colors.dark_ground, tcod.BKGND_SET)
-   # Draw all entities in the list
+    # Render game map #
+    for y in range(game_map.height):
+        for x in range(game_map.width):
+            visible = tcod.map_is_in_fov(fov_map, x, y) or debug
+            wall = game_map.tiles[x][y].block_sight
+
+            if visible:
+                # TODO Brightness fall off with range
+                if wall:
+                    tcod.console_put_char_ex(con, x, y, '#', colors.light_wall, colors.black)
+                else:
+                    tcod.console_put_char_ex(con, x, y, '.', colors.light_ground, colors.black)
+
+                game_map.tiles[x][y].explored = True
+            elif game_map.tiles[x][y].explored:
+                if wall:
+                    tcod.console_put_char_ex(con, x, y, '#', colors.dark_wall_fg, colors.dark_wall)
+                else:
+                    tcod.console_put_char_ex(con, x, y, '.', colors.dark_ground_fg, colors.dark_ground)
+
+    # Draw all entities #
     entities_in_render_order = sorted(entities, key=lambda x: x.render_order.value)
     for entity in entities_in_render_order:
-        draw_entity(con, entity, fov_map)
+        draw_entity(con, entity, fov_map, debug=debug)
 
     tcod.console_blit(con, 0, 0, screen_width, screen_height, 0, 0, 0)
 
     tcod.console_set_default_background(panel, tcod.black)
     tcod.console_clear(panel)
 
+    # Print the game messages, one line at a time #
+    y = 1
+    for message in message_log.messages:
+        tcod.console_set_default_foreground(panel, message.color)
+        tcod.console_print_ex(panel, message_log.x, y, tcod.BKGND_NONE, tcod.LEFT, message.text)
+        y += 1
+
+    tcod.console_set_default_foreground(panel, tcod.light_gray)
+    tcod.console_print_ex(panel, 1, 0, tcod.BKGND_NONE, tcod.LEFT,
+                          get_names_under_mouse(mouse, entities, fov_map))
+
+    # HP Bar #
     render_bar(panel, 1, 1, bar_width, 'HP', player.fighter.hp, player.fighter.max_hp,
                tcod.light_red, tcod.darker_red)
 
     tcod.console_blit(panel, 0, 0, screen_width, panel_height, 0, 0, panel_y)
+
+    # Render inventory window #
+    if game.state in (GameStates.SHOW_INVENTORY, GameStates.DROP_INVENTORY):
+        if game.state == GameStates.SHOW_INVENTORY:
+            inventory_title = 'Press the key next to an item to use it, or Esc to cancel.\n'
+        else:
+            inventory_title = 'Press the key next to an item to drop it, or Esc to cancel.\n'
+
+        inventory_menu(con, inventory_title, player.inventory, 50, screen_width, screen_height)
 
 
 def clear_all(con, entities):
@@ -93,10 +107,11 @@ def clear_all(con, entities):
         clear_entity(con, entity)
 
 
-def draw_entity(con, entity, fov_map):
-    if tcod.map_is_in_fov(fov_map, entity.x, entity.y):
+def draw_entity(con, entity, fov_map, debug=False):
+    if tcod.map_is_in_fov(fov_map, entity.x, entity.y) or debug:
         tcod.console_set_default_foreground(con, entity.color)
         tcod.console_put_char(con, entity.x, entity.y, entity.char, tcod.BKGND_NONE)
+
 
 def clear_entity(con, entity):
     # erase the character that represents this object

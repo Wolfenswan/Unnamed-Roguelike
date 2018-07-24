@@ -1,8 +1,7 @@
 import tcod
 
-import game
-from common.game_states import GameStates
-from rendering.render_functions import RenderOrder
+from gui.messages import Message, MessageType
+from rendering.render_order import RenderOrder
 
 
 class Fighter:
@@ -22,28 +21,34 @@ class Fighter:
 
         return results
 
+    def heal(self, amount):
+        self.hp += amount
+
+        if self.hp > self.max_hp:
+            self.hp = self.max_hp
+
     def attack(self, target):
         results = []
         damage = self.power - target.fighter.defense
 
         if damage > 0:
-            results.append({'message': f'{self.owner.name.capitalize()} attacks {target.name} for {str(damage)} hit points.'})
+            results.append({'message': Message(f'{self.owner.name.capitalize()} attacks {target.name} for {str(damage)} hit points.')})
             results.extend(target.fighter.take_damage(damage))
         else:
-            results.append({'message': f'{self.owner.name.capitalize()} attacks {target.name} but does no damage.'})
+            results.append({'message': Message(f'{self.owner.name.capitalize()} attacks {target.name} but does no damage.')})
 
         return results
 
     def death(self):
+        # TODO gibbing
         ent = self.owner
         
         if ent.is_player:
             ent.char = '%'
             ent.color = tcod.dark_red
 
-            return 'You died!'
+            message = Message('You died!', msg_type=MessageType.INFO_BAD)
         else:
-            death_message = f'The {ent.name.capitalize()} is dead!'
             
             ent.char = '%'
             ent.color = tcod.dark_red
@@ -53,4 +58,6 @@ class Fighter:
             ent.ai = None
             ent.name = 'remains of ' + ent.name
 
-            return death_message
+            message = Message(f'The {ent.name.capitalize()} is dead!', MessageType.INFO_GOOD)
+
+        return message

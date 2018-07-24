@@ -8,4 +8,5 @@ class RenderOrder(Enum):
     CORPSE = auto()
     ITEM = auto()
     ACTOR = auto()
+    PLAYER = auto()
     CURSOR = auto()

@@ -4,7 +4,31 @@
 
 import tcod
 
-def handle_keys(key):
+from game import GameStates
+
+
+def handle_keys(key, game_state):
+    # Inputs valid in all game states #
+    if key.vk == tcod.KEY_ENTER and key.lalt:
+        # Alt+Enter: toggle full screen
+        return {'fullscreen': True}
+    elif key.vk == tcod.KEY_ESCAPE:
+        # Exit the game
+        return {'exit': True}
+
+    # Game state specific inputs #
+    if game_state == GameStates.PLAYERS_TURN:
+        return handle_player_turn_keys(key)
+    elif game_state == GameStates.PLAYER_DEAD:
+        return handle_player_dead_keys(key)
+    elif game_state in (GameStates.SHOW_INVENTORY, GameStates.DROP_INVENTORY):
+        return handle_inventory_keys(key)
+    elif game_state == GameStates.TARGETING:
+        return handle_targeting_keys(key)
+
+    return {}
+
+def handle_player_turn_keys(key):
     key_char = chr(key.c)
 
     if key.vk == tcod.KEY_UP or key_char == 'k' or key.vk == tcod.KEY_KP8:
@@ -24,14 +48,43 @@ def handle_keys(key):
     elif key_char == 'n' or key.vk == tcod.KEY_KP3:
         return {'move': (1, 1)}
 
-    if key.vk == tcod.KEY_ENTER and key.lalt:
-        # Alt+Enter: toggle full screen
-        return {'fullscreen': True}
-    elif key.vk == tcod.KEY_ESCAPE:
-        # Exit the game
-        return {'exit': True}
+    if key_char == 'g':
+        return {'pickup': True}
+    elif key_char == 'i':
+        return {'show_inventory': True}
+    elif key_char == 'd':
+        return {'drop_inventory': True}
 
     # No key was pressed
+    return {}
+
+def handle_inventory_keys(key):
+    index = key.c - ord('a')
+
+    if index >= 0:
+        return {'inventory_index': index}
+
+    return {}
+
+def handle_player_dead_keys(key):
+    key_char = chr(key.c)
+
+    if key_char == 'i':
+        return {'show_inventory': True}
+
+    return {}
+
+def handle_targeting_keys(key):
+    return {}
+
+def handle_mouse(mouse):
+    (x, y) = (mouse.cx, mouse.cy)
+
+    if mouse.lbutton_pressed:
+        return {'left_click': (x, y)}
+    elif mouse.rbutton_pressed:
+        return {'right_click': (x, y)}
+
     return {}
 
 '''
