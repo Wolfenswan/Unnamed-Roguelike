@@ -28,7 +28,8 @@ def game_loop(game, fov_map):
     mouse = tcod.Mouse()
 
     while not tcod.console_is_window_closed():
-        tcod.sys_check_for_event(tcod.EVENT_KEY_PRESS | tcod.EVENT_MOUSE, key, mouse)
+        #tcod.sys_set_fps(30)
+        #tcod.sys_check_for_event(tcod.EVENT_KEY_PRESS | tcod.EVENT_MOUSE, key, mouse)
 
         if fov_recompute:
             recompute_fov(fov_map, player.x, player.y)
@@ -40,6 +41,8 @@ def game_loop(game, fov_map):
         tcod.console_flush()
 
         clear_all(con, entities)
+
+        tcod.sys_wait_for_event(tcod.EVENT_KEY_PRESS | tcod.EVENT_MOUSE, key, mouse, False)
 
         action = handle_keys(key, game.state)
         mouse_action = handle_mouse(mouse)
@@ -147,7 +150,7 @@ def game_loop(game, fov_map):
                 message_log.add_message(message)
 
             if dead_entity:
-                message = dead_entity.fighter.death()
+                message = dead_entity.fighter.death(game.map)
                 if dead_entity.is_player:
                     game.state = GameStates.PLAYER_DEAD
 
@@ -190,7 +193,7 @@ def game_loop(game, fov_map):
                             message_log.add_message(message)
 
                         if dead_entity:
-                            message = dead_entity.fighter.death()
+                            message = dead_entity.fighter.death(game.map)
                             if dead_entity.is_player:
                                 game.state = GameStates.PLAYER_DEAD
 

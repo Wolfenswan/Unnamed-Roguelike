@@ -1,3 +1,5 @@
+import random
+
 import tcod
 import config_files.cfg as cfg
 
@@ -19,3 +21,15 @@ def recompute_fov(fov_map, x, y):
     radius = cfg.FOV_RADIUS
 
     tcod.map_compute_fov(fov_map, x, y, radius, light_walls, algorithm)
+
+def change_color_by_fov_distance(ent, color, x, y):
+    color_coefficient = 1 - ent.distance_to_pos(x, y)/10 + random.uniform(0, 0.5)
+
+    if color_coefficient > 1:
+        color_coefficient = 1
+
+    if color_coefficient < 0:
+        color_coefficient = 0.1
+
+    new_color = tuple(int(color_coefficient * x) for x in color)
+    return new_color

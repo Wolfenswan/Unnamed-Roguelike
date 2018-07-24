@@ -3,6 +3,7 @@ import tcod
 from config_files import cfg as cfg, colors
 from game import GameStates
 from gui.menu import inventory_menu
+from rendering.fov_functions import change_color_by_fov_distance
 
 
 def get_names_under_mouse(mouse, entities, fov_map):
@@ -48,27 +49,32 @@ def render_all(game, fov_map, mouse, debug=False):
     # Render game map #
     for y in range(game_map.height):
         for x in range(game_map.width):
+            tile = game_map.tiles[x][y]
             visible = tcod.map_is_in_fov(fov_map, x, y) or debug
-            wall = game_map.tiles[x][y].block_sight
+            wall = tile.block_sight
 
             if visible:
                 # TODO Brightness fall off with range
-                if wall:
-                    tcod.console_put_char_ex(con, x, y, '#', colors.light_wall, colors.black)
-                else:
-                    tcod.console_put_char_ex(con, x, y, '.', colors.light_ground, colors.black)
+                fg_color = change_color_by_fov_distance(player, colors.light_fov, x, y)
+                char = '#' if wall else '.'
 
-                game_map.tiles[x][y].explored = True
-            elif game_map.tiles[x][y].explored:
+                if tile.gibbed:
+                    fg_color = colors.corpse
+
+                tcod.console_put_char_ex(con, x, y, char, fg_color, colors.black)
+                tile.explored = True
+
+            elif tile.explored:
                 if wall:
                     tcod.console_put_char_ex(con, x, y, '#', colors.dark_wall_fg, colors.dark_wall)
                 else:
                     tcod.console_put_char_ex(con, x, y, '.', colors.dark_ground_fg, colors.dark_ground)
 
+
     # Draw all entities #
     entities_in_render_order = sorted(entities, key=lambda x: x.render_order.value)
     for entity in entities_in_render_order:
-        draw_entity(con, entity, fov_map, debug=debug)
+        draw_entity(game, entity, fov_map, debug=debug)
 
     tcod.console_blit(con, 0, 0, screen_width, screen_height, 0, 0, 0)
 
@@ -107,10 +113,11 @@ def clear_all(con, entities):
         clear_entity(con, entity)
 
 
-def draw_entity(con, entity, fov_map, debug=False):
+def draw_entity(game, entity, fov_map, debug=False):
     if tcod.map_is_in_fov(fov_map, entity.x, entity.y) or debug:
-        tcod.console_set_default_foreground(con, entity.color)
-        tcod.console_put_char(con, entity.x, entity.y, entity.char, tcod.BKGND_NONE)
+        color = change_color_by_fov_distance(game.player, entity.color, entity.x, entity.y)
+        tcod.console_set_default_foreground(game.con, color)
+        tcod.console_put_char(game.con, entity.x, entity.y, entity.char, tcod.BKGND_NONE)
 
 
 def clear_entity(con, entity):

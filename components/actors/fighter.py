@@ -1,5 +1,9 @@
+from random import randint
+
 import tcod
 
+from config_files import colors
+from gameobjects.entity import Entity
 from gui.messages import Message, MessageType
 from rendering.render_order import RenderOrder
 
@@ -39,25 +43,31 @@ class Fighter:
 
         return results
 
-    def death(self):
-        # TODO gibbing
+    def death(self,map):
         ent = self.owner
+        x, y = ent.x, ent.y
+        ent.char = '%'
+        ent.color = colors.corpse
+        map.tiles[x][y].gibbed = True
         
         if ent.is_player:
-            ent.char = '%'
-            ent.color = tcod.dark_red
-
             message = Message('You died!', msg_type=MessageType.INFO_BAD)
         else:
-            
-            ent.char = '%'
-            ent.color = tcod.dark_red
             ent.blocks = False
             ent.render_order = RenderOrder.CORPSE
             ent.fighter = None
             ent.ai = None
-            ent.name = 'remains of ' + ent.name
+            ent.name = f'Remains of a {ent.name}'
 
             message = Message(f'The {ent.name.capitalize()} is dead!', MessageType.INFO_GOOD)
+
+        # Create gibs
+        # TODO Consider force of impact (amount of damage done beyond 0 hp?) to vary spread
+        for i in range(1, randint(2, 4)):
+            c_x, c_y = (randint(x - 1, x + 1), randint(y - 1, y + 1))
+            map.tiles[c_x][c_y].gibbed = True
+            if randint(0, 100) > 10:
+                c = Entity('~', c_x, c_y, colors.corpse, f'Bits of a {ent.name}')
+                c.render_order = RenderOrder.CORPSE
 
         return message
