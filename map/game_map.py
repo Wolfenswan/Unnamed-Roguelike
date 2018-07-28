@@ -34,8 +34,6 @@ class GameMap:
         rooms = self.rooms
         num_rooms = 0
 
-        tcod.random_new()
-
         for r in range(max_rooms):
             # random width and height
             w = randint(room_min_size, room_max_size)

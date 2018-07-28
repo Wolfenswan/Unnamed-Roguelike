@@ -15,7 +15,6 @@ use_potions_data = {
         'on_use': heal_entity,
         'on_use_msg': Message('You drink down the potion.'),
         'targeting': False,
-        'on_use_kwargs': '(pwr = randint(6, 10))',
         "on_use_params": {'pwr': (6, 10)},
         'chance': 60,
         'dlvls': (1, 99)
