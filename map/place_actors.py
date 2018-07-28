@@ -20,7 +20,7 @@ def gen_ent_from_dict(dict, entry, x, y):
         descr = data['descr']
         hp = randint(*data['max_hp'])
         defense = randint(*data['nat_armor'])
-        power = randint(*data['power'])
+        power = randint(*data['nat_power'])
         ai = data['ai']
 
         fighter_component = Fighter(hp, defense, power)
@@ -38,8 +38,8 @@ def gen_ent_from_dict(dict, entry, x, y):
         return ent
 
 def place_monsters(game):
-    """ generates monsters throughout the dungeon level """
-    
+    """ generates monsters in the current dungeon level """
+
     dlvl = game.dlvl
     game_map = game.map
 

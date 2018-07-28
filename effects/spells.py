@@ -6,12 +6,12 @@ from gui.messages import Message, MessageType
 
 def heal_entity(*args, **kwargs):
     entity = args[0]
-    amount = kwargs.get('amount')
+    amount = kwargs.get('pwr')
 
     results = []
 
     if entity.fighter.hp == entity.fighter.max_hp:
-        results.append({'consumed': False, 'message': Message('You are already at full health', MessageType.INFO_NEUTRAL)})
+        results.append({'consumed': False, 'message': Message('You are already at full health', MessageType.INFO_GENERIC)})
     else:
         entity.fighter.heal(amount)
         results.append({'consumed': True, 'message': Message('Your wounds start to feel better!', MessageType.INFO_GOOD)})
@@ -49,7 +49,7 @@ def cast_lightning_on(*args, **kwargs):
 def cast_fireball_on(*args, **kwargs):
     entities = kwargs.get('entities')
     fov_map = kwargs.get('fov_map')
-    damage = kwargs.get('damage')
+    damage = kwargs.get('dmg')
     radius = kwargs.get('radius')
     target_x = kwargs.get('target_x')
     target_y = kwargs.get('target_y')

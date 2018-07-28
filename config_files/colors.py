@@ -3,11 +3,11 @@ import tcod
 
 # Dungeon
 door = tcod.Color(153, 115, 0)
+light_fov = tcod.Color(127, 127, 127)#tcod.Color(226, 152, 34)
 dark_wall = tcod.Color(63, 63, 63)
 dark_wall_fg = tcod.Color(95, 95, 95)
 dark_ground =  tcod.Color(31, 31, 31)
 dark_ground_fg = tcod.Color(95, 95, 95)
-light_fov = tcod.Color(226, 152, 34)
 
 # Entities
 corpse = tcod.Color(127, 0, 0)

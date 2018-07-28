@@ -172,7 +172,7 @@ def game_loop(game, fov_map):
                 previous_game_state = GameStates.PLAYERS_TURN
                 game.state = GameStates.TARGETING
 
-                message_log.add_message(targeting_item.item.targeting_message)
+                message_log.add_message(targeting_item.item.on_use_msg)
 
             if targeting_cancelled:
                 game.state = previous_game_state

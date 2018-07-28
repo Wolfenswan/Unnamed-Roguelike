@@ -8,6 +8,7 @@ from gameobjects.player import Player
 from gui.messages import MessageLog
 from map.game_map import GameMap
 from map.place_actors import place_monsters
+from map.place_items import place_items
 
 
 def initialize_game(debug=False):
@@ -27,6 +28,7 @@ def initialize_game(debug=False):
     game.map.make_map(game, cfg.MAX_ROOMS, cfg.ROOM_MIN_SIZE, cfg.ROOM_MAX_SIZE, cfg.MAP_SCREEN_WIDTH, cfg.MAP_SCREEN_HEIGHT, cfg.MAX_ROOM_MONSTERS, cfg.MAX_ROOM_ITEMS)
 
     place_monsters(game)
+    place_items(game)
 
     game.message_log = MessageLog(cfg.MSG_X, cfg.MSG_WIDTH, cfg.MSG_HEIGHT)
 

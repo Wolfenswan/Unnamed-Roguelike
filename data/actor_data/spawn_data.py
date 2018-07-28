@@ -39,7 +39,7 @@ spawn_data = {
         'descr': 'The most generic of monsters you could imagine. Thankfully, it will probably kill you before you are bored to death.',
         'max_hp': (8,15),
         'nat_armor': (0,2),
-        'power': (3,6),
+        'nat_power': (3,6),
         'vision': 4,
         'ai': 'BasicMonster()',
         'barks': ('humanoid', 'orcs'),
