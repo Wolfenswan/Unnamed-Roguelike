@@ -9,6 +9,7 @@ from effects.spells import heal_entity, cast_lightning_on, cast_fireball_on, cas
 from gameobjects.entity import Entity
 from gameobjects.npc import NPC
 from gui.messages import Message
+from map.place_actors import place_monsters
 from map.rectangle import Rect
 from map.tile import Tile
 from rendering.render_order import RenderOrder
@@ -17,6 +18,7 @@ class GameMap:
     def __init__(self, width, height):
         self.width = width
         self.height = height
+        self.rooms = []
         self.tiles = self.initialize_tiles()
 
     def initialize_tiles(self):
@@ -29,8 +31,10 @@ class GameMap:
         player = game.player
         entities = game.entities
 
-        rooms = []
+        rooms = self.rooms
         num_rooms = 0
+
+        tcod.random_new()
 
         for r in range(max_rooms):
             # random width and height
@@ -83,8 +87,8 @@ class GameMap:
                 rooms.append(new_room)
                 num_rooms += 1
 
-        for r in rooms:
-            self.place_entities(r, entities, max_monsters_per_room, max_items_per_room)
+            #for r in rooms:
+                #self.place_entities(r, entities, max_monsters_per_room, max_items_per_room)
 
     def create_room(self, room):
         # go through the tiles in the rectangle and make them passable

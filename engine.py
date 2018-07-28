@@ -4,8 +4,9 @@ from gameobjects.entity import get_blocking_entities_at_location
 from game import GameStates
 from gui.messages import Message, MessageType
 from loader_functions.initialize_game import initialize_game
+from loader_functions.initialize_logging import initialize_logging
 from rendering.fov_functions import initialize_fov, recompute_fov
-from rendering.render_functions import clear_all, render_all
+from rendering.render_main import clear_all, render_all
 from loader_functions.initialize_window import initialize_window
 from input.handle_input import handle_keys, handle_mouse
 
@@ -208,7 +209,8 @@ def game_loop(game, fov_map):
                 game.state = GameStates.PLAYERS_TURN
 
 if __name__ == '__main__':
-    game = initialize_game(debug=False)
+    initialize_logging(debugging=True)
+    game = initialize_game(debug=True)
     initialize_window(game)
     fov_map = initialize_fov(game.map)
     game_loop(game, fov_map)

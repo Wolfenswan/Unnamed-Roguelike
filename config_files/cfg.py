@@ -6,10 +6,10 @@ from config_files import colors
 GAME_NAME = 'VermintideRL'
 
 # Console
-SCREEN_WIDTH = 80
-SCREEN_HEIGHT = 45
-MAP_SCREEN_WIDTH = 80
-MAP_SCREEN_HEIGHT = 43
+SCREEN_WIDTH = 120
+SCREEN_HEIGHT = 80
+MAP_SCREEN_WIDTH = SCREEN_WIDTH
+MAP_SCREEN_HEIGHT = SCREEN_HEIGHT - 10
 LIMIT_FPS = 30
 
 # Dungeon settings
@@ -21,17 +21,9 @@ ROOM_MAX_SIZE = 18
 ROOM_MIN_SIZE = 6
 MAX_ROOMS = 30
 MAX_MONSTERS = MAX_ROOMS/2 # Currently unused
-MAX_ROOM_MONSTERS = 6      # TODO Adjust dynamically to room size
+MAX_ROOM_MONSTERS = 9      # TODO Adjust dynamically to room size
 MAX_ROOM_ITEMS = 6
 MAX_ROOM_STATICOBJECTS = 4
-
-# Dungeon colors
-COLOR_DARK_WALL = colors.darkest_gray
-COLOR_DARK_WALL_fg = colors.dark_grey
-COLOR_DARK_GROUND = colors.darkest_gray
-COLOR_DARK_GROUND_fg = colors.dark_grey
-COLOR_LIGHT_WALL = colors.lighter_grey
-COLOR_LIGHT_GROUND = colors.lighter_grey
 
 # GUI PANELS
 PANELS_BORDER_COLOR = colors.dark_grey
@@ -42,7 +34,7 @@ SIDE_PANEL_WIDTH = SCREEN_WIDTH - MAP_SCREEN_WIDTH  # Difference between screen 
 SIDE_PANEL_X = SCREEN_WIDTH - SIDE_PANEL_WIDTH
 
 # BOTTOM PANEL
-BOTTOM_PANEL_HEIGHT = 7#SCREEN_HEIGHT - MAP_SCREEN_HEIGHT  # Difference between screen and map height
+BOTTOM_PANEL_HEIGHT = SCREEN_HEIGHT - MAP_SCREEN_HEIGHT  # Difference between screen and map height
 BOTTOM_PANEL_Y = SCREEN_HEIGHT - BOTTOM_PANEL_HEIGHT
 BOTTOM_PANEL_WIDTH = SCREEN_WIDTH
 

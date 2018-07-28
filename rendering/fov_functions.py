@@ -22,8 +22,23 @@ def recompute_fov(fov_map, x, y):
 
     tcod.map_compute_fov(fov_map, x, y, radius, light_walls, algorithm)
 
-def change_color_by_fov_distance(ent, color, x, y):
-    color_coefficient = 1 - ent.distance_to_pos(x, y)/10 + random.uniform(0, 0.5)
+def darken_color_by_fov_distance(ent, color, x, y):
+    """
+    Darkens the given color by distance between given entity and x,y coordinates
+
+    :param ent: The entity from which to measure
+    :type ent: object
+    :param color: The original color value
+    :type color: tuple
+    :param x: x-coordinate on the dungeon grid
+    :type x: int
+    :param y: y-coordinate on the dungeon grid
+    :type y: int
+    :return: darkened color
+    :rtype: tuple
+    """
+
+    color_coefficient = 1 - ent.distance_to_pos(x, y)/10 + random.uniform(0, 0.5) # If not using wait_for_event in engine.py the randomness causes irritating flickering
 
     if color_coefficient > 1:
         color_coefficient = 1

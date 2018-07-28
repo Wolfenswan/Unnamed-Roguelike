@@ -1,6 +1,7 @@
 import tcod
 
-from gui.messages import Message
+from rendering.common_functions import draw_console_borders
+from rendering.render_windows import draw_options_window
 
 
 def menu(con, header, options, width, screen_width, screen_height):
@@ -29,9 +30,11 @@ def menu(con, header, options, width, screen_width, screen_height):
     # blit the contents of "window" to the root console
     x = int(screen_width / 2 - width / 2)
     y = int(screen_height / 2 - height / 2)
+    #draw_console_borders(window)
     tcod.console_blit(window, 0, 0, width, height, 0, x, y, 1.0, 0.7)
 
-def inventory_menu(con, header, inventory, inventory_width, screen_width, screen_height):
+def inventory_menu(con, title, header, inventory, x, y):
     # show a menu with each item of the inventory as an option
     options = [item.name for item in inventory.items]
-    menu(con, header, options, inventory_width, screen_width, screen_height)
+    #menu(con, header, options, inventory_width, screen_width, screen_height)
+    draw_options_window(title, header, options, window_x=x, window_y=y, forced_width=len(header)//2)

@@ -16,8 +16,11 @@ class Game:
         self.debug = debug
         self.state = None
         self.map = None
+        self.dlvl = 1
         self.player = None
         self.entities = None
+
+        # GUI #
         self.con = None
-        self.panel = None
+        self.bottom_panel = None
         self.message_log = None

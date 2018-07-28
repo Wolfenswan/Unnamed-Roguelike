@@ -53,13 +53,13 @@ class Fighter:
         if ent.is_player:
             message = Message('You died!', msg_type=MessageType.INFO_BAD)
         else:
+            message = Message(f'The {ent.name.capitalize()} is dead!', MessageType.INFO_GOOD)
+
             ent.blocks = False
             ent.render_order = RenderOrder.CORPSE
             ent.fighter = None
             ent.ai = None
             ent.name = f'Remains of a {ent.name}'
-
-            message = Message(f'The {ent.name.capitalize()} is dead!', MessageType.INFO_GOOD)
 
         # Create gibs
         # TODO Consider force of impact (amount of damage done beyond 0 hp?) to vary spread
@@ -67,7 +67,7 @@ class Fighter:
             c_x, c_y = (randint(x - 1, x + 1), randint(y - 1, y + 1))
             map.tiles[c_x][c_y].gibbed = True
             if randint(0, 100) > 10:
-                c = Entity('~', c_x, c_y, colors.corpse, f'Bits of a {ent.name}')
+                c = Entity('~', c_x, c_y, colors.corpse, f'Bits of a {ent.name}', 'Assorted ovals.')
                 c.render_order = RenderOrder.CORPSE
 
         return message
