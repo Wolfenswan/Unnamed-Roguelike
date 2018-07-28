@@ -22,13 +22,14 @@ class Rect:
                 self.y1 <= other.y2 and self.y2 >= other.y1)
 
 
-    def ranpos(self, game):
+    def ranpos(self, game, ignore_blocked = True):
         """returns a random, walkable position within the room"""
         x = randint(self.x1 + 1, self.x2 - 1)
         y = randint(self.y1 + 1, self.y2 - 1)
-        while game.map.is_blocked(x, y):
-            x = randint(self.x1 + 1, self.x2 - 1)
-            y = randint(self.y1 + 1, self.y2 - 1)
+        if not ignore_blocked:
+            while game.map.is_blocked(x, y):
+                x = randint(self.x1 + 1, self.x2 - 1)
+                y = randint(self.y1 + 1, self.y2 - 1)
         return x, y
 
     def free_tiles(self, game):

@@ -210,7 +210,7 @@ def game_loop(game, fov_map):
 
 if __name__ == '__main__':
     initialize_logging(debugging=True)
-    game = initialize_game(debug=True)
+    game = initialize_game(debug=False)
     initialize_window(game)
     fov_map = initialize_fov(game.map)
     game_loop(game, fov_map)

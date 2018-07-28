@@ -1,6 +1,7 @@
 from random import randint
 
 import tcod
+import logging
 
 from config_files import colors
 from gameobjects.entity import Entity
@@ -30,6 +31,8 @@ class Fighter:
 
         if self.hp > self.max_hp:
             self.hp = self.max_hp
+
+        logging.debug(f'({self} was healed for {amount}.')
 
     def attack(self, target):
         results = []

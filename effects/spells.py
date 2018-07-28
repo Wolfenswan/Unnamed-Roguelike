@@ -1,3 +1,5 @@
+from random import randint
+
 import tcod
 
 from components.AI.confusedmonster import ConfusedMonster
@@ -7,6 +9,9 @@ from gui.messages import Message, MessageType
 def heal_entity(*args, **kwargs):
     entity = args[0]
     amount = kwargs.get('pwr')
+
+    if type(amount) is not int:
+        amount = randint(*amount)
 
     results = []
 
