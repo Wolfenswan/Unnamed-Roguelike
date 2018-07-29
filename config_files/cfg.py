@@ -1,5 +1,6 @@
 #! python3
 """ Constant variables """
+import tcod
 
 from config_files import colors
 
@@ -67,6 +68,6 @@ MSG_COLOR_ALERT = colors.red
 INVENTORY_WIDTH = 30
 
 # FOV
-FOV_ALGO = 0
+FOV_ALGO = tcod.FOV_RESTRICTIVE
 FOV_LIGHT_WALLS = True
-FOV_RADIUS = 6
+FOV_RADIUS = 4

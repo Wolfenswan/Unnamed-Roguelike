@@ -1,4 +1,5 @@
 import logging
+from random import randint
 
 from components.actors.fighter import Fighter
 from components.inventory import Inventory
@@ -24,8 +25,12 @@ def initialize_game(debug=False):
     game.entities = [player]
 
     # Setup the game map #
-    game.map = GameMap(cfg.MAP_SCREEN_WIDTH, cfg.MAP_SCREEN_HEIGHT)
-    game.map.make_map(game, cfg.MAX_ROOMS, cfg.ROOM_MIN_SIZE, cfg.ROOM_MAX_SIZE, cfg.MAP_SCREEN_WIDTH, cfg.MAP_SCREEN_HEIGHT, cfg.MAX_ROOM_MONSTERS, cfg.MAX_ROOM_ITEMS)
+    dwidth = randint(cfg.DUNGEON_MIN_WIDTH, cfg.DUNGEON_MAX_WIDTH)
+    dheight = randint(cfg.DUNGEON_MIN_HEIGHT, cfg.DUNGEON_MAX_HEIGHT)
+    dwidth = cfg.SCREEN_WIDTH
+    dheight = cfg.SCREEN_HEIGHT
+    game.map = GameMap(dwidth, dheight)
+    game.map.make_map(game, cfg.MAX_ROOMS, cfg.ROOM_MIN_SIZE, cfg.ROOM_MAX_SIZE, dwidth, dheight)
 
     place_monsters(game)
     place_items(game)

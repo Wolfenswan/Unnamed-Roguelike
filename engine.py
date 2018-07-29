@@ -6,7 +6,7 @@ from gui.messages import Message, MessageType
 from loader_functions.initialize_game import initialize_game
 from loader_functions.initialize_logging import initialize_logging
 from rendering.fov_functions import initialize_fov, recompute_fov
-from rendering.render_main import clear_all, render_all
+from rendering.render_main import clear_all, render_all, pos_on_screen
 from loader_functions.initialize_window import initialize_window
 from input.handle_input import handle_keys, handle_mouse
 
@@ -43,7 +43,7 @@ def game_loop(game, fov_map):
 
         clear_all(con, entities)
 
-        tcod.sys_wait_for_event(tcod.EVENT_KEY_PRESS | tcod.EVENT_MOUSE, key, mouse, False)
+        tcod.sys_wait_for_event(tcod.EVENT_KEY_PRESS, key, mouse, True)
 
         action = handle_keys(key, game.state)
         mouse_action = handle_mouse(mouse)

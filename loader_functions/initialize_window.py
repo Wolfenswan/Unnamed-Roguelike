@@ -13,13 +13,13 @@ def initialize_window(game):
         'courier10x10_aa_tc',  # 3
         'lucida10x10_gs_tc',  # 4
         'prestige10x10_gs_tc',  # 5
-        '',  # 6
+        'dejavu10x10_gs_tc',  # 6
         'terminal8x8_gs_ro',  # 7
         'terminal10x10_gs_tc',  # 8
         'terminal12x12_gs_ro'  # 9
     )
 
-    tcod.console_set_custom_font(f'resources/fonts/{fonts[8]}.png', tcod.FONT_TYPE_GREYSCALE | tcod.FONT_LAYOUT_TCOD)
+    tcod.console_set_custom_font(f'resources/fonts/{fonts[6]}.png', tcod.FONT_TYPE_GREYSCALE | tcod.FONT_LAYOUT_TCOD)
 
     tcod.console_init_root(cfg.SCREEN_WIDTH, cfg.SCREEN_HEIGHT, cfg.GAME_NAME, False)
 
