@@ -96,15 +96,12 @@ def render_map_centered_on_player(game, con, fov_map, debug=False):
             if tile_x in range(game_map.width) and tile_y in range(game_map.height):
                 draw_tile(game, con, fov_map, tile_x, tile_y, screen_x, screen_y, debug=debug)
 
-# TODO Issue with FOV calculation?
-
 def draw_tile(game, con, fov_map, tile_x, tile_y, screen_x, screen_y, debug=False):
     tile = game.map.tiles[tile_x][tile_y]
     visible = tcod.map_is_in_fov(fov_map, tile_x, tile_y) or debug
     wall = tile.block_sight and not tile.walkable
 
-    # TODO Brightness fall off with range
-    fg_color = darken_color_by_fov_distance(game.player, colors.light_fov, tile_x, tile_y, randomness = 0.6)
+    fg_color = darken_color_by_fov_distance(game.player, colors.light_fov, tile_x, tile_y, randomness = 0)
     if debug:
         fg_color = colors.light_fov
 
@@ -118,11 +115,15 @@ def draw_tile(game, con, fov_map, tile_x, tile_y, screen_x, screen_y, debug=Fals
         tile.explored = True
 
     elif tile.explored:
+        bg_color = darken_color_by_fov_distance(game.player, colors.dark_bg, tile_x, tile_y, randomness = 0)
 
         if wall:
-            tcod.console_put_char_ex(con, screen_x, screen_y, '#', colors.dark_wall_fg, colors.dark_wall)
+            tcod.console_put_char_ex(con, screen_x, screen_y, '#', colors.dark_wall_fg, colors.dark_ground)
+            #tcod.console_set_char_background(con, screen_x, screen_y, colors.grey, flag=tcod.BKGND_DARKEN)
+            #tcod.console_put_char_ex(con, screen_x, screen_y, '#', colors.dark_wall_fg, colors.dark_wall)
         else:
             tcod.console_put_char_ex(con, screen_x, screen_y, '.', colors.dark_ground_fg, colors.dark_ground)
+            #tcod.console_put_char_ex(con, screen_x, screen_y, '.', colors.dark_ground_fg, colors.dark_ground)
     else:
         return
 
@@ -134,7 +135,6 @@ def draw_entity(game, entity, fov_map, debug=False):
             color = entity.color
         tcod.console_set_default_foreground(game.con, color)
         x, y = pos_on_screen(entity.x, entity.y, game.player)
-        #x, y = entity.x, entity.y
         tcod.console_put_char(game.con, x, y, entity.char, tcod.BKGND_NONE)
 
 

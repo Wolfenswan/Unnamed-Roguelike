@@ -27,8 +27,6 @@ def initialize_game(debug=False):
     # Setup the game map #
     dwidth = randint(cfg.DUNGEON_MIN_WIDTH, cfg.DUNGEON_MAX_WIDTH)
     dheight = randint(cfg.DUNGEON_MIN_HEIGHT, cfg.DUNGEON_MAX_HEIGHT)
-    dwidth = cfg.SCREEN_WIDTH
-    dheight = cfg.SCREEN_HEIGHT
     game.map = GameMap(dwidth, dheight)
     game.map.make_map(game, cfg.MAX_ROOMS, cfg.ROOM_MIN_SIZE, cfg.ROOM_MAX_SIZE, dwidth, dheight)
 

@@ -43,7 +43,7 @@ def game_loop(game, fov_map):
 
         clear_all(con, entities)
 
-        tcod.sys_wait_for_event(tcod.EVENT_KEY_PRESS, key, mouse, True)
+        tcod.sys_wait_for_event(tcod.EVENT_KEY_PRESS | tcod.EVENT_MOUSE, key, mouse, True)
 
         action = handle_keys(key, game.state)
         mouse_action = handle_mouse(mouse)
