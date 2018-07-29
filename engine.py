@@ -51,6 +51,7 @@ def game_loop(game, fov_map):
         exit = action.get('exit')
         fullscreen = action.get('fullscreen')
         move = action.get('move')
+        rest = action.get('rest')
         pickup = action.get('pickup')
         show_inventory = action.get('show_inventory')
         drop_inventory = action.get('drop_inventory')
@@ -62,33 +63,39 @@ def game_loop(game, fov_map):
         player_turn_results = []
 
         # Player moves #
-        if move and game.state == GameStates.PLAYERS_TURN:
-            dx, dy = move
-            destination_x = player.x + dx
-            destination_y = player.y + dy
+        active_player_states = [GameStates.PLAYERS_TURN, GameStates.PLAYER_RESTING]
+        if game.state in active_player_states:
+            if move:
+                dx, dy = move
+                destination_x = player.x + dx
+                destination_y = player.y + dy
 
-            if not game_map.is_blocked(destination_x, destination_y):
-                target = get_blocking_entities_at_location(entities, destination_x, destination_y)
+                if not game_map.is_blocked(destination_x, destination_y):
+                    target = get_blocking_entities_at_location(entities, destination_x, destination_y)
 
-                if target:
-                    attack_results = player.fighter.attack(target)
-                    player_turn_results.extend(attack_results)
+                    if target:
+                        attack_results = player.fighter.attack(target)
+                        player_turn_results.extend(attack_results)
+                    else:
+                        player.move(dx, dy)
+
+                        fov_recompute = True
+
+                    game.state = GameStates.ENEMY_TURN
+
+            elif rest:
+                player_turn_results.append({'message': Message(f'You wait.'),'resting': True})
+                game.state = GameStates.PLAYER_RESTING
+
+            elif pickup:
+                for entity in entities:
+                    if entity.item and entity.same_pos_as(player):
+                        pickup_results = player.inventory.add_item(entity)
+                        player_turn_results.extend(pickup_results)
+
+                        break
                 else:
-                    player.move(dx, dy)
-
-                    fov_recompute = True
-
-                game.state = GameStates.ENEMY_TURN
-
-        elif pickup and game.state == GameStates.PLAYERS_TURN:
-            for entity in entities:
-                if entity.item and entity.same_pos_as(player):
-                    pickup_results = player.inventory.add_item(entity)
-                    player_turn_results.extend(pickup_results)
-
-                    break
-            else:
-                message_log.add_message(Message('There is nothing here to pick up.', msg_type=MessageType.INFO_GENERIC))
+                    message_log.add_message(Message('There is nothing here to pick up.', msg_type=MessageType.INFO_GENERIC))
 
         # Inventory display #
         if show_inventory:
@@ -143,6 +150,7 @@ def game_loop(game, fov_map):
             dead_entity = player_turn_result.get('dead')
             targeting_item = player_turn_result.get('targeting')
             targeting_cancelled = player_turn_result.get('targeting_cancelled')
+            resting = player_turn_result.get('resting')
 
             # List of results that activate the enemy's turn #
             enemy_turn_on = [item_added, item_dropped, item_consumed]
@@ -163,9 +171,13 @@ def game_loop(game, fov_map):
             if item_dropped:
                 entities.append(item_dropped)
 
+            if resting:
+                # TODO Reveal explored parts of map if no enemies are around
+                pass
+
             # Enable enemy turn if at least one of the results is valid
-            filtered_conditions = list(filter(lambda x: x != None, enemy_turn_on))
-            if len(filtered_conditions) > 0:
+            filtered_enemy_turn_conditions = list(filter(lambda x: x != None, enemy_turn_on))
+            if len(filtered_enemy_turn_conditions) > 0:
                 game.state = GameStates.ENEMY_TURN
 
             if targeting_item:
@@ -181,8 +193,8 @@ def game_loop(game, fov_map):
 
         # Enemies take turns #
         if game.state == GameStates.ENEMY_TURN:
-            # move_order = sorted(entities, key=lambda i: i.distance_to(player))
-            for entity in entities:
+            move_order = sorted(entities, key=lambda i: i.distance_to_ent(player))
+            for entity in move_order:
                 if entity.ai:
                     enemy_turn_results = entity.ai.take_turn(player, fov_map, game_map, entities)
 

@@ -114,19 +114,13 @@ def draw_tile(game, con, fov_map, tile_x, tile_y, screen_x, screen_y, debug=Fals
         tcod.console_put_char_ex(con, screen_x, screen_y, char, fg_color, colors.black)
         tile.explored = True
 
-    elif tile.explored:
-        bg_color = darken_color_by_fov_distance(game.player, colors.dark_bg, tile_x, tile_y, randomness = 0)
+    # TODO move to own function, called by 'resting' result in engine.py
+    elif tile.explored and game.state == GameStates.PLAYER_RESTING:
 
-        if wall:
-            tcod.console_put_char_ex(con, screen_x, screen_y, '#', colors.dark_wall_fg, colors.dark_ground)
-            #tcod.console_set_char_background(con, screen_x, screen_y, colors.grey, flag=tcod.BKGND_DARKEN)
-            #tcod.console_put_char_ex(con, screen_x, screen_y, '#', colors.dark_wall_fg, colors.dark_wall)
-        else:
-            tcod.console_put_char_ex(con, screen_x, screen_y, '.', colors.dark_ground_fg, colors.dark_ground)
-            #tcod.console_put_char_ex(con, screen_x, screen_y, '.', colors.dark_ground_fg, colors.dark_ground)
-    else:
-        return
-
+            if wall:
+                tcod.console_put_char_ex(con, screen_x, screen_y, '#', colors.dark_wall_fg, colors.dark_ground)
+            else:
+                tcod.console_put_char_ex(con, screen_x, screen_y, '.', colors.dark_ground_fg, colors.dark_ground)
 
 def draw_entity(game, entity, fov_map, debug=False):
     if tcod.map_is_in_fov(fov_map, entity.x, entity.y) or debug:

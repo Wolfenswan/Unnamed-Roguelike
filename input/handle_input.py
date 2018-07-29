@@ -17,7 +17,7 @@ def handle_keys(key, game_state):
         return {'exit': True}
 
     # Game state specific inputs #
-    if game_state == GameStates.PLAYERS_TURN:
+    if game_state in [GameStates.PLAYERS_TURN, GameStates.PLAYER_RESTING]:
         return handle_player_turn_keys(key)
     elif game_state == GameStates.PLAYER_DEAD:
         return handle_player_dead_keys(key)
@@ -47,6 +47,8 @@ def handle_player_turn_keys(key):
         return {'move': (-1, 1)}
     elif key_char == 'n' or key.vk == tcod.KEY_KP3:
         return {'move': (1, 1)}
+    elif key.vk == tcod.KEY_KP5:
+        return {'rest': True}
 
     if key_char == 'g':
         return {'pickup': True}
