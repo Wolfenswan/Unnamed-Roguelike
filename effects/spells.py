@@ -51,7 +51,7 @@ def cast_lightning_on(*args, **kwargs):
 
     return results
 
-def cast_fireball_on(*args, **kwargs):
+def cast_fireball_on(**kwargs):
     entities = kwargs.get('entities')
     fov_map = kwargs.get('fov_map')
     damage = kwargs.get('dmg')

@@ -15,13 +15,13 @@ def initialize_logging(debugging=True, cleanup=True):
         logging.disable(logging.DEBUG)
 
     # setup output streams
-    rootLogger = logging.getLogger()
+    rootlogger = logging.getLogger()
 
     # file output
-    logFormatter = logging.Formatter(formatting)
-    fileHandler = logging.FileHandler(f'{format(log_file)}')
-    fileHandler.setFormatter(logFormatter)
-    rootLogger.addHandler(fileHandler)
+    logformatter = logging.Formatter(formatting)
+    filehandler = logging.FileHandler(f'{format(log_file)}')
+    filehandler.setFormatter(logformatter)
+    rootlogger.addHandler(filehandler)
 
     if cleanup:
         last_logs_to_keep = 3

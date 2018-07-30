@@ -1,6 +1,7 @@
 import math
 
-from rendering.fov_functions import pos_is_visible
+import tcod
+
 from rendering.render_order import RenderOrder
 
 
@@ -23,6 +24,7 @@ class Entity:
         self.item = item
         self.inventory = inventory
 
+
         if self.fighter:
             self.fighter.owner = self
 
@@ -35,25 +37,29 @@ class Entity:
         if self.inventory:
             self.inventory.owner = self
 
+
     def move(self, dx, dy):
         # Move the entity by a given amount
         self.x += dx
         self.y += dy
+
 
     def distance_to_ent(self, other):
         dx = other.x - self.x
         dy = other.y - self.y
         return math.sqrt(dx ** 2 + dy ** 2)
 
+
     def distance_to_pos(self, x, y):
         return math.sqrt((x - self.x) ** 2 + (y - self.y) ** 2)
+
 
     def same_pos_as(self, other):
         return (self.x, self.y) == (other.x, other.y)
 
 
-    def can_see_ent(self, fov_map, other):
-        return pos_is_visible(fov_map, other.x, other.y)
+    def is_visible(self, fov_map):
+        return tcod.map_is_in_fov(fov_map, self.x, self.y)
 
 
 def get_blocking_entities_at_location(entities, destination_x, destination_y):

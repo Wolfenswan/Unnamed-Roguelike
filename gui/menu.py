@@ -33,7 +33,7 @@ def menu(con, header, options, width, screen_width, screen_height):
     #draw_console_borders(window)
     tcod.console_blit(window, 0, 0, width, height, 0, x, y, 1.0, 0.7)
 
-def inventory_menu(con, title, header, inventory, x, y):
+def inventory_menu(title, header, inventory, x, y):
     # show a menu with each item of the inventory as an option
     options = [item.name for item in inventory.items]
     #menu(con, header, options, inventory_width, screen_width, screen_height)

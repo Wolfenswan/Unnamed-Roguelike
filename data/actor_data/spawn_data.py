@@ -29,6 +29,7 @@
 
 """
 from components.AI.basicmonster import BasicMonster
+from components.skills import skill_charge_activation, skill_charge_condition
 from config_files import colors
 
 spawn_data = {
@@ -41,8 +42,15 @@ spawn_data = {
         'nat_armor': (0,2),
         'nat_power': (3,6),
         'nat_vision': 8,
-        'ai': 'BasicMonster()',
+        'ai': BasicMonster,
         'barks': ('humanoid', 'orcs'),
+        'skills': {
+                'charge1': {
+                    'on_activate': skill_charge_activation,
+                    'activate_condition': skill_charge_condition,
+                    'cooldown_length': 6
+                }
+        },
         'loadouts': {
                 'melee1': {
                     'chance': 50,

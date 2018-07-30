@@ -31,7 +31,7 @@ def initialize_game(debug=False):
     game.map.make_map(game, cfg.MAX_ROOMS, cfg.ROOM_MIN_SIZE, cfg.ROOM_MAX_SIZE, dwidth, dheight)
 
     place_monsters(game)
-    place_items(game)
+    #place_items(game)
 
     game.message_log = MessageLog(cfg.MSG_X, cfg.MSG_WIDTH, cfg.MSG_HEIGHT)
 

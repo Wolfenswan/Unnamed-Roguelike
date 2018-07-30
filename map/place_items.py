@@ -65,8 +65,5 @@ def place_items(game):
             x, y = room.ranpos(game)
 
             # Generate the item at the given position
-            try:
-                i = gen_item_from_data(i_dict, x, y)
-                game.entities.append(i)
-            except Exception as err:
-                logging.error(f'Unable to create {i_key}')
+            item = gen_item_from_data(i_dict, x, y)
+            game.entities.append(item)

@@ -28,7 +28,7 @@ class Inventory:
 
     def remove_from_inv(self, item):
         """ removes an item from the player main inventory or any quick use slots """
-        if item in (self.items):
+        if item in self.items:
             self.items.remove(item)
 
     def is_full(self):

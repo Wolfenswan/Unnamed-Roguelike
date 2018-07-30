@@ -1,6 +1,5 @@
-from random import randint
+from random import randint, choice
 
-import tcod
 import logging
 
 from config_files import colors
@@ -10,12 +9,17 @@ from rendering.render_order import RenderOrder
 
 
 class Fighter:
-    def __init__(self, hp, defense, power, vision):
+    def __init__(self, hp, defense, power, vision, skills=None):
         self.max_hp = hp
         self.hp = hp
         self.defense = defense
         self.power = power
         self.vision = vision
+        self.skills = skills
+
+        if self.skills is not None:
+            for skill in skills:
+                skill.owner = self
 
     def take_damage(self, amount):
         results = []
@@ -40,20 +44,34 @@ class Fighter:
         damage = self.power - target.fighter.defense
 
         if damage > 0:
-            results.append({'message': Message(f'{self.owner.name.capitalize()} attacks {target.name} for {str(damage)} hit points.')})
+            results.append({'message': Message(
+                f'{self.owner.name.capitalize()} attacks {target.name} for {str(damage)} hit points.')})
             results.extend(target.fighter.take_damage(damage))
         else:
-            results.append({'message': Message(f'{self.owner.name.capitalize()} attacks {target.name} but does no damage.')})
+            results.append(
+                {'message': Message(f'{self.owner.name.capitalize()} attacks {target.name} but does no damage.')})
 
         return results
 
-    def death(self,map):
+    def available_skills(self):
+        available_skills = [skill for skill in self.skills if skill.is_available()]
+        return available_skills
+
+    def cooldown_skills(self, reset=False):
+        for skill in self.skills:
+            if reset:
+                skill.cooldown = skill.cooldown_length
+            else:
+                skill.cooldown += 1
+
+
+    def death(self, map):
         ent = self.owner
         x, y = ent.x, ent.y
         ent.char = '%'
         ent.color = colors.corpse
         map.tiles[x][y].gibbed = True
-        
+
         if ent.is_player:
             message = Message('You died!', msg_type=MessageType.INFO_BAD)
         else:

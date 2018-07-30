@@ -24,7 +24,7 @@ def handle_keys(key, game_state):
     elif game_state in (GameStates.SHOW_INVENTORY, GameStates.DROP_INVENTORY):
         return handle_inventory_keys(key)
     elif game_state == GameStates.TARGETING:
-        return handle_targeting_keys(key)
+        return handle_targeting_keys()
 
     return {}
 
@@ -76,7 +76,7 @@ def handle_player_dead_keys(key):
 
     return {}
 
-def handle_targeting_keys(key):
+def handle_targeting_keys():
     return {}
 
 def handle_mouse(mouse):

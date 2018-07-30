@@ -3,40 +3,47 @@
 import logging
 from random import randint, choice
 
+from components.skills import Skill
 from data.util_functions import pick_from_data_dict_by_chance
 from components.actors.fighter import Fighter
 from config_files import cfg
 from data.actor_data.spawn_data import spawn_data
 from gameobjects.npc import NPC
-from components.AI.basicmonster import BasicMonster
 
 
 def gen_ent_from_dict(dict, entry, x, y):
     data = dict[entry]
-    try:
-        name = data['name']
-        char = data['char']
-        color = choice(data['colors'])
-        descr = data['descr']
-        hp = randint(*data['max_hp'])
-        defense = randint(*data['nat_armor'])
-        power = randint(*data['nat_power'])
-        vision = data['nat_vision']
-        ai = data['ai']
+    name = data['name']
+    char = data['char']
+    color = choice(data['colors'])
+    descr = data['descr']
+    hp = randint(*data['max_hp'])
+    defense = randint(*data['nat_armor'])
+    power = randint(*data['nat_power'])
+    vision = data['nat_vision']
+    ai = data['ai']
+    skills = data.get('skills', None)
 
-        fighter_component = Fighter(hp, defense, power, vision)
-        ai_component = eval(f'{ai}') # Dynamically generate the AI-class
+    skills_component = None
 
-        # create the arguments tuple out of the values we've got so far
-        arguments = (x, y, char, color, name, descr)
-    except Exception as err:
-        logging.error(f'Failed generating item from {data} with error: {err}')
+    if skills is not None:
+        skills_component = []
+        for k in skills:
+            skill = Skill(**skills[k])
+            skills_component.append(skill)
 
-    else:
-        # create the static object using the arguments tuple
-        ent = NPC(*arguments, fighter=fighter_component, ai=ai_component)
-        logging.debug(f'Generating {name}: {ent} generated with {arguments, fighter_component, ai_component}')
-        return ent
+    fighter_component = Fighter(hp, defense, power, vision, skills=skills_component)
+    ai_component = ai()
+
+
+    # create the arguments tuple out of the values we've got so far
+    arguments = (x, y, char, color, name, descr)
+        #logging.error(f'Failed generating item from {data} with error: {err}')
+
+    # create the static object using the arguments tuple
+    logging.debug(f'Generating {name} with {arguments, fighter_component, ai_component, skills_component}')
+    ent = NPC(*arguments, fighter=fighter_component, ai=ai_component)
+    return ent
 
 def place_monsters(game):
     """ generates monsters in the current dungeon level """

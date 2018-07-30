@@ -7,7 +7,7 @@ from config_files import cfg as cfg, colors
 from game import GameStates
 from gui.menu import inventory_menu
 from rendering.common_functions import get_names_under_mouse, draw_console_borders
-from rendering.fov_functions import darken_color_by_fov_distance, recompute_fov, pos_is_visible
+from rendering.fov_functions import darken_color_by_fov_distance
 from rendering.render_panels import render_bar
 
 
@@ -68,7 +68,7 @@ def render_all(game, fov_map, mouse, debug=False):
         else:
             header = 'Press the key next to an item to drop it, or Esc to cancel.\n'
 
-        inventory_menu(con, 'Inventory', header, player.inventory, player.x, player.y)
+        inventory_menu('Inventory', header, player.inventory, player.x, player.y)
 
 def render_map(game, con, fov_map, debug=False):
     """ Obsolete rendering function """
@@ -98,7 +98,7 @@ def render_map_centered_on_player(game, con, fov_map, debug=False):
 
 def draw_tile(game, con, fov_map, tile_x, tile_y, screen_x, screen_y, debug=False):
     tile = game.map.tiles[tile_x][tile_y]
-    visible = pos_is_visible(fov_map, tile_x, tile_y) #tcod.map_is_in_fov(fov_map, tile_x, tile_y) or debug
+    visible = tcod.map_is_in_fov(fov_map, tile_x, tile_y)
     wall = tile.block_sight and not tile.walkable
 
     fg_color = darken_color_by_fov_distance(game.player, colors.light_fov, tile_x, tile_y, randomness = 0)

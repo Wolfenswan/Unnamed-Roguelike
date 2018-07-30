@@ -1,4 +1,5 @@
 import math
+from random import choice
 
 import tcod
 
@@ -6,12 +7,16 @@ from gameobjects.entity import Entity, get_blocking_entities_at_location
 from rendering.render_order import RenderOrder
 
 
+
+
+
 class NPC(Entity):
     """ Class for the all active non-player objects """
 
-    def __init__(self, x, y, char, color, name, descr, fighter=None, ai=None, inventory=None):
+    def __init__(self, x, y, char, color, name, descr, fighter=None, ai=None, inventory=None, skills=None):
 
         super().__init__(x, y, char, color, name, descr, blocks=True, render_order=RenderOrder.ACTOR, fighter=fighter, ai=ai, inventory=inventory)
+
 
     def move_towards(self, target_x, target_y, game_map, entities):
         dx = target_x - self.x

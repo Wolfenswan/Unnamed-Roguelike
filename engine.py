@@ -1,17 +1,17 @@
 import tcod
 
-from gameobjects.entity import get_blocking_entities_at_location
 from game import GameStates
+from gameobjects.entity import get_blocking_entities_at_location
 from gui.messages import Message, MessageType
+from input.handle_input import handle_keys, handle_mouse
 from loader_functions.initialize_game import initialize_game
 from loader_functions.initialize_logging import initialize_logging
-from rendering.fov_functions import initialize_fov, recompute_fov
-from rendering.render_main import clear_all, render_all, pos_on_screen
 from loader_functions.initialize_window import initialize_window
-from input.handle_input import handle_keys, handle_mouse
+from rendering.fov_functions import initialize_fov, recompute_fov
+from rendering.render_main import clear_all, render_all
+
 
 def game_loop(game, fov_map):
-
     player = game.player
     entities = game.entities
     game_map = game.map
@@ -29,8 +29,8 @@ def game_loop(game, fov_map):
     mouse = tcod.Mouse()
 
     while not tcod.console_is_window_closed():
-        #tcod.sys_set_fps(30)
-        #tcod.sys_check_for_event(tcod.EVENT_KEY_PRESS | tcod.EVENT_MOUSE, key, mouse)
+        # tcod.sys_set_fps(30)
+        # tcod.sys_check_for_event(tcod.EVENT_KEY_PRESS | tcod.EVENT_MOUSE, key, mouse)
 
         if fov_recompute:
             recompute_fov(fov_map, player.x, player.y)
@@ -84,7 +84,7 @@ def game_loop(game, fov_map):
                     game.state = GameStates.ENEMY_TURN
 
             elif rest:
-                player_turn_results.append({'message': Message(f'You wait.'),'resting': True})
+                player_turn_results.append({'message': Message(f'You wait.'), 'resting': True})
 
             elif pickup:
                 for entity in entities:
@@ -94,7 +94,8 @@ def game_loop(game, fov_map):
 
                         break
                 else:
-                    message_log.add_message(Message('There is nothing here to pick up.', msg_type=MessageType.INFO_GENERIC))
+                    message_log.add_message(
+                        Message('There is nothing here to pick up.', msg_type=MessageType.INFO_GENERIC))
 
         # Inventory display #
         if show_inventory:
@@ -171,7 +172,7 @@ def game_loop(game, fov_map):
                 entities.append(item_dropped)
 
             # Enable enemy turn if at least one of the results is valid
-            filtered_enemy_turn_conditions = list(filter(lambda x: x != None, enemy_turn_on))
+            filtered_enemy_turn_conditions = list(filter(lambda x: x is not None, enemy_turn_on))
             if len(filtered_enemy_turn_conditions) > 0:
                 game.state = GameStates.ENEMY_TURN
 
@@ -220,6 +221,7 @@ def game_loop(game, fov_map):
                         break
             else:
                 game.state = GameStates.PLAYERS_TURN
+
 
 if __name__ == '__main__':
     initialize_logging(debugging=True)
