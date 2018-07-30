@@ -10,10 +10,10 @@ class Skill:
         self.cooldown_length = cooldown_length
         self.cooldown = cooldown_length
 
-    def execute(self):
+    def execute(self, game):
         actor = self.owner.owner
         logging.debug(f'Special attack for {actor}. Cooldown {self.cooldown} of {self.cooldown_length}')
-        results = self.on_activate(actor)
+        results = self.on_activate(game, actor)
         self.cooldown = 0
         return results
 
@@ -27,8 +27,8 @@ def skill_charge_activation(ent):
     results.append({'message': Message(f'{ent.name} charges!')})
     return results
 
-def skill_charge_condition(ent):
-    if randint(0,1):
+def skill_charge_condition(game, actor):
+    if ent.distance_to(player) < 6:
         print('T')
         return True
     else:

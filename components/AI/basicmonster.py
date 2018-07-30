@@ -4,7 +4,11 @@ import tcod
 
 
 class BasicMonster:
-    def take_turn(self, target, fov_map, game_map, entities):
+    def take_turn(self, game, fov_map):
+        target = game.player
+        game_map = game.map
+        entities = game.entities
+
         results = []
 
         monster = self.owner
@@ -16,7 +20,7 @@ class BasicMonster:
                 available_skills = monster.fighter.available_skills()
                 if available_skills:
                     skill = choice(available_skills)
-                    skill_results = skill.execute()
+                    skill_results = skill.execute(game)
                     return results.extend(skill_results)
 
             if monster.distance_to_ent(target) >= 2:

@@ -198,7 +198,7 @@ def game_loop(game, fov_map):
             move_order = sorted(entities, key=lambda i: i.distance_to_ent(player))
             for entity in move_order:
                 if entity.ai:
-                    enemy_turn_results = entity.ai.take_turn(player, fov_map, game_map, entities)
+                    enemy_turn_results = entity.ai.take_turn(game, fov_map)
 
                     for enemy_turn_result in enemy_turn_results:
                         message = enemy_turn_result.get('message')
