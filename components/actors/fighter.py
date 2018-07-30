@@ -10,11 +10,12 @@ from rendering.render_order import RenderOrder
 
 
 class Fighter:
-    def __init__(self, hp, defense, power):
+    def __init__(self, hp, defense, power, vision):
         self.max_hp = hp
         self.hp = hp
         self.defense = defense
         self.power = power
+        self.vision = vision
 
     def take_damage(self, amount):
         results = []

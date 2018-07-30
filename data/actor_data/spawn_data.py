@@ -40,7 +40,7 @@ spawn_data = {
         'max_hp': (8,15),
         'nat_armor': (0,2),
         'nat_power': (3,6),
-        'vision': 4,
+        'nat_vision': 8,
         'ai': 'BasicMonster()',
         'barks': ('humanoid', 'orcs'),
         'loadouts': {

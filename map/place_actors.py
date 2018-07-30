@@ -21,9 +21,10 @@ def gen_ent_from_dict(dict, entry, x, y):
         hp = randint(*data['max_hp'])
         defense = randint(*data['nat_armor'])
         power = randint(*data['nat_power'])
+        vision = data['nat_vision']
         ai = data['ai']
 
-        fighter_component = Fighter(hp, defense, power)
+        fighter_component = Fighter(hp, defense, power, vision)
         ai_component = eval(f'{ai}') # Dynamically generate the AI-class
 
         # create the arguments tuple out of the values we've got so far

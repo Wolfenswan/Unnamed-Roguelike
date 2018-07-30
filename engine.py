@@ -85,7 +85,6 @@ def game_loop(game, fov_map):
 
             elif rest:
                 player_turn_results.append({'message': Message(f'You wait.'),'resting': True})
-                game.state = GameStates.PLAYER_RESTING
 
             elif pickup:
                 for entity in entities:
@@ -171,10 +170,6 @@ def game_loop(game, fov_map):
             if item_dropped:
                 entities.append(item_dropped)
 
-            if resting:
-                # TODO Reveal explored parts of map if no enemies are around
-                pass
-
             # Enable enemy turn if at least one of the results is valid
             filtered_enemy_turn_conditions = list(filter(lambda x: x != None, enemy_turn_on))
             if len(filtered_enemy_turn_conditions) > 0:
@@ -188,8 +183,14 @@ def game_loop(game, fov_map):
 
             if targeting_cancelled:
                 game.state = previous_game_state
-
                 message_log.add_message(Message('Targeting cancelled'))
+
+            if resting:
+                nearby_enemies = player.enemies_in_distance(game.entities, dist = player.vision)
+                if len(nearby_enemies) > 0:
+                    game.state = GameStates.ENEMY_TURN
+                else:
+                    game.state = GameStates.PLAYER_RESTING
 
         # Enemies take turns #
         if game.state == GameStates.ENEMY_TURN:

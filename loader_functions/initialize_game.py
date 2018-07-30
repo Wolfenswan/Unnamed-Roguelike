@@ -17,7 +17,7 @@ def initialize_game(debug=False):
     game = Game(debug=debug)
 
     # Setup the Player character #
-    fighter_component = Fighter(hp=30, defense=2, power=5)
+    fighter_component = Fighter(hp=30, defense=2, power=5, vision=cfg.FOV_RADIUS)
     inventory_component = Inventory(26)
     player = Player('Player', fighter=fighter_component, inventory=inventory_component)
 
