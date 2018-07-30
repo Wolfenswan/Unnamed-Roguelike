@@ -13,13 +13,13 @@ class Skill:
     def execute(self, game):
         actor = self.owner.owner
         logging.debug(f'Special attack for {actor}. Cooldown {self.cooldown} of {self.cooldown_length}')
-        results = self.on_activate(game, actor)
+        results = self.on_activate(actor)
         self.cooldown = 0
         return results
 
-    def is_available(self):
+    def is_available(self, game):
         monster = self.owner.owner
-        return self.cooldown >= self.cooldown_length and self.activate_condition(monster)
+        return self.cooldown >= self.cooldown_length and self.activate_condition(game, monster)
 
 
 def skill_charge_activation(ent):
@@ -28,7 +28,8 @@ def skill_charge_activation(ent):
     return results
 
 def skill_charge_condition(game, actor):
-    if ent.distance_to(player) < 6:
+    player = game.player
+    if actor.distance_to_ent(player) < 6:
         print('T')
         return True
     else:

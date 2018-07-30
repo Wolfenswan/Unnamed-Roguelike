@@ -53,8 +53,8 @@ class Fighter:
 
         return results
 
-    def available_skills(self):
-        available_skills = [skill for skill in self.skills if skill.is_available()]
+    def available_skills(self, game):
+        available_skills = [skill for skill in self.skills if skill.is_available(game)]
         return available_skills
 
     def cooldown_skills(self, reset=False):

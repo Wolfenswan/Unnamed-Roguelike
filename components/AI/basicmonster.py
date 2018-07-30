@@ -17,11 +17,12 @@ class BasicMonster:
             if monster.fighter.skills:
                 monster.fighter.cooldown_skills()
                 # TODO Use cooldown amount exceeding cooldown length to prioritze unused skills
-                available_skills = monster.fighter.available_skills()
+                available_skills = monster.fighter.available_skills(game)
                 if available_skills:
                     skill = choice(available_skills)
                     skill_results = skill.execute(game)
-                    return results.extend(skill_results)
+                    results.extend(skill_results)
+                    return results
 
             if monster.distance_to_ent(target) >= 2:
                 monster.move_astar(target, entities, game_map)
