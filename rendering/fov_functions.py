@@ -24,6 +24,10 @@ def recompute_fov(fov_map, x, y):
     tcod.map_compute_fov(fov_map, x, y, radius, light_walls, algorithm)
 
 
+def pos_is_visible(fov_map, x, y):
+    return tcod.map_is_in_fov(fov_map, x, y)
+
+
 def darken_color_by_fov_distance(ent, color, x, y, randomness = 0):
     """
     Darkens the given color by distance between given entity and x,y coordinates

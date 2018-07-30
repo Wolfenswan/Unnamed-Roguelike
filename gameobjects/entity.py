@@ -1,5 +1,6 @@
 import math
 
+from rendering.fov_functions import pos_is_visible
 from rendering.render_order import RenderOrder
 
 
@@ -49,6 +50,10 @@ class Entity:
 
     def same_pos_as(self, other):
         return (self.x, self.y) == (other.x, other.y)
+
+
+    def can_see_ent(self, fov_map, other):
+        return pos_is_visible(fov_map, other.x, other.y)
 
 
 def get_blocking_entities_at_location(entities, destination_x, destination_y):

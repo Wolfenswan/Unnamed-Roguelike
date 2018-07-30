@@ -7,7 +7,7 @@ from config_files import cfg as cfg, colors
 from game import GameStates
 from gui.menu import inventory_menu
 from rendering.common_functions import get_names_under_mouse, draw_console_borders
-from rendering.fov_functions import darken_color_by_fov_distance, recompute_fov
+from rendering.fov_functions import darken_color_by_fov_distance, recompute_fov, pos_is_visible
 from rendering.render_panels import render_bar
 
 
@@ -98,7 +98,7 @@ def render_map_centered_on_player(game, con, fov_map, debug=False):
 
 def draw_tile(game, con, fov_map, tile_x, tile_y, screen_x, screen_y, debug=False):
     tile = game.map.tiles[tile_x][tile_y]
-    visible = tcod.map_is_in_fov(fov_map, tile_x, tile_y) or debug
+    visible = pos_is_visible(fov_map, tile_x, tile_y) #tcod.map_is_in_fov(fov_map, tile_x, tile_y) or debug
     wall = tile.block_sight and not tile.walkable
 
     fg_color = darken_color_by_fov_distance(game.player, colors.light_fov, tile_x, tile_y, randomness = 0)
@@ -152,16 +152,3 @@ def pos_on_screen(x, y, player):
     y = max(cfg.MAP_SCREEN_HEIGHT // 2 + (y - player.y), 0)
 
     return x, y
-
-
-def is_visible_tile(x, y):
-    """ a helper function to determine whether a tile is in within the game's playing field """
-
-    if x >= game_map.width or x < 0:
-        return False
-    elif y >= game_map.height or y < 0:
-        return False
-    elif not game_map.tiles[x][y].block_sight:
-        return True
-    else:
-        return False

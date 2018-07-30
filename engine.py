@@ -186,8 +186,8 @@ def game_loop(game, fov_map):
                 message_log.add_message(Message('Targeting cancelled'))
 
             if resting:
-                nearby_enemies = player.enemies_in_distance(game.entities, dist = player.vision)
-                if len(nearby_enemies) > 0:
+                visible_enemies = player.visible_enemies(entities, fov_map)
+                if len(visible_enemies) > 0:
                     game.state = GameStates.ENEMY_TURN
                 else:
                     game.state = GameStates.PLAYER_RESTING

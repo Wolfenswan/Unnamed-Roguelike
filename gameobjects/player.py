@@ -11,7 +11,14 @@ class Player(Entity):
 
         super().__init__(0, 0, '@', tcod.white, name, "You.", is_player=True, blocks=True, render_order=RenderOrder.PLAYER, fighter=fighter, inventory=inventory)
 
+
     def enemies_in_distance(self, entities, dist=2):
         """ returns nearby monsters in given distance """
-        enemies_in_distance = [ent for ent in entities if ent.distance_to(self) <= dist and ent != self]
+        enemies_in_distance = [ent for ent in entities if self.distance_to_ent(ent) <= dist and ent != self and ent.fighter is not None]
         return enemies_in_distance
+
+
+    def visible_enemies(self, entities, fov_map):
+        enemies_in_distance = self.enemies_in_distance(entities, dist=self.fighter.vision)
+        visible_enemies = [ent for ent in enemies_in_distance if self.can_see_ent(fov_map, ent) and ent != self and ent.fighter is not None]
+        return visible_enemies
