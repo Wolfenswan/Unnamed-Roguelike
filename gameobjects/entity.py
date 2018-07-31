@@ -3,7 +3,6 @@ from enum import Enum, auto
 
 import tcod
 
-from config_files import colors
 from rendering.render_order import RenderOrder
 
 
@@ -18,6 +17,38 @@ class Entity:
     A generic object to represent players, enemies, items, etc.
     """
     def __init__(self, x, y, char, color, name, descr=None, is_player = False, blocks=False, render_order=RenderOrder.CORPSE, fighter=None, ai=None, skills=None, item=None, inventory=None):
+        """
+
+        :param x: pos x
+        :type x: int
+        :param y: pos y
+        :type y: int
+        :param char: ascii character
+        :type char: str
+        :param color: color
+        :type color: tuple
+        :param name: entity name
+        :type name: str
+        :param descr: entity description
+        :type descr: str
+        :param is_player: is_player flag
+        :type is_player: bool
+        :param blocks: blocks flag
+        :type blocks: bool
+        :param render_order:
+        :type render_order: RenderOrder
+        :param fighter:
+        :type fighter:
+        :param ai:
+        :type ai:
+        :param skills:
+        :type skills:
+        :param item:
+        :type item:
+        :param inventory:
+        :type inventory:
+
+        """
         self.state = EntityStates.ENTITY_ACTIVE
         self.x = x
         self.y = y
@@ -85,5 +116,4 @@ def get_blocking_entities_at_location(entities, destination_x, destination_y):
     for entity in entities:
         if entity.blocks and entity.x == destination_x and entity.y == destination_y:
             return entity
-
     return None

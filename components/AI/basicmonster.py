@@ -2,7 +2,6 @@ from random import randint, choice
 
 import tcod
 
-from config_files import colors
 from gameobjects.entity import EntityStates
 
 
@@ -16,19 +15,24 @@ class BasicMonster:
 
         monster = self.owner
 
+        # If monster is unable to move, reduce their turn delay
         if monster.state in [EntityStates.ENTITY_STUNNED, EntityStates.ENTITY_WAITING]:
             monster.delay_turns -= 1
 
+        # If monster is not delaying, being turn evaluation #
         if monster.delay_turns == 0:
             monster.state = EntityStates.ENTITY_ACTIVE
-            monster.color_bg = colors.black
+            monster.color_bg = None # some special attacks modify a character's background color, this resets it
 
+            # Check if monster is set to execute a skill after the delay #
             if monster.execute_after_delay is not None:
                 skill_results = eval(monster.execute_after_delay)
                 results.extend(skill_results)
                 monster.execute_after_delay = None
 
             elif tcod.map_is_in_fov(fov_map, monster.x, monster.y):
+
+                # Consider using a skill #
                 if monster.skills:
                     monster.cooldown_skills() # Currently skills do not cool down if a monster is already stunned or waiting.
                     available_skills = monster.available_skills(game)
