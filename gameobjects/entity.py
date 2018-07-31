@@ -56,7 +56,7 @@ class Entity:
         self.color = color
         self.color_bg = None
         self.name = name
-        self.descr = descr
+        self.descr = "This one needs an description."
         self.is_player = is_player
         self.blocks = blocks
         self.render_order = render_order

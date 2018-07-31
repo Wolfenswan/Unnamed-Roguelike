@@ -1,17 +1,15 @@
 import tcod
 
 from game import GameStates
-from gameobjects.entity import get_blocking_entities_at_location
-from gui.menus import inventory_menu
-from gui.messages import Message, MessageType
-from input.handle_input import handle_keys, handle_mouse
-from input.process_input import process_input
+from gui.messages import Message
+from turn_processing.handle_input import handle_keys, handle_mouse
+from turn_processing.process_player_actions import process_player_input
 from loader_functions.initialize_game import initialize_game
 from loader_functions.initialize_logging import initialize_logging
 from loader_functions.initialize_window import initialize_window
 from rendering.fov_functions import initialize_fov, recompute_fov
-from rendering.render_main import clear_all, render_all
-from rendering.common_functions import pos_on_screen
+from rendering.render_main import clear_all, render_main_screen, render_windows, render_panels
+from turn_processing.process_turn_results import process_turn_results
 
 
 def game_loop(game, fov_map):
@@ -24,6 +22,7 @@ def game_loop(game, fov_map):
     game.previous_state = game.state
 
     targeting_item = None
+    selected_item = None
 
     fov_recompute = True
 
@@ -36,10 +35,11 @@ def game_loop(game, fov_map):
 
         if fov_recompute:
             recompute_fov(fov_map, player.x, player.y)
+            fov_recompute = False
 
-        render_all(game, fov_map, mouse)
-
-        fov_recompute = False
+        render_main_screen(game, fov_map, mouse)
+        render_panels(game, fov_map, mouse)
+        render_windows(game, selected_item)
 
         tcod.console_flush()
 
@@ -50,59 +50,18 @@ def game_loop(game, fov_map):
         action = handle_keys(key, game.state)
         mouse_action = handle_mouse(mouse)
 
-        game.player_turn_results = process_input(action, mouse_action, fov_map, game, targeting_item = targeting_item)
+        player_turn_results = process_player_input(action, mouse_action, game, fov_map, targeting_item = targeting_item, selected_item_ent = selected_item)
 
-        # Results of Player actions #
-        for player_turn_result in game.player_turn_results:
-            message = player_turn_result.get('message')
-            item_added = player_turn_result.get('item_added')
-            item_consumed = player_turn_result.get('consumed')
-            item_dropped = player_turn_result.get('item_dropped')
-            dead_entity = player_turn_result.get('dead')
-            targeting_item = player_turn_result.get('targeting')
-            targeting_cancelled = player_turn_result.get('targeting_cancelled')
-            resting = player_turn_result.get('resting')
+        # Player turn results is None if the game should exit #
+        if player_turn_results is None:
+            return True
 
-            # List of results that activate the enemy's turn #
-            enemy_turn_on = [item_added, item_dropped, item_consumed]
+        processed_turn_results = process_turn_results(player_turn_results, game, fov_map)
 
-            if message:
-                message_log.add_message(message)
-
-            if dead_entity:
-                message = dead_entity.fighter.death(game.map)
-                if dead_entity.is_player:
-                    game.state = GameStates.PLAYER_DEAD
-
-                message_log.add_message(message)
-
-            if item_added:
-                entities.remove(item_added)
-
-            if item_dropped:
-                entities.append(item_dropped)
-
-            # Enable enemy turn if at least one of the results is valid
-            filtered_enemy_turn_conditions = list(filter(lambda x: x is not None, enemy_turn_on))
-            if len(filtered_enemy_turn_conditions) > 0:
-                game.state = GameStates.ENEMY_TURN
-
-            if targeting_item:
-                game.previous_state = GameStates.PLAYERS_TURN
-                game.state = GameStates.TARGETING
-
-                #message_log.add_message(targeting_item.item.useable.on_use_msg)
-
-            if targeting_cancelled:
-                game.state = game.previous_state
-                message_log.add_message(Message('Targeting cancelled'))
-
-            if resting:
-                visible_enemies = player.visible_enemies(entities, fov_map)
-                if len(visible_enemies) > 0:
-                    game.state = GameStates.ENEMY_TURN
-                else:
-                    game.state = GameStates.PLAYER_RESTING
+        for turn_result in processed_turn_results:
+            fov_recompute = turn_result.get('fov_recompute', False)
+            targeting_item = turn_result.get('targeting_item', None)
+            selected_item = turn_result.get('selected_item', None)
 
         # Enemies take turns #
         if game.state == GameStates.ENEMY_TURN:

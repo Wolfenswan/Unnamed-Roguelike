@@ -8,7 +8,7 @@ class Inventory:
         self.capacity = capacity
         self.items = []
 
-    def add_item(self, item):
+    def add(self, item):
         results = []
 
         if len(self.items) >= self.capacity:
@@ -26,14 +26,6 @@ class Inventory:
 
         return results
 
-    def remove_from_inv(self, item):
-        """ removes an item from the player main inventory or any quick use slots """
-        if item in self.items:
-            self.items.remove(item)
-
-    def is_full(self):
-        return True if len(self.items) == self.capacity else False
-
     def use(self, item_entity, **kwargs):
         results = []
 
@@ -50,27 +42,40 @@ class Inventory:
 
                 for item_use_result in item_use_results:
                     if item_use_result.get('consumed'):
-                        self.remove_item(item_entity)
+                        self.remove_from_inv(item_entity)
 
                 results.extend(item_use_results)
 
         return results
 
-    def remove_item(self, item):
-        self.items.remove(item)
-
-    def drop_item(self, item):
+    def drop(self, item):
         results = []
 
         item.x, item.y = self.owner.x, self.owner.y
 
-        self.remove_item(item)
+        self.remove_from_inv(item)
         results.append({'item_dropped': item, 'message': Message(f'You dropped the {item.name}')})
 
         return results
 
-    def equip_item(self):
-        pass
+    def equip(self, item):
+        results = []
 
-    def dequip_item(self):
-        pass
+        results.append({'item_equipped': item, 'message': Message(f'You equip the {item.name}')})
+
+        return results
+
+    def dequip(self, item):
+        results = []
+
+        results.append({'item_dequipped': item, 'message': Message(f'You remove the {item.name}')})
+
+        return results
+
+    def remove_from_inv(self, item):
+        """ removes an item from the player main inventory or any quick use slots """
+        if item in self.items:
+            self.items.remove(item)
+
+    def is_full(self):
+        return True if len(self.items) == self.capacity else False

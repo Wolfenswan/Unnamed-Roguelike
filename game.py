@@ -8,6 +8,7 @@ class GameStates(Enum):
     EQUIPMENT_ACTIVE = auto()
     SHOW_INVENTORY = auto()
     DROP_INVENTORY = auto()
+    SHOW_ITEM = auto()
     ENEMY_TURN = auto()
     TARGETING = auto()
     PLAYER_DEAD = auto()

@@ -2,13 +2,13 @@ import tcod
 
 from config_files import cfg as cfg, colors
 from game import GameStates
-from gui.menus import inventory_menu
+from gui.menus import inventory_menu, item_menu
 from rendering.common_functions import get_names_under_mouse, draw_console_borders, pos_on_screen
 from rendering.fov_functions import darken_color_by_fov_distance
-from rendering.render_panels import render_bar
+from rendering.draw_panels import draw_bar
 
 
-def render_all(game, fov_map, mouse, debug=False):
+def render_main_screen(game, fov_map, mouse, debug=False):
     screen_width = cfg.SCREEN_WIDTH
     screen_height = cfg.SCREEN_HEIGHT
     bar_width = 20 # TODO use cfg.file
@@ -35,6 +35,19 @@ def render_all(game, fov_map, mouse, debug=False):
     draw_console_borders(con, height=cfg.MAP_SCREEN_HEIGHT, color=colors.white)
     tcod.console_blit(con, 0, 0, screen_width, screen_height, 0, 0, 0)
 
+
+def render_panels(game, fov_map, mouse):
+    screen_width = cfg.SCREEN_WIDTH
+    screen_height = cfg.SCREEN_HEIGHT
+    bar_width = 20  # TODO use cfg.file
+    panel_height = cfg.BOTTOM_PANEL_HEIGHT
+    panel_y = cfg.BOTTOM_PANEL_Y
+
+    player = game.player
+    entities = game.entities
+    bottom_panel = game.bottom_panel
+    message_log = game.message_log
+
     tcod.console_set_default_background(bottom_panel, tcod.black)
     tcod.console_clear(bottom_panel)
 
@@ -50,22 +63,23 @@ def render_all(game, fov_map, mouse, debug=False):
                           get_names_under_mouse(mouse, entities, fov_map))
 
     # HP Bar #
-    render_bar(bottom_panel, 1, 1, bar_width, 'HP', player.fighter.hp, player.fighter.max_hp,
-               tcod.light_red, tcod.darker_red)
+    draw_bar(bottom_panel, 1, 1, bar_width, 'HP', player.fighter.hp, player.fighter.max_hp,
+             tcod.light_red, tcod.darker_red)
 
     draw_console_borders(bottom_panel, height=cfg.BOTTOM_PANEL_HEIGHT, color=colors.white)
     tcod.console_blit(bottom_panel, 0, 0, screen_width, panel_height, 0, 0, panel_y)
 
     tcod.console_print_frame(bottom_panel, 0, 0, screen_width, panel_height)
 
-    # Render windows #
-    if game.state in (GameStates.SHOW_INVENTORY, GameStates.DROP_INVENTORY):
-        if game.state == GameStates.SHOW_INVENTORY:
-            header = 'Press the key next to an item to use it, or Esc to cancel.\n'
-        else:
-            header = 'Press the key next to an item to drop it, or Esc to cancel.\n'
 
-        inventory_menu('Inventory', header, game)
+def render_windows(game, selected_item):
+    # Function to render all temporary windows & popup screens #
+    if game.state in (GameStates.SHOW_INVENTORY, GameStates.DROP_INVENTORY):
+        inventory_menu(game)
+
+    if game.state == GameStates.SHOW_ITEM and selected_item is not None:
+        item_menu(selected_item, game)
+
 
 def render_map(game, con, fov_map, debug=False):
     """ Obsolete rendering function """
@@ -143,5 +157,3 @@ def clear_entity(con, entity):
 def clear_all(con, entities):
     for entity in entities:
         clear_entity(con, entity)
-
-
