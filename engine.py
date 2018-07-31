@@ -2,24 +2,26 @@ import tcod
 
 from game import GameStates
 from gameobjects.entity import get_blocking_entities_at_location
+from gui.menus import inventory_menu
 from gui.messages import Message, MessageType
 from input.handle_input import handle_keys, handle_mouse
+from input.process_input import process_input
 from loader_functions.initialize_game import initialize_game
 from loader_functions.initialize_logging import initialize_logging
 from loader_functions.initialize_window import initialize_window
 from rendering.fov_functions import initialize_fov, recompute_fov
-from rendering.render_main import clear_all, render_all, pos_on_screen
+from rendering.render_main import clear_all, render_all
+from rendering.common_functions import pos_on_screen
 
 
 def game_loop(game, fov_map):
     player = game.player
     entities = game.entities
-    game_map = game.map
     con = game.con
     message_log = game.message_log
 
     game.state = GameStates.PLAYERS_TURN
-    previous_game_state = game.state
+    game.previous_state = game.state
 
     targeting_item = None
 
@@ -48,104 +50,10 @@ def game_loop(game, fov_map):
         action = handle_keys(key, game.state)
         mouse_action = handle_mouse(mouse)
 
-        exit = action.get('exit')
-        fullscreen = action.get('fullscreen')
-        move = action.get('move')
-        rest = action.get('rest')
-        pickup = action.get('pickup')
-        show_inventory = action.get('show_inventory')
-        drop_inventory = action.get('drop_inventory')
-        inventory_index = action.get('inventory_index')
-
-        left_click = mouse_action.get('left_click')
-        right_click = mouse_action.get('right_click')
-
-        player_turn_results = []
-
-        # Player moves #
-        active_player_states = [GameStates.PLAYERS_TURN, GameStates.PLAYER_RESTING]
-        if game.state in active_player_states:
-            if move:
-                dx, dy = move
-                destination_x = player.x + dx
-                destination_y = player.y + dy
-
-                if not game_map.is_blocked(destination_x, destination_y):
-                    target = get_blocking_entities_at_location(entities, destination_x, destination_y)
-
-                    if target:
-                        attack_results = player.fighter.attack(target)
-                        player_turn_results.extend(attack_results)
-                    else:
-                        player.move(dx, dy)
-
-                        fov_recompute = True
-
-                    game.state = GameStates.ENEMY_TURN
-
-            elif rest:
-                #player_turn_results.append({'message': Message(f'You wait.'), 'resting': True})
-                player_turn_results.append({'resting': True})
-
-            elif pickup:
-                for entity in entities:
-                    if entity.item and entity.same_pos_as(player):
-                        pickup_results = player.inventory.add_item(entity)
-                        player_turn_results.extend(pickup_results)
-
-                        break
-                else:
-                    message_log.add_message(
-                        Message('There is nothing here to pick up.', msg_type=MessageType.INFO_GENERIC))
-
-        # Inventory display #
-        if show_inventory:
-            if len(player.inventory.items) > 0:
-                previous_game_state = game.state
-                game.state = GameStates.SHOW_INVENTORY
-            else:
-                message_log.add_message(Message('Your inventory is empty.'))
-
-        # Dropping items #
-        if drop_inventory:
-            previous_game_state = game.state
-            game.state = GameStates.DROP_INVENTORY
-
-        # Item usage #
-        if inventory_index is not None and previous_game_state != GameStates.PLAYER_DEAD and inventory_index <= len(
-                player.inventory.items):
-            item = player.inventory.items[inventory_index]
-
-            if game.state == GameStates.SHOW_INVENTORY:
-                player_turn_results.extend(player.inventory.use(item, entities=entities, fov_map=fov_map))
-            elif game.state == GameStates.DROP_INVENTORY:
-                player_turn_results.extend(player.inventory.drop_item(item))
-
-        # Targeting #
-        # TODO broken at the moment - replace with keyboard controlled cursor
-        if game.state == GameStates.TARGETING:
-            if left_click:
-                target_x, target_y = left_click
-                print(left_click, game.player.x, game.player.y)
-                item_use_results = player.inventory.use(targeting_item, entities=entities, fov_map=fov_map,
-                                                        target_x=target_x, target_y=target_y)
-                player_turn_results.extend(item_use_results)
-            elif right_click:
-                player_turn_results.append({'targeting_cancelled': True})
-
-        if exit:
-            if game.state in (GameStates.SHOW_INVENTORY, GameStates.DROP_INVENTORY):
-                game.state = previous_game_state
-            elif game.state == GameStates.TARGETING:
-                player_turn_results.append({'targeting_cancelled': True})
-            else:
-                return True
-
-        if fullscreen:
-            tcod.console_set_fullscreen(not tcod.console_is_fullscreen())
+        game.player_turn_results = process_input(action, mouse_action, fov_map, game, targeting_item = targeting_item)
 
         # Results of Player actions #
-        for player_turn_result in player_turn_results:
+        for player_turn_result in game.player_turn_results:
             message = player_turn_result.get('message')
             item_added = player_turn_result.get('item_added')
             item_consumed = player_turn_result.get('consumed')
@@ -180,13 +88,13 @@ def game_loop(game, fov_map):
                 game.state = GameStates.ENEMY_TURN
 
             if targeting_item:
-                previous_game_state = GameStates.PLAYERS_TURN
+                game.previous_state = GameStates.PLAYERS_TURN
                 game.state = GameStates.TARGETING
 
                 #message_log.add_message(targeting_item.item.useable.on_use_msg)
 
             if targeting_cancelled:
-                game.state = previous_game_state
+                game.state = game.previous_state
                 message_log.add_message(Message('Targeting cancelled'))
 
             if resting:

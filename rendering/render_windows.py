@@ -4,8 +4,21 @@ import textwrap
 import tcod
 
 from config_files import cfg, colors
+from game import GameStates
 from rendering.common_functions import center_x_for_text, draw_console_borders
 
+
+def draw_window(window, caption, window_x, window_y, width, height, show_cancel_option):
+    draw_console_borders(window, color=colors.white)
+    tcod.console_print(window, 2, 0, caption)
+
+    if show_cancel_option:
+        #tcod.console_print(window, 0, height - 1, '<ESC TO CANCEL>')
+        string = '<ESC TO CANCEL>'
+        x = center_x_for_text(width, '<ESC TO CANCEL>')
+        tcod.console_print(window, x, height - 1, string)
+
+    tcod.console_blit(window, 0, 0, width, height, 0, window_x, window_y, 1, 0.7)
 
 def draw_options_window(caption, header, options, window_x = None, window_y = None, sort_by = 'letter', show_cancel_option=True, forced_width=None):
     padding_x = 5
@@ -52,13 +65,42 @@ def draw_options_window(caption, header, options, window_x = None, window_y = No
             line = option
         tcod.console_print(window, 1, i + y, line)
 
-    draw_console_borders(window, color=colors.white)
-    tcod.console_print(window, 2, 0, caption)
+    draw_window(window, caption, window_x, window_y, width, height, show_cancel_option)
 
-    if show_cancel_option:
-        #tcod.console_print(window, 0, height - 1, '<ESC TO CANCEL>')
-        string = '<ESC TO CANCEL>'
-        x = center_x_for_text(width, '<ESC TO CANCEL>')
-        tcod.console_print(window, x, height - 1, string)
+def draw_item_window(item, px, py, width, height):
+    """ draws a window containing an item's description and related options """
 
-    tcod.console_blit(window, 0, 0, width, height, 0, window_x, window_y, 1, 0.7)
+    window = tdl.Window(gv.root, px, py, width, height)
+    window.caption = item.name
+    window.border_color = settings.PANELS_BORDER_COLOR_ACTIVE
+    setup_panel(window)
+
+    y = 2
+    lines = draw_wrapped_text(window, item.description, window.width-2, o_y = y)
+    y += lines + 2
+
+    if getattr(item,'weight',0):
+        lines = draw_wrapped_text(window, 'It is {0}.'.format(item.get_weight_as_string()), window.width-2, o_y=y)
+        y += lines + 2
+
+    if getattr(item,'slots',0):
+        lines = draw_wrapped_text(window, 'It has {0} pockets for quick access.'.format(item.slots), window.width-2, o_y=y)
+        y += lines + 2
+
+    if hasattr(item, 'on_use'):
+        window.draw_str(2, y, '(u)se?', bg=None, fg=colors.white)
+        y += 2
+
+        window.draw_str(2, y, '(p)repare?', bg=None, fg=colors.white)
+        y += 2
+
+    if hasattr(item, 'e_to'):
+        if item not in gv.player.paperdoll.equipped_items:
+            window.draw_str(2, y, '(e)quip?', bg=None, fg=colors.white)
+        else:
+            window.draw_str(2, y, '(r)emove?', bg=None, fg=colors.white)
+        y += 2
+
+    window.draw_str(2, y, '(d)rop?', bg=None, fg=colors.white)
+    y += 2
+    window.draw_str(center_x_for_text(window, '<ESC TO CANCEL>'), y, '<ESC TO CANCEL>')

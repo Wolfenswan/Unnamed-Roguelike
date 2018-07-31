@@ -1,6 +1,6 @@
 import tcod
 
-from config_files import colors
+from config_files import colors, cfg as cfg
 
 
 def center_x_for_text(width, text, padding=0):
@@ -40,3 +40,15 @@ def draw_console_borders(con, width=None, height=None, color=colors.dark_grey):
     tcod.console_put_char(con, width - 1, 0, 191)
     tcod.console_put_char(con, 0, height - 1, 192)
     tcod.console_put_char(con, width - 1, height - 1, 217)
+
+
+def pos_on_screen(x, y, player):
+    """
+    Returns coordinate on the visible screen, in relation to the player
+
+    """
+
+    x = max(cfg.MAP_SCREEN_WIDTH // 2 + (x - player.x), 0)
+    y = max(cfg.MAP_SCREEN_HEIGHT // 2 + (y - player.y), 0)
+
+    return x, y

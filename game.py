@@ -15,11 +15,15 @@ class GameStates(Enum):
 class Game:
     def __init__(self, debug=False):
         self.debug = debug
-        self.state = None
         self.map = None
         self.dlvl = 1
         self.player = None
         self.entities = None
+
+        # Turn Processing #
+        self.state = None
+        self.previous_state = None
+        self.player_turn_results = []
 
         # GUI #
         self.con = None

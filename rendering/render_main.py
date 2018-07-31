@@ -1,12 +1,9 @@
-import logging
-
 import tcod
-import tdl
 
 from config_files import cfg as cfg, colors
 from game import GameStates
-from gui.menu import inventory_menu
-from rendering.common_functions import get_names_under_mouse, draw_console_borders
+from gui.menus import inventory_menu
+from rendering.common_functions import get_names_under_mouse, draw_console_borders, pos_on_screen
 from rendering.fov_functions import darken_color_by_fov_distance
 from rendering.render_panels import render_bar
 
@@ -61,14 +58,14 @@ def render_all(game, fov_map, mouse, debug=False):
 
     tcod.console_print_frame(bottom_panel, 0, 0, screen_width, panel_height)
 
-    # Render inventory window #
+    # Render windows #
     if game.state in (GameStates.SHOW_INVENTORY, GameStates.DROP_INVENTORY):
         if game.state == GameStates.SHOW_INVENTORY:
             header = 'Press the key next to an item to use it, or Esc to cancel.\n'
         else:
             header = 'Press the key next to an item to drop it, or Esc to cancel.\n'
 
-        inventory_menu('Inventory', header, player.inventory, player.x, player.y)
+        inventory_menu('Inventory', header, game)
 
 def render_map(game, con, fov_map, debug=False):
     """ Obsolete rendering function """
@@ -148,13 +145,3 @@ def clear_all(con, entities):
         clear_entity(con, entity)
 
 
-def pos_on_screen(x, y, player):
-    """
-    Returns coordinate on the visible screen, in relation to the player
-
-    """
-
-    x = max(cfg.MAP_SCREEN_WIDTH // 2 + (x - player.x), 0)
-    y = max(cfg.MAP_SCREEN_HEIGHT // 2 + (y - player.y), 0)
-
-    return x, y
