@@ -4,7 +4,7 @@ import tcod
 
 from config_files import colors
 
-GAME_NAME = 'VermintideRL'
+GAME_NAME = 'RoguelikeTutReloaded'
 
 # Console
 SCREEN_WIDTH = 120

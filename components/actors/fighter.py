@@ -9,17 +9,13 @@ from rendering.render_order import RenderOrder
 
 
 class Fighter:
-    def __init__(self, hp, defense, power, vision, skills=None):
+    def __init__(self, hp, defense, power, vision):
         self.max_hp = hp
         self.hp = hp
         self.defense = defense
         self.power = power
         self.vision = vision
-        self.skills = skills
 
-        if self.skills is not None:
-            for skill in skills:
-                skill.owner = self
 
     def take_damage(self, amount):
         results = []
@@ -52,17 +48,6 @@ class Fighter:
                 {'message': Message(f'{self.owner.name.capitalize()} attacks {target.name} but does no damage.')})
 
         return results
-
-    def available_skills(self, game):
-        available_skills = [skill for skill in self.skills if skill.is_available(game)]
-        return available_skills
-
-    def cooldown_skills(self, reset=False):
-        for skill in self.skills:
-            if reset:
-                skill.cooldown = skill.cooldown_length
-            else:
-                skill.cooldown += 1
 
 
     def death(self, map):

@@ -15,7 +15,7 @@ class NPC(Entity):
 
     def __init__(self, x, y, char, color, name, descr, fighter=None, ai=None, inventory=None, skills=None):
 
-        super().__init__(x, y, char, color, name, descr, blocks=True, render_order=RenderOrder.ACTOR, fighter=fighter, ai=ai, inventory=inventory)
+        super().__init__(x, y, char, color, name, descr, blocks=True, render_order=RenderOrder.ACTOR, fighter=fighter, ai=ai, skills=skills, inventory=inventory)
 
 
     def move_towards(self, target_x, target_y, game_map, entities):

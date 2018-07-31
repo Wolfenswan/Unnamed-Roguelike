@@ -124,12 +124,18 @@ def draw_tile(game, con, fov_map, tile_x, tile_y, screen_x, screen_y, debug=Fals
 
 def draw_entity(game, entity, fov_map, debug=False):
     if tcod.map_is_in_fov(fov_map, entity.x, entity.y) or debug:
+        x, y = pos_on_screen(entity.x, entity.y, game.player)
+
+        tcod.console_put_char(game.con, x, y, entity.char)
+
+        # Set the entity colors #
         color = darken_color_by_fov_distance(game.player, entity.color, entity.x, entity.y)
         if debug:
             color = entity.color
-        tcod.console_set_default_foreground(game.con, color)
-        x, y = pos_on_screen(entity.x, entity.y, game.player)
-        tcod.console_put_char(game.con, x, y, entity.char, tcod.BKGND_NONE)
+
+        tcod.console_set_char_foreground(game.con, x, y, color)
+        if entity.color_bg is not None:
+            tcod.console_set_char_background(game.con, x, y, entity.color_bg)
 
 
 def clear_entity(con, entity):

@@ -2,6 +2,9 @@ from random import randint, choice
 
 import tcod
 
+from config_files import colors
+from gameobjects.entity import EntityStates
+
 
 class BasicMonster:
     def take_turn(self, game, fov_map):
@@ -12,29 +15,39 @@ class BasicMonster:
         results = []
 
         monster = self.owner
-        if tcod.map_is_in_fov(fov_map, monster.x, monster.y):
 
-            if monster.fighter.skills:
-                monster.fighter.cooldown_skills()
-                # TODO Use cooldown amount exceeding cooldown length to prioritze unused skills
-                available_skills = monster.fighter.available_skills(game)
-                if available_skills:
-                    skill = choice(available_skills)
-                    skill_results = skill.execute(game)
-                    results.extend(skill_results)
-                    return results
+        if monster.state in [EntityStates.ENTITY_STUNNED, EntityStates.ENTITY_WAITING]:
+            monster.delay_turns -= 1
 
-            if monster.distance_to_ent(target) >= 2:
-                monster.move_astar(target, entities, game_map)
+        if monster.delay_turns == 0:
+            monster.state = EntityStates.ENTITY_ACTIVE
+            monster.color_bg = colors.black
 
-            elif target.fighter.hp > 0:
-                attack_results = monster.fighter.attack(target)
-                results.extend(attack_results)
+            if monster.execute_after_delay is not None:
+                skill_results = eval(monster.execute_after_delay)
+                results.extend(skill_results)
+                monster.execute_after_delay = None
 
-        else:
-            dx, dy = randint(-1,1), randint(-1,1)
-            x, y = monster.x + dx, monster.y + dy
-            if not game_map.is_blocked(x, y):
-                monster.move(dx,dy)
+            elif tcod.map_is_in_fov(fov_map, monster.x, monster.y):
+                if monster.skills:
+                    monster.cooldown_skills() # Currently skills do not cool down if a monster is already stunned or waiting.
+                    available_skills = monster.available_skills(game)
+                    if available_skills:
+                        skill = choice(available_skills)
+                        skill_results = skill.execute(game)
+                        results.extend(skill_results)
+                        return results
+
+                if monster.distance_to_ent(target) >= 2:
+                    monster.move_astar(target, entities, game_map)
+                elif target.fighter.hp > 0:
+                    attack_results = monster.fighter.attack(target)
+                    results.extend(attack_results)
+
+            else:
+                dx, dy = randint(-1,1), randint(-1,1)
+                x, y = monster.x + dx, monster.y + dy
+                if not game_map.is_blocked(x, y):
+                    monster.move(dx,dy)
 
         return results

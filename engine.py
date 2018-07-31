@@ -84,7 +84,8 @@ def game_loop(game, fov_map):
                     game.state = GameStates.ENEMY_TURN
 
             elif rest:
-                player_turn_results.append({'message': Message(f'You wait.'), 'resting': True})
+                #player_turn_results.append({'message': Message(f'You wait.'), 'resting': True})
+                player_turn_results.append({'resting': True})
 
             elif pickup:
                 for entity in entities:

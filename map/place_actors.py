@@ -8,6 +8,7 @@ from data.util_functions import pick_from_data_dict_by_chance
 from components.actors.fighter import Fighter
 from config_files import cfg
 from data.actor_data.spawn_data import spawn_data
+from data.actor_data.skills_data import skills_data
 from gameobjects.npc import NPC
 
 
@@ -24,25 +25,23 @@ def gen_ent_from_dict(dict, entry, x, y):
     ai = data['ai']
     skills = data.get('skills', None)
 
+    fighter_component = Fighter(hp, defense, power, vision)
+    ai_component = ai()
+
     skills_component = None
 
     if skills is not None:
-        skills_component = []
+        skills_component = {}
         for k in skills:
-            skill = Skill(**skills[k])
-            skills_component.append(skill)
-
-    fighter_component = Fighter(hp, defense, power, vision, skills=skills_component)
-    ai_component = ai()
-
+            skill = Skill(**skills_data[k])
+            skills_component[k] = (skill)
 
     # create the arguments tuple out of the values we've got so far
     arguments = (x, y, char, color, name, descr)
-        #logging.error(f'Failed generating item from {data} with error: {err}')
 
     # create the static object using the arguments tuple
     logging.debug(f'Generating {name} with {arguments, fighter_component, ai_component, skills_component}')
-    ent = NPC(*arguments, fighter=fighter_component, ai=ai_component)
+    ent = NPC(*arguments, fighter=fighter_component, ai=ai_component, skills=skills_component)
     return ent
 
 def place_monsters(game):
