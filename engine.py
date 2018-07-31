@@ -8,7 +8,7 @@ from loader_functions.initialize_game import initialize_game
 from loader_functions.initialize_logging import initialize_logging
 from loader_functions.initialize_window import initialize_window
 from rendering.fov_functions import initialize_fov, recompute_fov
-from rendering.render_main import clear_all, render_all
+from rendering.render_main import clear_all, render_all, pos_on_screen
 
 
 def game_loop(game, fov_map):
@@ -121,10 +121,12 @@ def game_loop(game, fov_map):
             elif game.state == GameStates.DROP_INVENTORY:
                 player_turn_results.extend(player.inventory.drop_item(item))
 
+        # Targeting #
+        # TODO broken at the moment - replace with keyboard controlled cursor
         if game.state == GameStates.TARGETING:
             if left_click:
                 target_x, target_y = left_click
-
+                print(left_click, game.player.x, game.player.y)
                 item_use_results = player.inventory.use(targeting_item, entities=entities, fov_map=fov_map,
                                                         target_x=target_x, target_y=target_y)
                 player_turn_results.extend(item_use_results)
@@ -181,7 +183,7 @@ def game_loop(game, fov_map):
                 previous_game_state = GameStates.PLAYERS_TURN
                 game.state = GameStates.TARGETING
 
-                message_log.add_message(targeting_item.item.on_use_msg)
+                #message_log.add_message(targeting_item.item.useable.on_use_msg)
 
             if targeting_cancelled:
                 game.state = previous_game_state

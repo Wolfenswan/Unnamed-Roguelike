@@ -1,18 +1,7 @@
 from random import randint
 
-import tcod
-
-from components.AI.basicmonster import BasicMonster
-from components.actors.fighter import Fighter
-from components.item import Item
-from effects.spells import heal_entity, cast_lightning_on, cast_fireball_on, cast_confuse_on
-from gameobjects.entity import Entity
-from gameobjects.npc import NPC
-from gui.messages import Message
-from map.place_actors import place_monsters
 from map.rectangle import Rect
 from map.tile import Tile
-from rendering.render_order import RenderOrder
 
 class GameMap:
     def __init__(self, width, height):

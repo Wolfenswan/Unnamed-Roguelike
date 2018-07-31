@@ -37,16 +37,16 @@ class Inventory:
     def use(self, item_entity, **kwargs):
         results = []
 
-        item_component = item_entity.item
+        useable_component = item_entity.item.useable
 
-        if item_component.use_function is None:
+        if useable_component.use_function is None:
             results.append({'message': Message(f'The {item_entity.name} cannot be used')})
         else:
-            if item_component.targeting and not (kwargs.get('target_x') or kwargs.get('target_y')):
-                results.append({'targeting': item_entity})
+            if useable_component.targeting and not (kwargs.get('target_x') or kwargs.get('target_y')):
+                results.append({'targeting': item_entity,'message': useable_component.on_use_msg})
             else:
-                kwargs = {**item_component.function_kwargs, **kwargs}
-                item_use_results = item_component.use_function(self.owner, **kwargs)
+                kwargs = {**useable_component.function_kwargs, **kwargs}
+                item_use_results = useable_component.use_function(caster = self.owner, **kwargs)
 
                 for item_use_result in item_use_results:
                     if item_use_result.get('consumed'):
@@ -62,10 +62,15 @@ class Inventory:
     def drop_item(self, item):
         results = []
 
-        item.x = self.owner.x
-        item.y = self.owner.y
+        item.x, item.y = self.owner.x, self.owner.y
 
         self.remove_item(item)
         results.append({'item_dropped': item, 'message': Message(f'You dropped the {item.name}')})
 
         return results
+
+    def equip_item(self):
+        pass
+
+    def dequip_item(self):
+        pass

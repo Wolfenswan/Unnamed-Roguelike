@@ -7,7 +7,7 @@ from gui.messages import Message, MessageType
 
 
 def heal_entity(*args, **kwargs):
-    entity = args[0]
+    entity = kwargs.get('caster')
     amount = kwargs.get('pwr')
 
     if type(amount) is not int:
@@ -23,8 +23,8 @@ def heal_entity(*args, **kwargs):
 
     return results
 
-def cast_lightning_on(*args, **kwargs):
-    caster = args[0]
+def cast_lightning_on(**kwargs):
+    caster = kwargs.get('caster')
     entities = kwargs.get('entities')
     fov_map = kwargs.get('fov_map')
     damage = kwargs.get('damage')
