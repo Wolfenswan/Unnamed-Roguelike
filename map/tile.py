@@ -11,7 +11,7 @@ class Tile:
             block_sight = blocked
 
         self.block_sight = block_sight
-        self.explored = False
+        self.explored = 0
         self.gibbed = gibbed
         self.walkable = False
         self.map = game_map

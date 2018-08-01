@@ -1,3 +1,5 @@
+from random import randint
+
 import tcod
 
 from config_files import cfg as cfg, colors
@@ -123,11 +125,11 @@ def draw_tile(game, con, fov_map, tile_x, tile_y, screen_x, screen_y, debug=Fals
             fg_color = colors.corpse
 
         tcod.console_put_char_ex(con, screen_x, screen_y, char, fg_color, colors.black)
-        tile.explored = True
+        tile.explored = 50
 
-    # TODO move to own function, called by 'resting' result in engine.py
-    elif tile.explored and game.state == GameStates.PLAYER_RESTING:
-
+    elif tile.explored > 0:
+        tile.explored -= randint(0, 1)
+        if game.state == GameStates.PLAYER_RESTING:
             if wall:
                 tcod.console_put_char_ex(con, screen_x, screen_y, '#', colors.dark_wall_fg, colors.dark_ground)
             else:
