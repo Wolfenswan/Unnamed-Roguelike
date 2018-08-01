@@ -9,6 +9,7 @@ from gui.messages import Message, MessageType
 
 def process_player_input(action, mouse_action, game, fov_map, targeting_item = None):
     player = game.player
+    cursor = game.cursor
     entities = game.entities
     game_map = game.map
     message_log = game.message_log
@@ -22,6 +23,7 @@ def process_player_input(action, mouse_action, game, fov_map, targeting_item = N
     show_equipment = action.get('show_equipment')
     # drop_inventory = action.get('drop_inventory')
     # menu_selection = action.get('menu_selection')
+    toggle_look = action.get('toggle_look')
     left_click = mouse_action.get('left_click')
     right_click = mouse_action.get('right_click')
 
@@ -62,6 +64,22 @@ def process_player_input(action, mouse_action, game, fov_map, targeting_item = N
                 message_log.add_message(
                     Message('There is nothing here to pick up.', msg_type=MessageType.INFO_GENERIC))
 
+    # Controlling the cursor #
+    if toggle_look:
+        if game.state == GameStates.CURSOR_ACTIVE:
+            game.state = GameStates.PLAYERS_TURN
+        else:
+            game.state = GameStates.CURSOR_ACTIVE
+            game.cursor.x, game.cursor.y = game.player.x, game.player.y
+
+    if game.state == GameStates.CURSOR_ACTIVE:
+        if move:
+            dx, dy = move
+            destination_x = cursor.x + dx
+            destination_y = cursor.y + dy
+            if tcod.map_is_in_fov(fov_map, destination_x, destination_y):
+                cursor.move(dx, dy)
+
     # Inventory display #
     if show_inventory:
         if len(player.inventory.items) > 0:
@@ -94,26 +112,28 @@ def process_player_input(action, mouse_action, game, fov_map, targeting_item = N
     elif game.state == GameStates.SHOW_EQUIPMENT:
         selected_item_ent = equipment_menu(game)
 
-    if selected_item_ent:
-        item_use_choice = item_menu(selected_item_ent, game)
-        if item_use_choice:
-            if item_use_choice == 'u':
-                item_interaction_result = player.inventory.use(selected_item_ent, entities=entities, fov_map=fov_map)
-                turn_results.extend(item_interaction_result)
-            if item_use_choice == 'e':
-                item_interaction_result = player.paperdoll.equip(selected_item_ent, game)
-                turn_results.extend(item_interaction_result)
-            if item_use_choice == 'r':
-                item_interaction_result = player.paperdoll.dequip(selected_item_ent)
-                turn_results.extend(item_interaction_result)
-            if item_use_choice == 'd':
-                item_interaction_result = player.inventory.drop(selected_item_ent)
-                turn_results.extend(item_interaction_result)
+    if game.state in [GameStates.SHOW_INVENTORY, GameStates.SHOW_EQUIPMENT]:
+        if selected_item_ent:
+            item_use_choice = item_menu(selected_item_ent, game)
+            if item_use_choice:
+                if item_use_choice == 'u':
+                    item_interaction_result = player.inventory.use(selected_item_ent, entities=entities, fov_map=fov_map)
+                    turn_results.extend(item_interaction_result)
+                if item_use_choice == 'e':
+                    item_interaction_result = player.paperdoll.equip(selected_item_ent, game)
+                    turn_results.extend(item_interaction_result)
+                if item_use_choice == 'r':
+                    item_interaction_result = player.paperdoll.dequip(selected_item_ent)
+                    turn_results.extend(item_interaction_result)
+                if item_use_choice == 'd':
+                    item_interaction_result = player.inventory.drop(selected_item_ent)
+                    turn_results.extend(item_interaction_result)
 
+            else:
+                game.state = game.previous_state
         else:
             game.state = game.previous_state
-    else:
-        game.state = game.previous_state
+
     # if game.state == GameStates.SHOW_ITEM:
     #     if menu_selection is not None and game.previous_state != GameStates.PLAYER_DEAD:
     #         if menu_selection in [ord('e'), ord('E')] and selected_item_ent.item.equipment is not None:

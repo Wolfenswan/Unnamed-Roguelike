@@ -3,13 +3,15 @@ from random import randint
 
 from components.actors.fighter import Fighter
 from components.inventory import Inventory
-from config_files import cfg
+from config_files import cfg, colors
 from game import Game
+from gameobjects.entity import Entity
 from gameobjects.player import Player
 from gui.messages import MessageLog
 from map.game_map import GameMap
 from map.place_actors import place_monsters
 from map.place_items import place_items
+from rendering.render_order import RenderOrder
 
 
 def initialize_game(debug=False):
@@ -19,10 +21,10 @@ def initialize_game(debug=False):
     # Setup the Player character #
     fighter_component = Fighter(hp=30, defense=2, power=5, vision=cfg.FOV_RADIUS)
     inventory_component = Inventory(26)
-    player = Player('Player', fighter=fighter_component, inventory=inventory_component)
+    game.player = Player('Player', fighter=fighter_component, inventory=inventory_component)
+    game.cursor = Entity(0, 0, 'X', colors.white, 'Cursor', render_order=RenderOrder.CURSOR)
 
-    game.player = player
-    game.entities = [player]
+    game.entities = [game.player]
 
     # Setup the game map #
     dwidth = randint(cfg.DUNGEON_MIN_WIDTH, cfg.DUNGEON_MAX_WIDTH)

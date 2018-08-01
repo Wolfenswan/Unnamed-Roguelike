@@ -34,6 +34,9 @@ def render_main_screen(game, fov_map, mouse, debug=False):
     for entity in entities_in_render_order:
         draw_entity(game, entity, fov_map, debug=debug)
 
+    if game.state == GameStates.CURSOR_ACTIVE:
+        draw_entity(game, game.cursor, fov_map, debug=debug)
+
     draw_console_borders(con, height=cfg.MAP_SCREEN_HEIGHT, color=colors.white)
     tcod.console_blit(con, 0, 0, screen_width, screen_height, 0, 0, 0)
 
@@ -142,7 +145,10 @@ def draw_entity(game, entity, fov_map, debug=False):
         tcod.console_put_char(game.con, x, y, entity.char)
 
         # Set the entity colors #
-        color = darken_color_by_fov_distance(game.player, entity.color, entity.x, entity.y)
+        if entity is not game.cursor:
+            color = darken_color_by_fov_distance(game.player, entity.color, entity.x, entity.y)
+        else:
+            color = entity.color
         if debug:
             color = entity.color
 

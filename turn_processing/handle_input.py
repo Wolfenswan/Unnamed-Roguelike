@@ -17,7 +17,7 @@ def handle_keys(key, game_state):
         return {'exit': True}
 
     # Game state specific inputs #
-    if game_state in [GameStates.PLAYERS_TURN, GameStates.PLAYER_RESTING]:
+    if game_state in [GameStates.PLAYERS_TURN, GameStates.PLAYER_RESTING, GameStates.CURSOR_ACTIVE]:
         return handle_player_turn_keys(key)
     elif game_state == GameStates.PLAYER_DEAD:
         return handle_player_dead_keys(key)
@@ -38,7 +38,7 @@ def handle_player_turn_keys(key):
         return {'move': (0, 1)}
     elif key.vk == tcod.KEY_LEFT or key_char == 'h' or key.vk == tcod.KEY_KP4:
         return {'move': (-1, 0)}
-    elif key.vk == tcod.KEY_RIGHT or key_char == 'l' or key.vk == tcod.KEY_KP6:
+    elif key.vk == tcod.KEY_RIGHT or key.vk == tcod.KEY_KP6:
         return {'move': (1, 0)}
     elif key_char == 'y' or key.vk == tcod.KEY_KP7:
         return {'move': (-1, -1)}
@@ -57,6 +57,8 @@ def handle_player_turn_keys(key):
         return {'show_inventory': True}
     elif key_char == 'e' and key.shift:
         return {'show_equipment': True}
+    elif key_char == 'l':
+        return {'toggle_look': True}
     # elif key_char == 'd':
     #     return {'drop_inventory': True}
 
