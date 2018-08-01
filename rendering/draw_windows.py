@@ -17,7 +17,9 @@ def draw_window(window, caption, window_x, window_y, width, height, show_cancel_
         x = center_x_for_text(width, '<ESC TO CANCEL>')
         tcod.console_print(window, x, height - 1, string)
 
-    tcod.console_blit(window, 0, 0, width, height, 0, window_x, window_y, 1, 0.4)
+    tcod.console_blit(window, 0, 0, width, height, 0, window_x, window_y, 1, 1)
+
+    tcod.console_flush()
 
 def draw_options_window(caption, body, options, window_x = None, window_y = None, sort_by = 'letter', show_cancel_option=True, forced_width=None):
     padding_x = 5

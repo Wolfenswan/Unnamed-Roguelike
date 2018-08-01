@@ -21,8 +21,8 @@ def handle_keys(key, game_state):
         return handle_player_turn_keys(key)
     elif game_state == GameStates.PLAYER_DEAD:
         return handle_player_dead_keys(key)
-    elif game_state in (GameStates.SHOW_INVENTORY, GameStates.DROP_INVENTORY, GameStates.SHOW_ITEM):
-        return handle_menu_keys(key)
+    # elif game_state in (GameStates.SHOW_INVENTORY, GameStates.DROP_INVENTORY, GameStates.SHOW_ITEM):
+    #     return handle_menu_keys(key)
     elif game_state == GameStates.TARGETING:
         return handle_targeting_keys()
 
@@ -55,15 +55,15 @@ def handle_player_turn_keys(key):
         return {'pickup': True}
     elif key_char == 'i':
         return {'show_inventory': True}
-    elif key_char == 'd':
-        return {'drop_inventory': True}
+    # elif key_char == 'd':
+    #     return {'drop_inventory': True}
 
     # No key was pressed
     return {}
 
 
-def handle_menu_keys(key):
-    return {'menu_selection': key.c}
+# def handle_menu_keys(key):
+#     return {'menu_selection': key.c}
 
 
 def handle_player_dead_keys(key):

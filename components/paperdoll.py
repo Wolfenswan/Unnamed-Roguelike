@@ -1,9 +1,8 @@
 import logging
 
+from gui.menus import yesno_menu
 from gui.messages import Message
 
-
-# TODO rewrite for new system
 
 class Paperdoll:
     """ The Paperdoll component controls the equipped items of an entity """
@@ -15,22 +14,21 @@ class Paperdoll:
         self.arms = Arms()
         self.legs = Legs()
 
-    def equip(self, item_ent):
+    def equip(self, item_ent, game):
         results = []
         e_to = item_ent.item.equipment.e_to
         e_type = item_ent.item.equipment.e_type
-
-        # try equipping
-        # remove item from inventory if success
 
         extremity = getattr(self, e_to)
         equipped_item = getattr(extremity, e_type)
 
         if equipped_item:
-            # prompt removal question
-            # if removal:
-            results.extend(self.dequip(equipped_item))
-            results.extend(self.equip(item_ent))
+            choice = yesno_menu('Remove the item?', game)
+            if choice:
+                results.extend(self.dequip(equipped_item))
+                results.extend(self.equip(item_ent, game))
+            else:
+                print('kept')
         else:
             setattr(extremity, e_type, item_ent)
             self.equipped_items.append(item_ent)
@@ -87,18 +85,6 @@ class Paperdoll:
             setattr(extremity, item.e_type, item)
             self.equipped_items.append(item)
             return True
-
-    def dequip_old(self, item):
-        """ this sets the formerly occupied slot to None and removes the item from the equipped_items list """
-
-        extr = getattr(self, item.e_to)
-        slot = getattr(extr, item.e_type)
-        if slot:
-            setattr(extr, item.e_type, None)
-            self.equipped_items.remove(item)
-            return True
-        else:
-            logging.error('Trying to dequip something that is not equipped. This should not happen...')
 
     def apply_equipment_effects(self):
         pass

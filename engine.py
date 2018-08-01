@@ -39,19 +39,19 @@ def game_loop(game, fov_map):
 
         render_main_screen(game, fov_map, mouse)
         render_panels(game, fov_map, mouse)
-        render_windows(game, selected_item)
+        #render_windows(game, selected_item)
 
         tcod.console_flush()
 
         clear_all(con, entities)
 
-        tcod.sys_wait_for_event(tcod.EVENT_KEY_PRESS | tcod.EVENT_MOUSE, key, mouse, True)
+        tcod.sys_wait_for_event(tcod.EVENT_KEY_PRESS, key, mouse, True)
 
         action = handle_keys(key, game.state)
         mouse_action = handle_mouse(mouse)
 
         # Process player input into turn results #
-        player_turn_results = process_player_input(action, mouse_action, game, fov_map, targeting_item = targeting_item, selected_item_ent = selected_item)
+        player_turn_results = process_player_input(action, mouse_action, game, fov_map, targeting_item = targeting_item)
 
         # Player turn results is None if the game should exit #
         if player_turn_results is None:
@@ -63,7 +63,6 @@ def game_loop(game, fov_map):
         for turn_result in processed_turn_results:
             fov_recompute = turn_result.get('fov_recompute', False)
             targeting_item = turn_result.get('targeting_item', None)
-            selected_item = turn_result.get('selected_item', None)
 
         # Enemies take turns #
         if game.state == GameStates.ENEMY_TURN:

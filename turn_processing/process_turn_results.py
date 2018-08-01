@@ -18,7 +18,6 @@ def process_turn_results(player_turn_results, game, fov_map):
         item_dropped = player_turn_result.get('item_dropped')
         item_equipped = player_turn_result.get('item_equipped')
         item_dequipped = player_turn_result.get('item_dequipped')
-        item_details = player_turn_result.get('item_details')
         targeting_item = player_turn_result.get('targeting')
         targeting_cancelled = player_turn_result.get('targeting_cancelled')
         resting = player_turn_result.get('resting')
@@ -40,10 +39,6 @@ def process_turn_results(player_turn_results, game, fov_map):
 
         if item_dropped:
             entities.append(item_dropped)
-
-        if item_details:
-            game.state = GameStates.SHOW_ITEM
-            results.append({'selected_item': item_details})
 
         # Enable enemy turn if at least one of the results is valid
         filtered_enemy_turn_conditions = list(filter(lambda x: x is not None, enemy_turn_on))
