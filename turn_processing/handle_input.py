@@ -55,6 +55,8 @@ def handle_player_turn_keys(key):
         return {'pickup': True}
     elif key_char == 'i':
         return {'show_inventory': True}
+    elif key_char == 'e' and key.shift:
+        return {'show_equipment': True}
     # elif key_char == 'd':
     #     return {'drop_inventory': True}
 

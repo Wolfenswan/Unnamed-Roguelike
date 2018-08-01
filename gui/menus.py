@@ -6,6 +6,9 @@ from rendering.draw_windows import draw_options_window
 
 def menu_loop(wait_for=None):
     """
+    The loop waits for a key input.
+    If wait_for is an integer, it waits for a key that corresponds to an integer in range of (0, wait_for)
+    If wait_for is a list of characters it waits for a key that corresponds to one of the characters.
 
     :param wait_for:
     :type wait_for: int or list
@@ -69,6 +72,30 @@ def inventory_menu(game):
     else:
         return False
 
+def equipment_menu(game):
+    # TODO: Placeholder #
+    player = game.player
+    inventory = player.paperdoll.equipped_items
+    x, y = pos_on_screen(player.x + 2, player.y - 2, game.player)
+
+    options = [item.name for item in inventory]
+
+    if game.state == GameStates.SHOW_INVENTORY:
+        body = 'Press the key next to an item to select it.'
+    else:
+        body = 'Press the key next to an item to drop it.'
+
+    width = len(max(options, key=len))
+
+    draw_options_window('Equipment', body, options, window_x=x, window_y=y, forced_width=max(width, 25))
+
+    choice = menu_loop(wait_for=len(options))
+
+    if choice is not False:
+        return inventory[choice]
+    else:
+        return False
+
 def item_menu(item_ent, game):
     player = game.player
     x, y = pos_on_screen(player.x + 2, player.y - 2, game.player)
@@ -83,8 +110,12 @@ def item_menu(item_ent, game):
         options.append('(U)se')
         wait_for.append('u')
     if item_ent.item.equipment is not None:
-        options.append('(E)quip')
-        wait_for.append('e')
+        if player.paperdoll.is_equipped(item_ent):
+            options.append('(R)emove')
+            wait_for.append('r')
+        else:
+            options.append('(E)quip')
+            wait_for.append('e')
     options.append('(D)rop')
 
     draw_options_window(title, body, options, window_x=x, window_y=y, forced_width=len(body), sort_by = None)
