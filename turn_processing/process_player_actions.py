@@ -24,10 +24,13 @@ def process_player_input(action, mouse_action, game, fov_map, targeting_item = N
     # drop_inventory = action.get('drop_inventory')
     # menu_selection = action.get('menu_selection')
     toggle_look = action.get('toggle_look')
+    confirm = action.get('confirm')
     left_click = mouse_action.get('left_click')
     right_click = mouse_action.get('right_click')
 
     turn_results = []
+
+    print(game.state, targeting_item)
 
     # Player moves #
     active_player_states = [GameStates.PLAYERS_TURN, GameStates.PLAYER_RESTING]
@@ -69,6 +72,7 @@ def process_player_input(action, mouse_action, game, fov_map, targeting_item = N
         if game.state == GameStates.CURSOR_ACTIVE:
             game.state = GameStates.PLAYERS_TURN
         else:
+            game.previous_state = game.state
             game.state = GameStates.CURSOR_ACTIVE
             game.cursor.x, game.cursor.y = game.player.x, game.player.y
 
@@ -80,8 +84,14 @@ def process_player_input(action, mouse_action, game, fov_map, targeting_item = N
             if tcod.map_is_in_fov(fov_map, destination_x, destination_y):
                 cursor.move(dx, dy)
 
-        # if enter is pressed
-        # return cursor position for targeting
+        if confirm and targeting_item:
+            target_x, target_y = cursor.x, cursor.y
+            item_use_results = player.inventory.use(targeting_item, entities=entities, fov_map=fov_map,
+                                                    target_x=target_x, target_y=target_y)
+            turn_results.extend(item_use_results)
+
+        if exit and targeting_item:
+            turn_results.append({'targeting_cancelled': True})
 
     # Inventory display #
     if show_inventory:
@@ -151,20 +161,18 @@ def process_player_input(action, mouse_action, game, fov_map, targeting_item = N
 
     # Targeting #
     # TODO broken at the moment - replace with keyboard controlled cursor
-    if game.state == GameStates.TARGETING:
-        if left_click:
-            target_x, target_y = left_click
-            item_use_results = player.inventory.use(targeting_item, entities=entities, fov_map=fov_map,
-                                                    target_x=target_x, target_y=target_y)
-            turn_results.extend(item_use_results)
-        elif right_click:
-            turn_results.append({'targeting_cancelled': True})
+    # if game.state == GameStates.TARGETING:
+    #     if left_click:
+    #         target_x, target_y = left_click
+    #         item_use_results = player.inventory.use(targeting_item, entities=entities, fov_map=fov_map,
+    #                                                 target_x=target_x, target_y=target_y)
+    #         turn_results.extend(item_use_results)
+    #     elif right_click:
+    #         turn_results.append({'targeting_cancelled': True})
 
     if exit:
-        if game.state in (GameStates.SHOW_INVENTORY, GameStates.DROP_INVENTORY):
+        if game.state in (GameStates.SHOW_INVENTORY, GameStates.DROP_INVENTORY, GameStates.CURSOR_ACTIVE):
             game.state = game.previous_state
-        elif game.state == GameStates.TARGETING:
-            turn_results.append({'targeting_cancelled': True})
         else:
             return None
 

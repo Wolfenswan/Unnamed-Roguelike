@@ -47,7 +47,8 @@ def process_turn_results(player_turn_results, game, fov_map):
 
         if targeting_item:
             game.previous_state = GameStates.PLAYERS_TURN
-            game.state = GameStates.TARGETING
+            game.state = GameStates.CURSOR_ACTIVE
+            game.cursor.x, game.cursor.y = game.player.x, game.player.y
             results.append({'targeting_item': targeting_item})
 
         if targeting_cancelled:

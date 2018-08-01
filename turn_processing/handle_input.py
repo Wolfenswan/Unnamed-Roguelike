@@ -31,7 +31,6 @@ def handle_keys(key, game_state):
 
 def handle_player_turn_keys(key):
     key_char = chr(key.c)
-    print(key)
 
     if key.vk == tcod.KEY_UP or key_char == 'k' or key.vk == tcod.KEY_KP8:
         return {'move': (0, -1)}
@@ -60,7 +59,7 @@ def handle_player_turn_keys(key):
         return {'show_equipment': True}
     elif key_char == 's':
         return {'toggle_look': True}
-    elif key.vk == tcod.KEY_ENTER:
+    elif key.vk in [tcod.KEY_ENTER, tcod.KEY_KPENTER]:
         return {'confirm': True}
     # elif key_char == 'd':
     #     return {'drop_inventory': True}
