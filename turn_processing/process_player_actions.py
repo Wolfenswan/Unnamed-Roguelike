@@ -64,7 +64,7 @@ def process_player_input(action, mouse_action, game, fov_map, targeting_item = N
                 message_log.add_message(
                     Message('There is nothing here to pick up.', msg_type=MessageType.INFO_GENERIC))
 
-    # Controlling the cursor #
+    # Cursor Movement & Targeting #
     if toggle_look:
         if game.state == GameStates.CURSOR_ACTIVE:
             game.state = GameStates.PLAYERS_TURN
@@ -79,6 +79,9 @@ def process_player_input(action, mouse_action, game, fov_map, targeting_item = N
             destination_y = cursor.y + dy
             if tcod.map_is_in_fov(fov_map, destination_x, destination_y):
                 cursor.move(dx, dy)
+
+        # if enter is pressed
+        # return cursor position for targeting
 
     # Inventory display #
     if show_inventory:
