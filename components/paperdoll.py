@@ -9,14 +9,55 @@ class Paperdoll:
     """ The Paperdoll component controls the equipped items of an entity """
 
     def __init__(self):
-        self.owner = None
         self.equipped_items = []
         self.head = Head()
         self.torso = Torso()
         self.arms = Arms()
         self.legs = Legs()
 
-    def equip(self, item):
+    def equip(self, item_ent):
+        results = []
+        e_to = item_ent.item.equipment.e_to
+        e_type = item_ent.item.equipment.e_type
+
+        # try equipping
+        # remove item from inventory if success
+
+        extremity = getattr(self, e_to)
+        equipped_item = getattr(extremity, e_type)
+
+        if equipped_item:
+            # prompt removal question
+            # if removal:
+            results.extend(self.dequip(equipped_item))
+            results.extend(self.equip(item_ent))
+        else:
+            setattr(extremity, e_type, item_ent)
+            self.equipped_items.append(item_ent)
+            self.owner.inventory.remove_from_inv(item_ent)
+            results.append({'item_equipped': item_ent, 'message': Message(f'You equip the {item_ent.name}')})
+
+        return results
+
+    def dequip(self, item_ent):
+        results = []
+        e_to = item_ent.item.equipment.e_to
+        e_type = item_ent.item.equipment.e_type
+
+        extremity = getattr(self, e_to)
+        equipped_item = getattr(extremity, e_type)
+
+        if equipped_item:
+            setattr(extremity, e_type, None)
+            self.equipped_items.remove(equipped_item)
+            self.owner.inventory.add(equipped_item)
+            results.append({'item_dequipped': item_ent, 'message': Message(f'You remove the {item_ent.name}')})
+        else:
+            logging.error('Trying to dequip something that is not equipped. This should not happen...')
+
+        return results
+
+    def equip_old(self, item):
         """ this sets the slot to the new item and adds the item to the equipped_items list """
         results = []
         logging.debug('{0} is equipping {1}'.format(self.owner.name,item.name))
@@ -47,7 +88,7 @@ class Paperdoll:
             self.equipped_items.append(item)
             return True
 
-    def dequip(self, item):
+    def dequip_old(self, item):
         """ this sets the formerly occupied slot to None and removes the item from the equipped_items list """
 
         extr = getattr(self, item.e_to)

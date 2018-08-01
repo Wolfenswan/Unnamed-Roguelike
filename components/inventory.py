@@ -58,20 +58,6 @@ class Inventory:
 
         return results
 
-    def equip(self, item):
-        results = []
-
-        results.append({'item_equipped': item, 'message': Message(f'You equip the {item.name}')})
-
-        return results
-
-    def dequip(self, item):
-        results = []
-
-        results.append({'item_dequipped': item, 'message': Message(f'You remove the {item.name}')})
-
-        return results
-
     def remove_from_inv(self, item):
         """ removes an item from the player main inventory or any quick use slots """
         if item in self.items:

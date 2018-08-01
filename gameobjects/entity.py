@@ -3,6 +3,7 @@ from enum import Enum, auto
 
 import tcod
 
+from components.paperdoll import Paperdoll
 from rendering.render_order import RenderOrder
 
 
@@ -56,33 +57,23 @@ class Entity:
         self.color = color
         self.color_bg = None
         self.name = name
-        self.descr = "This one needs an description."
+        self.descr = "This one needs a description."
         self.is_player = is_player
         self.blocks = blocks
         self.render_order = render_order
+
+        # Components #
         self.fighter = fighter
         self.ai = ai
         self.item = item
         self.inventory = inventory
+        self.paperdoll = Paperdoll()
+        self.skills = skills  # dictionary
+        self.set_ownership() # Sets ownership for all components
+
+        # AI related attributes #
         self.delay_turns = 0
         self.execute_after_delay = None
-        self.skills = skills  # dictionary
-
-        if self.fighter:
-            self.fighter.owner = self
-
-        if self.ai:
-            self.ai.owner = self
-
-        if self.item:
-            self.item.owner = self
-
-        if self.inventory:
-            self.inventory.owner = self
-
-        if self.skills is not None:
-            for skill in skills.values():
-                skill.owner = self
 
     def move(self, dx, dy):
         # Move the entity by a given amount
@@ -110,6 +101,25 @@ class Entity:
     def cooldown_skills(self, reset=False):
         for skill in self.skills.values():
             skill.cooldown_skill(reset=reset)
+
+    def set_ownership(self):
+        if self.fighter:
+            self.fighter.owner = self
+
+        if self.ai:
+            self.ai.owner = self
+
+        if self.item:
+            self.item.owner = self
+
+        if self.inventory:
+            self.inventory.owner = self
+
+        if self.skills is not None:
+            for skill in self.skills.values():
+                skill.owner = self
+
+        self.paperdoll.owner = self
 
 
 def get_blocking_entities_at_location(entities, destination_x, destination_y):

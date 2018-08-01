@@ -50,12 +50,14 @@ def game_loop(game, fov_map):
         action = handle_keys(key, game.state)
         mouse_action = handle_mouse(mouse)
 
+        # Process player input into turn results #
         player_turn_results = process_player_input(action, mouse_action, game, fov_map, targeting_item = targeting_item, selected_item_ent = selected_item)
 
         # Player turn results is None if the game should exit #
         if player_turn_results is None:
             return True
 
+        # Process turn results #
         processed_turn_results = process_turn_results(player_turn_results, game, fov_map)
 
         for turn_result in processed_turn_results:

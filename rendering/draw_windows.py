@@ -58,11 +58,10 @@ def draw_options_window(caption, body, options, window_x = None, window_y = None
     letter_index = ord('a')
     for i, option in enumerate(options):
         if sort_by == 'letter':
-            line = '(' + chr(letter_index) + ')' + option
+            line = '(' + chr(letter_index) + ') ' + option
             letter_index += 1  # by incrementing the ascii code for the letter, we go through the alphabet
         elif sort_by == 'number':
-            line = '(' + str(i + 1) + ')' + option
-        # TODO sort by first letter system
+            line = '(' + str(i + 1) + ') ' + option
         else:
             line = option
         tcod.console_print(window, 1, i + y, line)

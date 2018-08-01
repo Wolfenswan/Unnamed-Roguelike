@@ -17,13 +17,14 @@ def process_turn_results(player_turn_results, game, fov_map):
         item_consumed = player_turn_result.get('consumed')
         item_dropped = player_turn_result.get('item_dropped')
         item_equipped = player_turn_result.get('item_equipped')
+        item_dequipped = player_turn_result.get('item_dequipped')
         item_details = player_turn_result.get('item_details')
         targeting_item = player_turn_result.get('targeting')
         targeting_cancelled = player_turn_result.get('targeting_cancelled')
         resting = player_turn_result.get('resting')
 
         # List of results that activate the enemy's turn #
-        enemy_turn_on = [item_added, item_dropped, item_consumed, item_equipped]
+        enemy_turn_on = [item_added, item_dropped, item_consumed, item_equipped, item_dequipped]
 
         if message:
             message_log.add_message(message)

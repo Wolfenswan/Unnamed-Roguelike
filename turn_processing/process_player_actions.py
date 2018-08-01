@@ -89,7 +89,7 @@ def process_player_input(action, mouse_action, game, fov_map, targeting_item = N
     if game.state == GameStates.SHOW_ITEM:
         if menu_selection is not None and game.previous_state != GameStates.PLAYER_DEAD:
             if menu_selection in [ord('e'), ord('E')] and selected_item_ent.item.equipment is not None:
-                item_interaction_result = player.inventory.equip(selected_item_ent)
+                item_interaction_result = player.paperdoll.equip(selected_item_ent)
                 turn_results.extend(item_interaction_result)
             if menu_selection in [ord('u'), ord('U')] and selected_item_ent.item.useable is not None:
                 item_interaction_result = player.inventory.use(selected_item_ent, entities=entities, fov_map=fov_map)
