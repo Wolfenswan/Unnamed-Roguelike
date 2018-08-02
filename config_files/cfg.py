@@ -23,9 +23,9 @@ DUNGEON_MAX_HEIGHT = DUNGEON_MIN_HEIGHT * 2
 ROOM_MAX_SIZE = 30
 ROOM_MIN_SIZE = 4
 # MAX_MONSTERS = MAX_ROOMS/2 # TODO implement
-MAX_ROOM_MONSTERS = 9      # TODO Adjust dynamically to room size
-MAX_ROOM_ITEMS = 6         # TODO Adjust dynamically to room size
-MAX_ROOM_STATICOBJECTS = 4 # TODO implement
+MAX_ROOM_MONSTERS = 9  # TODO Adjust dynamically to room size
+MAX_ROOM_ITEMS = 6  # TODO Adjust dynamically to room size
+MAX_ROOM_STATICOBJECTS = 4  # TODO implement
 
 # GUI PANELS
 PANELS_BORDER_COLOR = colors.dark_grey
@@ -53,9 +53,9 @@ COMBAT_PANEL_WIDTH = BOTTOM_PANEL_WIDTH // 4
 
 # Message panels
 MSG_PANEL_WIDTH = (SCREEN_WIDTH - COMBAT_PANEL_WIDTH) // 2
-MSG_WIDTH = SCREEN_WIDTH - 22 #MSG_PANEL_WIDTH - 2
+MSG_WIDTH = SCREEN_WIDTH - 22  # MSG_PANEL_WIDTH - 2
 MSG_HEIGHT = BOTTOM_PANEL_HEIGHT - 1
-MSG_X = 22 # TODO Temporary testing value # offset for messages
+MSG_X = 22  # TODO Temporary testing value # offset for messages
 
 # Message colors
 MSG_COLOR_INFO_GAME = colors.turquoise

@@ -27,7 +27,6 @@ def game_loop(game):
     game.previous_state = game.state
 
     targeting_item = None
-    selected_item = None
 
     fov_recompute = True
 
@@ -43,7 +42,7 @@ def game_loop(game):
             fov_recompute = False
 
         render_main_screen(game, fov_map)
-        render_panels(game, fov_map)
+        render_panels(game)
         #render_windows(game, selected_item)
 
         tcod.console_flush()

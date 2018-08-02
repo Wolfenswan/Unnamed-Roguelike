@@ -6,7 +6,7 @@ from rendering.common_functions import pos_on_screen
 from rendering.draw_windows import draw_options_window
 
 
-def menu_loop(wait_for=None, cancel_with_escape = True, sort_by='str'):
+def menu_loop(wait_for=None, cancel_with_escape=True, sort_by='str'):
     """
     The loop waits for a key input.
     If wait_for is an integer, it waits for a key that corresponds to an integer in range of (0, wait_for)
@@ -27,7 +27,7 @@ def menu_loop(wait_for=None, cancel_with_escape = True, sort_by='str'):
         # elif type(wait_for) is dict:
         #     if char.lower() in wait_for.keys():
         #         return wait_for[char]
-        elif type(wait_for) == int: # If menu is waiting to receive an index
+        elif type(wait_for) == int:  # If menu is waiting to receive an index
             if type(sort_by) == str:
                 index = ord(char) - ord('a')
                 if 0 <= index < wait_for:
@@ -36,7 +36,7 @@ def menu_loop(wait_for=None, cancel_with_escape = True, sort_by='str'):
                 index = int(key.c - ord('1'))
                 if 0 <= index < wait_for:
                     return index
-        elif type(wait_for) == list: # If menu is waiting for a specific key input
+        elif type(wait_for) == list:  # If menu is waiting for a specific key input
             if char.lower() in wait_for:
                 return char
 
@@ -70,7 +70,7 @@ def inventory_menu(game):
 
     width = len(max(options, key=len))
 
-    draw_options_window('Inventory', body, options, window_x=x, window_y=y, forced_width=max(width,25))
+    draw_options_window('Inventory', body, options, window_x=x, window_y=y, forced_width=max(width, 25))
 
     choice = menu_loop(wait_for=len(options))
 
@@ -80,10 +80,10 @@ def inventory_menu(game):
         return False
 
 
-def options_menu(title, body, options, sort_by='str',cancel_with_escape=True):
-    draw_options_window(title, body, options, show_cancel_option=cancel_with_escape, sort_by = sort_by)
+def options_menu(title, body, options, sort_by='str', cancel_with_escape=True):
+    draw_options_window(title, body, options, show_cancel_option=cancel_with_escape, sort_by=sort_by)
 
-    choice = menu_loop(wait_for=len(options), sort_by = sort_by, cancel_with_escape=cancel_with_escape)
+    choice = menu_loop(wait_for=len(options), sort_by=sort_by, cancel_with_escape=cancel_with_escape)
     return choice
 
 
@@ -93,8 +93,8 @@ def yesno_menu(body, game):
 
     title = 'Yes or No?'
 
-    options = ['(Y)es','(N)o']
-    wait_for = ['y','n']
+    options = ['(Y)es', '(N)o']
+    wait_for = ['y', 'n']
 
     draw_options_window(title, body, options, window_x=x, window_y=y, forced_width=len(body))
 

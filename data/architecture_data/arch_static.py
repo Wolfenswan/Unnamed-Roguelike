@@ -7,7 +7,7 @@ arch_static_data = {
         'name': 'Old Pillar',
         'descr': 'An old, crumbling pillar.',
         'chance': 100,
-        'dlvls': (1,99),
+        'dlvls': (1, 99),
         "char": chr(186),
         "color": SO_COLOR,
         "blocks": True,
@@ -17,7 +17,7 @@ arch_static_data = {
         'name': 'Arch',
         'descr': 'The decrepit arch looms over you.',
         'chance': 100,
-        'dlvls': (1,99),
+        'dlvls': (1, 99),
         "char": '^',
         "color": SO_COLOR
     }

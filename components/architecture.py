@@ -8,14 +8,6 @@ class Architecture:
         self.on_interaction = on_interaction
         self.on_collision = on_collision
 
-    def interaction(self):
-        pass
-
-    def collision(self):
-        pass
-
-
-
     @staticmethod
     def use_stairs(down):
         if down:
@@ -26,20 +18,22 @@ class Architecture:
             pass
 
     @staticmethod
-    def toggle_door(ent):
-        door_closed = ent.blocks
-        results = [{'door_toggled':ent, 'fov_recompute':True}]
-        if door_closed:
-            ent.architecture.on_collision = None
-            ent.char = '-'
-            ent.blocks = False
-            ent.blocks_sight = False
-            results.append({'message':Message('You open a door.')})
+    def toggle_door(door_ent):
+        door_ent_closed = door_ent.blocks
+        results = [{'door_ent_toggled': door_ent, 'fov_recompute': True}]
+        if door_ent_closed:
+            door_ent.architecture.on_collision = None
+            door_ent.char = '-'
+            door_ent.blocks = False
+            door_ent.blocks_sight = False
+            door_ent.descr = 'This door is open.'
+            results.append({'message': Message('You open a door.')})
         else:
-            ent.architecture.on_collision = Architecture.toggle_door
-            ent.char = '+'
-            ent.blocks = True
-            ent.blocks_sight = True
+            door_ent.architecture.on_collision = Architecture.toggle_door
+            door_ent.char = '+'
+            door_ent.blocks = True
+            door_ent.blocks_sight = True
+            door_ent.descr = 'This door is closed.'
             results.append({'message': Message('You close a door.')})
 
         return results

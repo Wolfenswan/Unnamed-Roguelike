@@ -6,7 +6,7 @@ from components.AI.confusedmonster import ConfusedMonster
 from gui.messages import Message, MessageType
 
 
-def heal_entity(*args, **kwargs):
+def heal_entity(**kwargs):
     entity = kwargs.get('caster')
     amount = kwargs.get('pwr')
 
@@ -74,7 +74,7 @@ def cast_fireball_on(**kwargs):
 
     return results
 
-def cast_confuse_on(*args, **kwargs):
+def cast_confuse_on(**kwargs):
     entities = kwargs.get('entities')
     fov_map = kwargs.get('fov_map')
     target_x = kwargs.get('target_x')

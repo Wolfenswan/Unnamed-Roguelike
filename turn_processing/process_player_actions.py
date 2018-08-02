@@ -73,7 +73,7 @@ def process_player_input(action, game, fov_map, targeting_item = None):
             turn_results.append({'resting': True})
 
         elif pickup:
-            for entity in entities: # TODO List comprehension can be tested for possible speed gain
+            for entity in entities:  # TODO List comprehension can be tested for possible speed gain
                 if entity.item and entity.same_pos_as(player):
                     pickup_results = player.inventory.add(entity)
                     turn_results.extend(pickup_results)
@@ -100,7 +100,8 @@ def process_player_input(action, game, fov_map, targeting_item = None):
             if tcod.map_is_in_fov(fov_map, destination_x, destination_y):
                 if targeting_item is None:
                     cursor.move(dx, dy)
-                elif player.distance_to_pos(destination_x, destination_y) < targeting_item.item.useable.function_kwargs['range']:
+                elif player.distance_to_pos(destination_x, destination_y) \
+                        < targeting_item.item.useable.function_kwargs['range']:
                     cursor.move(dx, dy)
 
         if confirm and targeting_item:

@@ -1,8 +1,8 @@
 barks_data = {
     'humanoid': {
         'generic': [
-           'seems agitated.',
-           'stares at you.'
+            'seems agitated.',
+            'stares at you.'
         ],
         'chasing': [
             'screams.',

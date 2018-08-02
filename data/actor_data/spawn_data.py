@@ -36,7 +36,7 @@ spawn_data = {
     'Orc': {
         'name': 'Orc',
         'char': 'o',
-        'colors': [colors.green, colors.desaturated_green, colors.light_green],
+        'color': colors.green,
         'descr': 'The most generic of monsters you could imagine. Thankfully, it will probably kill you before you are bored to death.',
         'max_hp': (8,15),
         'nat_armor': (0,2),

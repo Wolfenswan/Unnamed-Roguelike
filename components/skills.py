@@ -6,7 +6,7 @@ from gameobjects.entity import EntityStates
 from gui.messages import Message
 
 class Skill:
-    def __init__(self, name = 'Skill', on_activate=None, on_activate_kwargs = {}, activate_condition=None, activate_condition_kwargs = {}, cooldown_length=None, messages=None, description=''):
+    def __init__(self, name = 'Skill', on_activate=None, on_activate_kwargs = {}, activate_condition=None, activate_condition_kwargs = {}, cooldown_length=None, messages=None):
         self.name = name
         self.on_activate = on_activate
         self.on_activate_kwargs = on_activate_kwargs
@@ -67,9 +67,7 @@ class Skill:
         ent.delay_turns = 1
 
     @staticmethod
-    def skill_charge_execution(ent, *args, **kwargs):
-        dx, dy = args[0], args[1]
-        distance = args[2]
+    def skill_charge_execution(ent, *args):
         # TODO x steps charge in cardinal direction
         ent.color_bg = colors.green
 
@@ -83,5 +81,5 @@ def skill_charge_condition(game, actor, **kwargs):
     else:
         return False
 
-def skill_always_true(*args):
+def skill_always_true():
     return True

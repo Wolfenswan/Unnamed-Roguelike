@@ -17,7 +17,7 @@ class Entity:
     """
     A generic object to represent players, enemies, items, etc.
     """
-    def __init__(self, x, y, char, color, name, descr=None, is_player = False, blocks=False, blocks_sight = False, render_order=RenderOrder.CORPSE, fighter=None, ai=None, skills=None, item=None, inventory=None, architecture=None):
+    def __init__(self, x, y, char, color, name, is_player = False, blocks=False, blocks_sight = False, render_order=RenderOrder.CORPSE, fighter=None, ai=None, skills=None, item=None, inventory=None, architecture=None):
         """
 
         :param x: pos x
@@ -30,8 +30,6 @@ class Entity:
         :type color: tuple
         :param name: entity name
         :type name: str
-        :param descr: entity description
-        :type descr: str
         :param is_player: is_player flag
         :type is_player: bool
         :param blocks: blocks flag

@@ -111,3 +111,4 @@ logs/
 venv_start.bat
 /Misc/
 /savegames/*
+/libtcodpy-samples/

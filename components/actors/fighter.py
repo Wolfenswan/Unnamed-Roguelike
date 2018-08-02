@@ -16,7 +16,6 @@ class Fighter:
         self.power = power
         self.vision = vision
 
-
     def take_damage(self, amount):
         results = []
 
@@ -49,7 +48,6 @@ class Fighter:
 
         return results
 
-
     def death(self, map):
         ent = self.owner
         x, y = ent.x, ent.y
@@ -74,7 +72,7 @@ class Fighter:
             c_x, c_y = (randint(x - 1, x + 1), randint(y - 1, y + 1))
             map.tiles[c_x][c_y].gibbed = True
             if randint(0, 100) > 10:
-                c = Entity('~', c_x, c_y, colors.corpse, f'Bits of a {ent.name}', 'Assorted offal.')
+                c = Entity(c_x, c_y, '~', colors.corpse, f'Bits of a {ent.name}')
                 c.render_order = RenderOrder.CORPSE
 
         return message

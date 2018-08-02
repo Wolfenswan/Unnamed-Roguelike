@@ -14,15 +14,9 @@ from rendering.render_order import RenderOrder
 def render_main_screen(game, fov_map, debug=False):
     screen_width = cfg.SCREEN_WIDTH
     screen_height = cfg.SCREEN_HEIGHT
-    bar_width = 20 # TODO use cfg.file
-    panel_height = cfg.BOTTOM_PANEL_HEIGHT
-    panel_y = cfg.BOTTOM_PANEL_Y
 
-    player = game.player
     entities = game.entities
     con = game.con
-    bottom_panel = game.bottom_panel
-    message_log = game.message_log
     debug = game.debug or debug
 
     # Render game map #
@@ -42,15 +36,13 @@ def render_main_screen(game, fov_map, debug=False):
     tcod.console_blit(con, 0, 0, screen_width, screen_height, 0, 0, 0)
 
 
-def render_panels(game, fov_map):
+def render_panels(game):
     screen_width = cfg.SCREEN_WIDTH
-    screen_height = cfg.SCREEN_HEIGHT
     bar_width = 20  # TODO use cfg.file
     panel_height = cfg.BOTTOM_PANEL_HEIGHT
     panel_y = cfg.BOTTOM_PANEL_Y
 
     player = game.player
-    entities = game.entities
     bottom_panel = game.bottom_panel
     message_log = game.message_log
 
