@@ -37,7 +37,6 @@ def place_doors(game):
     game_map = game.map
     entities = game.entities
 
-    # pick a random room
     for room in game_map.rooms:
 
         exits = room.exits(game_map, max_width=1)
@@ -50,7 +49,6 @@ def place_doors(game):
                 x, y = e
                 door = gen_architecture(data, x, y)
                 if randint(0, 1):
-                    door.char = '-'
-                    door.blocks = False
+                    door.architecture.toggle_door()
 
                 entities.append(door)

@@ -10,7 +10,8 @@ arch_static_data = {
         'dlvls': (1,99),
         "char": chr(186),
         "color": SO_COLOR,
-        "blocks": True
+        "blocks": True,
+        'blocks_sight': True
     },
     'arch': {
         'name': 'Arch',
@@ -18,7 +19,6 @@ arch_static_data = {
         'chance': 100,
         'dlvls': (1,99),
         "char": '^',
-        "color": SO_COLOR,
-        "blocks": False
+        "color": SO_COLOR
     }
 }

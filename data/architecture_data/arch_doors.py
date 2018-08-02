@@ -6,10 +6,9 @@ arch_doors_data = {
         'name': 'Door',
         'descr': "A wooden door.",
         'chance': 100,
-        "char": '+',
+        "char": '-',
         "color": colors.beige,
-        'blocks': True,
-        'on_interaction': Architecture.toggle_door,
+        'blocks': False,
         'on_collision': Architecture.toggle_door,
     }
 }

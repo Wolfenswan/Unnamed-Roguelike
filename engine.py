@@ -16,9 +16,10 @@ from rendering.render_main import clear_all, render_main_screen, render_panels
 from turn_processing.process_turn_results import process_turn_results
 
 
-def game_loop(game, fov_map):
+def game_loop(game):
     player = game.player
     entities = game.entities
+    fov_map = game.fov_map
     con = game.con
     message_log = game.message_log
 
@@ -100,7 +101,7 @@ def game_loop(game, fov_map):
 
 if __name__ == '__main__':
     initialize_logging(debugging=True)
-    game = Game(debug=True)
+    game = Game(debug=False)
     initialize_window(game)
 
     choice = options_menu(cfg.GAME_NAME, 'Welcome to the Dungeon', ['Play a new game', 'Continue last game', 'Quit'], cancel_with_escape=False, sort_by=1)
@@ -115,6 +116,7 @@ if __name__ == '__main__':
     elif choice == 2:
         exit()
 
-    fov_map = initialize_fov(game.map)
-    game_loop(game, fov_map)
+    game.fov_map = initialize_fov(game)
+
+    game_loop(game)
     save_game(game) # TODO placeholder for testing purposes

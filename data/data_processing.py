@@ -37,12 +37,20 @@ ACTOR_DATA_MERGED = merge_dictionaries(actor_data)
 architecture_data = [arch_static_data]
 ARCHITECTURE_DATA_MERGED = merge_dictionaries(architecture_data)
 
-def gen_ent_from_dict(dict, entry, x, y, game):
-    data = dict[entry]
+
+def get_generic_data(data):
     name = data['name']
     char = data['char']
-    color = choice(data['colors'])
+    color = data['color']
     descr = data['descr']
+
+    return (char, color, name, descr)
+
+
+def gen_ent_from_dict(dict, entry, x, y, game):
+    data = dict[entry]
+    arguments = (x, y, *get_generic_data(data))
+
     hp = randint(*data['max_hp'])
     defense = randint(*data['nat_armor'])
     power = randint(*data['nat_power'])
@@ -63,10 +71,9 @@ def gen_ent_from_dict(dict, entry, x, y, game):
             skills_component[k] = (skill)
 
     # create the arguments tuple out of the values we've got so far
-    arguments = (x, y, char, color, name, descr)
+
 
     # create the static object using the arguments tuple
-    logging.debug(f'Generating {name} with {arguments, fighter_component, ai_component, skills_component}')
     ent = NPC(*arguments, fighter=fighter_component, ai=ai_component, skills=skills_component, inventory=inventory_component)
 
     if loadouts is not None:
@@ -77,60 +84,51 @@ def gen_ent_from_dict(dict, entry, x, y, game):
 
 
 def gen_item_from_data(data, x, y):
-    try:
-        name = data['name']
-        char = data['char']
-        color = data['color']
-        descr = data['descr']
-        on_use = data.get('on_use', None)
-        equip_to = data.get('e_to', None)
+    arguments = (x, y, *get_generic_data(data))
 
-        arguments = (x, y, char, color, name, descr)
-    except Exception as err:
-        logging.error(f'Failed generating item from {data} with error: {err}')
-    else:
-        useable_component = None
-        if on_use is not None:
-        # depending on the item's class new values are received and the arguments tuple expanded
-            targeting = data['targeting']
-            on_use_msg = data['on_use_msg']
-            on_use_params = data['on_use_params']
-            useable_component = Useable(use_function = on_use, targeting = targeting, on_use_msg = on_use_msg, **on_use_params)
+    on_use = data.get('on_use', None)
+    equip_to = data.get('e_to', None)
 
-        equipment_component = None
-        if equip_to is not None:
-            equip_type = data['e_type']
-            dmg = data.get('dmg_range', None)
-            av = data.get('av', None)
-            qu_slots = data.get('qu_slots', None)
-            l_radius = data.get('l_radius', None)
-            equipment_component = Equipment(equip_to, equip_type, dmg_range = dmg, av = av, qu_slots = qu_slots, l_radius = l_radius)
+    useable_component = None
+    if on_use is not None:
+    # depending on the item's class new values are received and the arguments tuple expanded
+        targeting = data['targeting']
+        on_use_msg = data['on_use_msg']
+        on_use_params = data['on_use_params']
+        useable_component = Useable(use_function = on_use, targeting = targeting, on_use_msg = on_use_msg, **on_use_params)
 
-        item_component = Item(useable=useable_component, equipment=equipment_component)
+    equipment_component = None
+    if equip_to is not None:
+        equip_type = data['e_type']
+        dmg = data.get('dmg_range', None)
+        av = data.get('av', None)
+        qu_slots = data.get('qu_slots', None)
+        l_radius = data.get('l_radius', None)
+        equipment_component = Equipment(equip_to, equip_type, dmg_range = dmg, av = av, qu_slots = qu_slots, l_radius = l_radius)
 
-        logging.debug(f'Preparing to generate {name} with {arguments}, {item_component}')
-        # create the item using item_class and the arguments tuple
-        i = Entity(*arguments, render_order=RenderOrder.ITEM, item = item_component)
+    item_component = Item(useable=useable_component, equipment=equipment_component)
 
-        return i
+    # create the item using item_class and the arguments tuple
+    i = Entity(*arguments, render_order=RenderOrder.ITEM, item = item_component)
+
+    return i
 
 
 def gen_architecture(data, x, y):
-    name = data['name']
-    char = data['char']
-    color = data['color']
-    descr = data['descr']
-    blocks = data['blocks']
+    arguments = (x, y, *get_generic_data(data))
+
+    blocks = data.get('blocks', False)
+    blocks_sight = data.get('blocks_sight', False)
     on_collision = data.get('on_collision')
     on_interaction = data.get('on_interaction')
 
     architecture_component = Architecture(on_collision = on_collision, on_interaction = on_interaction)
 
     # create the arguments tuple out of the values we've got so far
-    arguments = (x, y, char, color, name, descr)
+    #arguments = (x, y, char, color, name, descr)
 
     # create the static object using the arguments tuple
-    arch = Entity(*arguments, blocks=blocks, architecture=architecture_component)
+    arch = Entity(*arguments, blocks=blocks, blocks_sight=blocks_sight, architecture=architecture_component)
     
     return arch
 

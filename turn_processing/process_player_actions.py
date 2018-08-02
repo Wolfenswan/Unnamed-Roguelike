@@ -40,9 +40,18 @@ def process_player_input(action, game, fov_map, targeting_item = None):
                 target = get_blocking_entities_at_location(entities, destination_x, destination_y)
 
                 if target:
+                    # If a NPC is blocking the way #
                     if target.fighter:
                         attack_results = player.fighter.attack(target)
                         turn_results.extend(attack_results)
+                    # If a static object is blocking the way #
+                    elif target.architecture:
+                        if target.architecture.on_collision:
+                            collision_results = target.architecture.on_collision()
+                            turn_results.extend(collision_results)
+                        elif target.architecture.on_interaction:
+                            interaction_results = target.architecture.on_interaction()
+                            turn_results.extend(interaction_results)
                     else:
                         print('Your way is blocked.') # TODO placeholder
                 else:

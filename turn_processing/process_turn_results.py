@@ -1,3 +1,5 @@
+import tcod
+
 from game import GameStates
 from gui.messages import Message
 
@@ -12,7 +14,6 @@ def process_turn_results(player_turn_results, game, fov_map):
     for player_turn_result in player_turn_results:
         fov_recompute = player_turn_result.get('fov_recompute')
         message = player_turn_result.get('message')
-        dead_entity = player_turn_result.get('dead')
         item_added = player_turn_result.get('item_added')
         item_consumed = player_turn_result.get('consumed')
         item_dropped = player_turn_result.get('item_dropped')
@@ -21,6 +22,8 @@ def process_turn_results(player_turn_results, game, fov_map):
         targeting_item = player_turn_result.get('targeting')
         targeting_cancelled = player_turn_result.get('targeting_cancelled')
         resting = player_turn_result.get('resting')
+        door_entity = player_turn_result.get('door_toggled')
+        dead_entity = player_turn_result.get('dead')
 
         # List of results that activate the enemy's turn #
         enemy_turn_on = [item_added, item_dropped, item_consumed, item_equipped, item_dequipped]
@@ -64,5 +67,8 @@ def process_turn_results(player_turn_results, game, fov_map):
 
         if fov_recompute:
             results.append({'fov_recompute': fov_recompute})
+
+        if door_entity:
+            tcod.map_set_properties(fov_map, door_entity.x, door_entity.y, not door_entity.blocks_sight, not door_entity.blocks)
 
     return results

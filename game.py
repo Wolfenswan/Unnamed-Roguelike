@@ -29,5 +29,6 @@ class Game:
 
         # GUI #
         self.con = None
+        self.fov_map = None
         self.bottom_panel = None
         self.message_log = None

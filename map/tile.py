@@ -15,13 +15,3 @@ class Tile:
         self.gibbed = gibbed
         self.walkable = False
         self.map = game_map
-
-    def is_visible(self, x, y):
-        if x >= self.map.width or x < 0:
-            return False
-        elif y >= self.map.height or y < 0:
-            return False
-        elif not self.map.tiles[x][y].block_sight:
-            return True
-        else:
-            return False
