@@ -17,7 +17,7 @@ class Entity:
     """
     A generic object to represent players, enemies, items, etc.
     """
-    def __init__(self, x, y, char, color, name, descr=None, is_player = False, blocks=False, render_order=RenderOrder.CORPSE, fighter=None, ai=None, skills=None, item=None, inventory=None):
+    def __init__(self, x, y, char, color, name, descr=None, is_player = False, blocks=False, render_order=RenderOrder.CORPSE, fighter=None, ai=None, skills=None, item=None, inventory=None, architecture=None):
         """
 
         :param x: pos x
@@ -69,6 +69,7 @@ class Entity:
         self.inventory = inventory
         self.paperdoll = Paperdoll()
         self.skills = skills  # dictionary
+        self.architecture = architecture
         self.set_ownership() # Sets ownership for all components
 
         # AI related attributes #
@@ -114,6 +115,9 @@ class Entity:
 
         if self.inventory:
             self.inventory.owner = self
+
+        if self.architecture:
+            self.architecture = self
 
         if self.skills is not None:
             for skill in self.skills.values():

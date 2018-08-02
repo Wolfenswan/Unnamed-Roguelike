@@ -8,6 +8,7 @@ from gui.menus import inventory_menu, item_menu
 from rendering.common_functions import get_names_under_mouse, draw_console_borders, pos_on_screen
 from rendering.fov_functions import darken_color_by_fov_distance
 from rendering.draw_panels import draw_bar
+from rendering.render_order import RenderOrder
 
 
 def render_main_screen(game, fov_map, debug=False):
@@ -114,7 +115,7 @@ def render_map_centered_on_player(game, con, fov_map, debug=False):
 
 def draw_tile(game, con, fov_map, tile_x, tile_y, screen_x, screen_y, debug=False):
     tile = game.map.tiles[tile_x][tile_y]
-    visible = tcod.map_is_in_fov(fov_map, tile_x, tile_y)
+    visible = tcod.map_is_in_fov(fov_map, tile_x, tile_y) or debug
     wall = tile.block_sight and not tile.walkable
 
     fg_color = darken_color_by_fov_distance(game.player, colors.light_fov, tile_x, tile_y, randomness = 0)
@@ -127,6 +128,7 @@ def draw_tile(game, con, fov_map, tile_x, tile_y, screen_x, screen_y, debug=Fals
         if tile.gibbed:
             fg_color = colors.corpse
 
+        #tcod.console_put_char(con, screen_x, screen_y, char, tcod.BKGND_NONE)
         tcod.console_put_char_ex(con, screen_x, screen_y, char, fg_color, colors.black)
         tile.explored = 50
 
@@ -138,9 +140,8 @@ def draw_tile(game, con, fov_map, tile_x, tile_y, screen_x, screen_y, debug=Fals
             else:
                 tcod.console_put_char_ex(con, screen_x, screen_y, '.', colors.dark_ground_fg, colors.dark_ground)
 
-
 def draw_entity(game, entity, fov_map, debug=False):
-    if tcod.map_is_in_fov(fov_map, entity.x, entity.y) or debug:
+    if entity.render_order == RenderOrder.ALWAYS or tcod.map_is_in_fov(fov_map, entity.x, entity.y) or debug:
         x, y = pos_on_screen(entity.x, entity.y, game.player)
 
         tcod.console_put_char(game.con, x, y, entity.char)

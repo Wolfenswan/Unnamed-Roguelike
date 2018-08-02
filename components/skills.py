@@ -50,25 +50,28 @@ class Skill:
             logging.debug(
                 f'Cooled down {self.name} on {self.owner.name}: {self.cooldown} of {self.cooldown_length}.')
 
-# Skill Activation #
+    # Skill Activation #
+    # TODO consider if these should be their own file or static classes used to categorize them #
 
-def skill_charge_activation(ent, *args, **kwargs):
-    game = args[0]
-    distance = kwargs['distance']
-    # TODO cardinal direction instead of position
-    # TODO Straight empty line to target
-    target_x, target_y = game.player.x, game.player.y
-    execute_string = f"monster.skills['skill_orc_charge_exec'].execute{target_x, target_y, distance}"
-    ent.execute_after_delay = execute_string
-    ent.state = EntityStates.ENTITY_WAITING
-    ent.color_bg = colors.dark_red
-    ent.delay_turns = 1
+    @staticmethod
+    def skill_charge_activation(ent, *args, **kwargs):
+        game = args[0]
+        distance = kwargs['distance']
+        # TODO cardinal direction instead of position
+        # TODO Straight empty line to target
+        target_x, target_y = game.player.x, game.player.y
+        execute_string = f"monster.skills['skill_orc_charge_exec'].execute{target_x, target_y, distance}"
+        ent.execute_after_delay = execute_string
+        ent.state = EntityStates.ENTITY_WAITING
+        ent.color_bg = colors.dark_red
+        ent.delay_turns = 1
 
-def skill_charge_execution(ent, *args, **kwargs):
-    dx, dy = args[0], args[1]
-    distance = args[2]
-    # TODO x steps charge in cardinal direction
-    ent.color_bg = colors.green
+    @staticmethod
+    def skill_charge_execution(ent, *args, **kwargs):
+        dx, dy = args[0], args[1]
+        distance = args[2]
+        # TODO x steps charge in cardinal direction
+        ent.color_bg = colors.green
 
 # Skill Conditions #
 

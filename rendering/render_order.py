@@ -10,3 +10,4 @@ class RenderOrder(Enum):
     ACTOR = auto()
     PLAYER = auto()
     CURSOR = auto()
+    ALWAYS = auto()

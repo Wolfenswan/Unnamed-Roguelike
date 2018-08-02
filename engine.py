@@ -100,7 +100,7 @@ def game_loop(game, fov_map):
 
 if __name__ == '__main__':
     initialize_logging(debugging=True)
-    game = Game(debug=False)
+    game = Game(debug=True)
     initialize_window(game)
 
     choice = options_menu(cfg.GAME_NAME, 'Welcome to the Dungeon', ['Play a new game', 'Continue last game', 'Quit'], cancel_with_escape=False, sort_by=1)

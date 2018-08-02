@@ -35,7 +35,7 @@ def place_items(game):
             i_dict = possible_items[i_key]
 
             # Get a random position for the item
-            x, y = room.ranpos(game)
+            x, y = room.ranpos(game_map)
 
             # Generate the item at the given position
             item = gen_item_from_data(i_dict, x, y)

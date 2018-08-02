@@ -11,6 +11,7 @@ from gameobjects.player import Player
 from gui.messages import MessageLog
 from map.game_map import GameMap
 from map.place_actors import place_monsters
+from map.place_architecture import place_architecture, place_doors
 from map.place_items import place_items
 from rendering.render_order import RenderOrder
 
@@ -40,8 +41,10 @@ def initialize_game(game):
     game.map = GameMap(dwidth, dheight)
     game.map.make_map(game, cfg.MAX_ROOMS, cfg.ROOM_MIN_SIZE, cfg.ROOM_MAX_SIZE, dwidth, dheight)
 
-    place_items(game)
-    place_monsters(game)
+    place_architecture(game)
+    place_doors(game)
+    #place_items(game)
+    #place_monsters(game)
 
 
     game.message_log = MessageLog(cfg.MSG_X, cfg.MSG_WIDTH, cfg.MSG_HEIGHT)

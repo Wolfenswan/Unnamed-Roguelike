@@ -40,7 +40,7 @@ def place_monsters(game):
                         '... but count of {0} would exceed {1} so monster is not placed'.format(m + 1, num_of_monsters))
                     m += 1
                 else:
-                    free_tiles = room.free_tiles(game)
+                    free_tiles = room.free_tiles(game.map)
                     if len(free_tiles) > 0:
                         # Get a random position for the monster
                         x, y = choice(free_tiles)

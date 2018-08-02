@@ -40,8 +40,11 @@ def process_player_input(action, game, fov_map, targeting_item = None):
                 target = get_blocking_entities_at_location(entities, destination_x, destination_y)
 
                 if target:
-                    attack_results = player.fighter.attack(target)
-                    turn_results.extend(attack_results)
+                    if target.fighter:
+                        attack_results = player.fighter.attack(target)
+                        turn_results.extend(attack_results)
+                    else:
+                        print('Your way is blocked.') # TODO placeholder
                 else:
                     player.move(dx, dy)
                     turn_results.append({'fov_recompute':True})

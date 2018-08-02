@@ -2,6 +2,7 @@ import logging
 from random import choice, randint
 
 from components.actors.fighter import Fighter
+from components.architecture import Architecture
 from components.inventory import Inventory
 from components.items.equipment import Equipment
 from components.items.item import Item
@@ -9,6 +10,7 @@ from components.items.useable import Useable
 from components.skills import Skill
 from data.actor_data.skills_data import skills_data
 from data.actor_data.spawn_data import spawn_data
+from data.architecture_data.arch_static import arch_static_data
 from data.item_data.use_potions import use_potions_data
 from data.item_data.use_scrolls import use_scrolls_data
 from data.item_data.wp_swords import wp_swords_data
@@ -31,6 +33,9 @@ ITEM_DATA_MERGED = merge_dictionaries(item_data)
 
 actor_data = [spawn_data]
 ACTOR_DATA_MERGED = merge_dictionaries(actor_data)
+
+architecture_data = [arch_static_data]
+ARCHITECTURE_DATA_MERGED = merge_dictionaries(architecture_data)
 
 def gen_ent_from_dict(dict, entry, x, y, game):
     data = dict[entry]
@@ -108,6 +113,26 @@ def gen_item_from_data(data, x, y):
         i = Entity(*arguments, render_order=RenderOrder.ITEM, item = item_component)
 
         return i
+
+
+def gen_architecture(data, x, y):
+    name = data['name']
+    char = data['char']
+    color = data['color']
+    descr = data['descr']
+    blocks = data['blocks']
+    on_collision = data.get('on_collision')
+    on_interaction = data.get('on_interaction')
+
+    architecture_component = Architecture(on_collision = on_collision, on_interaction = on_interaction)
+
+    # create the arguments tuple out of the values we've got so far
+    arguments = (x, y, char, color, name, descr)
+
+    # create the static object using the arguments tuple
+    arch = Entity(*arguments, blocks=blocks, architecture=architecture_component)
+    
+    return arch
 
 
 def gen_loadout(actor, loadout, game):

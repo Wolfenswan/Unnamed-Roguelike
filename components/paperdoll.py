@@ -28,7 +28,7 @@ class Paperdoll:
                 results.extend(self.dequip(equipped_item))
                 results.extend(self.equip(item_ent, game))
             else:
-                print('kept')
+                print('kept') # TODO Placeholder
         else:
             setattr(extremity, e_type, item_ent)
             self.equipped_items.append(item_ent)
@@ -56,41 +56,40 @@ class Paperdoll:
 
         return results
 
-    def equip_old(self, item):
-        """ this sets the slot to the new item and adds the item to the equipped_items list """
-        results = []
-        logging.debug('{0} is equipping {1}'.format(self.owner.name,item.name))
+    # def equip_old(self, item):
+    #     """ this sets the slot to the new item and adds the item to the equipped_items list """
+    #     results = []
+    #     logging.debug('{0} is equipping {1}'.format(self.owner.name,item.name))
+    #
+    #     extremity = getattr(self, item.e_to)
+    #     slot = getattr(extremity, item.e_type)
+    #
+    #     # if the slot is already occupied, prompt the player if he wants to remove the other item
+    #     if slot:
+    #         results.append({'message':Message(f'{slot.name} is already equipped.')})
+    #
+    #         choice = menu_popup_yesno('', 'Remove your old {0}?'.format(slot.name), center_on_player=True,
+    #                                   force_width=24)
+    #         if choice:
+    #
+    #             # if both items have a quick use inventory try swapping their inventories
+    #             if hasattr(slot, 'qu_inventory') and hasattr(item, 'qu_inventory'):
+    #                 slot.qu_inventory.swap_qu_inv(item.qu_inventory)
+    #
+    #             slot.dequip(self.owner)
+    #             self.equip(item)
+    #             Message('You remove your old {0}.'.format(slot.name))
+    #             return True
+    #         else:
+    #             return False
+    #     else:
+    #         setattr(extremity, item.e_type, item)
+    #         self.equipped_items.append(item)
+    #         return True
 
-        extremity = getattr(self, item.e_to)
-        slot = getattr(extremity, item.e_type)
-
-        # if the slot is already occupied, prompt the player if he wants to remove the other item
-        if slot:
-            results.append({'message':Message(f'{slot.name} is already equipped.')})
-
-            choice = menu_popup_yesno('', 'Remove your old {0}?'.format(slot.name), center_on_player=True,
-                                      force_width=24)
-            if choice:
-
-                # if both items have a quick use inventory try swapping their inventories
-                if hasattr(slot, 'qu_inventory') and hasattr(item, 'qu_inventory'):
-                    slot.qu_inventory.swap_qu_inv(item.qu_inventory)
-
-                slot.dequip(self.owner)
-                self.equip(item)
-                Message('You remove your old {0}.'.format(slot.name))
-                return True
-            else:
-                return False
-        else:
-            setattr(extremity, item.e_type, item)
-            self.equipped_items.append(item)
-            return True
-
-    def apply_equipment_effects(self):
-        pass
 
     def get_total_qu_slots(self):
+        # TODO should be a @property #
         """ returns the number of total quick use slots on the paper doll """
         slots = 0
         for i in self.equipped_items:
