@@ -47,12 +47,9 @@ spawn_data = {
         'skills': ('skill_orc_charge_act','skill_orc_charge_exec'),
         'loadouts': {
                 'melee1': {
-                    'chance': 50,
-                    'equipment': ('sword_orc', 'helmet_rusty', 'leather_orc')
-                },
-                'melee2': {
-                    'chance': 50,
-                    'equipment': ('sword_orc', 'leather_orc')
+                    'chance': 100,
+                    'equipment': ('sword_rusty',),
+                    'backpack': ('pot_heal', 'scr_fireball')
                 }
         },
         'dlvls': (1,100),

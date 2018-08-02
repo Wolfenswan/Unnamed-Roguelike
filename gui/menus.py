@@ -4,6 +4,7 @@ from game import GameStates
 from rendering.common_functions import pos_on_screen
 from rendering.draw_windows import draw_options_window
 
+
 def menu_loop(wait_for=None):
     """
     The loop waits for a key input.
@@ -33,6 +34,7 @@ def menu_loop(wait_for=None):
         elif type(wait_for) is list:
             if char.lower() in wait_for:
                 return char
+
 
 def inventory_menu(game):
     player = game.player
@@ -72,6 +74,7 @@ def inventory_menu(game):
     else:
         return False
 
+
 def equipment_menu(game):
     # TODO: Placeholder #
     player = game.player
@@ -95,6 +98,7 @@ def equipment_menu(game):
         return inventory[choice]
     else:
         return False
+
 
 def item_menu(item_ent, game):
     player = game.player
@@ -123,6 +127,7 @@ def item_menu(item_ent, game):
     choice = menu_loop(wait_for=wait_for)
 
     return choice
+
 
 def yesno_menu(body, game):
     player = game.player
