@@ -147,9 +147,6 @@ def yesno_menu(body, game):
 
 
 def main_menu():
-    #tcod.image_blit_2x(background_image, 0, 0, 0)
-    screen_width = cfg.SCREEN_WIDTH
-    screen_height = cfg. SCREEN_HEIGHT
 
     body = 'Welcome to the Dungeon!'
     options = ['Play a new game', 'Continue last game', 'Quit']
