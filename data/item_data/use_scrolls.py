@@ -15,9 +15,9 @@ use_scrolls_data = {
         "char": SCROLL_CHAR,
         "color": SCROLL_COLOR,
         'on_use': cast_fireball_on,
-        'on_use_msg': 'Left-click an enemy to burn it, or right-click to cancel.',
+        'on_use_msg': 'Move the cursor over the intended target, press Enter to confirm.',
         'targeting': True,
-        "on_use_params": {'dmg': 12, 'radius': 3},
+        "on_use_params": {'dmg': 12, 'radius': 3, 'range': 5},
         'chance': 30,
         'dlvls': (1, 99)
     }

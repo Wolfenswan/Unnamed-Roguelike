@@ -27,7 +27,7 @@ def game_loop(game, fov_map):
     fov_recompute = True
 
     key = tcod.Key()
-    mouse = tcod.Mouse()
+    # mouse = tcod.Mouse()
 
     while not tcod.console_is_window_closed():
         # tcod.sys_set_fps(30)
@@ -37,21 +37,21 @@ def game_loop(game, fov_map):
             recompute_fov(fov_map, player.x, player.y)
             fov_recompute = False
 
-        render_main_screen(game, fov_map, mouse)
-        render_panels(game, fov_map, mouse)
+        render_main_screen(game, fov_map)
+        render_panels(game, fov_map)
         #render_windows(game, selected_item)
 
         tcod.console_flush()
 
         clear_all(con, entities)
 
-        tcod.sys_wait_for_event(tcod.EVENT_KEY_PRESS, key, mouse, True)
+        tcod.sys_wait_for_event(tcod.EVENT_KEY_PRESS, key, None, True)
 
         action = handle_keys(key, game.state)
-        mouse_action = handle_mouse(mouse)
+        #mouse_action = handle_mouse(mouse)
 
         # Process player input into turn results #
-        player_turn_results = process_player_input(action, mouse_action, game, fov_map, targeting_item = targeting_item)
+        player_turn_results = process_player_input(action, game, fov_map, targeting_item = targeting_item)
 
         # Player turn results is None if the game should exit #
         if player_turn_results is None:

@@ -4,6 +4,7 @@ from random import randint
 from components.actors.fighter import Fighter
 from components.inventory import Inventory
 from config_files import cfg, colors
+from data.data_processing import pick_from_data_dict_by_chance, gen_loadout
 from game import Game
 from gameobjects.entity import Entity
 from gameobjects.player import Player
@@ -21,8 +22,17 @@ def initialize_game(debug=False):
     # Setup the Player character #
     fighter_component = Fighter(hp=30, defense=2, power=5, vision=cfg.FOV_RADIUS)
     inventory_component = Inventory(26)
-    game.player = Player('Player', fighter=fighter_component, inventory=inventory_component)
     game.cursor = Entity(0, 0, 'X', colors.white, 'Cursor', render_order=RenderOrder.CURSOR)
+    game.player = Player('Player', fighter=fighter_component, inventory=inventory_component)
+    player_loadouts = {
+        'loadout1': {
+            'chance': 100,
+            'equipment': ('sword_rusty',),
+            'backpack': ('pot_heal', 'scr_fireball')
+        }
+    }
+    loadout = pick_from_data_dict_by_chance(player_loadouts)
+    gen_loadout(game.player, player_loadouts[loadout], game)
 
     game.entities = [game.player]
 

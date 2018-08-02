@@ -10,7 +10,7 @@ from rendering.fov_functions import darken_color_by_fov_distance
 from rendering.draw_panels import draw_bar
 
 
-def render_main_screen(game, fov_map, mouse, debug=False):
+def render_main_screen(game, fov_map, debug=False):
     screen_width = cfg.SCREEN_WIDTH
     screen_height = cfg.SCREEN_HEIGHT
     bar_width = 20 # TODO use cfg.file
@@ -41,7 +41,7 @@ def render_main_screen(game, fov_map, mouse, debug=False):
     tcod.console_blit(con, 0, 0, screen_width, screen_height, 0, 0, 0)
 
 
-def render_panels(game, fov_map, mouse):
+def render_panels(game, fov_map):
     screen_width = cfg.SCREEN_WIDTH
     screen_height = cfg.SCREEN_HEIGHT
     bar_width = 20  # TODO use cfg.file
@@ -64,8 +64,8 @@ def render_panels(game, fov_map, mouse):
         y += 1
 
     tcod.console_set_default_foreground(bottom_panel, tcod.light_gray)
-    tcod.console_print_ex(bottom_panel, 1, 0, tcod.BKGND_NONE, tcod.LEFT,
-                          get_names_under_mouse(mouse, entities, fov_map))
+    # tcod.console_print_ex(bottom_panel, 1, 0, tcod.BKGND_NONE, tcod.LEFT,
+    #                       get_names_under_mouse(mouse, entities, fov_map))
 
     # HP Bar #
     draw_bar(bottom_panel, 1, 1, bar_width, 'HP', player.fighter.hp, player.fighter.max_hp,
@@ -137,6 +137,7 @@ def draw_tile(game, con, fov_map, tile_x, tile_y, screen_x, screen_y, debug=Fals
                 tcod.console_put_char_ex(con, screen_x, screen_y, '#', colors.dark_wall_fg, colors.dark_ground)
             else:
                 tcod.console_put_char_ex(con, screen_x, screen_y, '.', colors.dark_ground_fg, colors.dark_ground)
+
 
 def draw_entity(game, entity, fov_map, debug=False):
     if tcod.map_is_in_fov(fov_map, entity.x, entity.y) or debug:

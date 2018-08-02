@@ -10,6 +10,8 @@ def center_x_for_text(width, text, padding=0):
 
 
 def get_names_under_mouse(mouse, entities, fov_map):
+    # TODO get names under cursor
+    # TODO description window for NPCs
     (x, y) = (mouse.cx, mouse.cy)
 
     names = [entity.name for entity in entities

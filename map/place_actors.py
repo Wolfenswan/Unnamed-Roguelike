@@ -3,46 +3,10 @@
 import logging
 from random import randint, choice
 
-from components.skills import Skill
-from data.util_functions import pick_from_data_dict_by_chance
-from components.actors.fighter import Fighter
+from data.data_processing import gen_ent_from_dict, pick_from_data_dict_by_chance
 from config_files import cfg
 from data.actor_data.spawn_data import spawn_data
-from data.actor_data.skills_data import skills_data
-from gameobjects.npc import NPC
 
-
-def gen_ent_from_dict(dict, entry, x, y):
-    data = dict[entry]
-    name = data['name']
-    char = data['char']
-    color = choice(data['colors'])
-    descr = data['descr']
-    hp = randint(*data['max_hp'])
-    defense = randint(*data['nat_armor'])
-    power = randint(*data['nat_power'])
-    vision = data['nat_vision']
-    ai = data['ai']
-    skills = data.get('skills', None)
-
-    fighter_component = Fighter(hp, defense, power, vision)
-    ai_component = ai()
-
-    skills_component = None
-
-    if skills is not None:
-        skills_component = {}
-        for k in skills:
-            skill = Skill(**skills_data[k])
-            skills_component[k] = (skill)
-
-    # create the arguments tuple out of the values we've got so far
-    arguments = (x, y, char, color, name, descr)
-
-    # create the static object using the arguments tuple
-    logging.debug(f'Generating {name} with {arguments, fighter_component, ai_component, skills_component}')
-    ent = NPC(*arguments, fighter=fighter_component, ai=ai_component, skills=skills_component)
-    return ent
 
 def place_monsters(game):
     """ generates monsters in the current dungeon level """
@@ -80,7 +44,7 @@ def place_monsters(game):
                     if len(free_tiles) > 0:
                         # Get a random position for the monster
                         x, y = choice(free_tiles)
-                        ent = gen_ent_from_dict(spawn_data, entry, x, y)
+                        ent = gen_ent_from_dict(spawn_data, entry, x, y, game)
                         game.entities.append(ent)
                         m += 1
                         logging.debug(f'... and created {ent} at {x},{y} in {room}, #{m} out of {num_of_monsters}')
