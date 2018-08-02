@@ -151,18 +151,10 @@ def main_menu():
     screen_width = cfg.SCREEN_WIDTH
     screen_height = cfg. SCREEN_HEIGHT
 
-    tcod.console_set_default_foreground(0, tcod.light_yellow)
-    tcod.console_print_ex(0, int(screen_width / 2), int(screen_height / 2) - 4, tcod.BKGND_NONE, tcod.CENTER,
-                             'TOMBS OF THE ANCIENT KINGS')
-    tcod.console_print_ex(0, int(screen_width / 2), int(screen_height - 2), tcod.BKGND_NONE, tcod.CENTER,
-                             'By (Your name here)')
-
     body = 'Welcome to the Dungeon!'
     options = ['Play a new game', 'Continue last game', 'Quit']
-    draw_options_window('', body, options, show_cancel_option=False)
+    draw_options_window(cfg.GAME_NAME, body, options, show_cancel_option=False)
 
     choice = menu_loop(wait_for=3, cancel_with_escape = False)
 
     return choice
-
-    #menu(con, '', ['Play a new game', 'Continue last game', 'Quit'], 24, screen_width, screen_height)
