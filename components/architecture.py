@@ -36,7 +36,7 @@ class Architecture:
             ent.blocks_sight = False
             results.append({'message':Message('You open a door.')})
         else:
-            ent.architecture.on_collision = toggle_door
+            ent.architecture.on_collision = Architecture.toggle_door
             ent.char = '+'
             ent.blocks = True
             ent.blocks_sight = True

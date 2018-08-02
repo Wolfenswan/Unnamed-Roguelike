@@ -1,4 +1,4 @@
-from components.architecture import Architecture, toggle_door
+from components.architecture import Architecture
 from config_files import colors
 
 arch_doors_data = {
