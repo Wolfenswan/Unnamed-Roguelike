@@ -6,7 +6,7 @@ from rendering.common_functions import pos_on_screen
 from rendering.draw_windows import draw_options_window
 
 
-def menu_loop(wait_for=None, cancel_with_escape = True):
+def menu_loop(wait_for=None, cancel_with_escape = True, sort_by='str'):
     """
     The loop waits for a key input.
     If wait_for is an integer, it waits for a key that corresponds to an integer in range of (0, wait_for)
@@ -19,20 +19,24 @@ def menu_loop(wait_for=None, cancel_with_escape = True):
     """
     key = tcod.Key()
 
-    while key.vk != tcod.KEY_ESCAPE:
+    while True:
         tcod.sys_wait_for_event(tcod.EVENT_KEY_PRESS, key, '', False)
         char = chr(key.c)
-
         if key.vk == tcod.KEY_ESCAPE and cancel_with_escape:
             return False
         # elif type(wait_for) is dict:
         #     if char.lower() in wait_for.keys():
         #         return wait_for[char]
-        elif type(wait_for) is int:
-            index = ord(char) - ord('a')
-            if 0 <= index < wait_for:
-                return index
-        elif type(wait_for) is list:
+        elif type(wait_for) == int: # If menu is waiting to receive an index
+            if type(sort_by) == str:
+                index = ord(char) - ord('a')
+                if 0 <= index < wait_for:
+                    return index
+            elif type(sort_by) == int:
+                index = int(key.c - ord('1'))
+                if 0 <= index < wait_for:
+                    return index
+        elif type(wait_for) == list: # If menu is waiting for a specific key input
             if char.lower() in wait_for:
                 return char
 
@@ -74,6 +78,29 @@ def inventory_menu(game):
         return player.inventory.items[choice]
     else:
         return False
+
+
+def options_menu(title, body, options, sort_by='str',cancel_with_escape=True):
+    draw_options_window(title, body, options, show_cancel_option=cancel_with_escape, sort_by = sort_by)
+
+    choice = menu_loop(wait_for=len(options), sort_by = sort_by, cancel_with_escape=cancel_with_escape)
+    return choice
+
+
+def yesno_menu(body, game):
+    player = game.player
+    x, y = pos_on_screen(player.x + 2, player.y - 2, game.player)
+
+    title = 'Yes or No?'
+
+    options = ['(Y)es','(N)o']
+    wait_for = ['y','n']
+
+    draw_options_window(title, body, options, window_x=x, window_y=y, forced_width=len(body))
+
+    choice = menu_loop(wait_for=wait_for)
+
+    return True if choice == 'y' else False
 
 
 def equipment_menu(game):
@@ -123,35 +150,8 @@ def item_menu(item_ent, game):
             wait_for.append('e')
     options.append('(D)rop')
 
-    draw_options_window(title, body, options, window_x=x, window_y=y, forced_width=len(body), sort_by = None)
+    draw_options_window(title, body, options, window_x=x, window_y=y, forced_width=len(body))
 
     choice = menu_loop(wait_for=wait_for)
-
-    return choice
-
-
-def yesno_menu(body, game):
-    player = game.player
-    x, y = pos_on_screen(player.x + 2, player.y - 2, game.player)
-
-    title = 'Yes or No?'
-
-    options = ['(Y)es','(N)o']
-    wait_for = ['y','n']
-
-    draw_options_window(title, body, options, window_x=x, window_y=y, forced_width=len(body), sort_by=None)
-
-    choice = menu_loop(wait_for=wait_for)
-
-    return True if choice == 'y' else False
-
-
-def main_menu():
-
-    body = 'Welcome to the Dungeon!'
-    options = ['Play a new game', 'Continue last game', 'Quit']
-    draw_options_window(cfg.GAME_NAME, body, options, show_cancel_option=False)
-
-    choice = menu_loop(wait_for=3, cancel_with_escape = False)
 
     return choice

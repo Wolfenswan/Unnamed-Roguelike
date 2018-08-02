@@ -2,17 +2,17 @@ import os
 
 import tcod
 
+from config_files import cfg
 from game import GameStates, Game
-from gui.menus import main_menu
-from gui.messages import Message
+from gui.menus import options_menu
 from loader_functions.data_loader import save_game, load_game
-from turn_processing.handle_input import handle_keys, handle_mouse
+from turn_processing.handle_input import handle_keys
 from turn_processing.process_player_actions import process_player_input
 from loader_functions.initialize_game import initialize_game
 from loader_functions.initialize_logging import initialize_logging
 from loader_functions.initialize_window import initialize_window
 from rendering.fov_functions import initialize_fov, recompute_fov
-from rendering.render_main import clear_all, render_main_screen, render_windows, render_panels
+from rendering.render_main import clear_all, render_main_screen, render_panels
 from turn_processing.process_turn_results import process_turn_results
 
 
@@ -103,8 +103,7 @@ if __name__ == '__main__':
     game = Game(debug=False)
     initialize_window(game)
 
-    choice = main_menu()
-
+    choice = options_menu(cfg.GAME_NAME, 'Welcome to the Dungeon', ['Play a new game', 'Continue last game', 'Quit'], cancel_with_escape=False, sort_by=1)
     if choice == 0:
         game = initialize_game(game)
     elif choice == 1:

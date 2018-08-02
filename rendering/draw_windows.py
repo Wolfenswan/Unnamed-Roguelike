@@ -21,7 +21,7 @@ def draw_window(window, caption, window_x, window_y, width, height, show_cancel_
 
     tcod.console_flush()
 
-def draw_options_window(caption, body, options, window_x = None, window_y = None, sort_by = 'letter', show_cancel_option=True, forced_width=None):
+def draw_options_window(caption, body, options, window_x = None, window_y = None, sort_by = 'str', show_cancel_option=True, forced_width=None):
     padding_x = 5
     padding_y = 4
     width = max(len(option) for option in options + [caption, body]) + padding_x
@@ -38,15 +38,14 @@ def draw_options_window(caption, body, options, window_x = None, window_y = None
     if body_height:
         height += body_height + padding_y // 2
 
-    # if no coordinates have been passed, calculate center-screen
+    # if no coordinates have been passed, window will drawn at screen center
     if window_x is None or window_y is None:
         window_x = (cfg.SCREEN_WIDTH - width) // 2
         window_y = (cfg.SCREEN_HEIGHT - height) // 2
-    else:
+    elif window_x > cfg.SCREEN_WIDTH//2:
         # Make sure the window does not cut off screen
-        # width + 3creates a minor offset to make sure the player is not concealed by the window
-        if window_x > cfg.SCREEN_WIDTH//2:
-            window_x -= width + 3
+        # width + 3 creates a minor offset to make sure the player is not concealed by the window
+        window_x -= (width + 3)
 
     window = tcod.console_new(width, height)
 
@@ -59,10 +58,10 @@ def draw_options_window(caption, body, options, window_x = None, window_y = None
 
     letter_index = ord('a')
     for i, option in enumerate(options):
-        if sort_by == 'letter':
+        if type(sort_by) == str:
             line = '(' + chr(letter_index) + ') ' + option
             letter_index += 1  # by incrementing the ascii code for the letter, we go through the alphabet
-        elif sort_by == 'number':
+        elif type(sort_by) == int:
             line = '(' + str(i + 1) + ') ' + option
         else:
             line = option
