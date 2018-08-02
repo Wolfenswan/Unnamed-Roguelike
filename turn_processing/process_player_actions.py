@@ -37,9 +37,10 @@ def process_player_input(action, game, fov_map, targeting_item = None):
             destination_x, destination_y = player.x + dx, player.y + dy
 
             if not game_map.is_blocked(destination_x, destination_y):
-                if move:
-                    target = get_blocking_entity_at_location(entities, destination_x, destination_y)
-                else:
+
+                target = get_blocking_entity_at_location(entities, destination_x, destination_y)
+
+                if target is None and interact:
                     target = get_interactable_entity_at_location(entities, destination_x, destination_y)
 
                 if target:
@@ -49,10 +50,12 @@ def process_player_input(action, game, fov_map, targeting_item = None):
                         turn_results.extend(attack_results)
                     # If a static object is blocking the way #
                     elif target.architecture:
-                        if interact and target.architecture.on_interaction:
+
+                        if interact and target.architecture.on_interaction: # interacting with the object
                             interaction_results = target.architecture.on_interaction(target)
                             turn_results.extend(interaction_results)
-                        if move and target.architecture.on_collision:
+
+                        if move and target.architecture.on_collision: # bumping into the object
                             collision_results = target.architecture.on_collision(target)
                             turn_results.extend(collision_results)
                     elif move:
