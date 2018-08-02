@@ -1,5 +1,6 @@
 from random import randint
 
+from config_files import cfg
 from map.rectangle import Rect
 from map.tile import Tile
 
@@ -15,12 +16,14 @@ class GameMap:
 
         return tiles
 
-    def make_map(self, game, max_rooms, room_min_size, room_max_size, map_width, map_height):
+    def make_map(self, game, room_min_size, room_max_size, map_width, map_height):
 
         player = game.player
+        max_rooms = int((map_width / room_min_size) + (map_height / room_min_size))
 
         rooms = self.rooms
         num_rooms = 0
+        #room_number = randint(min_rooms, max_rooms)
 
         for r in range(max_rooms):
             # random width and height

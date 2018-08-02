@@ -3,7 +3,7 @@ from random import choice
 
 import tcod
 
-from gameobjects.entity import Entity, get_blocking_entities_at_location
+from gameobjects.entity import Entity, get_blocking_entity_at_location
 from rendering.render_order import RenderOrder
 
 
@@ -27,7 +27,7 @@ class NPC(Entity):
         dy = int(round(dy / distance))
 
         if not (game_map.is_blocked(self.x + dx, self.y + dy) or
-                get_blocking_entities_at_location(entities, self.x + dx, self.y + dy)):
+                get_blocking_entity_at_location(entities, self.x + dx, self.y + dy)):
             self.move(dx, dy)
 
     def move_astar(self, target, entities, game_map):

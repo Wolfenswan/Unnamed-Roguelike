@@ -32,7 +32,6 @@ class Paperdoll:
         else:
             setattr(extremity, e_type, item_ent)
             self.equipped_items.append(item_ent)
-            print(self.equipped_items)
             self.owner.inventory.remove_from_inv(item_ent)
             results.append({'item_equipped': item_ent, 'message': Message(f'You equip the {item_ent.name}')})
 

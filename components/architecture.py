@@ -14,24 +14,7 @@ class Architecture:
     def collision(self):
         pass
 
-    def toggle_door(self):
-        ent = self.owner
-        door_closed = ent.blocks
-        results = [{'door_toggled':ent, 'fov_recompute':True}]
-        if door_closed:
-            self.on_collision = None
-            ent.char = '-'
-            ent.blocks = False
-            ent.blocks_sight = False
-            results.append({'message':Message('You open a door.')})
-        else:
-            self.on_collision = self.toggle_door
-            ent.char = '+'
-            ent.blocks = True
-            ent.blocks_sight = True
-            results.append({'message': Message('You close a door.')})
 
-        return results
 
     @staticmethod
     def use_stairs(down):
@@ -41,3 +24,21 @@ class Architecture:
         else:
             # retrieve old dungeon level
             pass
+
+def toggle_door(ent):
+    door_closed = ent.blocks
+    results = [{'door_toggled':ent, 'fov_recompute':True}]
+    if door_closed:
+        ent.architecture.on_collision = None
+        ent.char = '-'
+        ent.blocks = False
+        ent.blocks_sight = False
+        results.append({'message':Message('You open a door.')})
+    else:
+        ent.architecture.on_collision = toggle_door
+        ent.char = '+'
+        ent.blocks = True
+        ent.blocks_sight = True
+        results.append({'message': Message('You close a door.')})
+
+    return results

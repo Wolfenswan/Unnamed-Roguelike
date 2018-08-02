@@ -2,7 +2,7 @@
 import tcod
 
 from game import GameStates
-from gameobjects.entity import get_blocking_entities_at_location
+from gameobjects.entity import get_blocking_entity_at_location, get_interactable_entity_at_location
 from gui.menus import inventory_menu, item_menu, equipment_menu
 from gui.messages import Message, MessageType
 
@@ -16,6 +16,7 @@ def process_player_input(action, game, fov_map, targeting_item = None):
 
     exit = action.get('exit')
     fullscreen = action.get('fullscreen')
+    interact = action.get('interact')
     move = action.get('move')
     rest = action.get('rest')
     pickup = action.get('pickup')
@@ -31,13 +32,15 @@ def process_player_input(action, game, fov_map, targeting_item = None):
     # Player moves #
     active_player_states = [GameStates.PLAYERS_TURN, GameStates.PLAYER_RESTING]
     if game.state in active_player_states:
-        if move:
-            dx, dy = move
-            destination_x = player.x + dx
-            destination_y = player.y + dy
+        if move or interact:
+            dx, dy = move if move is not None else interact
+            destination_x, destination_y = player.x + dx, player.y + dy
 
             if not game_map.is_blocked(destination_x, destination_y):
-                target = get_blocking_entities_at_location(entities, destination_x, destination_y)
+                if move:
+                    target = get_blocking_entity_at_location(entities, destination_x, destination_y)
+                else:
+                    target = get_interactable_entity_at_location(entities, destination_x, destination_y)
 
                 if target:
                     # If a NPC is blocking the way #
@@ -46,15 +49,17 @@ def process_player_input(action, game, fov_map, targeting_item = None):
                         turn_results.extend(attack_results)
                     # If a static object is blocking the way #
                     elif target.architecture:
-                        if target.architecture.on_collision:
-                            collision_results = target.architecture.on_collision()
-                            turn_results.extend(collision_results)
-                        elif target.architecture.on_interaction:
-                            interaction_results = target.architecture.on_interaction()
+                        if interact and target.architecture.on_interaction:
+                            interaction_results = target.architecture.on_interaction(target)
                             turn_results.extend(interaction_results)
-                    else:
+                        if move and target.architecture.on_collision:
+                            collision_results = target.architecture.on_collision(target)
+                            turn_results.extend(collision_results)
+                    elif move:
                         print('Your way is blocked.') # TODO placeholder
-                else:
+                    elif interact:
+                        print('There is nothing to interact with') # TODO placeholder
+                elif not interact:
                     player.move(dx, dy)
                     turn_results.append({'fov_recompute':True})
 
