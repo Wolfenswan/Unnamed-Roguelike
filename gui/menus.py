@@ -1,11 +1,12 @@
 import tcod
 
+from config_files import cfg
 from game import GameStates
 from rendering.common_functions import pos_on_screen
 from rendering.draw_windows import draw_options_window
 
 
-def menu_loop(wait_for=None):
+def menu_loop(wait_for=None, cancel_with_escape = True):
     """
     The loop waits for a key input.
     If wait_for is an integer, it waits for a key that corresponds to an integer in range of (0, wait_for)
@@ -22,7 +23,7 @@ def menu_loop(wait_for=None):
         tcod.sys_wait_for_event(tcod.EVENT_KEY_PRESS, key, '', False)
         char = chr(key.c)
 
-        if key.vk == tcod.KEY_ESCAPE:
+        if key.vk == tcod.KEY_ESCAPE and cancel_with_escape:
             return False
         # elif type(wait_for) is dict:
         #     if char.lower() in wait_for.keys():
@@ -143,3 +144,25 @@ def yesno_menu(body, game):
     choice = menu_loop(wait_for=wait_for)
 
     return True if choice == 'y' else False
+
+
+def main_menu():
+    #tcod.image_blit_2x(background_image, 0, 0, 0)
+    screen_width = cfg.SCREEN_WIDTH
+    screen_height = cfg. SCREEN_HEIGHT
+
+    tcod.console_set_default_foreground(0, tcod.light_yellow)
+    tcod.console_print_ex(0, int(screen_width / 2), int(screen_height / 2) - 4, tcod.BKGND_NONE, tcod.CENTER,
+                             'TOMBS OF THE ANCIENT KINGS')
+    tcod.console_print_ex(0, int(screen_width / 2), int(screen_height - 2), tcod.BKGND_NONE, tcod.CENTER,
+                             'By (Your name here)')
+
+    body = 'Welcome to the Dungeon!'
+    options = ['Play a new game', 'Continue last game', 'Quit']
+    draw_options_window('', body, options, show_cancel_option=False)
+
+    choice = menu_loop(wait_for=3, cancel_with_escape = False)
+
+    return choice
+
+    #menu(con, '', ['Play a new game', 'Continue last game', 'Quit'], 24, screen_width, screen_height)

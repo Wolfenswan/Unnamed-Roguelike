@@ -15,9 +15,7 @@ from map.place_items import place_items
 from rendering.render_order import RenderOrder
 
 
-def initialize_game(debug=False):
-
-    game = Game(debug=debug)
+def initialize_game(game):
 
     # Setup the Player character #
     fighter_component = Fighter(hp=30, defense=2, power=5, vision=cfg.FOV_RADIUS)

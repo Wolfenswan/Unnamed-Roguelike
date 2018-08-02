@@ -59,7 +59,7 @@ class Inventory:
         return results
 
     def remove_from_inv(self, item):
-        """ removes an item from the player main inventory or any quick use slots """
+        """ removes an item from the player main inventory """
         if item in self.items:
             self.items.remove(item)
 

@@ -110,3 +110,4 @@ venv.bak/
 logs/
 venv_start.bat
 /Misc/
+/savegames/*

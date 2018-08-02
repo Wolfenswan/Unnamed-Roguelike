@@ -1,7 +1,11 @@
+import os
+
 import tcod
 
-from game import GameStates
+from game import GameStates, Game
+from gui.menus import main_menu
 from gui.messages import Message
+from loader_functions.data_loader import save_game, load_game
 from turn_processing.handle_input import handle_keys, handle_mouse
 from turn_processing.process_player_actions import process_player_input
 from loader_functions.initialize_game import initialize_game
@@ -96,7 +100,22 @@ def game_loop(game, fov_map):
 
 if __name__ == '__main__':
     initialize_logging(debugging=True)
-    game = initialize_game(debug=False)
+    game = Game(debug=False)
     initialize_window(game)
+
+    choice = main_menu()
+
+    if choice == 0:
+        game = initialize_game(game)
+    elif choice == 1:
+        try:
+            game = load_game()
+        except:
+            # TODO show a file loading error popup
+            pass
+    elif choice == 2:
+        exit()
+
     fov_map = initialize_fov(game.map)
     game_loop(game, fov_map)
+    save_game(game) # TODO placeholder for testing purposes

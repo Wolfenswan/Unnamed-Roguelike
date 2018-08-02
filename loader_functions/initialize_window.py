@@ -1,3 +1,5 @@
+import os
+
 import tcod
 
 from config_files import cfg
@@ -19,7 +21,9 @@ def initialize_window(game):
         'terminal12x12_gs_ro'  # 9 # FONT_LAYOUT_ASCII_INROW
     )
 
-    tcod.console_set_custom_font(f'resources/fonts/{fonts[8]}.png', tcod.FONT_TYPE_GREYSCALE | tcod.FONT_LAYOUT_TCOD)
+    font = fonts[8]+'.png'
+    path = 'resources/fonts/'
+    tcod.console_set_custom_font(os.path.join(path, font), tcod.FONT_TYPE_GREYSCALE | tcod.FONT_LAYOUT_TCOD)
 
     tcod.console_init_root(cfg.SCREEN_WIDTH, cfg.SCREEN_HEIGHT, cfg.GAME_NAME, False)
 
