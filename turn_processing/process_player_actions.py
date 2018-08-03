@@ -2,9 +2,10 @@
 import tcod
 
 from game import GameStates
-from gameobjects.entity import get_blocking_entity_at_location, get_interactable_entity_at_location
+from gameobjects.util_functions import get_blocking_entity_at_location, get_interactable_entity_at_location
 from gui.menus import inventory_menu, item_menu, equipment_menu
 from gui.messages import Message, MessageType
+from rendering.render_windows import render_description_window
 
 
 def process_player_input(action, game, fov_map, targeting_item = None):

@@ -13,6 +13,7 @@ from loader_functions.initialize_logging import initialize_logging
 from loader_functions.initialize_window import initialize_window
 from rendering.fov_functions import initialize_fov, recompute_fov
 from rendering.render_main import clear_all, render_main_screen, render_panels
+from rendering.render_windows import render_description_window
 from turn_processing.process_turn_results import process_turn_results
 
 
@@ -43,7 +44,9 @@ def game_loop(game):
 
         render_main_screen(game, fov_map)
         render_panels(game)
-        #render_windows(game, selected_item)
+
+        if game.state == GameStates.CURSOR_ACTIVE:
+            render_description_window(game)
 
         tcod.console_flush()
 
@@ -103,7 +106,7 @@ if __name__ == '__main__':
     game = Game(debug=False)
     initialize_window(game)
 
-    choice = options_menu(cfg.GAME_NAME, 'Welcome to the Dungeon', ['Play a new game', 'Continue last game', 'Quit'], cancel_with_escape=False, sort_by=1)
+    choice = options_menu(cfg.GAME_NAME, 'Welcome to the Dungeon', options=['Play a new game', 'Continue last game', 'Quit'], cancel_with_escape=False, sort_by=1)
     if choice == 0:
         game = initialize_game(game)
     elif choice == 1:

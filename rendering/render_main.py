@@ -4,10 +4,9 @@ import tcod
 
 from config_files import cfg as cfg, colors
 from game import GameStates
-from gui.menus import inventory_menu, item_menu
-from rendering.common_functions import get_names_under_mouse, draw_console_borders, pos_on_screen
+from rendering.common_functions import draw_console_borders, pos_on_screen
 from rendering.fov_functions import darken_color_by_fov_distance
-from rendering.draw_panels import draw_bar
+from rendering.render_panels import draw_bar
 from rendering.render_order import RenderOrder
 
 
@@ -70,15 +69,6 @@ def render_panels(game):
     tcod.console_print_frame(bottom_panel, 0, 0, screen_width, panel_height)
 
 
-def render_windows(game, selected_item):
-    # Function to render all temporary windows & popup screens #
-    if game.state in (GameStates.SHOW_INVENTORY, GameStates.DROP_INVENTORY):
-        inventory_menu(game)
-
-    if game.state == GameStates.SHOW_ITEM and selected_item is not None:
-        item_menu(selected_item, game)
-
-
 def render_map(game, con, fov_map, debug=False):
     """ Obsolete rendering function """
 
@@ -86,6 +76,7 @@ def render_map(game, con, fov_map, debug=False):
        for screen_x in range(cfg.MAP_SCREEN_WIDTH):
             tile_x, tile_y = screen_x, screen_y
             draw_tile(game, con, fov_map, tile_x, tile_y, screen_x, screen_y, debug=debug)
+
 
 def render_map_centered_on_player(game, con, fov_map, debug=False):
 
@@ -104,6 +95,7 @@ def render_map_centered_on_player(game, con, fov_map, debug=False):
 
             if tile_x in range(game_map.width) and tile_y in range(game_map.height):
                 draw_tile(game, con, fov_map, tile_x, tile_y, screen_x, screen_y, debug=debug)
+
 
 def draw_tile(game, con, fov_map, tile_x, tile_y, screen_x, screen_y, debug=False):
     tile = game.map.tiles[tile_x][tile_y]

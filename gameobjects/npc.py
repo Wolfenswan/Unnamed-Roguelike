@@ -3,7 +3,8 @@ from random import choice
 
 import tcod
 
-from gameobjects.entity import Entity, get_blocking_entity_at_location
+from gameobjects.entity import Entity
+from gameobjects.util_functions import get_blocking_entity_at_location
 from rendering.render_order import RenderOrder
 
 

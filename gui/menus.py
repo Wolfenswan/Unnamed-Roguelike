@@ -3,7 +3,7 @@ import tcod
 from config_files import cfg
 from game import GameStates
 from rendering.common_functions import pos_on_screen
-from rendering.draw_windows import draw_options_window
+from rendering.render_windows import draw_window
 
 
 def menu_loop(wait_for=None, cancel_with_escape=True, sort_by='str'):
@@ -70,7 +70,7 @@ def inventory_menu(game):
 
     width = len(max(options, key=len))
 
-    draw_options_window('Inventory', body, options, window_x=x, window_y=y, forced_width=max(width, 25))
+    draw_window('Inventory', body, options=options, window_x=x, window_y=y, forced_width=max(width, 25))
 
     choice = menu_loop(wait_for=len(options))
 
@@ -81,7 +81,7 @@ def inventory_menu(game):
 
 
 def options_menu(title, body, options, sort_by='str', cancel_with_escape=True):
-    draw_options_window(title, body, options, show_cancel_option=cancel_with_escape, sort_by=sort_by)
+    draw_window(title, body, options, show_cancel_option=cancel_with_escape, sort_by=sort_by)
 
     choice = menu_loop(wait_for=len(options), sort_by=sort_by, cancel_with_escape=cancel_with_escape)
     return choice
@@ -118,7 +118,7 @@ def equipment_menu(game):
 
     width = len(max(options, key=len))
 
-    draw_options_window('Equipment', body, options, window_x=x, window_y=y, forced_width=max(width, 25))
+    draw_window('Equipment', body, options=options, window_x=x, window_y=y, forced_width=max(width, 25))
 
     choice = menu_loop(wait_for=len(options))
 
@@ -150,7 +150,7 @@ def item_menu(item_ent, game):
             wait_for.append('e')
     options.append('(D)rop')
 
-    draw_options_window(title, body, options, window_x=x, window_y=y, forced_width=len(body))
+    draw_window(title, body, options=options, window_x=x, window_y=y)
 
     choice = menu_loop(wait_for=wait_for)
 
