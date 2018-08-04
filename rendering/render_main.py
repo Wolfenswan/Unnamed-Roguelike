@@ -4,10 +4,23 @@ import tcod
 
 from config_files import cfg as cfg, colors
 from game import GameStates
+from rendering.render_windows import render_description_window
 from rendering.util_functions import draw_console_borders, pos_on_screen
 from rendering.fov_functions import darken_color_by_fov_distance
 from rendering.render_panels import draw_bar
 from rendering.render_order import RenderOrder
+
+
+def render_all(game, fov_map):
+    render_main_screen(game, fov_map)
+    render_panels(game)
+
+    if game.state == GameStates.CURSOR_ACTIVE:
+        render_description_window(game)  # Description window is drawn under the cursor if active
+
+    tcod.console_flush()
+
+    clear_all(game.con, game.entities)
 
 
 def render_main_screen(game, fov_map, debug=False):

@@ -13,8 +13,7 @@ from loader_functions.initialize_game import initialize_game
 from loader_functions.initialize_logging import initialize_logging
 from loader_functions.initialize_window import initialize_window
 from rendering.fov_functions import initialize_fov, recompute_fov
-from rendering.render_main import clear_all, render_main_screen, render_panels
-from rendering.render_windows import render_description_window
+from rendering.render_main import render_all
 from turn_processing.process_turn_results import process_turn_results
 
 
@@ -45,39 +44,23 @@ def game_loop(game):
         if fov_recompute:
             recompute_fov(fov_map, player.x, player.y)
             fov_recompute = False
-
-        render_main_screen(game, fov_map)
-        render_panels(game)
-
-        if game.state == GameStates.CURSOR_ACTIVE:
-            render_description_window(game)
-
-        tcod.console_flush()
-
-        clear_all(con, entities)
+        render_all(game, fov_map)
 
         tcod.sys_wait_for_event(tcod.EVENT_KEY_PRESS, key, None, True)
-
         action = handle_keys(key, game.state)
         #mouse_action = handle_mouse(mouse)
 
         # Process player input into turn results #
         player_turn_results = process_player_input(action, game, fov_map, targeting_item = targeting_item)
-
         logging.debug(f'Turn {turn} player results: {player_turn_results}')
 
-        # Player turn results is None if the game should exit #
+        # Exit the game if player turn results is None #
         if player_turn_results is None:
             return True
 
         # Process turn results #
         processed_turn_results = process_turn_results(player_turn_results, game, fov_map)
-
         logging.debug(f'Turn {turn} processed results: {player_turn_results}')
-
-        for turn_result in processed_turn_results:
-            fov_recompute = turn_result.get('fov_recompute', False)
-            targeting_item = turn_result.get('targeting_item', None)
 
         # Enemies take turns #
         if game.state == GameStates.ENEMY_TURN:
@@ -108,6 +91,11 @@ def game_loop(game):
             else:
                 game.state = GameStates.PLAYERS_TURN
 
+        # Prepare for next turn #
+        for turn_result in processed_turn_results:
+            fov_recompute = turn_result.get('fov_recompute', False)
+            targeting_item = turn_result.get('targeting_item')
+        turn += 1
 
 if __name__ == '__main__':
     initialize_logging(debugging=True)
