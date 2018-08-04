@@ -4,7 +4,7 @@ import tcod
 
 from config_files import cfg as cfg, colors
 from game import GameStates
-from rendering.common_functions import draw_console_borders, pos_on_screen
+from rendering.util_functions import draw_console_borders, pos_on_screen
 from rendering.fov_functions import darken_color_by_fov_distance
 from rendering.render_panels import draw_bar
 from rendering.render_order import RenderOrder

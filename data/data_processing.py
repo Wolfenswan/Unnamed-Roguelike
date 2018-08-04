@@ -70,9 +70,6 @@ def gen_ent_from_dict(dict, entry, x, y, game):
             skill = Skill(**skills_data[k])
             skills_component[k] = (skill)
 
-    # create the arguments tuple out of the values we've got so far
-
-
     # create the static object using the arguments tuple
     ent = NPC(*arguments, fighter=fighter_component, ai=ai_component, skills=skills_component, inventory=inventory_component)
 

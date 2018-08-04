@@ -5,7 +5,7 @@ import tcod
 
 from config_files import cfg, colors
 from gameobjects.util_functions import get_blocking_entity_at_location
-from rendering.common_functions import center_x_for_text, draw_console_borders, pos_on_screen
+from rendering.util_functions import center_x_for_text, draw_console_borders, pos_on_screen
 
 
 def set_window_on_screen(window_x, window_y, width, height):

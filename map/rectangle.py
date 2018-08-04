@@ -4,7 +4,7 @@ from random import randint
 import tcod
 
 from config_files import colors
-from rendering.common_functions import pos_on_screen
+from rendering.util_functions import pos_on_screen
 
 
 class Rect:

@@ -20,7 +20,7 @@ class Architecture:
     @staticmethod
     def toggle_door(door_ent):
         door_ent_closed = door_ent.blocks
-        results = [{'door_ent_toggled': door_ent, 'fov_recompute': True}]
+        results = [{'door_toggled': door_ent, 'fov_recompute': True}]
         if door_ent_closed:
             door_ent.architecture.on_collision = None
             door_ent.char = '-'

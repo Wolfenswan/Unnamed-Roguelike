@@ -2,7 +2,7 @@ import tcod
 
 from config_files import cfg
 from game import GameStates
-from rendering.common_functions import pos_on_screen
+from rendering.util_functions import pos_on_screen
 from rendering.render_windows import draw_window
 
 

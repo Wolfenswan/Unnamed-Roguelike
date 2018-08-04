@@ -1,3 +1,4 @@
+import logging
 import os
 
 import tcod
@@ -34,9 +35,12 @@ def game_loop(game):
     key = tcod.Key()
     # mouse = tcod.Mouse()
 
+    turn = 1
     while not tcod.console_is_window_closed():
         # tcod.sys_set_fps(30)
         # tcod.sys_check_for_event(tcod.EVENT_KEY_PRESS | tcod.EVENT_MOUSE, key, mouse)
+
+        logging.debug(f'Beginning turn {turn}. Recomputing FOV: {fov_recompute}')
 
         if fov_recompute:
             recompute_fov(fov_map, player.x, player.y)
@@ -60,12 +64,16 @@ def game_loop(game):
         # Process player input into turn results #
         player_turn_results = process_player_input(action, game, fov_map, targeting_item = targeting_item)
 
+        logging.debug(f'Turn {turn} player results: {player_turn_results}')
+
         # Player turn results is None if the game should exit #
         if player_turn_results is None:
             return True
 
         # Process turn results #
         processed_turn_results = process_turn_results(player_turn_results, game, fov_map)
+
+        logging.debug(f'Turn {turn} processed results: {player_turn_results}')
 
         for turn_result in processed_turn_results:
             fov_recompute = turn_result.get('fov_recompute', False)
