@@ -23,7 +23,7 @@ def menu_loop(wait_for=None, cancel_with_escape=True, sort_by='str'):
         tcod.sys_wait_for_event(tcod.EVENT_KEY_PRESS, key, '', False)
         char = chr(key.c)
         if key.vk == tcod.KEY_ESCAPE and cancel_with_escape:
-            return False
+            return None
         # elif type(wait_for) is dict:
         #     if char.lower() in wait_for.keys():
         #         return wait_for[char]
@@ -74,7 +74,7 @@ def inventory_menu(game):
 
     choice = menu_loop(wait_for=len(options))
 
-    if choice is not False:
+    if choice is not None:
         return player.inventory.items[choice]
     else:
         return False
@@ -96,7 +96,7 @@ def yesno_menu(body, game):
     options = ['(Y)es', '(N)o']
     wait_for = ['y', 'n']
 
-    draw_options_window(title, body, options, window_x=x, window_y=y, forced_width=len(body))
+    draw_window(title, body, options, window_x=x, window_y=y, forced_width=len(body))
 
     choice = menu_loop(wait_for=wait_for)
 

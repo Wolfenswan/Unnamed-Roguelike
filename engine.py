@@ -1,5 +1,4 @@
 import logging
-import os
 
 import tcod
 
@@ -54,8 +53,8 @@ def game_loop(game):
         player_turn_results = process_player_input(action, game, fov_map, targeting_item = targeting_item)
         logging.debug(f'Turn {turn} player results: {player_turn_results}')
 
-        # Exit the game if player turn results is None #
-        if player_turn_results is None:
+        # The game exits if player turn results returns False #
+        if player_turn_results == False:
             return True
 
         # Process turn results #
@@ -117,4 +116,4 @@ if __name__ == '__main__':
     game.fov_map = initialize_fov(game)
 
     game_loop(game)
-    save_game(game) # TODO placeholder for testing purposes
+    #save_game(game) # TODO placeholder for testing purposes

@@ -3,8 +3,9 @@ import tcod
 
 from game import GameStates
 from gameobjects.util_functions import get_blocking_entity_at_location, get_interactable_entity_at_location
-from gui.menus import inventory_menu, item_menu, equipment_menu
+from gui.menus import inventory_menu, item_menu, equipment_menu, options_menu
 from gui.messages import Message, MessageType
+from loader_functions.data_loader import save_game
 from rendering.render_windows import render_description_window
 
 
@@ -164,7 +165,12 @@ def process_player_input(action, game, fov_map, targeting_item = None):
         if game.state in (GameStates.SHOW_INVENTORY, GameStates.DROP_INVENTORY, GameStates.CURSOR_ACTIVE):
             game.state = game.previous_state
         else:
-            return None
+            choice = options_menu('Quit Game', 'Do you want to quit the game?', ['Save & Quit', 'Just Quit'], sort_by=1, cancel_with_escape=True)
+            if choice == 0:
+                save_game(game)
+                return False
+            elif choice == 1:
+                return False
 
     if fullscreen:
         tcod.console_set_fullscreen(not tcod.console_is_fullscreen())
