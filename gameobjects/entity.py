@@ -5,6 +5,7 @@ import tcod
 
 from components.paperdoll import Paperdoll
 from components.actors.turnplan import Turnplan
+from gameobjects.util_functions import get_blocking_entity_at_location
 from rendering.render_order import RenderOrder
 
 
@@ -89,6 +90,23 @@ class Entity:
 
     def distance_to_pos(self, x, y):
         return math.sqrt((x - self.x) ** 2 + (y - self.y) ** 2)
+
+    def direction_to_ent(self, other):
+        dx, dy = 0, 0
+        x_plane = other.x - self.x
+        y_plane = other.y - self.y
+
+        if x_plane > 0:
+            dx = 1
+        elif x_plane < 0:
+            dx = -1
+
+        if y_plane > 0:
+            dy = 1
+        elif y_plane < 0:
+            dy = -1
+
+        return dx, dy
 
     def same_pos_as(self, other):
         return (self.x, self.y) == (other.x, other.y)

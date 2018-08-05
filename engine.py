@@ -33,9 +33,9 @@ def game_loop(game):
 
     while not tcod.console_is_window_closed():
         # tcod.sys_set_fps(30)
-        # tcod.sys_check_for_event(tcod.EVENT_KEY_PRESS | tcod.EVENT_MOUSE, key, mouse)
+        # tcod.sys_check_for_event(tcod.EVENT_KEY_PRESS, key, '')
 
-        logging.debug(f'Beginning turn {game.turn}. Recomputing FOV: {fov_recompute}')
+        logging.debug(f'Beginning turn {game.turn}. State: {game.state}. Recomputing FOV: {fov_recompute}')
 
         if fov_recompute:
             recompute_fov(fov_map, player.x, player.y)
@@ -61,7 +61,7 @@ def game_loop(game):
 
         # Process turn results #
         processed_turn_results = process_turn_results(player_turn_results, game, fov_map)
-        logging.debug(f'Turn {game.turn} processed results: {player_turn_results}')
+        logging.debug(f'Turn {game.turn}. State: {game.state}. Processed results: {player_turn_results}')
 
         # Enemies take turns #
         if game.state == GameStates.ENEMY_TURN:
@@ -92,11 +92,12 @@ def game_loop(game):
             else:
                 game.state = GameStates.PLAYERS_TURN
 
+            game.turn += 1
+
         # Prepare for next turn #
         for turn_result in processed_turn_results:
             fov_recompute = turn_result.get('fov_recompute', False)
             targeting_item = turn_result.get('targeting_item')
-        game.turn += 1
 
 if __name__ == '__main__':
     initialize_logging(debugging=True)

@@ -1,3 +1,7 @@
+def get_entities_at_pos(entities, x, y):
+    return [ent for ent in entities if ent.x == x and ent.y == y]
+
+
 def get_blocking_entity_at_location(entities, destination_x, destination_y):
     for entity in entities:
         if entity.blocks and entity.x == destination_x and entity.y == destination_y:

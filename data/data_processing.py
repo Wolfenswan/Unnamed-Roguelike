@@ -7,7 +7,7 @@ from components.inventory import Inventory
 from components.items.equipment import Equipment
 from components.items.item import Item
 from components.items.useable import Useable
-from components.skills import Skill
+from components.skill import Skill
 from data.actor_data.skills_data import skills_data
 from data.actor_data.spawn_data import spawn_data
 from data.architecture_data.arch_static import arch_static_data
@@ -44,7 +44,7 @@ def get_generic_data(data):
     color = data['color']
     descr = data['descr']
 
-    color = tuple(int(uniform(0.2, 1) * x) for x in color) # Slight color randomization for each entity
+    color = tuple(int(uniform(0.5, 1) * x) for x in color) # Slight color randomization for each entity
 
     return (char, color, name, descr)
 

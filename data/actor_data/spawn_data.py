@@ -34,25 +34,19 @@ from config_files import colors
 
 spawn_data = {
     'Orc': {
-        'name': 'Orc',
-        'char': 'o',
-        'color': colors.green,
-        'descr': 'The most generic of monsters you could imagine. Thankfully, it will probably kill you before you are bored to death.',
-        'max_hp': (4,8),
+        'name': 'Roach',
+        'char': 'r',
+        'color': colors.light_amber,
+        'descr': 'Twitching antennae and six legs beneath a hardy carapace.',
+        'max_hp': (2,5),
         'max_stamina':(4,8),
         'nat_armor': (0,2),
         'nat_power': (3,6),
         'nat_vision': 8,
         'ai': BasicMonster,
-        'barks': ('humanoid', 'orcs'),
-        'skills': ('skill_orc_charge_act','skill_orc_charge_exec'),
-        'loadouts': {
-                'melee1': {
-                    'chance': 100,
-                    'equipment': ('sword_rusty',),
-                    'backpack': ('pot_heal', 'scr_fireball')
-                }
-        },
+        'barks': ('insect'),
+        'skills': ('skill_charge_roach',  ),
+        'loadouts': None,
         'dlvls': (1,100),
         'chance': 60,
         'group_size': (1,3)

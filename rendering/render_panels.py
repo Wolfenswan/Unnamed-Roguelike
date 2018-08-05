@@ -21,7 +21,7 @@ def render_combat_panel(game, con, panel_y, width, height):
     setup_console(con, caption='Enemies', borders=True)
     
     # check for monsters in FOV
-    spotted = [ent for ent in game.entities if ent.ai and ent.is_visible(game.fov_map)]
+    spotted = [ent for ent in game.entities if ent.ai and ent.fighter.hp > 0 and ent.is_visible(game.fov_map)]
 
     if len(spotted):
         spotted.sort(key=game.player.distance_to_ent)  # sort the spotted array by distance to player

@@ -85,7 +85,6 @@ def draw_tile(game, con, fov_map, tile_x, tile_y, screen_x, screen_y, debug=Fals
     if debug:
         fg_color = colors.light_fov
 
-
     if visible:
         char = '#' if wall else '.'
         if tile.gibbed:

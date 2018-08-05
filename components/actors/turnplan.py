@@ -10,6 +10,7 @@ class Turnplan:
             skill = plan.get('planned_skill')
             skill_args = plan.get('planned_skill_args',())
             function = plan.get('planned_function')
+            function_args = plan.get('planned_function_args')
 
             if skip_turn:
                 return results
@@ -18,7 +19,7 @@ class Turnplan:
                 results.extend(skill.execute(*skill_args))
 
             if function:
-                function()
+                results.extend(function(*function_args))
 
         return results
 

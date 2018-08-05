@@ -1,9 +1,5 @@
-from random import choice
-from random import randint
-
 from config_files import colors
-from effects.spells import cast_fireball_on
-from gui.messages import Message
+from abilities.spells import cast_fireball_on
 
 SCROLL_CHAR = '='
 SCROLL_COLOR = colors.light_yellow

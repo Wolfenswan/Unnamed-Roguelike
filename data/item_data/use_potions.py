@@ -1,7 +1,5 @@
-from random import randint
-
 from config_files import colors
-from effects.spells import heal_entity
+from abilities.spells import heal_entity
 from gui.messages import Message
 
 POTION_CHAR = '!'

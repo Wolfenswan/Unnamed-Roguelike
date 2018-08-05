@@ -57,8 +57,9 @@ class Fighter:
         damage = self.power - target.fighter.defense
 
         if damage > 0:
+            msg_type = MessageType.ALERT if target.is_player else MessageType.COMBAT
             results.append({'message': Message(
-                f'{self.owner.name.capitalize()} attacks {target.name} for {str(damage)} hit points.', type=MessageType.COMBAT)})
+                f'{self.owner.name.capitalize()} attacks {target.name} for {str(damage)} hit points.', type=msg_type)})
             results.extend(target.fighter.take_damage(damage))
         else:
             results.append(

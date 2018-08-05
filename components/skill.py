@@ -21,9 +21,8 @@ class Skill:
         results = []
 
         logging.debug(f'Special attack for {actor}. Cooldown {self.cooldown} of {self.cooldown_length}')
-        self.on_activate(actor, *args, **self.on_activate_kwargs)
-        message = choice(self.messages)
-        results.append({'message': Message(message)})
+        activation_results = self.on_activate(actor, *args, **self.on_activate_kwargs)
+        results.extend(activation_results)
         self.cooldown_skill(reset=True)
         return results
 
@@ -47,39 +46,5 @@ class Skill:
         elif self.cooldown > 0:
             self.cooldown -= 1
 
-            logging.debug(
-                f'Cooled down {self.name} on {self.owner.name}: {self.cooldown} of {self.cooldown_length}.')
-
-    # Skill Activation #
-    # TODO consider if these should be their own file or use static classes to categorize them
-
-    @staticmethod
-    def skill_charge_activation(ent, *args, **kwargs):
-        game = args[0]
-        distance = kwargs['distance']
-        delay = kwargs['delay']
-        # TODO cardinal direction instead of position
-        # TODO Straight empty line to target
-        target_x, target_y = game.player.x, game.player.y
-
-        ent.color_bg = colors.dark_red
-        ent.turnplan.skip_turns(delay, game.turn)
-        ent.turnplan.plan_turn(game.turn + delay + 1, {'planned_skill': ent.skills['skill_orc_charge_exec'], 'planned_skill_args': (target_x, target_y, distance)})
-
-    @staticmethod
-    def skill_charge_execution(ent, *args):
-        # TODO x steps charge in cardinal direction
-        ent.color_bg = colors.green
-
-# Skill Conditions #
-
-def skill_charge_condition(game, actor, **kwargs):
-    player = game.player
-    min, max = kwargs['min'], kwargs['max']
-    if min < actor.distance_to_ent(player) < max:
-        return True
-    else:
-        return False
-
-def skill_always_true():
-    return True
+        logging.debug(
+            f'Cooled down {self.name} on {self.owner.name}: {self.cooldown} of {self.cooldown_length}.')
