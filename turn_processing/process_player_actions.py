@@ -20,7 +20,7 @@ def process_player_input(action, game, fov_map, targeting_item = None):
     fullscreen = action.get('fullscreen')
     interact = action.get('interact')
     move = action.get('move')
-    rest = action.get('rest')
+    wait = action.get('wait')
     pickup = action.get('pickup')
     show_inventory = action.get('show_inventory')
     show_equipment = action.get('show_equipment')
@@ -70,9 +70,9 @@ def process_player_input(action, game, fov_map, targeting_item = None):
 
                 game.state = GameStates.ENEMY_TURN
 
-        elif rest:
+        elif wait:
             # turn_results.append({'message': Message(f'You wait.'), 'resting': True})
-            turn_results.append({'resting': True})
+            turn_results.append({'waiting': True})
 
         elif pickup:
             for entity in entities:  # TODO List comprehension can be tested for possible speed gain

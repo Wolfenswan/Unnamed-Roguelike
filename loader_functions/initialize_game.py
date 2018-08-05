@@ -43,8 +43,8 @@ def initialize_game(game):
 
     place_architecture(game)
     place_doors(game)
-    #place_items(game)
-    #place_monsters(game)
+    place_items(game)
+    place_monsters(game)
 
 
     game.message_log = MessageLog(cfg.MSG_X, cfg.MSG_WIDTH, cfg.MSG_HEIGHT)

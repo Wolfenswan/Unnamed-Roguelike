@@ -21,7 +21,7 @@ def process_turn_results(player_turn_results, game, fov_map):
         item_dequipped = player_turn_result.get('item_dequipped')
         targeting_item = player_turn_result.get('targeting')
         targeting_cancelled = player_turn_result.get('targeting_cancelled')
-        resting = player_turn_result.get('resting')
+        waiting = player_turn_result.get('waiting')
         door_entity = player_turn_result.get('door_toggled')
         dead_entity = player_turn_result.get('dead')
 
@@ -32,7 +32,7 @@ def process_turn_results(player_turn_results, game, fov_map):
             message_log.add_message(message)
 
         if dead_entity:
-            message = dead_entity.fighter.death(game.map)
+            message = dead_entity.fighter.death(game)
             if dead_entity.is_player:
                 game.state = GameStates.PLAYER_DEAD
             message_log.add_message(message)
@@ -58,9 +58,11 @@ def process_turn_results(player_turn_results, game, fov_map):
             game.state = game.previous_state
             message_log.add_message(Message('Targeting cancelled'))
 
-        if resting:
+        if waiting:
             visible_enemies = player.visible_enemies(entities, fov_map)
             if len(visible_enemies) > 0:
+                player.fighter.toggle_blocking()
+                player.turnplan.plan_turn(game.turn+1, {'planned_function': player.fighter.toggle_blocking})
                 game.state = GameStates.ENEMY_TURN
             else:
                 game.state = GameStates.PLAYER_RESTING

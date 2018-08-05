@@ -4,6 +4,7 @@ from enum import Enum, auto
 import tcod
 
 from components.paperdoll import Paperdoll
+from components.actors.turnplan import Turnplan
 from rendering.render_order import RenderOrder
 
 
@@ -67,6 +68,7 @@ class Entity:
         self.item = item
         self.inventory = inventory
         self.paperdoll = Paperdoll()
+        self.turnplan = Turnplan()
         self.skills = skills  # dictionary
         self.architecture = architecture
         self.set_ownership() # Sets ownership for all components
@@ -122,6 +124,7 @@ class Entity:
             for skill in self.skills.values():
                 skill.owner = self
 
+        self.turnplan.owner = self
         self.paperdoll.owner = self
 
 

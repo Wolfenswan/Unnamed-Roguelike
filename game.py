@@ -23,6 +23,7 @@ class Game:
         self.entities = None
 
         # Turn Processing #
+        self.turn = 1
         self.state = None
         self.previous_state = None
         self.player_turn_results = []

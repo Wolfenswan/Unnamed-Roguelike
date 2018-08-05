@@ -51,20 +51,20 @@ class Skill:
                 f'Cooled down {self.name} on {self.owner.name}: {self.cooldown} of {self.cooldown_length}.')
 
     # Skill Activation #
-    # TODO consider if these should be their own file or static classes used to categorize them #
+    # TODO consider if these should be their own file or use static classes to categorize them
 
     @staticmethod
     def skill_charge_activation(ent, *args, **kwargs):
         game = args[0]
         distance = kwargs['distance']
+        delay = kwargs['delay']
         # TODO cardinal direction instead of position
         # TODO Straight empty line to target
         target_x, target_y = game.player.x, game.player.y
-        execute_string = f"monster.skills['skill_orc_charge_exec'].execute{target_x, target_y, distance}"
-        ent.execute_after_delay = execute_string
-        ent.state = EntityStates.ENTITY_WAITING
+
         ent.color_bg = colors.dark_red
-        ent.delay_turns = 1
+        ent.turnplan.skip_turns(delay, game.turn)
+        ent.turnplan.plan_turn(game.turn + delay + 1, {'planned_skill': ent.skills['skill_orc_charge_exec'], 'planned_skill_args': (target_x, target_y, distance)})
 
     @staticmethod
     def skill_charge_execution(ent, *args):

@@ -51,7 +51,7 @@ def handle_player_turn_keys(key):
     elif key_char == 'n' or key.vk == tcod.KEY_KP3:
         return {action: (1, 1)}
     elif key.vk == tcod.KEY_KP5:
-        return {'rest': True}
+        return {'wait': True}
 
     if key_char == 'g':
         return {'pickup': True}

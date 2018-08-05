@@ -16,6 +16,8 @@ class Fighter:
         self.power = power
         self.vision = vision
 
+        self.is_blocking = False
+
     def take_damage(self, amount):
         results = []
 
@@ -48,12 +50,19 @@ class Fighter:
 
         return results
 
-    def death(self, map):
+    def block(self, attack):
+        pass
+
+    def toggle_blocking(self):
+        self.is_blocking = not self.is_blocking
+
+    def death(self, game):
         ent = self.owner
         x, y = ent.x, ent.y
         ent.char = '%'
         ent.color = colors.corpse
-        map.tiles[x][y].gibbed = True
+        ent.color_bg = colors.black
+        game.map.tiles[x][y].gibbed = True
 
         if ent.is_player:
             message = Message('You died!', msg_type=MessageType.INFO_BAD)
@@ -70,9 +79,10 @@ class Fighter:
         # TODO Consider force of impact (amount of damage done beyond 0 hp?) to vary spread
         for i in range(1, randint(2, 4)):
             c_x, c_y = (randint(x - 1, x + 1), randint(y - 1, y + 1))
-            map.tiles[c_x][c_y].gibbed = True
-            if randint(0, 100) > 10:
+            game.map.tiles[c_x][c_y].gibbed = True
+            if not game.map.tiles[c_x][c_y].blocked and randint(0, 100) > 85:
                 c = Entity(c_x, c_y, '~', colors.corpse, f'Bits of a {ent.name}')
                 c.render_order = RenderOrder.CORPSE
+                game.entities.append(c)
 
         return message
