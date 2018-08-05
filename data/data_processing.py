@@ -54,6 +54,7 @@ def gen_ent_from_dict(dict, entry, x, y, game):
     arguments = (x, y, *get_generic_data(data))
 
     hp = randint(*data['max_hp'])
+    stamina = randint(*data['max_stamina'])
     defense = randint(*data['nat_armor'])
     power = randint(*data['nat_power'])
     loadouts = data.get('loadouts', None)
@@ -61,7 +62,7 @@ def gen_ent_from_dict(dict, entry, x, y, game):
     ai = data['ai']
     skills = data.get('skills', None)
 
-    fighter_component = Fighter(hp, defense, power, vision)
+    fighter_component = Fighter(hp, stamina, defense, power, vision)
     ai_component = ai()
     inventory_component = Inventory(12) # Todo Placeholder #
     skills_component = None

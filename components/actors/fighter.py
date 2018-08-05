@@ -9,9 +9,25 @@ from rendering.render_order import RenderOrder
 
 
 class Fighter:
-    def __init__(self, hp, defense, power, vision):
+    def __init__(self, hp, stamina, defense, power, vision):
+        """
+
+        :param hp:
+        :type hp: int
+        :param stamina:
+        :type stamina: int
+        :param defense:
+        :type defense: int
+        :param power:
+        :type power: int
+        :param vision:
+        :type vision: int
+
+        """
         self.max_hp = hp
         self.hp = hp
+        self.max_stamina = stamina
+        self.stamina = stamina
         self.defense = defense
         self.power = power
         self.vision = vision
