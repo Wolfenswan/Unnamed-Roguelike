@@ -21,9 +21,19 @@ def get_names_under_mouse(mouse, entities, fov_map):
     return names.capitalize()
 
 
-def draw_console_borders(con, width=None, height=None, color=colors.dark_grey):
+def setup_console(con, caption=None, fgcolor=tcod.white, bgcolor =tcod.black, borders=False):
+    tcod.console_set_default_foreground(con, fgcolor)
+    tcod.console_set_default_background(con, bgcolor)
+    tcod.console_clear(con)
+    if borders:
+        draw_console_borders(con)
+    if caption:
+        tcod.console_print(con, 2, 0, caption)
+
+
+def draw_console_borders(con, width=None, height=None, color=colors.dark_grey, bgcolor=colors.black):
     """ draws an outline around the passed console. By default, the console's width & height will be used """
-    tcod.console_set_default_foreground(con, color)
+    #tcod.console_set_default_foreground(con, color)
 
     if width is None:
         width = con.width
@@ -31,17 +41,17 @@ def draw_console_borders(con, width=None, height=None, color=colors.dark_grey):
         height = con.height
 
     for x in range(width):
-        tcod.console_put_char(con, x, 0, 196)
-        tcod.console_put_char(con, x, height - 1, 196)
+        tcod.console_put_char_ex(con, x, 0, 196, color, bgcolor)
+        tcod.console_put_char_ex(con, x, height - 1, 196, color, bgcolor)
 
     for y in range(height):
-        tcod.console_put_char(con, 0, y, 179)
-        tcod.console_put_char(con, width - 1, y, 179)
+        tcod.console_put_char_ex(con, 0, y, 179, color, bgcolor)
+        tcod.console_put_char_ex(con, width - 1, y, 179, color, bgcolor)
 
-    tcod.console_put_char(con, 0, 0, 218)
-    tcod.console_put_char(con, width - 1, 0, 191)
-    tcod.console_put_char(con, 0, height - 1, 192)
-    tcod.console_put_char(con, width - 1, height - 1, 217)
+    tcod.console_put_char_ex(con, 0, 0, 218, color, bgcolor)
+    tcod.console_put_char_ex(con, width - 1, 0, 191, color, bgcolor)
+    tcod.console_put_char_ex(con, 0, height - 1, 192, color, bgcolor)
+    tcod.console_put_char_ex(con, width - 1, height - 1, 217, color, bgcolor)
 
 
 def pos_on_screen(x, y, player):

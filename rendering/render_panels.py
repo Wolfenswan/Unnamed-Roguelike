@@ -2,7 +2,75 @@
 
 import tcod
 
-from config_files import colors
+from config_files import colors, cfg as cfg
+from rendering.util_functions import draw_console_borders, center_x_for_text, setup_console
+
+
+def render_panels(game):
+
+    render_status_panel(game, cfg.STATUS_PANEL_Y, cfg.SCREEN_WIDTH, cfg.STATUS_PANEL_HEIGHT)
+    render_combat_panel(game, game.bottom_left_panel, cfg.BOTTOM_PANELS_Y, cfg.COMBAT_PANEL_WIDTH, cfg.BOTTOM_PANELS_HEIGHT)
+    render_message_panel(game.message_log, game.bottom_center_panel, cfg.MSG_PANEL_X, cfg.BOTTOM_PANELS_Y, cfg.MSG_PANEL_WIDTH, cfg.BOTTOM_PANELS_HEIGHT)
+
+    # TODO place holder for testing purposes #
+    render_message_panel(game.message_log, game.bottom_right_panel, cfg.MSG_PANEL_X + cfg.MSG_PANEL_WIDTH, cfg.BOTTOM_PANELS_Y, cfg.MSG_PANEL_WIDTH, cfg.BOTTOM_PANELS_HEIGHT)
+    #render_bottom_panels(game)
+
+# TODO: Three separate panels for bottom panel - combat, message1, message 2
+
+def render_combat_panel(game, con, panel_y, width, height):
+
+    setup_console(con, caption='Enemies', borders=True)
+    
+    # check for monsters in FOV
+    spotted = [ent for ent in game.entities if ent.ai and ent.is_visible(game.fov_map)]
+
+    if len(spotted):
+        spotted.sort(key=game.player.distance_to_ent)  # sort the spotted array by distance to player
+
+        # initial offsets from panel borders
+        y = 2
+
+        for ent in spotted:  # Go through the object names and wrap them according to the panel's width
+
+            # Draw creature name and stats #
+            tcod.console_set_color_control(tcod.COLCTRL_1, ent.color, tcod.black)
+            tcod.console_set_color_control(tcod.COLCTRL_2, colors.red, tcod.black) # TODO make dynamic
+            tcod.console_print(con, 2, y, f'%c{ent.name}%c %c{ent.fighter.hp}/{ent.fighter.max_hp}%c' % (tcod.COLCTRL_1, tcod.COLCTRL_STOP, tcod.COLCTRL_2, tcod.COLCTRL_STOP))
+
+            y += 2
+            if y >= con.height - 2:  # If the limit's of the con are reached, cut the con off
+                x = center_x_for_text(width, '~ ~ ~ MORE ~ ~ ~')
+                tcod.console_print(con, x, y, '~ ~ ~ MORE ~ ~ ~')
+                break
+
+    tcod.console_blit(con, 0, 0, width, height, 0, 0, panel_y)
+
+
+def render_message_panel(message_log, con, panel_x, panel_y, width, height):
+    # TODO pass caption as argument, so function can be reused for several message panels #
+    setup_console(con, caption='Messages', borders=True)
+
+    y = 2
+    for message in message_log.messages:
+        tcod.console_set_default_foreground(con, message.color)
+        tcod.console_print(con, message_log.x, y, message.text)
+        y += 1
+
+    tcod.console_blit(con, 0, 0, width, height, 0, panel_x, panel_y)
+
+
+def render_status_panel(game, panel_y, width, height):
+    # TODO Stamina & Quick Use
+    console = game.status_panel
+    tcod.console_set_default_background(console, tcod.black)
+    tcod.console_clear(console)
+
+    draw_bar(console, 1, 1, 20, 'HP', game.player.fighter.hp, game.player.fighter.max_hp,
+             tcod.light_red, tcod.darker_red)
+
+    tcod.console_blit(console, 0, 0, width, height, 0, 0, panel_y)
+    tcod.console_print_frame(console, 0, 0, width, height)
 
 
 def draw_bar(panel, x, y, total_width, name, value, maximum, bar_color, back_color):

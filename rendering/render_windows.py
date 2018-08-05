@@ -71,7 +71,7 @@ def draw_window(title, body, options = None, window_x = None, window_y = None, p
     if show_cancel_option:
         # tcod.console_print(window, 0, height - 1, '<ESC TO CANCEL>')
         string = '<ESC TO CANCEL>'
-        x = center_x_for_text(width, '<ESC TO CANCEL>')
+        x = center_x_for_text(width, string)
         tcod.console_print(window, x, height - 1, string)
 
     window_x, window_y = set_window_on_screen(window_x, window_y, width, height)

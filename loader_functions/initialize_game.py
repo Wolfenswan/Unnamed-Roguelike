@@ -41,12 +41,10 @@ def initialize_game(game):
     game.map = GameMap(dwidth, dheight)
     game.map.make_map(game, cfg.ROOM_MIN_SIZE, cfg.ROOM_MAX_SIZE, dwidth, dheight)
 
-    place_architecture(game)
-    place_doors(game)
-    place_items(game)
+    # Add the good stuff #
+    # place_architecture(game)
+    # place_doors(game)
+    # place_items(game)
     place_monsters(game)
-
-
-    game.message_log = MessageLog(cfg.MSG_X, cfg.MSG_WIDTH, cfg.MSG_HEIGHT)
 
     return game

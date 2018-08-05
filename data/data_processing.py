@@ -1,5 +1,5 @@
 import logging
-from random import choice, randint
+from random import choice, randint, uniform
 
 from components.actors.fighter import Fighter
 from components.architecture import Architecture
@@ -43,6 +43,8 @@ def get_generic_data(data):
     char = data['char']
     color = data['color']
     descr = data['descr']
+
+    color = tuple(int(uniform(0.2, 1) * x) for x in color) # Slight color randomization for each entity
 
     return (char, color, name, descr)
 

@@ -32,6 +32,9 @@ def process_player_input(action, game, fov_map, targeting_item = None):
     turn_results = []
 
     # Player moves #
+    if player.fighter.is_blocking:
+        player.fighter.toggle_blocking()
+
     active_player_states = [GameStates.PLAYERS_TURN, GameStates.PLAYER_RESTING]
     if game.state in active_player_states:
         if move or interact:

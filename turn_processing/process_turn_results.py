@@ -62,7 +62,7 @@ def process_turn_results(player_turn_results, game, fov_map):
             visible_enemies = player.visible_enemies(entities, fov_map)
             if len(visible_enemies) > 0:
                 player.fighter.toggle_blocking()
-                player.turnplan.plan_turn(game.turn+1, {'planned_function': player.fighter.toggle_blocking})
+                #player.turnplan.plan_turn(game.turn+1, {'planned_function': player.fighter.toggle_blocking})
                 game.state = GameStates.ENEMY_TURN
             else:
                 game.state = GameStates.PLAYER_RESTING

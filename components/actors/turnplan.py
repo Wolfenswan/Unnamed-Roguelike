@@ -5,7 +5,6 @@ class Turnplan:
     def execute_plan(self, game_turn):
         results = []
         plan = self.planned_turns.get(game_turn)
-        print(plan)
         if plan is not None:
             skip_turn = plan.get('skip_turn')
             skill = plan.get('planned_skill')

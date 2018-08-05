@@ -1,5 +1,9 @@
 from enum import Enum, auto
 
+from config_files import cfg
+from gui.messages import MessageLog
+
+
 class GameStates(Enum):
     GAME_PAUSED = auto()
     PLAYERS_TURN = auto()
@@ -32,4 +36,4 @@ class Game:
         self.con = None
         self.fov_map = None
         self.bottom_panel = None
-        self.message_log = None
+        self.message_log = MessageLog(cfg.MSG_X, cfg.MSG_WIDTH, cfg.MSG_HEIGHT)

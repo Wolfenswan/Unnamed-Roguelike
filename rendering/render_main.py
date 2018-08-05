@@ -7,7 +7,7 @@ from game import GameStates
 from rendering.render_windows import render_description_window
 from rendering.util_functions import draw_console_borders, pos_on_screen
 from rendering.fov_functions import darken_color_by_fov_distance
-from rendering.render_panels import draw_bar
+from rendering.render_panels import render_panels
 from rendering.render_order import RenderOrder
 
 
@@ -46,40 +46,6 @@ def render_main_screen(game, fov_map, debug=False):
 
     draw_console_borders(con, height=cfg.MAP_SCREEN_HEIGHT, color=colors.white)
     tcod.console_blit(con, 0, 0, screen_width, screen_height, 0, 0, 0)
-
-
-def render_panels(game):
-    screen_width = cfg.SCREEN_WIDTH
-    bar_width = 20  # TODO use cfg.file
-    panel_height = cfg.BOTTOM_PANEL_HEIGHT
-    panel_y = cfg.BOTTOM_PANEL_Y
-
-    player = game.player
-    bottom_panel = game.bottom_panel
-    message_log = game.message_log
-
-    tcod.console_set_default_background(bottom_panel, tcod.black)
-    tcod.console_clear(bottom_panel)
-
-    # Print the game messages, one line at a time #
-    y = 1
-    for message in message_log.messages:
-        tcod.console_set_default_foreground(bottom_panel, message.color)
-        tcod.console_print_ex(bottom_panel, message_log.x, y, tcod.BKGND_NONE, tcod.LEFT, message.text)
-        y += 1
-
-    tcod.console_set_default_foreground(bottom_panel, tcod.light_gray)
-    # tcod.console_print_ex(bottom_panel, 1, 0, tcod.BKGND_NONE, tcod.LEFT,
-    #                       get_names_under_mouse(mouse, entities, fov_map))
-
-    # HP Bar #
-    draw_bar(bottom_panel, 1, 1, bar_width, 'HP', player.fighter.hp, player.fighter.max_hp,
-             tcod.light_red, tcod.darker_red)
-
-    draw_console_borders(bottom_panel, height=cfg.BOTTOM_PANEL_HEIGHT, color=colors.white)
-    tcod.console_blit(bottom_panel, 0, 0, screen_width, panel_height, 0, 0, panel_y)
-
-    tcod.console_print_frame(bottom_panel, 0, 0, screen_width, panel_height)
 
 
 def render_map(game, con, fov_map, debug=False):

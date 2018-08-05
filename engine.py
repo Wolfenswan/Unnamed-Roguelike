@@ -48,6 +48,11 @@ def game_loop(game):
         action = handle_keys(key, game.state)
         #mouse_action = handle_mouse(mouse)
 
+        # TODO Placeholder to later process planned turns for the player #
+        # turn_plan = player.turnplan.planned_turns.get(game.turn)
+        # if turn_plan:
+        #     turn_plan_results = player.turnplan.execute_plan(game.turn)
+
         # Process player input into turn results #
         player_turn_results = process_player_input(action, game, fov_map, targeting_item = targeting_item)
         logging.debug(f'Turn {game.turn} player results: {player_turn_results}')

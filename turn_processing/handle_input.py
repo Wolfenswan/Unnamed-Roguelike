@@ -32,7 +32,9 @@ def handle_keys(key, game_state):
 def handle_player_turn_keys(key):
     key_char = chr(key.c)
     
-    action = 'move' if not key.lctrl else 'interact'
+    action = 'move'
+    if key.lctrl or key.rctrl:
+        action = 'interact'
 
     if key.vk == tcod.KEY_UP or key_char == 'k' or key.vk == tcod.KEY_KP8:
         return {action: (0, -1)}

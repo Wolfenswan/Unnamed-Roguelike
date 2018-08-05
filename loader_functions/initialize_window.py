@@ -28,4 +28,8 @@ def initialize_window(game):
     tcod.console_init_root(cfg.SCREEN_WIDTH, cfg.SCREEN_HEIGHT, cfg.GAME_NAME, False)
 
     game.con = tcod.console_new(cfg.SCREEN_WIDTH, cfg.SCREEN_HEIGHT)
-    game.bottom_panel = tcod.console_new(cfg.SCREEN_WIDTH, cfg.BOTTOM_PANEL_HEIGHT)
+    #game.bottom_panel = tcod.console_new(cfg.SCREEN_WIDTH, cfg.BOTTOM_PANEL_HEIGHT)
+    game.status_panel = tcod.console_new(cfg.SCREEN_WIDTH, cfg.STATUS_PANEL_HEIGHT)
+    game.bottom_left_panel = tcod.console_new(cfg.COMBAT_PANEL_WIDTH, cfg.BOTTOM_PANELS_HEIGHT)
+    game.bottom_center_panel = tcod.console_new(cfg.MSG_PANEL_WIDTH, cfg.BOTTOM_PANELS_HEIGHT)
+    game.bottom_right_panel = tcod.console_new(cfg.BOTTOM_PANELS_WIDTH, cfg.BOTTOM_PANELS_HEIGHT)
