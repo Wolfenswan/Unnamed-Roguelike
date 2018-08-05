@@ -4,7 +4,7 @@ import tcod
 from game import GameStates
 from gameobjects.util_functions import get_blocking_entity_at_location, get_interactable_entity_at_location
 from gui.menus import inventory_menu, item_menu, equipment_menu, options_menu
-from gui.messages import Message, MessageType
+from gui.messages import Message, MessageType, MessageCategory
 from loader_functions.data_loader import save_game
 from rendering.render_windows import render_description_window
 
@@ -14,7 +14,6 @@ def process_player_input(action, game, fov_map, targeting_item = None):
     cursor = game.cursor
     entities = game.entities
     game_map = game.map
-    message_log = game.message_log
 
     exit = action.get('exit')
     fullscreen = action.get('fullscreen')
@@ -85,8 +84,7 @@ def process_player_input(action, game, fov_map, targeting_item = None):
 
                     break
             else:
-                message_log.add_message(
-                    Message('There is nothing here to pick up.', msg_type=MessageType.INFO_GENERIC))
+                Message('There is nothing here to pick up.', category=MessageCategory.OBSERVATION).add_to_log(game)
 
     # Cursor Movement & Targeting #
     if toggle_look:
@@ -124,14 +122,14 @@ def process_player_input(action, game, fov_map, targeting_item = None):
             game.previous_state = game.state
             game.state = GameStates.SHOW_INVENTORY
         else:
-            message_log.add_message(Message('Your inventory is empty.'))
+            message_log.add_message(Message('Your inventory is empty.', category=MessageCategory.OBSERVATION))
 
     if show_equipment:
         if len(player.paperdoll.equipped_items) > 0:
             game.previous_state = game.state
             game.state = GameStates.SHOW_EQUIPMENT
         else:
-            message_log.add_message(Message('You have no items equipped.'))
+            message_log.add_message(Message('You have no items equipped.', category=MessageCategory.OBSERVATION))
 
     # Inventory Interaction #
     selected_item_ent = None

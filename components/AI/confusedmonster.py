@@ -21,6 +21,6 @@ class ConfusedMonster:
             self.number_of_turns -= 1
         else:
             self.owner.ai = self.previous_ai
-            results.append({'message': Message('The {self.owner.name} is no longer confused!', MessageType.INFO_BAD)})
+            results.append({'message': Message('The {self.owner.name} is no longer confused!', MessageType.BAD)})
 
         return results

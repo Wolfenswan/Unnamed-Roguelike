@@ -9,7 +9,7 @@ class Player(Entity):
 
     def __init__(self, name, fighter = None, inventory = None):
 
-        super().__init__(0, 0, '@', tcod.white, name, is_player=True, blocks=True, render_order=RenderOrder.PLAYER, fighter=fighter, inventory=inventory)
+        super().__init__(0, 0, '@', tcod.white, name, descr='This is you.', is_player=True, blocks=True, render_order=RenderOrder.PLAYER, fighter=fighter, inventory=inventory)
 
 
     def enemies_in_distance(self, entities, dist=2):

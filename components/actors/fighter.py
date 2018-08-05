@@ -4,7 +4,7 @@ import logging
 
 from config_files import colors
 from gameobjects.entity import Entity
-from gui.messages import Message, MessageType
+from gui.messages import Message, MessageType, MessageCategory
 from rendering.render_order import RenderOrder
 
 
@@ -42,11 +42,11 @@ class Fighter:
 
         if damage > 0:
             results.append({'message': Message(
-                f'{self.owner.name.capitalize()} attacks {target.name} for {str(damage)} hit points.')})
+                f'{self.owner.name.capitalize()} attacks {target.name} for {str(damage)} hit points.', type=MessageType.COMBAT)})
             results.extend(target.fighter.take_damage(damage))
         else:
             results.append(
-                {'message': Message(f'{self.owner.name.capitalize()} attacks {target.name} but does no damage.')})
+                {'message': Message(f'{self.owner.name.capitalize()} attacks {target.name} but does no damage.', type=MessageType.COMBAT)})
 
         return results
 
@@ -65,9 +65,9 @@ class Fighter:
         game.map.tiles[x][y].gibbed = True
 
         if ent.is_player:
-            message = Message('You died!', msg_type=MessageType.INFO_BAD)
+            message = Message('You died!', type=MessageType.BAD)
         else:
-            message = Message(f'The {ent.name.capitalize()} is dead!', MessageType.INFO_GOOD)
+            message = Message(f'The {ent.name.capitalize()} is dead!', type=MessageType.GOOD, category=MessageCategory.OBSERVATION)
 
             ent.blocks = False
             ent.render_order = RenderOrder.CORPSE

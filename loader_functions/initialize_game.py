@@ -1,18 +1,13 @@
-import logging
 from random import randint
 
 from components.actors.fighter import Fighter
 from components.inventory import Inventory
 from config_files import cfg, colors
 from data.data_processing import pick_from_data_dict_by_chance, gen_loadout
-from game import Game
 from gameobjects.entity import Entity
 from gameobjects.player import Player
-from gui.messages import MessageLog
 from map.game_map import GameMap
 from map.place_actors import place_monsters
-from map.place_architecture import place_architecture, place_doors
-from map.place_items import place_items
 from rendering.render_order import RenderOrder
 
 

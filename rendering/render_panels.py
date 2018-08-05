@@ -10,10 +10,8 @@ def render_panels(game):
 
     render_status_panel(game, cfg.STATUS_PANEL_Y, cfg.SCREEN_WIDTH, cfg.STATUS_PANEL_HEIGHT)
     render_combat_panel(game, game.bottom_left_panel, cfg.BOTTOM_PANELS_Y, cfg.COMBAT_PANEL_WIDTH, cfg.BOTTOM_PANELS_HEIGHT)
-    render_message_panel(game.message_log, game.bottom_center_panel, cfg.MSG_PANEL_X, cfg.BOTTOM_PANELS_Y, cfg.MSG_PANEL_WIDTH, cfg.BOTTOM_PANELS_HEIGHT)
-
-    # TODO place holder for testing purposes #
-    render_message_panel(game.message_log, game.bottom_right_panel, cfg.MSG_PANEL_X + cfg.MSG_PANEL_WIDTH, cfg.BOTTOM_PANELS_Y, cfg.MSG_PANEL_WIDTH, cfg.BOTTOM_PANELS_HEIGHT)
+    render_message_panel(game.observation_log, 'Observations', game.bottom_center_panel, cfg.MSG_PANEL1_X, cfg.BOTTOM_PANELS_Y, cfg.MSG_PANEL_WIDTH, cfg.BOTTOM_PANELS_HEIGHT)
+    render_message_panel(game.event_log, "Events", game.bottom_right_panel, cfg.MSG_PANEL2_X, cfg.BOTTOM_PANELS_Y, cfg.MSG_PANEL_WIDTH, cfg.BOTTOM_PANELS_HEIGHT)
     #render_bottom_panels(game)
 
 # TODO: Three separate panels for bottom panel - combat, message1, message 2
@@ -47,15 +45,19 @@ def render_combat_panel(game, con, panel_y, width, height):
     tcod.console_blit(con, 0, 0, width, height, 0, 0, panel_y)
 
 
-def render_message_panel(message_log, con, panel_x, panel_y, width, height):
-    # TODO pass caption as argument, so function can be reused for several message panels #
-    setup_console(con, caption='Messages', borders=True)
+def render_message_panel(message_log, title, con, panel_x, panel_y, width, height):
+    setup_console(con, caption=title, borders=True)
 
     y = 2
-    for message in message_log.messages:
-        tcod.console_set_default_foreground(con, message.color)
+    color_coefficient = 1.0
+    for message in reversed(message_log.messages):
+        color = tuple(int(color_coefficient * x) for x in message.color)
+        tcod.console_set_default_foreground(con, color)
         tcod.console_print(con, message_log.x, y, message.text)
         y += 1
+
+        if color_coefficient >= 0.4:
+            color_coefficient -= 0.1
 
     tcod.console_blit(con, 0, 0, width, height, 0, panel_x, panel_y)
 

@@ -3,7 +3,7 @@ from random import randint
 import tcod
 
 from components.AI.confusedmonster import ConfusedMonster
-from gui.messages import Message, MessageType
+from gui.messages import Message, MessageType, MessageCategory
 
 
 def heal_entity(**kwargs):
@@ -16,10 +16,10 @@ def heal_entity(**kwargs):
     results = []
 
     if entity.fighter.hp == entity.fighter.max_hp:
-        results.append({'consumed': False, 'message': Message('You are already at full health', MessageType.INFO_GENERIC)})
+        results.append({'consumed': False, 'message': Message('You are already at full health', category=MessageCategory.OBSERVATION)})
     else:
         entity.fighter.heal(amount)
-        results.append({'consumed': True, 'message': Message('Your wounds start to feel better!', MessageType.INFO_GOOD)})
+        results.append({'consumed': True, 'message': Message('Your wounds start to feel better!', type=MessageType.GOOD)})
 
     return results
 

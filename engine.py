@@ -20,8 +20,6 @@ def game_loop(game):
     player = game.player
     entities = game.entities
     fov_map = game.fov_map
-    con = game.con
-    message_log = game.message_log
 
     game.state = GameStates.PLAYERS_TURN
     game.previous_state = game.state
@@ -77,14 +75,14 @@ def game_loop(game):
                         dead_entity = enemy_turn_result.get('dead')
 
                         if message:
-                            message_log.add_message(message)
+                            message.add_to_log(game)
 
                         if dead_entity:
                             message = dead_entity.fighter.death(game)
                             if dead_entity.is_player:
                                 game.state = GameStates.PLAYER_DEAD
 
-                            message_log.add_message(message)
+                            message.add_to_log(game)
 
                             if game.state == GameStates.PLAYER_DEAD:
                                 break

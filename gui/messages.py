@@ -1,41 +1,53 @@
 from enum import Enum, auto
 
-from config_files import cfg as cfg
+from config_files import cfg as cfg, colors
 
 import textwrap
 
+class MessageCategory(Enum):
+    EVENT = auto()
+    OBSERVATION = auto()
+
 class MessageType(Enum):
     """ sets the type of the message """
-    INFO_GENERIC = auto()  # generic information, e.g. picking up an item
-    INFO_GAME = auto()  # game-related information such as hints
-    INFO_GOOD = auto()  # information about beneficial events
-    INFO_BAD = auto()  # information about harmful events
-    FLUFF = auto()  # non-important events, such as monster barks
+    GENERIC = auto()  # generic information, e.g. picking up an item
+    GAME = auto()  # game-related information such as hints
+    GOOD = auto()  # information about beneficial events
+    BAD = auto()  # information about harmful events
     ALERT = auto()  # alerts about import events, such as health being very low
+    COMBAT = auto()
+    FLUFF = auto()  # non-important events, such as monster barks
 
 class Message:
-    def __init__(self, text, msg_type=MessageType.INFO_GENERIC, color=None):
+    def __init__(self, text, category = MessageCategory.EVENT, type=MessageType.GENERIC, color=None):
         self.text = text
-        self.msg_type = msg_type
+        self.category = category
+        self.type = type
         self.color = color if color is not None else self.set_color()
         
     def set_color(self):
-        if self.msg_type == MessageType.INFO_GENERIC:
-            return cfg.MSG_COLOR_INFO_GENERIC
-        elif self.msg_type == MessageType.INFO_GAME:
-            return cfg.MSG_COLOR_INFO_GAME
-        elif self.msg_type == MessageType.INFO_GOOD:
-            return cfg.MSG_COLOR_INFO_GOOD
-        elif self.msg_type == MessageType.INFO_BAD:
-            return cfg.MSG_COLOR_INFO_BAD
-        elif self.msg_type == MessageType.FLUFF:
-            return cfg.MSG_COLOR_FLUFF
-        elif self.msg_type == MessageType.ALERT:
-            return cfg.MSG_COLOR_ALERT
+        if self.type == MessageType.GENERIC:
+            return colors.light_amber
+        elif self.type == MessageType.GAME:
+            return colors.turquoise
+        elif self.type == MessageType.GOOD:
+            return colors.green
+        elif self.type == MessageType.BAD:
+            return colors.dark_flame
+        elif self.type == MessageType.FLUFF:
+            return colors.desaturated_red
+        elif self.type == MessageType.ALERT:
+            return colors.red
+        elif self.type == MessageType.COMBAT:
+            return colors.dark_azure
+        
+    def add_to_log(self, game):
+        if self.category == MessageCategory.EVENT:
+            game.event_log.add_message(self)
         else:
-            return cfg.MSG_COLOR_INFO_GENERIC
-
-
+            game.observation_log.add_message(self)
+            
+            
 class MessageLog:
     def __init__(self, x, width, height):
         self.messages = []
@@ -53,4 +65,4 @@ class MessageLog:
                 del self.messages[0]
 
             # Add the new line as a Message object, with the text and the color
-            self.messages.append(Message(line, message.msg_type, message.color))
+            self.messages.append(Message(line, type = message.type, color = message.color))

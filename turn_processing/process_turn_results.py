@@ -6,7 +6,6 @@ from gui.messages import Message
 
 def process_turn_results(player_turn_results, game, fov_map):
     player = game.player
-    message_log = game.message_log
     entities = game.entities
 
     results = []
@@ -29,13 +28,13 @@ def process_turn_results(player_turn_results, game, fov_map):
         enemy_turn_on = [item_added, item_dropped, item_consumed, item_equipped, item_dequipped]
 
         if message:
-            message_log.add_message(message)
+            message.add_to_log(game)
 
         if dead_entity:
             message = dead_entity.fighter.death(game)
             if dead_entity.is_player:
                 game.state = GameStates.PLAYER_DEAD
-            message_log.add_message(message)
+            message.add_to_log(game)
 
         if item_added:
             entities.remove(item_added)
@@ -56,7 +55,7 @@ def process_turn_results(player_turn_results, game, fov_map):
 
         if targeting_cancelled:
             game.state = game.previous_state
-            message_log.add_message(Message('Targeting cancelled'))
+            Message('Targeting cancelled').add_to_log(game)
 
         if waiting:
             visible_enemies = player.visible_enemies(entities, fov_map)

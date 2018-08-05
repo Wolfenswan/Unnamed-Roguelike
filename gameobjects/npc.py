@@ -1,3 +1,4 @@
+import logging
 import math
 from random import choice
 
@@ -5,6 +6,7 @@ import tcod
 
 from gameobjects.entity import Entity
 from gameobjects.util_functions import get_blocking_entity_at_location
+from gui.messages import Message, MessageType, MessageCategory
 from rendering.render_order import RenderOrder
 
 
@@ -14,10 +16,10 @@ from rendering.render_order import RenderOrder
 class NPC(Entity):
     """ Class for the all active non-player objects """
 
-    def __init__(self, x, y, char, color, name, descr, fighter=None, ai=None, inventory=None, skills=None):
+    def __init__(self, x, y, char, color, name, descr, barks=None, fighter=None, ai=None, inventory=None, skills=None):
 
-        super().__init__(x, y, char, color, name, blocks=True, render_order=RenderOrder.ACTOR, fighter=fighter, ai=ai, skills=skills, inventory=inventory)
-
+        super().__init__(x, y, char, color, name, descr, blocks=True, render_order=RenderOrder.ACTOR, fighter=fighter, ai=ai, skills=skills, inventory=inventory)
+        self.barks = barks
 
     def move_towards(self, target_x, target_y, game_map, entities):
         dx = target_x - self.x
@@ -73,3 +75,15 @@ class NPC(Entity):
 
             # Delete the path to free memory
         tcod.path_delete(my_path)
+
+    def bark(self,type):
+        """ make some noise """
+        results = []
+        if self.barks is not None:
+            try:
+                bark = choice(self.barks[type])
+            except:
+                logging.error('Could not find bark-type {0} in {1}.'.format(type, self.barks))
+            else:
+                results.append({'message':Message(f'The {self.name} {bark}', type=MessageType.FLUFF, category=MessageCategory.OBSERVATION)})
+        return results

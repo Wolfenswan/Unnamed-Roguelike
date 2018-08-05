@@ -1,6 +1,6 @@
 import tcod
 
-from gui.messages import Message
+from gui.messages import Message, MessageCategory
 
 
 class Inventory:
@@ -14,12 +14,12 @@ class Inventory:
         if len(self.items) >= self.capacity:
             results.append({
                 'item_added': None,
-                'message': Message('You cannot carry any more, your inventory is full', tcod.yellow)
+                'message': Message('You cannot carry any more, your inventory is full', category=MessageCategory.OBSERVATION)
             })
         else:
             results.append({
                 'item_added': item,
-                'message': Message(f'You pick up the {item.name}!', tcod.blue)
+                'message': Message(f'You pick up the {item.name}.')
             })
 
             self.items.append(item)
@@ -32,7 +32,7 @@ class Inventory:
         useable_component = item_entity.item.useable
 
         if useable_component.use_function is None:
-            results.append({'message': Message(f'The {item_entity.name} cannot be used')})
+            results.append({'message': Message(f'The {item_entity.name} cannot be used like this.', category=MessageCategory.OBSERVATION)})
         else:
             if useable_component.targeting and not (kwargs.get('target_x') or kwargs.get('target_y')):
                 results.append({'targeting': item_entity,'message': useable_component.on_use_msg})
@@ -54,7 +54,7 @@ class Inventory:
         item.x, item.y = self.owner.x, self.owner.y
 
         self.remove_from_inv(item)
-        results.append({'item_dropped': item, 'message': Message(f'You dropped the {item.name}')})
+        results.append({'item_dropped': item, 'message': Message(f'You dropped the {item.name}.')})
 
         return results
 
