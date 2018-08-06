@@ -19,7 +19,7 @@ class GameMap:
 
         max_rooms = int((map_width / room_min_size) + (map_height / room_min_size))
         algo = choice([Tunneling, DrunkWalk])
-        DrunkWalk().make_map(game, max_rooms, room_min_size, room_max_size, map_width, map_height)
+        Tunneling().make_map(game, max_rooms, room_min_size, room_max_size, map_width, map_height)
 
 
     def is_blocked(self, x, y):

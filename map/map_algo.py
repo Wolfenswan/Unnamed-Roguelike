@@ -10,7 +10,7 @@ class Tunneling:
     def make_map(self, game, max_rooms, room_min_size, room_max_size, map_width, map_height):
         game_map = game.map
 
-        self.create_rooms(game, max_rooms, room_min_size, room_max_size, map_width, map_height)
+        self.create_rooms(game_map, max_rooms, room_min_size, room_max_size, map_width, map_height)
         self.create_tunnels(game_map, randomize=True)
 
     @staticmethod
