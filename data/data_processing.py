@@ -11,6 +11,7 @@ from components.skill import Skill
 from data.actor_data.skills_data import skills_data
 from data.actor_data.spawn_data import spawn_data
 from data.architecture_data.arch_static import arch_static_data
+from data.item_data.test_equipment import test_equipment_data
 from data.item_data.use_potions import use_potions_data
 from data.item_data.use_scrolls import use_scrolls_data
 from data.item_data.wp_swords import wp_swords_data
@@ -28,7 +29,7 @@ def merge_dictionaries(dicts):
     return merged_dict
 
 
-item_data = [use_scrolls_data, use_potions_data, wp_swords_data]
+item_data = [use_scrolls_data, use_potions_data, test_equipment_data]
 ITEM_DATA_MERGED = merge_dictionaries(item_data)
 
 actor_data = [spawn_data]
@@ -100,10 +101,10 @@ def gen_item_from_data(data, x, y):
     equipment_component = None
     if equip_to is not None:
         equip_type = data['e_type']
-        dmg = data.get('dmg_range', None)
-        av = data.get('av', None)
-        qu_slots = data.get('qu_slots', None)
-        l_radius = data.get('l_radius', None)
+        dmg = data.get('dmg_range')
+        av = data.get('av')
+        qu_slots = data.get('qu_slots')
+        l_radius = data.get('l_radius')
         equipment_component = Equipment(equip_to, equip_type, dmg_range = dmg, av = av, qu_slots = qu_slots, l_radius = l_radius)
 
     item_component = Item(useable=useable_component, equipment=equipment_component)

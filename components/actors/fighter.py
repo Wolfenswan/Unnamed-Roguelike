@@ -28,11 +28,41 @@ class Fighter:
         self.hp = hp
         self.max_stamina = stamina
         self.stamina = stamina
-        self.defense = defense
-        self.power = power
-        self.vision = vision
+        self.base_defense = defense
+        self.base_power = power
+        self.base_vision = vision
 
         self.is_blocking = False
+
+    @property
+    def power(self): # TODO placeholder - later weapon damage should be separated from fighter power
+        power = self.base_power
+        for e in self.owner.paperdoll.equipped_items:
+            dmg_range = vars(e.item.equipment).get('dmg_range')
+            # This extra step is required as av value is set as None for all Equipments during data processing
+            if dmg_range:
+                power += randint(*dmg_range)
+        return power
+
+    @property
+    def defense(self):
+        defense = self.base_defense
+        for e in self.owner.paperdoll.equipped_items:
+            av = vars(e.item.equipment).get('av')
+            # This extra step is required as av value is set as None for all Equipments during data processing
+            if av:
+                defense += av
+        return defense
+
+    @property
+    def vision(self):
+        vision = self.base_vision
+        for e in self.owner.paperdoll.equipped_items:
+            l_radius = vars(e.item.equipment).get('l_radius')
+            # This extra step is required as l_radius value is set as None for all Equipments during data processing
+            if l_radius:
+                vision += l_radius
+        return vision
 
     def take_damage(self, amount):
         results = []
@@ -55,6 +85,8 @@ class Fighter:
     def attack(self, target):
         results = []
         damage = self.power - target.fighter.defense
+
+        logging.debug(f'{self.owner.name} attacks {target.name} with {self.power} power against {target.fighter.defense} defense for {damage} damage.')
 
         if damage > 0:
             msg_type = MessageType.ALERT if target.is_player else MessageType.COMBAT

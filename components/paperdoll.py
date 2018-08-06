@@ -23,7 +23,7 @@ class Paperdoll:
         equipped_item = getattr(extremity, e_type)
 
         if equipped_item:
-            choice = yesno_menu('Remove the item?', game)
+            choice = yesno_menu('Remove Item',f'Unequip your {equipped_item.name}?', game)
             if choice:
                 results.extend(self.dequip(equipped_item))
                 results.extend(self.equip(item_ent, game))

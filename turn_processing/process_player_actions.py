@@ -122,14 +122,14 @@ def process_player_input(action, game, fov_map, targeting_item = None):
             game.previous_state = game.state
             game.state = GameStates.SHOW_INVENTORY
         else:
-            message_log.add_message(Message('Your inventory is empty.', category=MessageCategory.OBSERVATION))
+            Message('Your inventory is empty.', category=MessageCategory.OBSERVATION).add_to_log(game)
 
     if show_equipment:
         if len(player.paperdoll.equipped_items) > 0:
             game.previous_state = game.state
             game.state = GameStates.SHOW_EQUIPMENT
         else:
-            message_log.add_message(Message('You have no items equipped.', category=MessageCategory.OBSERVATION))
+            Message('You have no items equipped.', category=MessageCategory.OBSERVATION).add_to_log(game)
 
     # Inventory Interaction #
     selected_item_ent = None

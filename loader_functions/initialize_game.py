@@ -21,8 +21,8 @@ def initialize_game(game):
     player_loadouts = {
         'loadout1': {
             'chance': 100,
-            'equipment': ('sword_rusty',),
-            'backpack': ('pot_heal', 'scr_fireball')
+            'equipment': ('sword_rusty','leather_brittle', 'helmet_rusty','belt_generic','shield_wood'),
+            'backpack': ('pot_heal', 'scr_fireball','torch')
         }
     }
     loadout = pick_from_data_dict_by_chance(player_loadouts)

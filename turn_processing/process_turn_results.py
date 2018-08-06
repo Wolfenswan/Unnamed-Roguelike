@@ -58,8 +58,7 @@ def process_turn_results(player_turn_results, game, fov_map):
             Message('Targeting cancelled').add_to_log(game)
 
         if waiting:
-            visible_enemies = player.visible_enemies(entities, fov_map)
-            if len(visible_enemies) > 0:
+            if player.in_combat(game):
                 player.fighter.toggle_blocking()
                 #player.turnplan.plan_turn(game.turn+1, {'planned_function': player.fighter.toggle_blocking})
                 game.state = GameStates.ENEMY_TURN

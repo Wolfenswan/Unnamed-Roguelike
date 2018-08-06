@@ -50,18 +50,6 @@ def inventory_menu(game):
 
     # TODO add optional filter
     # TODO allow cycling through filters
-    # sort = 'letter'
-    # if filter_by is MenuFilter.ALL:
-    #     inventory = gv.player.inventory.items
-    # elif filter_by is MenuFilter.USEABLES:
-    #     inventory = [item for item in gv.player.inventory.items if hasattr(item, 'on_use')]
-    # elif filter_by is MenuFilter.EQUIPMENT:
-    #     inventory = [item for item in gv.player.inventory.items if hasattr(item, 'e_to')]
-    # elif filter_by is MenuFilter.QUICKUSE:
-    #     inventory = gv.player.get_all_qu_items()
-    #     sort = 'number'
-    # else:
-    #     inventory = []
 
     if game.state == GameStates.SHOW_INVENTORY:
         body = 'Press the key next to an item to select it.'
@@ -87,16 +75,14 @@ def options_menu(title, body, options, sort_by='str', cancel_with_escape=True):
     return choice
 
 
-def yesno_menu(body, game):
+def yesno_menu(title, body, game):
     player = game.player
     x, y = pos_on_screen(player.x + 2, player.y - 2, game.player)
-
-    title = 'Yes or No?'
 
     options = ['(Y)es', '(N)o']
     wait_for = ['y', 'n']
 
-    draw_window(title, body, options, window_x=x, window_y=y, forced_width=len(body))
+    draw_window(title, body, options, window_x=x, window_y=y, forced_width=len(body), sort_by=None)
 
     choice = menu_loop(wait_for=wait_for)
 
@@ -104,7 +90,7 @@ def yesno_menu(body, game):
 
 
 def equipment_menu(game):
-    # TODO: Placeholder #
+    # TODO: Menu is a Placeholder #
     player = game.player
     inventory = player.paperdoll.equipped_items
     x, y = pos_on_screen(player.x + 2, player.y - 2, game.player)
@@ -122,7 +108,7 @@ def equipment_menu(game):
 
     choice = menu_loop(wait_for=len(options))
 
-    if choice is not False:
+    if choice:
         return inventory[choice]
     else:
         return False
@@ -138,10 +124,10 @@ def item_menu(item_ent, game):
     options = []
     wait_for = ['d']
 
-    if item_ent.item.useable is not None:
+    if item_ent.item.useable is not None and not player.in_combat(game):
         options.append('(U)se')
         wait_for.append('u')
-    if item_ent.item.equipment is not None:
+    if item_ent.item.equipment is not None and not player.in_combat(game):
         if player.paperdoll.is_equipped(item_ent):
             options.append('(R)emove')
             wait_for.append('r')
@@ -150,7 +136,7 @@ def item_menu(item_ent, game):
             wait_for.append('e')
     options.append('(D)rop')
 
-    draw_window(title, body, options=options, window_x=x, window_y=y)
+    draw_window(title, body, options=options, window_x=x, window_y=y, sort_by=None)
 
     choice = menu_loop(wait_for=wait_for)
 

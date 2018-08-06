@@ -88,7 +88,7 @@ def draw_tile(game, con, fov_map, tile_x, tile_y, screen_x, screen_y, debug=Fals
     if visible:
         char = '#' if wall else '.'
         if tile.gibbed:
-            fg_color = colors.corpse
+            fg_color =  darken_color_by_fov_distance(game.player, colors.corpse, tile_x, tile_y, randomness = 0)
 
         #tcod.console_put_char(con, screen_x, screen_y, char, tcod.BKGND_NONE)
         tcod.console_put_char_ex(con, screen_x, screen_y, char, fg_color, colors.black)
@@ -101,6 +101,7 @@ def draw_tile(game, con, fov_map, tile_x, tile_y, screen_x, screen_y, debug=Fals
                 tcod.console_put_char_ex(con, screen_x, screen_y, '#', colors.dark_wall_fg, colors.dark_ground)
             else:
                 tcod.console_put_char_ex(con, screen_x, screen_y, '.', colors.dark_ground_fg, colors.dark_ground)
+
 
 def draw_entity(game, entity, fov_map, debug=False):
     if entity.render_order == RenderOrder.ALWAYS or tcod.map_is_in_fov(fov_map, entity.x, entity.y) or debug:

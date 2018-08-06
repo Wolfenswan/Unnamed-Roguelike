@@ -22,3 +22,10 @@ class Player(Entity):
         enemies_in_distance = self.enemies_in_distance(entities, dist=self.fighter.vision)
         visible_enemies = [ent for ent in enemies_in_distance if ent.is_visible(fov_map) and ent != self and ent.fighter is not None]
         return visible_enemies
+
+    def in_combat(self, game):
+        visible_enemies = self.visible_enemies(game.entities, game.fov_map)
+        if len(visible_enemies) > 0:
+            return True
+        else:
+            return False

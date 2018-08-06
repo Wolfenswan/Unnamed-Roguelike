@@ -38,7 +38,7 @@ def game_loop(game):
         logging.debug(f'Beginning turn {game.turn}. State: {game.state}. Recomputing FOV: {fov_recompute}')
 
         if fov_recompute:
-            recompute_fov(fov_map, player.x, player.y)
+            recompute_fov(game, player.x, player.y)
             fov_recompute = False
         render_all(game, fov_map)
 

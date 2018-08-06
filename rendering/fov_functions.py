@@ -22,13 +22,13 @@ def initialize_fov(game):
     return fov_map
 
 
-def recompute_fov(fov_map, x, y):
+def recompute_fov(game, x, y):
 
     algorithm = cfg.FOV_ALGO
     light_walls = cfg.FOV_LIGHT_WALLS
-    radius = cfg.FOV_RADIUS
+    radius = game.player.fighter.vision
 
-    tcod.map_compute_fov(fov_map, x, y, radius, light_walls, algorithm)
+    tcod.map_compute_fov(game.fov_map, x, y, radius, light_walls, algorithm)
 
 
 def darken_color_by_fov_distance(ent, color, x, y, randomness = 0):
