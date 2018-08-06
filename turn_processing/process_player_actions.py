@@ -21,6 +21,7 @@ def process_player_input(action, game, fov_map, targeting_item = None):
     move = action.get('move')
     wait = action.get('wait')
     pickup = action.get('pickup')
+    quick_use_idx = action.get('quick_use')
     show_inventory = action.get('show_inventory')
     show_equipment = action.get('show_equipment')
     # drop_inventory = action.get('drop_inventory')
@@ -109,7 +110,12 @@ def process_player_input(action, game, fov_map, targeting_item = None):
 
         if confirm and targeting_item:
             target_x, target_y = cursor.x, cursor.y
-            item_use_results = player.inventory.use(targeting_item, entities=entities, fov_map=fov_map,
+            # check whether the item is being used from the regular inventory or the quick use inventory
+            if targeting_item in player.inventory.items:
+                inv = player.inventory
+            else:
+                inv = player.qu_inventory
+            item_use_results = inv.use(targeting_item, entities=entities, fov_map=fov_map,
                                                     target_x=target_x, target_y=target_y)
             turn_results.extend(item_use_results)
 
@@ -164,6 +170,12 @@ def process_player_input(action, game, fov_map, targeting_item = None):
                 game.state = game.previous_state
         else:
             game.state = game.previous_state
+
+    # Quick use handling #
+    if quick_use_idx and quick_use_idx <= len(player.qu_inventory.items):
+        quick_use_item = player.qu_inventory.items[quick_use_idx-1] # -1 as the idx is passed as a number key
+        qu_results = player.qu_inventory.use(quick_use_item, entities=entities, fov_map=fov_map)
+        turn_results.extend(qu_results)
 
     if exit:
         if game.state in (GameStates.SHOW_INVENTORY, GameStates.DROP_INVENTORY, GameStates.CURSOR_ACTIVE):

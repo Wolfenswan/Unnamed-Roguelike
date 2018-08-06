@@ -101,7 +101,6 @@ def draw_quickslots(con, game):
     width = 3 * total_slots # every slot needs 3 pixels
     start_x = cfg.BOTTOM_PANELS_WIDTH // 2 - width // 2
 
-    # TODO tweak color
     if total_slots > 0:
         o_x = start_x
         o_y = 0
