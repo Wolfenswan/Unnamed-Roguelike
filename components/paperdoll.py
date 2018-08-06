@@ -8,7 +8,8 @@ class Paperdoll:
     """ The Paperdoll component controls the equipped items of an entity """
 
     def __init__(self):
-        self.equipped_items = []
+        # TODO allow various combination of Heads, Arms etc.
+        self.equipped_items = [] # TODO make @property
         self.head = Head()
         self.torso = Torso()
         self.arms = Arms()
@@ -18,6 +19,7 @@ class Paperdoll:
         results = []
         e_to = item_ent.item.equipment.e_to
         e_type = item_ent.item.equipment.e_type
+        qu_slots = item_ent.item.equipment.qu_slots
 
         extremity = getattr(self, e_to)
         equipped_item = getattr(extremity, e_type)
@@ -33,6 +35,9 @@ class Paperdoll:
             setattr(extremity, e_type, item_ent)
             self.equipped_items.append(item_ent)
             self.owner.inventory.remove_from_inv(item_ent)
+            if qu_slots:
+                self.owner.qu_inventory.capacity += qu_slots
+
             results.append({'item_equipped': item_ent, 'message': Message(f'You equip the {item_ent.name}')})
 
         return results
@@ -41,6 +46,7 @@ class Paperdoll:
         results = []
         e_to = item_ent.item.equipment.e_to
         e_type = item_ent.item.equipment.e_type
+        qu_slots = item_ent.item.equipment.qu_slots
 
         extremity = getattr(self, e_to)
         equipped_item = getattr(extremity, e_type)
@@ -49,20 +55,19 @@ class Paperdoll:
             setattr(extremity, e_type, None)
             self.equipped_items.remove(equipped_item)
             self.owner.inventory.add(equipped_item)
+            if qu_slots:
+                # TODO make sure items over capacity are moved to regular inventory
+                self.owner.qu_inventory.capacity -= qu_slots
+
             results.append({'item_dequipped': item_ent, 'message': Message(f'You remove the {item_ent.name}')})
         else:
             logging.error('Trying to dequip something that is not equipped. This should not happen...')
 
         return results
 
-
-    def get_total_qu_slots(self):
-        """ returns the number of total quick use slots on the paper doll """
-        slots = 0
-        for i in self.equipped_items:
-            slots += getattr(i, 'slots', 0)
-        return slots
-
+    def prepare(self, item_ent):
+        # TODO add item to quick use inventory
+        pass
 
     def is_equipped(self, item):
         return item in self.equipped_items
@@ -80,7 +85,6 @@ class Torso:
         self.back = back
         self.shoulder = shoulder
         self.belt = belt
-
 
 class Arms:
     def __init__(self, armor=None, weapon=None, offhand=None, ring=None):

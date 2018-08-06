@@ -1,3 +1,6 @@
+from components.inventory import Inventory
+
+
 class Equipment():
 
     def __init__(self, e_to, e_type, dmg_range = None, av = None, qu_slots = None, l_radius = None):

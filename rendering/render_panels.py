@@ -52,8 +52,8 @@ def render_message_panel(message_log, title, con, panel_x, panel_y, width, heigh
     color_coefficient = 1.0
     for message in reversed(message_log.messages):
         color = tuple(int(color_coefficient * x) for x in message.color)
-        tcod.console_set_default_foreground(con, color)
-        tcod.console_print(con, message_log.x, y, message.text)
+        tcod.console_set_color_control(tcod.COLCTRL_1, color, colors.black)
+        tcod.console_print(con, message_log.x, y, f'%c{message.text}%c' %(tcod.COLCTRL_1, tcod.COLCTRL_STOP))
         y += 1
 
         if color_coefficient >= 0.4:
@@ -63,13 +63,16 @@ def render_message_panel(message_log, title, con, panel_x, panel_y, width, heigh
 
 
 def render_status_panel(game, panel_y, width, height):
-    # TODO Stamina & Quick Use
     console = game.status_panel
-    tcod.console_set_default_background(console, tcod.black)
-    tcod.console_clear(console)
+    setup_console(console, fgcolor=colors.light_gray)
 
     draw_bar(console, 1, 1, 20, 'HP', game.player.fighter.hp, game.player.fighter.max_hp,
              tcod.light_red, tcod.darker_red)
+
+    draw_bar(console, cfg.SCREEN_WIDTH-21, 1, 20, 'Stamina', game.player.fighter.stamina, game.player.fighter.max_stamina,
+             colors.blue, colors.darker_blue)
+
+    draw_quickslots(console, game)
 
     tcod.console_blit(console, 0, 0, width, height, 0, 0, panel_y)
     tcod.console_print_frame(console, 0, 0, width, height)
@@ -78,6 +81,7 @@ def render_status_panel(game, panel_y, width, height):
 def draw_bar(panel, x, y, total_width, name, value, maximum, bar_color, back_color):
     bar_width = int(float(value) / maximum * total_width)
 
+
     tcod.console_set_default_background(panel, back_color)
     tcod.console_rect(panel, x, y, total_width, 1, False, tcod.BKGND_SCREEN)
 
@@ -85,35 +89,45 @@ def draw_bar(panel, x, y, total_width, name, value, maximum, bar_color, back_col
     if bar_width > 0:
         tcod.console_rect(panel, x, y, bar_width, 1, False, tcod.BKGND_SCREEN)
 
-    tcod.console_set_default_foreground(panel, tcod.white)
-    tcod.console_print_ex(panel, int(x + total_width / 2), y, tcod.BKGND_NONE, tcod.CENTER,
-                          f'{name}: {value}/{maximum}')
+    tcod.console_set_color_control(tcod.COLCTRL_1, colors.white, bar_color)
+    tcod.console_print_ex(panel, int(x + total_width / 2), y, tcod.BKGND_NONE, tcod.CENTER, f'%c{name}: {value}/{maximum}%c' % (tcod.COLCTRL_1, tcod.COLCTRL_STOP))
 
 
-"""
-def draw_quickslot_panel():
+def draw_quickslots(con, game):
 
-    total_slots = gv.player.paperdoll.get_total_qu_slots()
-    width = 2 * total_slots + 1
-    height = 3
-    start_x = settings.MAP_SCREEN_WIDTH // 2 - width // 2
-    start_y = settings.MAP_SCREEN_HEIGHT - height
+    player = game.player
 
-    window = tdl.Window(gv.root, start_x, start_y, width, height)
-    window.caption = ''
-    window.border_color = settings.PANELS_BORDER_COLOR
-    setup_panel(window)
+    total_slots = player.qu_inventory.capacity
+    width = 3 * total_slots # every slot needs 3 pixels
+    start_x = cfg.BOTTOM_PANELS_WIDTH // 2 - width // 2
 
-    o_x = 2
-    for s in range(1,total_slots):
-        window.draw_char(o_x, 0, '194', fg=settings.PANELS_BORDER_COLOR, bg=None)
-        window.draw_char(o_x,1,'179', fg=settings.PANELS_BORDER_COLOR, bg=None)
-        window.draw_char(o_x, 2, '193', fg=settings.PANELS_BORDER_COLOR, bg=None)
-        o_x += 2
+    # TODO tweak color
+    if total_slots > 0:
+        o_x = start_x
+        o_y = 0
+        tcod.console_set_char(con, o_x, o_y, 218)
+        tcod.console_set_char(con, o_x, o_y+1, 179)
+        tcod.console_set_char(con, o_x, o_y+2, 192)
+        o_x += 1
+        for s in range(1,total_slots):
+            tcod.console_set_char(con, o_x, o_y, 196)
+            tcod.console_set_char(con, o_x, o_y+2, 196)
+            o_x += 1
+            tcod.console_set_char(con, o_x, o_y, 194)
+            tcod.console_set_char(con, o_x, o_y+1, 179)
+            tcod.console_set_char(con, o_x, o_y+2, 193)
+            o_x += 1
+        tcod.console_set_char(con, o_x, o_y, 196)
+        tcod.console_set_char(con, o_x, o_y+2, 196)
+        o_x += 1
+        tcod.console_set_char(con, o_x, o_y, 191)
+        tcod.console_set_char(con, o_x, o_y+1, 179)
+        tcod.console_set_char(con, o_x, o_y+2, 217)
 
-    o_x = 1
-    for i, item in enumerate(gv.player.get_all_qu_items()):
-        window.draw_str(o_x, 0, str(i+1), fg=colors.white, bg=None)
-        window.draw_str(o_x,1,'{0}'.format(item.char),fg=item.color)
-        o_x += 2
-"""
+        o_x = start_x + 1
+        for i, item in enumerate(player.qu_inventory.items):
+            tcod.console_set_char_foreground(con, o_x, 0, colors.white)
+            tcod.console_set_char(con, o_x, 0, f'{i+1}')
+            tcod.console_set_color_control(tcod.COLCTRL_1, item.color, colors.black)
+            tcod.console_print(con, o_x, 1, f'%c{item.char}%c' % (tcod.COLCTRL_1, tcod.COLCTRL_STOP))
+            o_x += 2

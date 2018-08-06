@@ -7,16 +7,16 @@ class Turnplan:
         plan = self.planned_turns.get(game_turn)
         if plan is not None:
             skip_turn = plan.get('skip_turn')
-            skill = plan.get('planned_skill')
-            skill_args = plan.get('planned_skill_args',())
+            # skill = plan.get('planned_skill')
+            # skill_args = plan.get('planned_skill_args',())
             function = plan.get('planned_function')
             function_args = plan.get('planned_function_args')
 
             if skip_turn:
                 return results
 
-            if skill:
-                results.extend(skill.execute(*skill_args))
+            # if skill: # Might reintroduce this functionality later again; but it might be entireally replaced by planned_function
+            #     results.extend(skill.execute(*skill_args))
 
             if function:
                 results.extend(function(*function_args))
@@ -24,7 +24,6 @@ class Turnplan:
         return results
 
     def plan_turn(self, turn_to_plan, plan, overwrite=False, pushback=False):
-        # If there's already a plan for the intended turn, push that plan back one turn
         if not self.planned_turns.get(turn_to_plan) or overwrite:
             self.planned_turns[turn_to_plan] = plan
         elif pushback: # If there's already a plan for the intended turn, push that plan back one turn TODO needs testing

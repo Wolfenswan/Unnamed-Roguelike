@@ -53,8 +53,28 @@ class Inventory:
 
         item.x, item.y = self.owner.x, self.owner.y
 
+        if item in self.owner.paperdoll.equipped_items:
+            self.owner.paperdoll.dequip(item)
+
         self.remove_from_inv(item)
         results.append({'item_dropped': item, 'message': Message(f'You dropped the {item.name}.')})
+
+        return results
+
+    def prepare(self, item):
+        results = []
+        qu_inventory = self.owner.qu_inventory
+
+        if len(qu_inventory.items) >= qu_inventory.capacity:
+            results.append({
+                'message': Message('You cannot prepare any more items.', category=MessageCategory.OBSERVATION)
+            })
+        else:
+            qu_inventory.items.append(item)
+            self.remove_from_inv(item)
+            results.append({
+                'item_prepared': item,
+                'message': Message(f'You prepare the {item.name}.')})
 
         return results
 

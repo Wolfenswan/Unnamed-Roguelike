@@ -3,6 +3,7 @@ from enum import Enum, auto
 
 import tcod
 
+from components.inventory import Inventory
 from components.paperdoll import Paperdoll
 from components.actors.turnplan import Turnplan
 from gameobjects.util_functions import get_blocking_entity_at_location
@@ -66,10 +67,12 @@ class Entity:
         # Components #
         self.fighter = fighter
         self.ai = ai
+        self.turnplan = Turnplan()
         self.item = item
         self.inventory = inventory
-        self.paperdoll = Paperdoll()
-        self.turnplan = Turnplan()
+        if self.inventory:
+            self.paperdoll = Paperdoll()
+            self.qu_inventory = Inventory(capacity = 0)
         self.skills = skills  # dictionary
         self.architecture = architecture
         self.set_ownership() # Sets ownership for all components
@@ -134,6 +137,8 @@ class Entity:
 
         if self.inventory:
             self.inventory.owner = self
+            self.paperdoll.owner = self
+            self.qu_inventory.owner = self
 
         if self.architecture:
             self.architecture.owner = self
@@ -143,6 +148,6 @@ class Entity:
                 skill.owner = self
 
         self.turnplan.owner = self
-        self.paperdoll.owner = self
+
 
 

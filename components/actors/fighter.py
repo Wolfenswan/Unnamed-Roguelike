@@ -86,21 +86,32 @@ class Fighter:
         results = []
         damage = self.power - target.fighter.defense
 
-        logging.debug(f'{self.owner.name} attacks {target.name} with {self.power} power against {target.fighter.defense} defense for {damage} damage.')
+        logging.debug(f'{self.owner.name.capitalize()} attacks {target.name.capitalize()} with {self.power} power against {target.fighter.defense} defense for {damage} damage.')
 
+        # TODO if blocked, reduce stamina
         if damage > 0:
-            msg_type = MessageType.ALERT if target.is_player else MessageType.COMBAT
-            results.append({'message': Message(
-                f'{self.owner.name.capitalize()} attacks {target.name} for {str(damage)} hit points.', type=msg_type)})
-            results.extend(target.fighter.take_damage(damage))
+            if target.fighter.is_blocking and target.fighter.stamina > 0:
+                results.extend(target.fighter.block(damage))
+            else:
+                msg_type = MessageType.ALERT if target.is_player else MessageType.COMBAT
+                results.append({'message': Message(
+                    f'{self.owner.name.capitalize()} attacks {target.name.capitalize()} for {str(damage)} hit points.', type=msg_type)})
+                results.extend(target.fighter.take_damage(damage))
         else:
             results.append(
                 {'message': Message(f'{self.owner.name.capitalize()} attacks {target.name} but does no damage.', type=MessageType.COMBAT)})
 
         return results
 
-    def block(self, attack):
-        pass
+    def block(self, damage):
+        results = []
+        self.stamina -= damage
+        if self.owner.is_player:
+            message = Message(f'You were able to block the attack!', type=MessageType.GOOD)
+        else:
+            message = Message(f'{self.owner.name.capitalize()} was able to block the attack!', type=MessageType.COMBAT)
+        results.append({'message': message})
+        return results
 
     def toggle_blocking(self):
         self.is_blocking = not self.is_blocking

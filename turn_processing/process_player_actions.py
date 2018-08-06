@@ -153,6 +153,9 @@ def process_player_input(action, game, fov_map, targeting_item = None):
                 if item_use_choice == 'r':
                     item_interaction_result = player.paperdoll.dequip(selected_item_ent)
                     turn_results.extend(item_interaction_result)
+                if item_use_choice == 'p':
+                    item_interaction_result = player.inventory.prepare(selected_item_ent)
+                    turn_results.extend(item_interaction_result)
                 if item_use_choice == 'd':
                     item_interaction_result = player.inventory.drop(selected_item_ent)
                     turn_results.extend(item_interaction_result)

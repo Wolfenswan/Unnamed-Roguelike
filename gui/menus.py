@@ -122,19 +122,28 @@ def item_menu(item_ent, game):
     body = item_ent.descr
 
     options = []
-    wait_for = ['d']
+    wait_for = []
 
     if item_ent.item.useable is not None and not player.in_combat(game):
-        options.append('(U)se')
-        wait_for.append('u')
+            options.append('(P)repare')
+            wait_for.append('p')
+            options.append('(U)se')
+            wait_for.append('u')
+
+
     if item_ent.item.equipment is not None and not player.in_combat(game):
         if player.paperdoll.is_equipped(item_ent):
             options.append('(R)emove')
             wait_for.append('r')
+            options.append('(D)rop')
+            wait_for.append('d')
         else:
             options.append('(E)quip')
             wait_for.append('e')
-    options.append('(D)rop')
+
+    if not item_ent in player.paperdoll.equipped_items:
+        options.append('(D)rop')
+        wait_for.append('d')
 
     draw_window(title, body, options=options, window_x=x, window_y=y, sort_by=None)
 

@@ -47,7 +47,7 @@ test_equipment_data = {
         'e_to': ARM_EQUIP,
         'e_type': ARM_TYPE,
         'av': 2,
-        'slots': 2
+        'qu_slots': 2
     },
     'helmet_rusty': {
         'name': 'Rusty Helmet',
@@ -69,7 +69,7 @@ test_equipment_data = {
         "color": M_COLOR,
         'e_to': M_EQUIP,
         'e_type': M_TYPE,
-        'slots': 6,
+        'qu_slots': 6,
     },
     'torch': {
         'name': 'Torch',
