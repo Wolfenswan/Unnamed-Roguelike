@@ -39,20 +39,21 @@ architecture_data = [arch_static_data]
 ARCHITECTURE_DATA_MERGED = merge_dictionaries(architecture_data)
 
 
-def get_generic_data(data):
+def get_generic_data(data, randomize_color = False):
     name = data['name']
     char = data['char']
     color = data['color']
     descr = data['descr']
 
-    color = tuple(int(uniform(0.5, 1) * x) for x in color) # Slight color randomization for each entity
+    if randomize_color:
+        color = tuple(int(uniform(0.5, 1) * x) for x in color) # Slight color randomization for each entity
 
     return (char, color, name, descr)
 
 
 def gen_ent_from_dict(dict, entry, x, y, game):
     data = dict[entry]
-    arguments = (x, y, *get_generic_data(data))
+    arguments = (x, y, *get_generic_data(data, randomize_color=True))
 
     hp = randint(*data['max_hp'])
     stamina = randint(*data['max_stamina'])

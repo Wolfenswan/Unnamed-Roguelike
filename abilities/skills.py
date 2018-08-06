@@ -34,8 +34,11 @@ class SkillUsage:
         hit = animate_move(ent, game, dx, dy, distance)
         # TODO add power modifier to charged attacks
         if hit:
-            results.extend(ent.fighter.attack(hit))
-        elif hit is False:  # If a wall is hit during the charge, damage the charging entity
+            if hit.fighter:
+                results.extend(ent.fighter.attack(hit))
+            elif hit.architecture:
+                results.extend(ent.fighter.attack(ent))
+        elif hit is False:   # If a wall is hit during the charge, damage the charging entity
             results.extend(ent.fighter.attack(ent))
         return results
 

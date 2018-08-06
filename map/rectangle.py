@@ -1,12 +1,6 @@
 import logging
 from random import randint
 
-import tcod
-
-from config_files import colors
-from rendering.util_functions import pos_on_screen
-
-
 class Rect:
     def __init__(self, x, y, w, h):
         self.x1 = x
@@ -15,6 +9,12 @@ class Rect:
         self.y2 = y + h
         self.w = w
         self.h = h
+
+    def create_room(self, game_map):
+        # go through the tiles in the rectangle and make them passable
+        for x in range(self.x1 + 1, self.x2):
+            for y in range(self.y1 + 1, self.y2):
+                game_map.tiles[x][y].set_attributes(floor=True)
 
     def center(self):
         center_x = int((self.x1 + self.x2) / 2)

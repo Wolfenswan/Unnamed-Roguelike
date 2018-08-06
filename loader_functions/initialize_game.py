@@ -8,6 +8,8 @@ from gameobjects.entity import Entity
 from gameobjects.player import Player
 from map.game_map import GameMap
 from map.place_actors import place_monsters
+from map.place_architecture import place_architecture, place_doors
+from map.place_items import place_items
 from rendering.render_order import RenderOrder
 
 
@@ -40,6 +42,8 @@ def initialize_game(game):
     # place_architecture(game)
     # place_doors(game)
     # place_items(game)
-    place_monsters(game)
+    # place_monsters(game)
+
+    game.player.x, game.player.y = game.map.rooms[0].center()
 
     return game
