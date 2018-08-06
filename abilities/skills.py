@@ -2,7 +2,7 @@ import tcod
 
 from config_files import colors
 from gui.messages import Message, MessageType, MessageCategory
-from rendering.render_animation import animate_move
+from rendering.render_animations import animate_move
 from rendering.render_main import render_main_screen
 
 
@@ -14,7 +14,7 @@ class SkillUsage:
         distance = kwargs['distance']
         delay = kwargs['delay']
         results = []
-        # TODO Condition: Straight empty line to target
+
         dx, dy = ent.direction_to_ent(game.player)
 
         ent.color_bg = colors.dark_red
@@ -26,28 +26,24 @@ class SkillUsage:
 
     @staticmethod
     def skill_charge_execute(ent, game, dx, dy, distance):
+        # TODO follow a rough line towards the targets position, instead of only cardinal directions
+        ent.color_bg = None # Reset the entities bg-color, which the skill preparation had changed
+
         results = []
         results.append({'message':Message(f'The {ent.name} charges forward!', category=MessageCategory.OBSERVATION, type=MessageType.COMBAT)})
-        ent.color_bg = colors.green
-        # TODO - charging monsters cover too distance, why?
         hit = animate_move(ent, game, dx, dy, distance)
-        print(hit)
+        # TODO add power modifier to charged attacks
         if hit:
             results.extend(ent.fighter.attack(hit))
-        # for i in range(distance):   # TODO Animation; maybe break up in several large steps over n turns?
-        #     blocked = ent.try_move(game, dx, dy)
-        #     print(i, distance, dx, dy, ent.direction_to_ent(game.player))
-        #     if blocked:
-        #         print(blocked)
-        #         ent.fighter.attack(blocked)
-        #         break
-
+        elif hit is False:  # If a wall is hit during the charge, damage the charging entity
+            results.extend(ent.fighter.attack(ent))
         return results
 
 class SkillConditions:
 
     @staticmethod
     def skill_charge_condition(game, actor, **kwargs):
+        # TODO also a somewhat straight empty line
         player = game.player
         min, max = kwargs['min'], kwargs['max']
         if min < actor.distance_to_ent(player) < max:

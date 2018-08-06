@@ -5,7 +5,7 @@ import tcod
 from config_files import cfg
 from game import GameStates, Game
 from gui.menus import options_menu
-from loader_functions.data_loader import save_game, load_game
+from loader_functions.data_loader import load_game
 from turn_processing.handle_input import handle_keys
 from turn_processing.process_player_actions import process_player_input
 from loader_functions.initialize_game import initialize_game

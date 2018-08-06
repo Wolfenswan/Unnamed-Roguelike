@@ -13,5 +13,7 @@ def animate_move(ent, game, dx, dy, steps):
                 return blocked
             else:
                 ent.move(dx, dy)
-                render_all(game, game.fov_map) # TODO Placeholder until a seperate render_map function exists (requries a dedicated map console)
-                time.sleep(0.1)
+                render_all(game, game.fov_map) # TODO Placeholder until a seperate render_map function exists (requires a dedicated map console)
+                time.sleep(0.05)
+        else:
+            return False
