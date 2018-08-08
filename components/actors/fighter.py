@@ -2,6 +2,8 @@ from random import randint, choice
 
 import logging
 
+import tcod
+
 from config_files import colors
 from gameobjects.entity import Entity
 from gui.messages import Message, MessageType, MessageCategory
@@ -25,14 +27,68 @@ class Fighter:
 
         """
         self.max_hp = hp
-        self.hp = hp
+        self.__hp = hp
         self.max_stamina = stamina
-        self.stamina = stamina
+        self.__stamina = stamina
         self.base_defense = defense
         self.base_power = power
         self.base_vision = vision
 
         self.is_blocking = False
+
+    @property
+    def hp(self):
+        return self.__hp
+
+    @property
+    def hp_string(self):
+        percentage = (self.__hp / self.max_hp * 100)
+        if 86.0 <= percentage <= 100.0:
+            return 'healthy'
+        elif 71.0 <= percentage <= 85.0:
+            return 'scratched'
+        elif 25.0 <= percentage <= 70.0:
+            return 'wounded'
+        else:
+            return 'near dead'
+
+    @property
+    def hp_color(self):
+        percentage = (self.__hp / self.max_hp * 100)
+        if 86.0 <= percentage <= 100.0:
+            return colors.dark_green
+        elif 71.0 <= percentage <= 85.0:
+            return colors.light_green
+        elif 25.0 <= percentage <= 70.0:
+            return colors.light_red
+        else:
+            return colors.dark_red
+
+    @hp.setter
+    def hp(self, value):
+        if value < 0:
+            self.__hp = 0
+        else:
+            self.__hp = value
+
+    @property
+    def stamina(self):
+        return self.__stamina
+
+    @property
+    def stamina_string(self):
+        pass
+
+    @property
+    def stamina_color(self):
+        pass
+
+    @stamina.setter
+    def stamina(self, value):
+        if value < 0:
+            self.__stamina = 0
+        else:
+            self.__stamina = value
 
     @property
     def power(self): # TODO placeholder - later weapon damage should be separated from fighter power
@@ -67,7 +123,7 @@ class Fighter:
     def take_damage(self, amount):
         results = []
 
-        self.hp -= amount
+        self.hp = self.hp - amount
 
         if self.hp <= 0:
             results.append({'dead': self.owner})
@@ -105,7 +161,7 @@ class Fighter:
 
     def block(self, damage):
         results = []
-        self.stamina -= damage
+        self.stamina = self.stamina - damage
         if self.owner.is_player:
             message = Message(f'You were able to block the attack!', type=MessageType.GOOD)
         else:

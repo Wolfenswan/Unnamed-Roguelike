@@ -42,6 +42,8 @@ class Message:
             return colors.dark_azure
         
     def add_to_log(self, game):
+        #self.text = f'T{game.turn}: ' + self.text
+
         if self.category == MessageCategory.EVENT:
             game.event_log.add_message(self)
         else:
@@ -56,6 +58,7 @@ class MessageLog:
         self.height = height
 
     def add_message(self, message):
+
         # Split the message if necessary, among multiple lines
         new_msg_lines = textwrap.wrap(message.text, self.width)
 

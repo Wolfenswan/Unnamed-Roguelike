@@ -3,6 +3,7 @@ import tcod
 
 from game import GameStates
 from gameobjects.util_functions import get_blocking_entity_at_location, get_interactable_entity_at_location
+from gui.manual import display_manual
 from gui.menus import inventory_menu, item_menu, equipment_menu, options_menu
 from gui.messages import Message, MessageType, MessageCategory
 from loader_functions.data_loader import save_game
@@ -17,8 +18,11 @@ def process_player_input(action, game, fov_map, targeting_item = None):
 
     exit = action.get('exit')
     fullscreen = action.get('fullscreen')
-    interact = action.get('interact')
+    manual = action.get('manual')
     move = action.get('move')
+    dodge = action.get('dodge')
+    interact = action.get('interact')
+    direction = action.get('dir')
     wait = action.get('wait')
     pickup = action.get('pickup')
     quick_use_idx = action.get('quick_use')
@@ -37,20 +41,23 @@ def process_player_input(action, game, fov_map, targeting_item = None):
 
     active_player_states = [GameStates.PLAYERS_TURN, GameStates.PLAYER_RESTING]
     if game.state in active_player_states:
-        if move or interact:
-            dx, dy = move if move is not None else interact
+        if move or interact or dodge:
+            dx, dy = direction
             destination_x, destination_y = player.x + dx, player.y + dy
 
             if not game_map.is_blocked(destination_x, destination_y):
 
                 target = get_blocking_entity_at_location(entities, destination_x, destination_y)
 
-                if target is None and interact:
+                if target is None and interact: # Check for non-blocking interactable objects
                     target = get_interactable_entity_at_location(entities, destination_x, destination_y)
 
                 if target:
+                    if dodge:
+                        # TODO implement
+                        pass
                     # If a NPC is blocking the way #
-                    if target.fighter:
+                    elif target.fighter:
                         attack_results = player.fighter.attack(target)
                         turn_results.extend(attack_results)
                     # If a static object is blocking the way #
@@ -67,7 +74,7 @@ def process_player_input(action, game, fov_map, targeting_item = None):
                         print('Your way is blocked.') # TODO placeholder
                     elif interact:
                         print('There is nothing to interact with') # TODO placeholder
-                elif not interact:
+                elif move or dodge: # TODO implement dodging
                     player.move(dx, dy)
                     turn_results.append({'fov_recompute':True})
 
@@ -187,6 +194,9 @@ def process_player_input(action, game, fov_map, targeting_item = None):
                 return False
             elif choice == 1:
                 return False
+
+    if manual:
+        display_manual()
 
     if fullscreen:
         tcod.console_set_fullscreen(not tcod.console_is_fullscreen())

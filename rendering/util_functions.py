@@ -21,12 +21,12 @@ def get_names_under_mouse(mouse, entities, fov_map):
     return names.capitalize()
 
 
-def setup_console(con, caption=None, fgcolor=tcod.white, bgcolor =tcod.black, borders=False):
+def setup_console(con, caption=None, fgcolor=tcod.white, bgcolor =tcod.black, borders=False, bordercolor = colors.dark_gray):
     tcod.console_set_default_foreground(con, fgcolor)
     tcod.console_set_default_background(con, bgcolor)
     tcod.console_clear(con)
     if borders:
-        draw_console_borders(con)
+        draw_console_borders(con, color = bordercolor)
     if caption:
         tcod.console_print(con, 2, 0, caption)
 

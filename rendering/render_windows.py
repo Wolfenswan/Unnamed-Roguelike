@@ -89,3 +89,4 @@ def render_description_window(game):
         body = ent.descr
 
         draw_window(title, body, window_x=x, window_y=y, forced_width=len(body)//2,show_cancel_option=False)
+

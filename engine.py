@@ -101,7 +101,7 @@ def game_loop(game):
 
 if __name__ == '__main__':
     initialize_logging(debugging=True)
-    game = Game(debug=True)
+    game = Game(debug=False)
     initialize_window(game)
 
     choice = options_menu(cfg.GAME_NAME, 'Welcome to the Dungeon', options=['Play a new game', 'Continue last game', 'Quit'], cancel_with_escape=False, sort_by=1)

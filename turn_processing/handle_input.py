@@ -9,7 +9,7 @@ from game import GameStates
 
 
 def handle_keys(key, game_state):
-    logging.debug(f'Handling {key}')
+    logging.debug(f'Handling {key}, char: {chr(key.c)}')
 
     # Inputs valid in all game states #
     if key.vk == tcod.KEY_ENTER and key.lalt:
@@ -18,6 +18,8 @@ def handle_keys(key, game_state):
     elif key.vk == tcod.KEY_ESCAPE:
         # Exit the game
         return {'exit': True}
+    elif chr(key.c) == 'ß' and key.shift:
+        return {'manual': True}
 
     # Game state specific inputs #
     if game_state in [GameStates.PLAYERS_TURN, GameStates.PLAYER_RESTING, GameStates.CURSOR_ACTIVE]:
@@ -38,24 +40,26 @@ def handle_player_turn_keys(key):
     action = 'move'
     if key.lctrl or key.rctrl:
         action = 'interact'
+    elif key.lalt:
+        action = 'dodge'
 
     if key.vk == tcod.KEY_UP or key_char == 'k' or key.vk == tcod.KEY_KP8:
-        return {action: (0, -1)}
+        return {action: True, 'dir': True, 'dir': (0, -1)}
     elif key.vk == tcod.KEY_DOWN or key_char == 'j' or key.vk == tcod.KEY_KP2:
-        return {action: (0, 1)}
+        return {action: True, 'dir': (0, 1)}
     elif key.vk == tcod.KEY_LEFT or key_char == 'h' or key.vk == tcod.KEY_KP4:
-        return {action: (-1, 0)}
+        return {action: True, 'dir': (-1, 0)}
     elif key.vk == tcod.KEY_RIGHT or key_char == 'l' or key.vk == tcod.KEY_KP6:
-        return {action: (1, 0)}
+        return {action: True, 'dir': (1, 0)}
     elif key_char == 'y' or key.vk == tcod.KEY_KP7:
-        return {action: (-1, -1)}
+        return {action: True, 'dir': (-1, -1)}
     elif key_char == 'u' or key.vk == tcod.KEY_KP9:
-        return {action: (1, -1)}
+        return {action: True, 'dir': (1, -1)}
     elif key_char == 'b' or key.vk == tcod.KEY_KP1:
-        return {action: (-1, 1)}
+        return {action: True, 'dir': (-1, 1)}
     elif key_char == 'n' or key.vk == tcod.KEY_KP3:
-        return {action: (1, 1)}
-    elif key.vk == tcod.KEY_KP5:
+        return {action: True, 'dir': (1, 1)}
+    elif key.vk == tcod.KEY_KP5 or key_char == '.':
         return {'wait': True}
 
     if key_char in ['1','2','3','4','5','6','7','8','9']:

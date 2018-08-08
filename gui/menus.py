@@ -10,7 +10,7 @@ def menu_loop(wait_for=None, cancel_with_escape=True, sort_by='str'):
     """
     The loop waits for a key input.
     If wait_for is an integer, it waits for a key that corresponds to an integer in range of (0, wait_for)
-    If wait_for is a list of characters it waits for a key that corresponds to one of the characters.
+    If wait_for is a list of characters or tcod key codes it waits for a key that corresponds to one of the characters or key codes.
 
     :param wait_for:
     :type wait_for: int or list
@@ -39,6 +39,8 @@ def menu_loop(wait_for=None, cancel_with_escape=True, sort_by='str'):
         elif type(wait_for) == list:  # If menu is waiting for a specific key input
             if char.lower() in wait_for:
                 return char
+            if key.vk in wait_for:
+                return key.vk
 
 
 def inventory_menu(game):

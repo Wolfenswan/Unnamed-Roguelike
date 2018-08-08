@@ -3,20 +3,18 @@
 import tcod
 
 from config_files import colors, cfg as cfg
-from rendering.util_functions import draw_console_borders, center_x_for_text, setup_console
+from rendering.util_functions import center_x_for_text, setup_console
 
 
 def render_panels(game):
 
     render_status_panel(game, cfg.STATUS_PANEL_Y, cfg.SCREEN_WIDTH, cfg.STATUS_PANEL_HEIGHT)
-    render_combat_panel(game, game.bottom_left_panel, cfg.BOTTOM_PANELS_Y, cfg.COMBAT_PANEL_WIDTH, cfg.BOTTOM_PANELS_HEIGHT)
+    render_enemy_panel(game, game.bottom_left_panel, cfg.BOTTOM_PANELS_Y, cfg.COMBAT_PANEL_WIDTH, cfg.BOTTOM_PANELS_HEIGHT)
     render_message_panel(game.observation_log, 'Observations', game.bottom_center_panel, cfg.MSG_PANEL1_X, cfg.BOTTOM_PANELS_Y, cfg.MSG_PANEL_WIDTH, cfg.BOTTOM_PANELS_HEIGHT)
-    render_message_panel(game.event_log, "Events", game.bottom_right_panel, cfg.MSG_PANEL2_X, cfg.BOTTOM_PANELS_Y, cfg.MSG_PANEL_WIDTH, cfg.BOTTOM_PANELS_HEIGHT)
-    #render_bottom_panels(game)
+    render_message_panel(game.event_log, 'Combat', game.bottom_right_panel, cfg.MSG_PANEL2_X, cfg.BOTTOM_PANELS_Y, cfg.MSG_PANEL_WIDTH, cfg.BOTTOM_PANELS_HEIGHT)
 
-# TODO: Three separate panels for bottom panel - combat, message1, message 2
 
-def render_combat_panel(game, con, panel_y, width, height):
+def render_enemy_panel(game, con, panel_y, width, height):
 
     setup_console(con, caption='Enemies', borders=True)
     
@@ -33,8 +31,8 @@ def render_combat_panel(game, con, panel_y, width, height):
 
             # Draw creature name and stats #
             tcod.console_set_color_control(tcod.COLCTRL_1, ent.color, tcod.black)
-            tcod.console_set_color_control(tcod.COLCTRL_2, colors.red, tcod.black) # TODO make dynamic
-            tcod.console_print(con, 2, y, f'%c{ent.name}%c %c{ent.fighter.hp}/{ent.fighter.max_hp}%c' % (tcod.COLCTRL_1, tcod.COLCTRL_STOP, tcod.COLCTRL_2, tcod.COLCTRL_STOP))
+            tcod.console_set_color_control(tcod.COLCTRL_2, ent.fighter.hp_color, tcod.black) # TODO make dynamic
+            tcod.console_print(con, 2, y, f'%c{ent.name}%c|%c{ent.fighter.hp_string.capitalize()}%c' % (tcod.COLCTRL_1, tcod.COLCTRL_STOP, tcod.COLCTRL_2, tcod.COLCTRL_STOP))
 
             y += 2
             if y >= con.height - 2:  # If the limit's of the con are reached, cut the con off

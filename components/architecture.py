@@ -21,19 +21,20 @@ class Architecture:
     def toggle_door(door_ent):
         door_ent_closed = door_ent.blocks
         results = [{'door_toggled': door_ent, 'fov_recompute': True}]
+        # TODO doors can be locked too
         if door_ent_closed:
             door_ent.architecture.on_collision = None
             door_ent.char = '-'
             door_ent.blocks = False
             door_ent.blocks_sight = False
             door_ent.descr = 'This door is open.'
-            results.append({'message': Message('You open a door.')})
+            #results.append({'message': Message('You open a door.')})
         else:
             door_ent.architecture.on_collision = Architecture.toggle_door
             door_ent.char = '+'
             door_ent.blocks = True
             door_ent.blocks_sight = True
             door_ent.descr = 'This door is closed.'
-            results.append({'message': Message('You close a door.')})
+            #results.append({'message': Message('You close a door.')})
 
         return results
