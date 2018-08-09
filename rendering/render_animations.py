@@ -38,7 +38,12 @@ def animate_move_to(ent, tx, ty, game, ignore_entities=False, anim_delay = 0.05)
             return blocked
 
 def animate_projectile(start_x, start_y, target_x, target_y, distance, game, homing=True, ignore_entities=True, anim_delay = 0.05):
-    # TODO additonal switches: color, character
+    """
+    Creates a temporary projectile and animates its movement from start position to target position.
+
+    TODO additonal switches: color, character
+    TODO doesn't return anything atm. Add return as needed
+    """
     projectile = Entity(start_x, start_y, '*', colors.flame, 'Projectile', render_order=RenderOrder.ALWAYS)
     game.entities.append(projectile)
     if homing:
@@ -50,6 +55,12 @@ def animate_projectile(start_x, start_y, target_x, target_y, distance, game, hom
 
 
 def animate_explosion(center_x, center_y, spread, game, ignore_walls=False, anim_delay = 0.02):
+    """
+    Creates a projectiles moving outward from the center position.
+
+    TODO additonal switches: color, character
+    TODO doesn't return anything atm. Add return as needed
+    """
     projectiles = []
     directions = [(0,1),(0,-1),(1,0),(-1,0),(1,1),(1,-1),(-1,1),(-1,-1)]
     for dir in directions:
