@@ -26,7 +26,7 @@ class Inventory:
 
         return results
 
-    def use(self, item_entity, **kwargs):
+    def use(self, item_entity, game, **kwargs):
         results = []
 
         useable_component = item_entity.item.useable
@@ -38,7 +38,7 @@ class Inventory:
                 results.append({'targeting': item_entity,'message': useable_component.on_use_msg})
             else:
                 kwargs = {**useable_component.function_kwargs, **kwargs}
-                item_use_results = useable_component.use_function(caster = self.owner, **kwargs)
+                item_use_results = useable_component.use_function(game, caster = self.owner, **kwargs)
 
                 for item_use_result in item_use_results:
                     if item_use_result.get('consumed'):

@@ -4,9 +4,11 @@ import tcod
 
 from components.AI.confusedmonster import ConfusedMonster
 from gui.messages import Message, MessageType, MessageCategory
+from rendering.render_animations import animate_projectile, animate_explosion
 
 
-def heal_entity(**kwargs):
+def heal_entity(*args, **kwargs):
+    game = args[0]
     entity = kwargs.get('caster')
     amount = kwargs.get('pwr')
 
@@ -23,7 +25,8 @@ def heal_entity(**kwargs):
 
     return results
 
-def cast_lightning_on(**kwargs):
+def cast_lightning_on(*args, **kwargs):
+    game = args[0]
     caster = kwargs.get('caster')
     entities = kwargs.get('entities')
     fov_map = kwargs.get('fov_map')
@@ -51,7 +54,9 @@ def cast_lightning_on(**kwargs):
 
     return results
 
-def cast_fireball_on(**kwargs):
+def cast_fireball_on(*args, **kwargs):
+    game = args[0]
+    caster = kwargs.get('caster')
     entities = kwargs.get('entities')
     fov_map = kwargs.get('fov_map')
     damage = kwargs.get('dmg')
@@ -60,6 +65,9 @@ def cast_fireball_on(**kwargs):
     target_y = kwargs.get('target_y')
 
     results = []
+
+    animate_projectile(caster.x, caster.y, target_x, target_y, 0, game)
+    animate_explosion(target_x, target_y, radius, game)
 
     if not tcod.map_is_in_fov(fov_map, target_x, target_y):
         results.append({'consumed': False, 'message': Message('You cannot target a tile outside your field of view.')})

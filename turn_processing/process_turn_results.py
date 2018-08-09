@@ -43,11 +43,6 @@ def process_turn_results(player_turn_results, game, fov_map):
         if item_dropped:
             entities.append(item_dropped)
 
-        # Enable enemy turn if at least one of the results is valid
-        filtered_enemy_turn_conditions = list(filter(lambda x: x is not None, enemy_turn_on))
-        if len(filtered_enemy_turn_conditions) > 0:
-            game.state = GameStates.ENEMY_TURN
-
         if targeting_item:
             game.previous_state = GameStates.PLAYERS_TURN
             game.state = GameStates.CURSOR_ACTIVE
@@ -70,6 +65,12 @@ def process_turn_results(player_turn_results, game, fov_map):
             results.append({'fov_recompute': fov_recompute})
 
         if door_entity:
+            # If the player interacted with a door, the fov map is updated)
             tcod.map_set_properties(fov_map, door_entity.x, door_entity.y, not door_entity.blocks_sight, not door_entity.blocks)
+
+        # Enable enemy turn if at least one of the results is valid
+        filtered_enemy_turn_conditions = list(filter(lambda x: x is not None, enemy_turn_on))
+        if len(filtered_enemy_turn_conditions) > 0:
+            game.state = GameStates.ENEMY_TURN
 
     return results

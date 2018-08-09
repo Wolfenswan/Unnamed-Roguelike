@@ -105,7 +105,7 @@ def process_player_input(action, game, fov_map, targeting_item = None):
 
     if game.state == GameStates.CURSOR_ACTIVE:
         if move:
-            dx, dy = move
+            dx, dy = direction
             destination_x = cursor.x + dx
             destination_y = cursor.y + dy
             if tcod.map_is_in_fov(fov_map, destination_x, destination_y):
@@ -122,7 +122,7 @@ def process_player_input(action, game, fov_map, targeting_item = None):
                 inv = player.inventory
             else:
                 inv = player.qu_inventory
-            item_use_results = inv.use(targeting_item, entities=entities, fov_map=fov_map,
+            item_use_results = inv.use(targeting_item, game, entities=entities, fov_map=fov_map,
                                                     target_x=target_x, target_y=target_y)
             turn_results.extend(item_use_results)
 
@@ -158,7 +158,7 @@ def process_player_input(action, game, fov_map, targeting_item = None):
             item_use_choice = item_menu(selected_item_ent, game)
             if item_use_choice:
                 if item_use_choice == 'u':
-                    item_interaction_result = player.inventory.use(selected_item_ent, entities=entities, fov_map=fov_map)
+                    item_interaction_result = player.inventory.use(selected_item_ent, game, entities=entities, fov_map=fov_map)
                     turn_results.extend(item_interaction_result)
                 if item_use_choice == 'e':
                     item_interaction_result = player.paperdoll.equip(selected_item_ent, game)
@@ -181,7 +181,7 @@ def process_player_input(action, game, fov_map, targeting_item = None):
     # Quick use handling #
     if quick_use_idx and quick_use_idx <= len(player.qu_inventory.items):
         quick_use_item = player.qu_inventory.items[quick_use_idx-1] # -1 as the idx is passed as a number key
-        qu_results = player.qu_inventory.use(quick_use_item, entities=entities, fov_map=fov_map)
+        qu_results = player.qu_inventory.use(quick_use_item, game, entities=entities, fov_map=fov_map)
         turn_results.extend(qu_results)
 
     if exit:

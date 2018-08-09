@@ -86,6 +86,23 @@ class Entity:
         self.x += dx
         self.y += dy
 
+    def try_move(self, dx, dy, game, ignore_entities=False, ignore_walls = False):
+        """
+        Attempts to move the entity in the given direction.
+        If the direction is blocked by another entity, the blocking entity is returned.
+        If the direction is non-walkable, False is returned
+
+        """
+        dest_x, dest_y = self.x + dx, self.y + dy
+        if not game.map.is_blocked(dest_x, dest_y) or ignore_walls:
+            blocked = get_blocking_entity_at_location(game.entities, dest_x, dest_y)
+            if blocked and not ignore_entities:
+                return blocked
+            else:
+                self.move(dx, dy)
+        else:
+            return False
+
     def distance_to_ent(self, other):
         dx = other.x - self.x
         dy = other.y - self.y
@@ -93,6 +110,23 @@ class Entity:
 
     def distance_to_pos(self, x, y):
         return math.sqrt((x - self.x) ** 2 + (y - self.y) ** 2)
+
+    def direction_to_pos(self, x, y):
+        dx, dy = 0, 0
+        x_plane = x - self.x
+        y_plane = y - self.y
+
+        if x_plane > 0:
+            dx = 1
+        elif x_plane < 0:
+            dx = -1
+
+        if y_plane > 0:
+            dy = 1
+        elif y_plane < 0:
+            dy = -1
+
+        return dx, dy
 
     def direction_to_ent(self, other):
         dx, dy = 0, 0
