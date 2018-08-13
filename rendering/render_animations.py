@@ -7,8 +7,9 @@ from gameobjects.entity import Entity
 from rendering.render_main import render_map_screen
 from rendering.render_order import RenderOrder
 
-def render_animation(game):
+def render_animation(game, anim_delay):
     render_map_screen(game, game.fov_map)
+    time.sleep(anim_delay)
     tcod.console_flush()
 
 
@@ -19,8 +20,7 @@ def animate_move_line(ent, dx, dy, steps, game, ignore_entities=False, anim_dela
     for i in range(steps):
         blocked = ent.try_move(dx, dy, game, ignore_entities=ignore_entities)
         if blocked is None:
-            render_animation(game)
-            time.sleep(anim_delay)
+            render_animation(game, anim_delay)
         elif blocked is False:
             return False
         else:
@@ -35,8 +35,7 @@ def animate_move_to(ent, tx, ty, game, ignore_entities=False, anim_delay = 0.05)
         dx, dy = ent.direction_to_pos(tx, ty)
         blocked = ent.try_move(dx, dy, game, ignore_entities=ignore_entities)
         if blocked is None:
-            render_animation(game)
-            time.sleep(anim_delay)
+            render_animation(game, anim_delay)
         elif blocked is False:
             return False
         else:
@@ -78,8 +77,7 @@ def animate_explosion(center_x, center_y, spread, game, ignore_walls=False, anim
         for i, dir in enumerate(directions):
             projectile = projectiles[i]
             projectile.try_move(*dir, game, ignore_entities=True, ignore_walls=ignore_walls)
-            render_animation(game)
-        time.sleep(anim_delay)
+        render_animation(game, anim_delay)
 
     for p in projectiles:
         if p in game.entities:
