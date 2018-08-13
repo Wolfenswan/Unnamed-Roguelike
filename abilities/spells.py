@@ -2,7 +2,7 @@ from random import randint
 
 import tcod
 
-from components.AI.confusedmonster import ConfusedMonster
+from components.AI.confusedAI import ConfusedAI
 from gui.messages import Message, MessageType, MessageCategory
 from rendering.render_animations import animate_projectile, animate_explosion
 
@@ -96,7 +96,7 @@ def cast_confuse_on(**kwargs):
 
     for entity in entities:
         if entity.x == target_x and entity.y == target_y and entity.ai:
-            confused_ai = ConfusedMonster(entity.ai, 10)
+            confused_ai = ConfusedAI(entity.ai, 10)
 
             confused_ai.owner = entity
             entity.ai = confused_ai

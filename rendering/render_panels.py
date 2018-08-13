@@ -8,13 +8,37 @@ from rendering.util_functions import center_x_for_text, setup_console
 
 def render_panels(game):
 
-    render_status_panel(game, cfg.STATUS_PANEL_Y, cfg.SCREEN_WIDTH, cfg.STATUS_PANEL_HEIGHT)
-    render_enemy_panel(game, game.bottom_left_panel, cfg.BOTTOM_PANELS_Y, cfg.COMBAT_PANEL_WIDTH, cfg.BOTTOM_PANELS_HEIGHT)
-    render_message_panel(game.observation_log, 'Observations', game.bottom_center_panel, cfg.MSG_PANEL1_X, cfg.BOTTOM_PANELS_Y, cfg.MSG_PANEL_WIDTH, cfg.BOTTOM_PANELS_HEIGHT)
-    render_message_panel(game.event_log, 'Combat', game.bottom_right_panel, cfg.MSG_PANEL2_X, cfg.BOTTOM_PANELS_Y, cfg.MSG_PANEL_WIDTH, cfg.BOTTOM_PANELS_HEIGHT)
+    render_player_panel(game, game.top_right_panel, cfg.SIDE_PANEL_X, 1, cfg.SIDE_PANEL_WIDTH,
+                       cfg.PLAYER_PANEL_HEIGHT)
+    render_enemy_panel(game, game.center_right_panel, cfg.SIDE_PANEL_X, cfg.PLAYER_PANEL_HEIGHT + 1, cfg.SIDE_PANEL_WIDTH,
+                       cfg.COMBAT_PANEL_HEIGHT)
+    render_object_panel(game, game.lower_right_panel, cfg.SIDE_PANEL_X, cfg.PLAYER_PANEL_HEIGHT + cfg.COMBAT_PANEL_HEIGHT + 1, cfg.SIDE_PANEL_WIDTH,
+                       cfg.OBJECT_PANEL_HEIGHT)
+    render_status_panel(game, cfg.STATUS_PANEL_Y, cfg.BOTTOM_PANELS_WIDTH, cfg.STATUS_PANEL_HEIGHT)
+    render_message_panel(game.observation_log, 'Observations', game.bottom_left_panel, 0, cfg.BOTTOM_PANELS_Y, cfg.MSG_PANEL_WIDTH, cfg.BOTTOM_PANELS_HEIGHT)
+    render_message_panel(game.event_log, 'Combat', game.bottom_center_panel, cfg.MSG_PANEL2_X, cfg.BOTTOM_PANELS_Y, cfg.MSG_PANEL_WIDTH, cfg.BOTTOM_PANELS_HEIGHT)
 
 
-def render_enemy_panel(game, con, panel_y, width, height):
+    # BOTTOM GUI
+    # render_enemy_panel(game, game.bottom_left_panel, 0, cfg.BOTTOM_PANELS_Y, cfg.COMBAT_PANEL_WIDTH,
+    #                    cfg.BOTTOM_PANELS_HEIGHT)
+    # render_message_panel(game.observation_log, 'Observations', game.bottom_center_panel, cfg.MSG_PANEL1_X, cfg.BOTTOM_PANELS_Y, cfg.MSG_PANEL_WIDTH, cfg.BOTTOM_PANELS_HEIGHT)
+    # render_message_panel(game.event_log, 'Combat', game.bottom_right_panel, cfg.MSG_PANEL2_X, cfg.BOTTOM_PANELS_Y, cfg.MSG_PANEL_WIDTH, cfg.BOTTOM_PANELS_HEIGHT)
+
+
+def render_player_panel(game, con, panel_x, panel_y, width, height):
+    setup_console(con, caption='Player', borders=True)
+
+
+    tcod.console_blit(con, 0, 0, width, height, 0, panel_x, panel_y)
+
+def render_object_panel(game, con, panel_x, panel_y, width, height):
+    setup_console(con, caption='Objects', borders=True)
+
+
+    tcod.console_blit(con, 0, 0, width, height, 0, panel_x, panel_y)
+
+def render_enemy_panel(game, con, panel_x, panel_y, width, height):
 
     setup_console(con, caption='Enemies', borders=True)
     
@@ -40,7 +64,7 @@ def render_enemy_panel(game, con, panel_y, width, height):
                 tcod.console_print(con, x, y, '~ ~ ~ MORE ~ ~ ~')
                 break
 
-    tcod.console_blit(con, 0, 0, width, height, 0, 0, panel_y)
+    tcod.console_blit(con, 0, 0, width, height, 0, panel_x, panel_y)
 
 
 def render_message_panel(message_log, title, con, panel_x, panel_y, width, height):
@@ -64,10 +88,10 @@ def render_status_panel(game, panel_y, width, height):
     console = game.status_panel
     setup_console(console, fgcolor=colors.light_gray)
 
-    draw_bar(console, 1, 1, 20, 'HP', game.player.fighter.hp, game.player.fighter.max_hp,
+    draw_bar(console, 1, 1, 20, 'HP', int(game.player.fighter.hp), game.player.fighter.max_hp,
              tcod.light_red, tcod.darker_red)
 
-    draw_bar(console, cfg.SCREEN_WIDTH-21, 1, 20, 'Stamina', game.player.fighter.stamina, game.player.fighter.max_stamina,
+    draw_bar(console, width-21, 1, 20, 'Stamina', int(game.player.fighter.stamina), game.player.fighter.max_stamina,
              colors.blue, colors.darker_blue)
 
     draw_quickslots(console, game)

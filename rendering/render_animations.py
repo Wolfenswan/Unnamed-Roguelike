@@ -1,10 +1,15 @@
 import time
 
+import tcod
+
 from config_files import colors
 from gameobjects.entity import Entity
-from gameobjects.util_functions import get_blocking_entity_at_location
-from rendering.render_main import render_all
+from rendering.render_main import render_map_screen
 from rendering.render_order import RenderOrder
+
+def render_animation(game):
+    render_map_screen(game, game.fov_map)
+    tcod.console_flush()
 
 
 def animate_move_line(ent, dx, dy, steps, game, ignore_entities=False, anim_delay = 0.05):
@@ -14,13 +19,13 @@ def animate_move_line(ent, dx, dy, steps, game, ignore_entities=False, anim_dela
     for i in range(steps):
         blocked = ent.try_move(dx, dy, game, ignore_entities=ignore_entities)
         if blocked is None:
-            render_all(game,
-                       game.fov_map)  # TODO Placeholder until a seperate render_map function exists (requires a dedicated map console)
+            render_animation(game)
             time.sleep(anim_delay)
         elif blocked is False:
             return False
         else:
             return blocked
+
 
 def animate_move_to(ent, tx, ty, game, ignore_entities=False, anim_delay = 0.05):
     """
@@ -30,12 +35,13 @@ def animate_move_to(ent, tx, ty, game, ignore_entities=False, anim_delay = 0.05)
         dx, dy = ent.direction_to_pos(tx, ty)
         blocked = ent.try_move(dx, dy, game, ignore_entities=ignore_entities)
         if blocked is None:
-            render_all(game, game.fov_map)  # TODO Placeholder until a seperate render_map function exists (requires a dedicated map console)
+            render_animation(game)
             time.sleep(anim_delay)
         elif blocked is False:
             return False
         else:
             return blocked
+
 
 def animate_projectile(start_x, start_y, target_x, target_y, distance, game, homing=True, ignore_entities=True, anim_delay = 0.05):
     """
@@ -72,8 +78,7 @@ def animate_explosion(center_x, center_y, spread, game, ignore_walls=False, anim
         for i, dir in enumerate(directions):
             projectile = projectiles[i]
             projectile.try_move(*dir, game, ignore_entities=True, ignore_walls=ignore_walls)
-        render_all(game,
-                   game.fov_map)  # TODO Placeholder until a seperate render_map function exists (requires a dedicated map console)
+            render_animation(game)
         time.sleep(anim_delay)
 
     for p in projectiles:

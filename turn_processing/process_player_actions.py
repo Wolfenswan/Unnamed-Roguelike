@@ -41,6 +41,7 @@ def process_player_input(action, game, fov_map, targeting_item = None):
 
     active_player_states = [GameStates.PLAYERS_TURN, GameStates.PLAYER_RESTING]
     if game.state in active_player_states:
+
         if move or interact or dodge:
             dx, dy = direction
             destination_x, destination_y = player.x + dx, player.y + dy
@@ -74,9 +75,12 @@ def process_player_input(action, game, fov_map, targeting_item = None):
                         print('Your way is blocked.') # TODO placeholder
                     elif interact:
                         print('There is nothing to interact with') # TODO placeholder
-                elif move or dodge: # TODO implement dodging
+                elif move:
                     player.move(dx, dy)
                     turn_results.append({'fov_recompute':True})
+                elif dodge:
+                    player.fighter.dodge(dx, dy, game)
+                    turn_results.append({'fov_recompute': True})
 
                 game.state = GameStates.ENEMY_TURN
 

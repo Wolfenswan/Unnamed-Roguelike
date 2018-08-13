@@ -27,8 +27,12 @@ def initialize_window(game):
 
     tcod.console_init_root(cfg.SCREEN_WIDTH, cfg.SCREEN_HEIGHT, cfg.GAME_NAME, False)
 
+    # Consoles #
     game.con = tcod.console_new(cfg.SCREEN_WIDTH, cfg.SCREEN_HEIGHT)
-    game.status_panel = tcod.console_new(cfg.SCREEN_WIDTH, cfg.STATUS_PANEL_HEIGHT)
-    game.bottom_left_panel = tcod.console_new(cfg.COMBAT_PANEL_WIDTH, cfg.BOTTOM_PANELS_HEIGHT)
+    game.map_panel = tcod.console_new(cfg.MAP_SCREEN_WIDTH, cfg.MAP_SCREEN_HEIGHT) # TODO Currently unused
+    game.status_panel = tcod.console_new(cfg.BOTTOM_PANELS_WIDTH, cfg.STATUS_PANEL_HEIGHT)
+    game.top_right_panel = tcod.console_new(cfg.SIDE_PANEL_WIDTH, cfg.PLAYER_PANEL_HEIGHT)
+    game.center_right_panel = tcod.console_new(cfg.SIDE_PANEL_WIDTH, cfg.COMBAT_PANEL_HEIGHT)
+    game.lower_right_panel = tcod.console_new(cfg.SIDE_PANEL_WIDTH, cfg.OBJECT_PANEL_HEIGHT)
+    game.bottom_left_panel = tcod.console_new(cfg.MSG_PANEL_WIDTH, cfg.BOTTOM_PANELS_HEIGHT)
     game.bottom_center_panel = tcod.console_new(cfg.MSG_PANEL_WIDTH, cfg.BOTTOM_PANELS_HEIGHT)
-    game.bottom_right_panel = tcod.console_new(cfg.MSG_PANEL_WIDTH, cfg.BOTTOM_PANELS_HEIGHT)

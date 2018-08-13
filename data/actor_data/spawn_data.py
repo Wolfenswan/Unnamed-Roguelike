@@ -10,8 +10,9 @@
         'nat_armor': Tuple of min/max values
         'nat_power': Tuple of min/max values
         'vision': Integer
-        'ai': 'BasicMonster()'
+        'ai': 'BasicMonster'
         'barks': ('humanoid', 'orcs')
+        'skills': (),
         'loadouts': {
                 'melee1': {
                     'chance': 50,
@@ -29,11 +30,11 @@
 
 """
 
-from components.AI.basicmonster import BasicMonster
+from components.AI.basicAI import BasicAI
 from config_files import colors
 
 spawn_data = {
-    'Orc': {
+    'Roach': {
         'name': 'Roach',
         'char': 'r',
         'color': colors.light_amber,
@@ -41,9 +42,9 @@ spawn_data = {
         'max_hp': (2,5),
         'max_stamina':(4,8),
         'nat_armor': (0,2),
-        'nat_power': (3,6),
+        'nat_power': (5,7),
         'nat_vision': 8,
-        'ai': BasicMonster,
+        'ai': BasicAI,
         'barks': ('insect'),
         'skills': ('skill_charge_roach',  ),
         'loadouts': None,

@@ -113,3 +113,4 @@ venv_start.bat
 /savegames/*
 /libtcodpy-samples/
 /ToDo
+/dungeon-generation-samples/

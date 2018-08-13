@@ -2,17 +2,23 @@ from random import randint, choice
 
 import tcod
 
-from gameobjects.entity import EntityStates
+from components.AI.movement.straightmover import StraightMover
+from components.AI.movement.swarmmover import SwarmMover
 
 
-class BasicMonster:
+class BasicAI:
+    def __init__(self, movement = StraightMover()):
+        self.movement = movement
+
+        if movement:
+            movement.owner = self
+
     def take_turn(self, game, fov_map):
+
+        results = []
         target = game.player
         game_map = game.map
         entities = game.entities
-
-        results = []
-
         monster = self.owner
 
         # First check if anything has been planned for this turn #
@@ -25,9 +31,10 @@ class BasicMonster:
         elif tcod.map_is_in_fov(fov_map, monster.x, monster.y):
             monster.color_bg = None  # some special attacks modify a character's background color, this resets it
 
+            #results.extend(self.movement.move_decision(game))
             # Consider using a skill #
             if monster.skills:
-                monster.cooldown_skills()  # Currently skills do not cool down if a monster is already stunned or waiting.
+                monster.cooldown_skills()
                 available_skills = monster.available_skills(game)
                 if available_skills:
                     skill = choice(available_skills)
@@ -37,6 +44,7 @@ class BasicMonster:
 
             if monster.distance_to_ent(target) >= 2:
                 monster.move_astar(target, entities, game_map)
+
             elif target.fighter.hp > 0:
                 attack_results = monster.fighter.attack(target)
                 results.extend(attack_results)

@@ -12,7 +12,7 @@ from rendering.render_order import RenderOrder
 
 
 def render_all(game, fov_map):
-    render_main_screen(game, fov_map)
+    render_map_screen(game, fov_map)
     render_panels(game)
 
     if game.state == GameStates.CURSOR_ACTIVE:
@@ -23,38 +23,25 @@ def render_all(game, fov_map):
     clear_all(game.con, game.entities)
 
 
-def render_main_screen(game, fov_map, debug=False):
-    screen_width = cfg.SCREEN_WIDTH
-    screen_height = cfg.SCREEN_HEIGHT
-
+def render_map_screen(game, fov_map, debug=False):
+    con = game.map_panel
     entities = game.entities
-    con = game.con
     debug = game.debug or debug
 
     # Render game map #
     tcod.console_clear(con)
-    # render_map(game, con, fov_map, debug=debug)
     render_map_centered_on_player(game, con, fov_map, debug=debug)
 
     # Draw all entities #
     entities_in_render_order = sorted(entities, key=lambda x: x.render_order.value)
     for entity in entities_in_render_order:
-        draw_entity(game, entity, fov_map, debug=debug)
+        draw_entity(game, con, entity, fov_map, debug=debug)
 
     if game.state == GameStates.CURSOR_ACTIVE:
-        draw_entity(game, game.cursor, fov_map, debug=debug)
+        draw_entity(game, con, game.cursor, fov_map, debug=debug)
 
-    draw_console_borders(con, height=cfg.MAP_SCREEN_HEIGHT, color=colors.white)
-    tcod.console_blit(con, 0, 0, screen_width, screen_height, 0, 0, 0)
-
-
-def render_map(game, con, fov_map, debug=False):
-    """ Obsolete rendering function """
-
-    for screen_y in range(cfg.MAP_SCREEN_HEIGHT):
-       for screen_x in range(cfg.MAP_SCREEN_WIDTH):
-            tile_x, tile_y = screen_x, screen_y
-            draw_tile(game, con, fov_map, tile_x, tile_y, screen_x, screen_y, debug=debug)
+    draw_console_borders(con ,color=colors.white)
+    tcod.console_blit(con, 0, 0, cfg.MAP_SCREEN_WIDTH, cfg.MAP_SCREEN_HEIGHT, 0, 0, 0)
 
 
 def render_map_centered_on_player(game, con, fov_map, debug=False):
@@ -79,6 +66,7 @@ def render_map_centered_on_player(game, con, fov_map, debug=False):
 def draw_tile(game, con, fov_map, tile_x, tile_y, screen_x, screen_y, debug=False):
     tile = game.map.tiles[tile_x][tile_y]
     visible = tcod.map_is_in_fov(fov_map, tile_x, tile_y) or debug
+
     wall = tile.block_sight and not tile.walkable
 
     fg_color = darken_color_by_fov_distance(game.player, colors.light_fov, tile_x, tile_y, randomness = 0)
@@ -103,11 +91,11 @@ def draw_tile(game, con, fov_map, tile_x, tile_y, screen_x, screen_y, debug=Fals
                 tcod.console_put_char_ex(con, screen_x, screen_y, '.', colors.dark_ground_fg, colors.dark_ground)
 
 
-def draw_entity(game, entity, fov_map, debug=False):
+def draw_entity(game, con, entity, fov_map, debug=False):
     if entity.render_order == RenderOrder.ALWAYS or tcod.map_is_in_fov(fov_map, entity.x, entity.y) or debug:
         x, y = pos_on_screen(entity.x, entity.y, game.player)
 
-        tcod.console_put_char(game.con, x, y, entity.char)
+        tcod.console_put_char(con, x, y, entity.char)
 
         # Set the entity colors #
         if entity is not game.cursor:
@@ -117,9 +105,9 @@ def draw_entity(game, entity, fov_map, debug=False):
         if debug:
             color = entity.color
 
-        tcod.console_set_char_foreground(game.con, x, y, color)
+        tcod.console_set_char_foreground(con, x, y, color)
         if entity.color_bg is not None:
-            tcod.console_set_char_background(game.con, x, y, entity.color_bg)
+            tcod.console_set_char_background(con, x, y, entity.color_bg)
 
 
 def clear_entity(con, entity):

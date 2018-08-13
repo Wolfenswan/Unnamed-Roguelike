@@ -7,6 +7,7 @@ import tcod
 from config_files import colors
 from gameobjects.entity import Entity
 from gui.messages import Message, MessageType, MessageCategory
+from rendering.render_animations import animate_move_line
 from rendering.render_order import RenderOrder
 
 
@@ -68,6 +69,8 @@ class Fighter:
     def hp(self, value):
         if value < 0:
             self.__hp = 0
+        elif value > 0:
+            self.__hp = self.max_hp
         else:
             self.__hp = value
 
@@ -87,6 +90,8 @@ class Fighter:
     def stamina(self, value):
         if value < 0:
             self.__stamina = 0
+        elif value > self.max_stamina:
+            self.__stamina = self.max_stamina
         else:
             self.__stamina = value
 
@@ -95,7 +100,7 @@ class Fighter:
         power = self.base_power
         for e in self.owner.paperdoll.equipped_items:
             dmg_range = vars(e.item.equipment).get('dmg_range')
-            # This extra step is required as av value is set as None for all Equipments during data processing
+            # This extra step is required as dmg_range is set to None for all Equipments during data processing
             if dmg_range:
                 power += randint(*dmg_range)
         return power
@@ -105,7 +110,7 @@ class Fighter:
         defense = self.base_defense
         for e in self.owner.paperdoll.equipped_items:
             av = vars(e.item.equipment).get('av')
-            # This extra step is required as av value is set as None for all Equipments during data processing
+            # This extra step is required as av value is set to None for all Equipments during data processing
             if av:
                 defense += av
         return defense
@@ -115,7 +120,7 @@ class Fighter:
         vision = self.base_vision
         for e in self.owner.paperdoll.equipped_items:
             l_radius = vars(e.item.equipment).get('l_radius')
-            # This extra step is required as l_radius value is set as None for all Equipments during data processing
+            # This extra step is required as l_radius value is set to None for all Equipments during data processing
             if l_radius:
                 vision += l_radius
         return vision
@@ -123,7 +128,7 @@ class Fighter:
     def take_damage(self, amount):
         results = []
 
-        self.hp = self.hp - amount
+        self.hp -= amount
 
         if self.hp <= 0:
             results.append({'dead': self.owner})
@@ -138,11 +143,11 @@ class Fighter:
 
         logging.debug(f'({self} was healed for {amount}.')
 
-    def attack(self, target):
+    def attack(self, target, mod=1):
         results = []
-        damage = self.power - target.fighter.defense
+        damage = int(round(self.power * mod - target.fighter.defense))
 
-        logging.debug(f'{self.owner.name.capitalize()} attacks {target.name.capitalize()} with {self.power} power against {target.fighter.defense} defense for {damage} damage.')
+        logging.debug(f'{self.owner.name.capitalize()} attacks {target.name.capitalize()} with {self.power} power (modified: {damage}) against {target.fighter.defense} defense for {damage} damage.')
 
         # TODO if blocked, reduce stamina
         if damage > 0:
@@ -150,8 +155,16 @@ class Fighter:
                 results.extend(target.fighter.block(damage))
             else:
                 msg_type = MessageType.ALERT if target.is_player else MessageType.COMBAT
+
+                if target == self:
+                    target_string = 'itself'
+                elif target.is_player:
+                    target_string = 'you'
+                else:
+                    target_string = target.name.capitalize()
+
                 results.append({'message': Message(
-                    f'{self.owner.name.capitalize()} attacks {target.name.capitalize()} for {str(damage)} hit points.', type=msg_type)})
+                    f'{self.owner.name.capitalize()} attacks {target_string} for {str(damage)} hit points.', type=msg_type)})
                 results.extend(target.fighter.take_damage(damage))
         else:
             results.append(
@@ -169,11 +182,17 @@ class Fighter:
         results.append({'message': message})
         return results
 
+    def dodge(self, dx, dy, game):
+        if self.stamina >= 10:
+            animate_move_line(self.owner, dx, dy, 2, game, anim_delay=0.001)
+            self.stamina -= 10
+
     def toggle_blocking(self):
         self.is_blocking = not self.is_blocking
 
     def death(self, game):
         ent = self.owner
+        ent.ai = None
         x, y = ent.x, ent.y
         ent.char = '%'
         ent.color = colors.corpse

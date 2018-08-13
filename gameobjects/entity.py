@@ -103,6 +103,30 @@ class Entity:
         else:
             return False
 
+    def move_away_from(self, target):
+        """ Move Entity away from intended target """
+        # TODO: improve so all that it always moves to a tile that it is at least 1 tile distance from the player
+        dx, dy = (0, 0)
+
+        # loop through available directions and pick the first that is at least one space from the player
+        # loop does not check for walls, as monster can back up into walls (and thus fail)
+        for x in (-1, 0, 1):
+            for y in (-1, 0, 1):
+                flee_pos = (self.x + x, self.y + y)
+                if target.distance_to_pos(*flee_pos) > 1.5:
+                    (dx, dy) = (x, y)
+                    break
+
+        distance = math.sqrt(dx ** 2 + dy ** 2)
+
+        # normalize it to length 1 (preserving direction), then round it and
+        # convert to integer so the movement is restricted to the map grid
+        if distance:
+            dx = int(round(dx / distance))
+            dy = int(round(dy / distance))
+
+        self.move(dx, dy)
+
     def distance_to_ent(self, other):
         dx = other.x - self.x
         dy = other.y - self.y
@@ -158,6 +182,14 @@ class Entity:
     def cooldown_skills(self, reset=False):
         for skill in self.skills.values():
             skill.cooldown_skill(reset=reset)
+
+    def get_nearby_entities(self, game, ai_only=False, dist=2, filter_player = True):
+        """ returns nearby entitis in given distance """
+        # TODO bugfix & check perfomance
+        entities_in_range = [ent for ent in game.entities if ent.distance_to_ent(self) <= dist and ent != self and (ai_only and ent.ai is not None) and (filter_player and ent.is_player == False)]
+        #entities_in_range.sort(key=self.distance_to_ent)
+        print(entities_in_range)
+        return entities_in_range
 
     def set_ownership(self):
         if self.fighter:
