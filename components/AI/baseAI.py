@@ -45,17 +45,11 @@ class BaseAI:
 
             # If no skill is available, consider moving #
             if npc.distance_to_ent(target) >= 2:
-                if self.movement:
-                    results.extend(self.movement.decide_move(target, game))
-                else:
-                    logging.error(f'{npc.name (npc)} is trying to take a turn but has no movement set.')
+                results.extend(self.movement.decide_move(target, game))
 
             # Or consider attack, if next to target #
             elif npc.distance_to_ent(target) < 2:
-                if self.attack:
-                    results.extend(self.movement.decide_attack(target, game))
-                else:
-                    logging.error(f'{npc.name (npc)} is trying to take a turn but has no attack set.')
+                results.extend(self.movement.decide_attack(target, game))
 
         # As last alternative, the npc will randomly move around #
         else:

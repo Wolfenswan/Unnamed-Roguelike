@@ -189,7 +189,6 @@ class Entity:
         # TODO bugfix & check perfomance
         entities_in_range = [ent for ent in game.entities if ent.distance_to_ent(self) <= dist and ent != self and (ai_only and ent.ai is not None) and (filter_player and ent.is_player == False)]
         #entities_in_range.sort(key=self.distance_to_ent)
-        print(entities_in_range)
         return entities_in_range
 
     def set_ownership(self):

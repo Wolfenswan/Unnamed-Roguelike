@@ -6,8 +6,7 @@ class Simple:
     Simple behavior moves the npc straight towards the player, attack if next to them and use a skill if available.
     """
 
-    def decide_move(self, game):
-        target = game.player
+    def decide_move(self, target, game):
         game_map = game.map
         entities = game.entities
         npc = self.owner.owner
