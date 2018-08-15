@@ -20,7 +20,7 @@ class Entity:
     """
     A generic object to represent players, enemies, items, etc.
     """
-    def __init__(self, x, y, char, color, name, descr=None, is_player = False, blocks=False, blocks_sight = False, render_order=RenderOrder.CORPSE, fighter=None, ai=None, skills=None, item=None, inventory=None, architecture=None):
+    def __init__(self, x, y, char, color, name, descr=None, is_player = False, is_corpse = False, blocks=False, blocks_sight = False, render_order=RenderOrder.CORPSE, fighter=None, ai=None, skills=None, item=None, inventory=None, architecture=None):
         """
 
         :param x: pos x
@@ -60,6 +60,7 @@ class Entity:
         self.name = name
         self.descr = descr
         self.is_player = is_player
+        self.is_corpse = is_corpse
         self.blocks = blocks
         self.blocks_sight = blocks_sight
         self.render_order = render_order

@@ -48,7 +48,7 @@ def darken_color_by_fov_distance(ent, color, x, y, randomness = 0):
     :rtype: tuple
     """
 
-    color_coefficient = 1 - ent.distance_to_pos(x, y)/10 + random.uniform(0, randomness)
+    color_coefficient = 1 - ent.distance_to_pos(x, y)/ent.fighter.vision #+ random.uniform(0, randomness)
 
     if color_coefficient > 1:
         color_coefficient = 1

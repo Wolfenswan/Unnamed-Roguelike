@@ -1,8 +1,6 @@
-from random import randint, choice
+from random import randint
 
 import logging
-
-import tcod
 
 from config_files import colors
 from gameobjects.entity import Entity
@@ -12,7 +10,7 @@ from rendering.render_order import RenderOrder
 
 
 class Fighter:
-    def __init__(self, hp, stamina, defense, power, vision):
+    def __init__(self, hp, stamina, base_defense, base_power, base_vision):
         """
 
         :param hp:
@@ -31,9 +29,9 @@ class Fighter:
         self.__hp = hp
         self.max_stamina = stamina
         self.__stamina = stamina
-        self.base_defense = defense
-        self.base_power = power
-        self.base_vision = vision
+        self.base_defense = base_defense
+        self.base_power = base_power
+        self.base_vision = base_vision
 
         self.is_blocking = False
 
@@ -69,7 +67,7 @@ class Fighter:
     def hp(self, value):
         if value < 0:
             self.__hp = 0
-        elif value > 0:
+        elif value > self.max_hp:
             self.__hp = self.max_hp
         else:
             self.__hp = value
@@ -127,7 +125,6 @@ class Fighter:
 
     def take_damage(self, amount):
         results = []
-
         self.hp -= amount
 
         if self.hp <= 0:
@@ -145,9 +142,9 @@ class Fighter:
 
     def attack(self, target, mod=1):
         results = []
-        damage = int(round(self.power * mod - target.fighter.defense))
+        damage = round(self.power * mod - target.fighter.defense)
 
-        logging.debug(f'{self.owner.name.capitalize()} attacks {target.name.capitalize()} with {self.power} power (modified: {damage}) against {target.fighter.defense} defense for {damage} damage.')
+        logging.debug(f'{self.owner.name.capitalize()} attacks {target.name.capitalize()} with {self.power}*{mod} power against {target.fighter.defense} defense for {damage} damage.')
 
         # TODO if blocked, reduce stamina
         if damage > 0:
@@ -167,6 +164,7 @@ class Fighter:
                     f'{self.owner.name.capitalize()} attacks {target_string} for {str(damage)} hit points.', type=msg_type)})
                 results.extend(target.fighter.take_damage(damage))
         else:
+            target.fighter.stamina -= 2 # TODO placeholder until balancing (scale stamina drain with armor encumberance)
             results.append(
                 {'message': Message(f'{self.owner.name.capitalize()} attacks {target.name} but does no damage.', type=MessageType.COMBAT)})
 
@@ -174,7 +172,7 @@ class Fighter:
 
     def block(self, damage):
         results = []
-        self.stamina = self.stamina - damage
+        self.stamina -= damage
         if self.owner.is_player:
             message = Message(f'You were able to block the attack!', type=MessageType.GOOD)
         else:
@@ -199,25 +197,25 @@ class Fighter:
         ent.color_bg = colors.black
         game.map.tiles[x][y].gibbed = True
 
-        if ent.is_player:
-            message = Message('You died!', type=MessageType.BAD)
-        else:
-            message = Message(f'The {ent.name.capitalize()} is dead!', type=MessageType.GOOD, category=MessageCategory.OBSERVATION)
-
-            ent.blocks = False
-            ent.render_order = RenderOrder.CORPSE
-            ent.fighter = None
-            ent.ai = None
-            ent.name = f'Remains of a {ent.name}'
-
         # Create gibs
         # TODO Consider force of impact (amount of damage done beyond 0 hp?) to vary spread
         for i in range(1, randint(2, 4)):
             c_x, c_y = (randint(x - 1, x + 1), randint(y - 1, y + 1))
             game.map.tiles[c_x][c_y].gibbed = True
             if not game.map.tiles[c_x][c_y].blocked and randint(0, 100) > 85:
-                c = Entity(c_x, c_y, '~', colors.corpse, f'Bits of a {ent.name}')
+                c = Entity(c_x, c_y, '~', colors.corpse, f'{ent.name.capitalize()} bits', is_corpse=True)
                 c.render_order = RenderOrder.CORPSE
                 game.entities.append(c)
+
+        if ent.is_player:
+            message = Message('You died!', type=MessageType.BAD)
+        else:
+            message = Message(f'The {ent.name.capitalize()} is dead!', type=MessageType.GOOD, category=MessageCategory.OBSERVATION)
+
+            ent.render_order = RenderOrder.CORPSE
+            ent.blocks = False
+            ent.ai = None
+            ent.is_corpse = True
+            ent.name = f'{ent.name.capitalize()} remains'
 
         return message

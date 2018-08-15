@@ -1,4 +1,5 @@
 """ Panels are permanently displayed consoles containing information relevant to the game """
+import textwrap
 
 import tcod
 
@@ -35,6 +36,29 @@ def render_player_panel(game, con, panel_x, panel_y, width, height):
 def render_object_panel(game, con, panel_x, panel_y, width, height):
     setup_console(con, caption='Objects', borders=True)
 
+    # check for objects in FOV
+    spotted = [ent for ent in game.entities if ent.is_visible(game.fov_map) and (ent.item is not None or ent.architecture is not None)]
+
+    if len(spotted):
+        spotted.sort(key=game.player.distance_to_ent)  # sort the spotted array by distance to player
+
+        # initial offsets from panel borders
+        y = 2
+
+        for ent in spotted:  # Go through the object names and wrap them according to the panel's width
+
+            # Draw creature name and stats #
+            tcod.console_set_color_control(tcod.COLCTRL_1, ent.color, tcod.black)
+            wrapped_name = textwrap.wrap(f'* {ent.name}', width-3)
+            for i, line in enumerate(wrapped_name):
+                tcod.console_print(con, 2+i, y, f'%c{line}%c' % (
+                tcod.COLCTRL_1, tcod.COLCTRL_STOP))
+
+                y += 2
+                if y >= con.height - 2:  # If the limit's of the con are reached, cut the con off
+                    x = center_x_for_text(width, '~ ~ ~ MORE ~ ~ ~')
+                    tcod.console_print(con, x, y, '~ ~ ~ MORE ~ ~ ~')
+                    break
 
     tcod.console_blit(con, 0, 0, width, height, 0, panel_x, panel_y)
 
@@ -56,7 +80,7 @@ def render_enemy_panel(game, con, panel_x, panel_y, width, height):
             # Draw creature name and stats #
             tcod.console_set_color_control(tcod.COLCTRL_1, ent.color, tcod.black)
             tcod.console_set_color_control(tcod.COLCTRL_2, ent.fighter.hp_color, tcod.black) # TODO make dynamic
-            tcod.console_print(con, 2, y, f'%c{ent.name}%c|%c{ent.fighter.hp_string.capitalize()}%c' % (tcod.COLCTRL_1, tcod.COLCTRL_STOP, tcod.COLCTRL_2, tcod.COLCTRL_STOP))
+            tcod.console_print(con, 2, y, f'%c{ent.name}%c | %c{ent.fighter.hp_string.capitalize()}%c' % (tcod.COLCTRL_1, tcod.COLCTRL_STOP, tcod.COLCTRL_2, tcod.COLCTRL_STOP))
 
             y += 2
             if y >= con.height - 2:  # If the limit's of the con are reached, cut the con off

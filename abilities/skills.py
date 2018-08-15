@@ -9,7 +9,7 @@ from rendering.render_main import render_map_screen
 class SkillUsage:
 
     @staticmethod
-    def skill_charge_prepare(ent, *args, **kwargs):
+    def charge_prepare(ent, *args, **kwargs):
         game = args[0]
         delay = kwargs['delay']
         results = []
@@ -18,13 +18,13 @@ class SkillUsage:
 
         ent.color_bg = colors.dark_red
         ent.turnplan.skip_turns(delay, game.turn)
-        ent.turnplan.plan_turn(game.turn + delay + 1, {'planned_function': SkillUsage.skill_charge_execute,
+        ent.turnplan.plan_turn(game.turn + delay + 1, {'planned_function': SkillUsage.charge_execute,
                                                        'planned_function_args': (ent, tx, ty, game)})
         results.append({'message':Message(f'The {ent.name} prepares to rush forward.', category=MessageCategory.OBSERVATION, type=MessageType.ALERT)})
         return results
 
     @staticmethod
-    def skill_charge_execute(ent, tx, ty, game):
+    def charge_execute(ent, tx, ty, game):
         ent.color_bg = None # Reset the entities bg-color, which the skill preparation had changed
 
         results = []
@@ -41,18 +41,21 @@ class SkillUsage:
             results.extend(ent.fighter.attack(ent, mod=0.5))
         return results
 
-class SkillConditions:
+class SkillCondition:
+    """
+    TODO Add:
+    Clear line to target
+    """
 
     @staticmethod
-    def skill_charge_condition(game, actor, **kwargs):
-        # TODO make sure there's a straight, non-blocked line between you & target
+    def distance_to(game, actor, **kwargs):
         player = game.player
-        min, max = kwargs['min'], kwargs['max']
+        min, max = kwargs['min_dist'], kwargs['max_dist']
         if min < actor.distance_to_ent(player) < max:
             return True
         else:
             return False
 
     @staticmethod
-    def skill_always_true():
+    def always_true():
         return True

@@ -1,6 +1,8 @@
 import logging
 from random import choice, randint, uniform
 
+from components.AI.baseAI import BaseAI
+from components.AI.behavior.simple import Simple
 from components.actors.fighter import Fighter
 from components.architecture import Architecture
 from components.inventory import Inventory
@@ -61,11 +63,12 @@ def gen_ent_from_dict(dict, entry, x, y, game):
     power = randint(*data['nat_power'])
     loadouts = data.get('loadouts', None)
     vision = data['nat_vision']
-    ai = data['ai']
+    ai_movement = data['ai_movement']
+    ai_attack = data['ai_attack']
     skills = data.get('skills', None)
 
     fighter_component = Fighter(hp, stamina, defense, power, vision)
-    ai_component = ai()
+    ai_component = BaseAI(movement=ai_movement(), attack=ai_attack())
     inventory_component = Inventory(12) # Todo Placeholder #
     skills_component = None
 

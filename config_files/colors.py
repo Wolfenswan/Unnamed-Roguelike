@@ -4,7 +4,7 @@ import tcod
 # Dungeon
 door = tcod.Color(153, 115, 0)
 # light_fov = tcod.Color(127, 127, 127)
-light_fov = tcod.Color(220, 195, 136)
+light_fov = tcod.Color(220, 217, 162)
 dark_bg = (95, 95, 95)
 dark_wall = tcod.Color(63, 63, 63)
 dark_wall_fg = tcod.Color(95, 95, 95)
