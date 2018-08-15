@@ -1,6 +1,6 @@
 **RoguelikeTutorial - TCOD**
 
-A from-ground-up libtcod rework of my 2017 attempt (using the by now deprecated TDL), with a bit more experience and a better of hold of which concepts I want to implement and how to implement.
+A from-ground-up libtcod rework of my 2017 attempt (using the by now deprecated TDL), with a bit more starting experience and a better of hold of which concepts I want to implement and how to implement them.
 
 Still, this might never turn into a full game, but until then it's a Python playground of various proofs-of-concept.
 
