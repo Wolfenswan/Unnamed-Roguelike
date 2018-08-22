@@ -62,7 +62,7 @@ def gen_ent_from_dict(dict, entry, x, y, game):
     defense = randint(*data['nat_armor'])
     power = randint(*data['nat_power'])
     loadouts = data.get('loadouts', None)
-    vision = data['nat_vision']
+    vision = data.get('nat_vision', 8)
     ai_movement = data.get('ai_movement', Simple)
     ai_attack = data.get('ai_attack', Simple)
     skills = data.get('skills', None)

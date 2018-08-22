@@ -142,7 +142,11 @@ class Fighter:
 
     def attack(self, target, mod=1):
         results = []
-        damage = round(self.power * mod - target.fighter.defense)
+
+        if target.fighter.stamina > 0:
+            damage = round(self.power * mod - target.fighter.defense)
+        else:
+            damage = round(self.power * mod) * 2 # Targets out of stamina will loose all defense and receive double damage # TODO balancing
 
         logging.debug(f'{self.owner.name.capitalize()} attacks {target.name.capitalize()} with {self.power}*{mod} power against {target.fighter.defense} defense for {damage} damage.')
 

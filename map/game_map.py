@@ -1,5 +1,7 @@
+from cmath import sqrt
 from random import choice
 
+from gameobjects.util_functions import get_blocking_entity_at_location
 from map.map_algo import Tunneling, DrunkWalk
 from map.tile import Tile
 
@@ -11,18 +13,51 @@ class GameMap:
         self.tiles = self.initialize_tiles()
 
     def initialize_tiles(self):
-        tiles = [[Tile(True, x, y, self) for y in range(self.height)] for x in range(self.width)]
+        tiles = [[Tile(True, x, y) for y in range(self.height)] for x in range(self.width)]
 
         return tiles
 
     def make_map(self, game, room_min_size, room_max_size, map_width, map_height):
 
         max_rooms = int((map_width / room_min_size) + (map_height / room_min_size))
-        algo = choice([Tunneling, DrunkWalk])
+        # TODO placeholder for later implementation
+        # algo = choice([Tunneling, DrunkWalk])
+        # algo.make_map(game, max_rooms, room_min_size, room_max_size, map_width, map_height)
         DrunkWalk().make_map(game, max_rooms, room_min_size, room_max_size, map_width, map_height)
 
-    def is_blocked(self, x, y):
+    def is_wall(self, x, y):
+        """
+        Returns True if position is a wall.
+
+        :param x: x-coord
+        :type x: int
+        :param y: y-coord
+        :type y: int
+        :return: wall
+        :rtype: bool
+        """
         if self.tiles[x][y].blocked:
+            return True
+
+        return False
+
+    def is_blocked(self, x, y, game):
+        """
+        Returns True if position is either a wall or occupied by a blocking object.
+
+        :param x: x-coord
+        :type x: int
+        :param y: y-coord
+        :type y: int
+        :param game: game-object
+        :type game: game-object
+        :return: blocked
+        :rtype: bool
+        """
+        if self.is_wall(x, y):
+            return True
+
+        if get_blocking_entity_at_location(game.entities, x, y) > 0:
             return True
 
         return False
@@ -39,4 +74,17 @@ class GameMap:
                     near_empty_tiles.append((to_x, to_y))
 
         return near_empty_tiles
+
+    @staticmethod
+    def distance_between_pos(x1, y1, x2, y2):
+        return sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
+
+    def free_line_between_pos(self, x1, y1, x2, y2, game):
+        dist = self.distance_between_pos(x1, y1, x2, y2)
+        for s in range(dist):
+            x = x1 + s/dist * (x2-x1)
+            y = x1 + s/dist * (x2-x1)
+            if self.is_blocked(x, y, game):
+                return False
+        return True
 

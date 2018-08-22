@@ -22,6 +22,9 @@ class BaseAI:
         game_map = game.map
         npc = self.owner
 
+        free_line = game.map.free_line_between_pos(target.x, target.y, npc.x, npc.y, game)
+        print(free_line)
+
         # First check if anything has been planned for this turn #
         turn_plan = npc.turnplan.planned_turns.get(game.turn)
         if turn_plan:
@@ -55,7 +58,7 @@ class BaseAI:
         else:
             dx, dy = randint(-1, 1), randint(-1, 1)
             x, y = npc.x + dx, npc.y + dy
-            if not game_map.is_blocked(x, y):
+            if not game_map.is_wall(x, y):
                 npc.move(dx, dy)
 
         return results

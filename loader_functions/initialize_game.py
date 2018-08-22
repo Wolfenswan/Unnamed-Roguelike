@@ -16,10 +16,8 @@ from rendering.render_order import RenderOrder
 def initialize_game(game):
 
     # Setup the Player character #
-    fighter_component = Fighter(30, 50, 0, 1, cfg.FOV_RADIUS)
-    inventory_component = Inventory(26)
     game.cursor = Entity(0, 0, 'X', colors.white, 'Cursor', render_order=RenderOrder.CURSOR)
-    game.player = Player('Player', fighter=fighter_component, inventory=inventory_component)
+    game.player = Player('Player')
     player_loadouts = {
         'loadout1': {
             'chance': 100,

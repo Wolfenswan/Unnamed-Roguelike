@@ -31,7 +31,7 @@ class Swarm:
         # 3. Check: If all else fails, try to flee #
         else: # TODO coin toss whether to cower or flee?
             logging.debug(f'{npc} is keeping distance from player.')
-            npc.move_away_from(target)
+            npc.move_away_from(target, game)
 
         return results
     

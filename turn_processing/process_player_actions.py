@@ -46,7 +46,7 @@ def process_player_input(action, game, fov_map, targeting_item = None):
             dx, dy = direction
             destination_x, destination_y = player.x + dx, player.y + dy
 
-            if not game_map.is_blocked(destination_x, destination_y):
+            if not game_map.is_wall(destination_x, destination_y):
 
                 target = get_blocking_entity_at_location(entities, destination_x, destination_y)
 

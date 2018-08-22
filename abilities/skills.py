@@ -48,7 +48,17 @@ class SkillCondition:
     """
 
     @staticmethod
-    def distance_to(game, actor, **kwargs):
+    def can_see_player(actor, game, **kwargs):
+        player = game.player
+        return actor.distance_to_ent(player) <= actor.fighter.vision
+
+    @staticmethod
+    def free_line_to_player(actor, game, **kwargs):
+        player = game.player
+        game.map.free_line_between_tiles(actor.x, actor.y, player.x, player.y)
+
+    @staticmethod
+    def distance_to(actor, game, **kwargs):
         player = game.player
         min, max = kwargs['min_dist'], kwargs['max_dist']
         if min < actor.distance_to_ent(player) < max:

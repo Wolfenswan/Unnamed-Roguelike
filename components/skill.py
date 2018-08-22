@@ -28,7 +28,7 @@ class Skill:
 
     def is_available(self, game):
         actor = self.owner
-        available = self.cooldown_length >= 0 and self.cooldown == 0 and self.activate_condition(game, actor, **self.activate_condition_kwargs)
+        available = self.cooldown_length >= 0 and self.cooldown == 0 and self.activate_condition(actor, game, **self.activate_condition_kwargs)
         return available
 
     # def is_available_alt(self, game):

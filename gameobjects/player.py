@@ -1,5 +1,8 @@
 import tcod
 
+from components.actors.fighter import Fighter
+from components.inventory import Inventory
+from config_files import cfg
 from gameobjects.entity import Entity
 from rendering.render_order import RenderOrder
 
@@ -7,9 +10,12 @@ from rendering.render_order import RenderOrder
 class Player(Entity):
     """ Class for the player object """
 
-    def __init__(self, name, fighter = None, inventory = None):
+    def __init__(self, name):
 
-        super().__init__(0, 0, '@', tcod.white, name, descr='This is you.', is_player=True, blocks=True, render_order=RenderOrder.PLAYER, fighter=fighter, inventory=inventory)
+        fighter_component = Fighter(30, 50, 0, 1, cfg.FOV_RADIUS)
+        inventory_component = Inventory(26)
+
+        super().__init__(0, 0, '@', tcod.white, name, descr='This is you.', is_player=True, blocks=True, render_order=RenderOrder.PLAYER, fighter=fighter_component, inventory=inventory_component)
 
 
     def enemies_in_distance(self, entities, dist=2):

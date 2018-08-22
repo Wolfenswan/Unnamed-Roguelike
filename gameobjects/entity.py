@@ -95,7 +95,7 @@ class Entity:
 
         """
         dest_x, dest_y = self.x + dx, self.y + dy
-        if not game.map.is_blocked(dest_x, dest_y) or ignore_walls:
+        if not game.map.is_wall(dest_x, dest_y) or ignore_walls:
             blocked = get_blocking_entity_at_location(game.entities, dest_x, dest_y)
             if blocked and not ignore_entities:
                 return blocked
@@ -104,37 +104,31 @@ class Entity:
         else:
             return False
 
-    def move_away_from(self, target):
+    def move_away_from(self, target, game):
         """ Move Entity away from intended target """
-        # TODO: improve so all that it always moves to a tile that it is at least 1 tile distance from the player
-        dx, dy = (0, 0)
 
-        # loop through available directions and pick the first that is at least one space from the player
-        # loop does not check for walls, as monster can back up into walls (and thus fail)
-        for x in (-1, 0, 1):
-            for y in (-1, 0, 1):
-                flee_pos = (self.x + x, self.y + y)
-                if target.distance_to_pos(*flee_pos) > 1.5:
-                    (dx, dy) = (x, y)
+        # loop through available directions and pick the first that is at least one square from the player
+        # loop does not check for walls, so an entity can back up into walls (and thus fail/be cornered)
+        for dx in (-1, 0, 1):
+            for dy in (-1, 0, 1):
+                flee_pos = (self.x + dx, self.y + dy)
+                distance = target.distance_to_pos(*flee_pos)
+                if distance > 1.5:
+                    self.try_move(dx, dy, game)
                     break
 
-        distance = math.sqrt(dx ** 2 + dy ** 2)
-
+        # TODO commented part can probably be deleted
         # normalize it to length 1 (preserving direction), then round it and
         # convert to integer so the movement is restricted to the map grid
-        if distance:
-            dx = int(round(dx / distance))
-            dy = int(round(dy / distance))
-
-        self.move(dx, dy)
-
-    def distance_to_ent(self, other):
-        dx = other.x - self.x
-        dy = other.y - self.y
-        return math.sqrt(dx ** 2 + dy ** 2)
+        # if distance > 2:
+        #     dx = int(round(dx / distance))
+        #     dy = int(round(dy / distance))
 
     def distance_to_pos(self, x, y):
         return math.sqrt((x - self.x) ** 2 + (y - self.y) ** 2)
+
+    def distance_to_ent(self, other):
+        return self.distance_to_pos(other.x, other.y)
 
     def direction_to_pos(self, x, y):
         dx, dy = 0, 0
