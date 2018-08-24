@@ -20,13 +20,12 @@ class Player(Entity):
 
     def enemies_in_distance(self, entities, dist=2):
         """ returns nearby monsters in given distance """
-        enemies_in_distance = [ent for ent in entities if self.distance_to_ent(ent) <= dist and ent != self and ent.fighter is not None]
+        enemies_in_distance = [ent for ent in entities if self.distance_to_ent(ent) <= dist and ent != self and ent.fighter is not None and not ent.is_corpse]
         return enemies_in_distance
-
 
     def visible_enemies(self, entities, fov_map):
         enemies_in_distance = self.enemies_in_distance(entities, dist=self.fighter.vision)
-        visible_enemies = [ent for ent in enemies_in_distance if ent.is_visible(fov_map) and ent != self and ent.fighter is not None]
+        visible_enemies = [ent for ent in enemies_in_distance if ent.is_visible(fov_map) and ent != self and ent.fighter is not None and not ent.is_corpse]
         return visible_enemies
 
     def in_combat(self, game):

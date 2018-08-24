@@ -22,8 +22,8 @@ class BaseAI:
         game_map = game.map
         npc = self.owner
 
-        free_line = game.map.free_line_between_pos(target.x, target.y, npc.x, npc.y, game)
-        print(free_line)
+        # free_line = game.map.free_line_between_pos(target.x, target.y, npc.x, npc.y, game)
+        # print(free_line)
 
         # First check if anything has been planned for this turn #
         turn_plan = npc.turnplan.planned_turns.get(game.turn)

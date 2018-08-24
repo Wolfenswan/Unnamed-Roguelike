@@ -1,5 +1,3 @@
-import tcod
-
 from config_files import colors
 from gui.messages import Message, MessageType, MessageCategory
 from rendering.render_animations import animate_move_line, animate_move_to

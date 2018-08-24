@@ -10,5 +10,3 @@ class Equipment():
         self.av = av
         self.qu_slots = qu_slots
         self.l_radius = l_radius
-        self.on_equip = None
-        self.on_dequip = None

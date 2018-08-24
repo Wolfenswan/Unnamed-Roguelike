@@ -60,7 +60,7 @@ def inventory_menu(game):
 
     width = len(max(options, key=len))
 
-    draw_window('Inventory', body, options=options, window_x=x, window_y=y, forced_width=max(width, 25))
+    draw_window('Inventory', body, options=options, window_x=x, window_y=y, forced_width=width)
 
     choice = menu_loop(wait_for=len(options))
 
@@ -106,11 +106,11 @@ def equipment_menu(game):
 
     width = len(max(options, key=len))
 
-    draw_window('Equipment', body, options=options, window_x=x, window_y=y, forced_width=max(width, 25))
+    draw_window('Equipment', body, options=options, window_x=x, window_y=y, forced_width=width)
 
     choice = menu_loop(wait_for=len(options))
 
-    if choice:
+    if choice is not None:
         return inventory[choice]
     else:
         return False
@@ -132,7 +132,6 @@ def item_menu(item_ent, game):
             options.append('(U)se')
             wait_for.append('u')
 
-
     if item_ent.item.equipment is not None and not player.in_combat(game):
         if player.paperdoll.is_equipped(item_ent):
             options.append('(R)emove')
@@ -147,7 +146,7 @@ def item_menu(item_ent, game):
         options.append('(D)rop')
         wait_for.append('d')
 
-    draw_window(title, body, options=options, window_x=x, window_y=y, sort_by=None)
+    draw_window(title, body, options=options, window_x=x, window_y=y, sort_by=None, extend_body = item_ent.item.attr_list)
 
     choice = menu_loop(wait_for=wait_for)
 

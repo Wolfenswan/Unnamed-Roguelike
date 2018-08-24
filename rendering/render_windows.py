@@ -21,7 +21,7 @@ def set_window_on_screen(window_x, window_y, width, height):
     return window_x, window_y
 
 
-def draw_window(title, body, options = None, window_x = None, window_y = None, padding_x = 2, padding_y = 2, sort_by = 'str', show_cancel_option=True, forced_width=None):
+def draw_window(title, body, options = None, window_x = None, window_y = None, padding_x = 2, padding_y = 2, sort_by = 'str', show_cancel_option=True, forced_width=None, extend_body = None):
     # Calculate window width #
     if forced_width:
         width = forced_width + padding_x * 2
@@ -32,7 +32,11 @@ def draw_window(title, body, options = None, window_x = None, window_y = None, p
         else:
             width = max(len(title), len(body)) + padding_x * 2
 
+    width = min(width, cfg.SCREEN_WIDTH//3)
+
     body_wrapped = textwrap.wrap(body, width - padding_x * 2)
+    if extend_body:
+        body_wrapped.extend(extend_body)
 
     # Calculate window height #
     height = padding_y * 2

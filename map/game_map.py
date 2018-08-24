@@ -57,6 +57,7 @@ class GameMap:
         if self.is_wall(x, y):
             return True
 
+        print(x, y, game.entities)
         if get_blocking_entity_at_location(game.entities, x, y) > 0:
             return True
 
@@ -77,13 +78,14 @@ class GameMap:
 
     @staticmethod
     def distance_between_pos(x1, y1, x2, y2):
-        return sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
+        distance = sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
+        return round(distance.real)
 
     def free_line_between_pos(self, x1, y1, x2, y2, game):
         dist = self.distance_between_pos(x1, y1, x2, y2)
         for s in range(dist):
-            x = x1 + s/dist * (x2-x1)
-            y = x1 + s/dist * (x2-x1)
+            x = round(x1 + s/dist * (x2-x1))
+            y = round(x1 + s/dist * (x2-x1))
             if self.is_blocked(x, y, game):
                 return False
         return True
