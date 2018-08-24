@@ -1,12 +1,16 @@
 import tcod
 
-from gui.messages import Message
+from gui.messages import Message, MessageCategory
 
 
 class Architecture:
     def __init__(self, on_interaction=None, on_collision=None):
         self.on_interaction = on_interaction
         self.on_collision = on_collision
+
+    @staticmethod
+    def blocks_info(entity):
+        return [{'message': Message(f'A {entity.name} blocks your way.', category=MessageCategory.OBSERVATION)}]
 
     @staticmethod
     def use_stairs(down):
@@ -38,3 +42,19 @@ class Architecture:
             #results.append({'message': Message('You close a door.')})
 
         return results
+
+    @staticmethod
+    def open_chest(chest_ent):
+        # check for trap?
+        # display chest_contents
+        pass
+
+    @staticmethod
+    def smash_object(entity):
+        entity.char = '%'
+        entity.color *= 0.3
+        entity.blocks = False
+        entity.blocks_sight = False
+        entity.is_corpse = True
+
+        return [{'message': Message(f'You smash a {entity.name.capitalize()}', category=MessageCategory.OBSERVATION)}]

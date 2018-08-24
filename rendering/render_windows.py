@@ -92,5 +92,5 @@ def render_description_window(game):
         title = ent.name
         body = ent.descr
 
-        draw_window(title, body, window_x=x, window_y=y, forced_width=len(body)//2,show_cancel_option=False)
+        draw_window(title, body, window_x=x, window_y=y, show_cancel_option=False)
 

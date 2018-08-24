@@ -8,7 +8,7 @@ from gameobjects.entity import Entity
 from gameobjects.player import Player
 from map.game_map import GameMap
 from map.place_actors import place_monsters
-from map.place_architecture import place_architecture, place_doors
+from map.place_architecture import place_architecture, place_doors, place_containers
 from map.place_items import place_items
 from rendering.render_order import RenderOrder
 
@@ -38,6 +38,7 @@ def initialize_game(game):
 
     # Add the good stuff #
     place_architecture(game)
+    place_containers(game)
     place_doors(game)
     place_items(game)
     place_monsters(game)

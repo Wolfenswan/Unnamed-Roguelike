@@ -23,7 +23,7 @@ def place_items(game):
     game_map = game.map
 
     # first, remove all items that can't be spawned on the current level
-    possible_items = {k: v for k, v in ITEM_DATA_MERGED.items() if dlvl in v.get('dlvls',[0,0])}
+    possible_items = {k: v for k, v in ITEM_DATA_MERGED.items() if dlvl in v.get('dlvls',[0,99])}
 
     # pick a random room
     for room in game_map.rooms:
@@ -35,6 +35,7 @@ def place_items(game):
             i_dict = possible_items[i_key]
 
             # Get a random position for the item
+            # TODO make sure items are not placed on blocking architecture
             x, y = room.ranpos(game_map)
 
             # Generate the item at the given position

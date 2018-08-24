@@ -37,7 +37,7 @@ def render_object_panel(game, con, panel_x, panel_y, width, height):
     setup_console(con, caption='Objects', borders=True)
 
     # check for objects in FOV
-    spotted = [ent for ent in game.entities if ent.is_visible(game.fov_map) and (ent.item is not None or ent.architecture is not None)]
+    spotted = [ent for ent in game.entities if ent.is_visible(game.fov_map) and (ent.item is not None or ent.architecture is not None) and not ent.is_corpse]
 
     if len(spotted):
         spotted.sort(key=game.player.distance_to_ent)  # sort the spotted array by distance to player
@@ -49,7 +49,8 @@ def render_object_panel(game, con, panel_x, panel_y, width, height):
 
             # Draw creature name and stats #
             tcod.console_set_color_control(tcod.COLCTRL_1, ent.color, tcod.black)
-            wrapped_name = textwrap.wrap(f'* {ent.name}', width-3)
+            symbol = '>' if (ent.x, ent.y) == (game.player.x, game.player.y) else '*'
+            wrapped_name = textwrap.wrap(f'{symbol} {ent.name}', width-3)
             for i, line in enumerate(wrapped_name):
                 tcod.console_print(con, 2+i, y, f'%c{line}%c' % (
                 tcod.COLCTRL_1, tcod.COLCTRL_STOP))
