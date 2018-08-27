@@ -43,20 +43,16 @@ def menu_loop(wait_for=None, cancel_with_escape=True, sort_by='str'):
                 return key.vk
 
 
-def inventory_menu(game):
-    player = game.player
-    inventory = player.inventory
-    x, y = pos_on_screen(player.x + 2, player.y - 2, game.player)
+def inventory_menu(entity):
+    inventory = entity.inventory
+    x, y = pos_on_screen(entity.x + 2, entity.y - 2, entity)
 
     options = [item.name for item in inventory.items]
 
     # TODO add optional filter
     # TODO allow cycling through filters
 
-    if game.state == GameStates.SHOW_INVENTORY:
-        body = 'Press the key next to an item to select it.'
-    else:
-        body = 'Press the key next to an item to drop it.'
+    body = 'Press the key next to an item to select it.'
 
     width = len(max(options, key=len))
 
@@ -65,7 +61,7 @@ def inventory_menu(game):
     choice = menu_loop(wait_for=len(options))
 
     if choice is not None:
-        return player.inventory.items[choice]
+        return inventory.items[choice]
     else:
         return False
 
@@ -91,18 +87,13 @@ def yesno_menu(title, body, game):
     return True if choice == 'y' else False
 
 
-def equipment_menu(game):
-    # TODO: Menu is a Placeholder #
-    player = game.player
-    inventory = player.paperdoll.equipped_items
-    x, y = pos_on_screen(player.x + 2, player.y - 2, game.player)
+def equipment_menu(entity):
+    # TODO: Menu will be expanded to provide more detailled information #
+    inventory = entity.paperdoll.equipped_items
+    x, y = pos_on_screen(entity.x + 2, entity.y - 2, entity)
 
+    body = 'Press the key next to an item to select it.'
     options = [item.name for item in inventory]
-
-    if game.state == GameStates.SHOW_INVENTORY:
-        body = 'Press the key next to an item to select it.'
-    else:
-        body = 'Press the key next to an item to drop it.'
 
     width = len(max(options, key=len))
 

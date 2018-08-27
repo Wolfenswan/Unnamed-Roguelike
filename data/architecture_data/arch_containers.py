@@ -1,0 +1,30 @@
+from components.architecture import Architecture
+from config_files import colors
+
+arch_containers_data = {
+    'barrel_wood': {
+        'name': 'Wooden Barrel',
+        'descr': "A barrel of unknown contents.",
+        'chance': 100,
+        'dlvls': (1, 99),
+        "char": 'o',
+        "color": colors.lime,
+        "blocks": True,
+        'container_room': (0,4),
+        'on_collision': Architecture.blocks_info,
+        'on_interaction': Architecture.smash_object
+    },
+    'chest_wood': {
+        'name': 'Wooden Chest',
+        'descr': "A simple, yet sturdy chest.",
+        'chance': 100,
+        'dlvls': (1, 99),
+        "char": chr(240),
+        "color": colors.lime,
+        "blocks": False,
+        'container_room': (1, 6),
+        'on_collision': Architecture.blocks_info,
+        'on_interaction': Architecture.open_container
+    },
+
+}

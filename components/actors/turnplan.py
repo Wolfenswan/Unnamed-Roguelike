@@ -7,16 +7,11 @@ class Turnplan:
         plan = self.planned_turns.get(game_turn)
         if plan is not None:
             skip_turn = plan.get('skip_turn')
-            # skill = plan.get('planned_skill')
-            # skill_args = plan.get('planned_skill_args',())
             function = plan.get('planned_function')
             function_args = plan.get('planned_function_args')
 
             if skip_turn:
                 return results
-
-            # if skill: # Might reintroduce this functionality later again; but it might be entireally replaced by planned_function
-            #     results.extend(skill.execute(*skill_args))
 
             if function:
                 results.extend(function(*function_args))
@@ -24,12 +19,30 @@ class Turnplan:
         return results
 
     def plan_turn(self, turn_to_plan, plan, overwrite=False, pushback=False):
+        """
+        Sets plan for given turn.
+        The plan-dictionary can contain:
+            - 'skip_turn'
+            - 'planned_function'
+            - 'planned_function_args'
+
+        :param turn_to_plan:
+        :type turn_to_plan:
+        :param plan: Plan to Execute
+        :type plan: dict
+        :param overwrite:
+        :type overwrite:
+        :param pushback:
+        :type pushback:
+        :return:
+        :rtype:
+        """
         if not self.planned_turns.get(turn_to_plan) or overwrite:
             self.planned_turns[turn_to_plan] = plan
         elif pushback: # If there's already a plan for the intended turn, push that plan back one turn TODO needs testing
             self.plan_turn(turn_to_plan + 1, self.planned_turns.get(turn_to_plan), pushback=True)
         else:
-            self.planned_turns[turn_to_plan] = self.planned_turns[turn_to_plan] + plan
+            self.planned_turns[turn_to_plan] += plan
 
 
     def skip_turns(self, num_of_turns, game_turn):

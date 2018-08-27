@@ -44,10 +44,15 @@ class Architecture:
         return results
 
     @staticmethod
-    def open_chest(chest_ent):
-        # check for trap?
+    def open_container(container_ent):
+        results = []
+        # check for trap
         # display chest_contents
-        pass
+        # selected_item = container_menu()
+        # if selected_item:
+            # results.append()
+
+        return results
 
     @staticmethod
     def smash_object(entity):
@@ -55,6 +60,6 @@ class Architecture:
         entity.color *= 0.3
         entity.blocks = False
         entity.blocks_sight = False
-        entity.is_corpse = True
+        entity.architecture = None # TODO not a very elegant solution to prevent rendering in the objects panel
 
         return [{'message': Message(f'You smash a {entity.name.capitalize()}', category=MessageCategory.OBSERVATION)}]

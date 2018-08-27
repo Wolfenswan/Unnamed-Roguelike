@@ -152,10 +152,10 @@ def process_player_input(action, game, fov_map, targeting_item = None):
     selected_item_ent = None
 
     if game.state == GameStates.SHOW_INVENTORY:
-        selected_item_ent = inventory_menu(game)
+        selected_item_ent = inventory_menu(player)
 
     elif game.state == GameStates.SHOW_EQUIPMENT:
-        selected_item_ent = equipment_menu(game)
+        selected_item_ent = equipment_menu(player)
 
     if game.state in [GameStates.SHOW_INVENTORY, GameStates.SHOW_EQUIPMENT]:
         if selected_item_ent:
@@ -189,7 +189,7 @@ def process_player_input(action, game, fov_map, targeting_item = None):
         turn_results.extend(qu_results)
 
     if exit:
-        if game.state in (GameStates.SHOW_INVENTORY, GameStates.DROP_INVENTORY, GameStates.CURSOR_ACTIVE):
+        if game.state in (GameStates.SHOW_INVENTORY, GameStates.CURSOR_ACTIVE):
             game.state = game.previous_state
         else:
             choice = options_menu('Quit Game', 'Do you want to quit the game?', ['Save & Quit', 'Just Quit'], sort_by=1, cancel_with_escape=True)

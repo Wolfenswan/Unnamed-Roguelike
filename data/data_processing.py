@@ -13,7 +13,7 @@ from components.skill import Skill
 from data.actor_data.skills_data import skills_data
 from data.actor_data.spawn_data import spawn_data
 from data.architecture_data.arch_static import arch_static_data
-from data.architecture_data.containers_data import arch_containers_data
+from data.architecture_data.arch_containers import arch_containers_data
 from data.item_data.test_equipment import test_equipment_data
 from data.item_data.use_potions import use_potions_data
 from data.item_data.use_scrolls import use_scrolls_data
@@ -128,16 +128,15 @@ def gen_architecture(data, x, y):
 
     blocks = data.get('blocks', False)
     blocks_sight = data.get('blocks_sight', False)
+    container_room = data.get('inventory_space', (0,0))
     on_collision = data.get('on_collision')
     on_interaction = data.get('on_interaction')
 
+    inventory_component = Inventory(randint(*container_room))
     architecture_component = Architecture(on_collision = on_collision, on_interaction = on_interaction)
 
-    # create the arguments tuple out of the values we've got so far
-    #arguments = (x, y, char, color, name, descr)
-
     # create the static object using the arguments tuple
-    arch = Entity(*arguments, blocks=blocks, blocks_sight=blocks_sight, architecture=architecture_component, render_order=RenderOrder.BOTTOM)
+    arch = Entity(*arguments, blocks=blocks, blocks_sight=blocks_sight, inventory=inventory_component, architecture=architecture_component, render_order=RenderOrder.BOTTOM)
     
     return arch
 

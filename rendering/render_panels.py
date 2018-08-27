@@ -37,7 +37,7 @@ def render_object_panel(game, con, panel_x, panel_y, width, height):
     setup_console(con, caption='Objects', borders=True)
 
     # check for objects in FOV
-    spotted = [ent for ent in game.entities if ent.is_visible(game.fov_map) and (ent.item is not None or ent.architecture is not None) and not ent.is_corpse]
+    spotted = [ent for ent in game.entities if ent.is_visible(game.fov_map) and (ent.item is not None or ent.architecture is not None)]
 
     if len(spotted):
         spotted.sort(key=game.player.distance_to_ent)  # sort the spotted array by distance to player
