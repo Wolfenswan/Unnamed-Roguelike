@@ -49,7 +49,7 @@ def render_object_panel(game, con, panel_x, panel_y, width, height):
 
             # Draw creature name and stats #
             tcod.console_set_color_control(tcod.COLCTRL_1, ent.color, tcod.black)
-            symbol = '>' if (ent.x, ent.y) == (game.player.x, game.player.y) else '*'
+            symbol = '*' if (ent.x, ent.y) == (game.player.x, game.player.y) else f'{ent.char}'
             wrapped_name = textwrap.wrap(f'{symbol} {ent.name}', width-3)
             for i, line in enumerate(wrapped_name):
                 tcod.console_print(con, 2+i, y, f'%c{line}%c' % (
@@ -82,7 +82,7 @@ def render_enemy_panel(game, con, panel_x, panel_y, width, height):
             # Draw creature name and stats #
             tcod.console_set_color_control(tcod.COLCTRL_1, ent.color, tcod.black)
             tcod.console_set_color_control(tcod.COLCTRL_2, ent.fighter.hp_color, tcod.black) # TODO make dynamic
-            tcod.console_print(con, 2, y, f'%c{ent.name}%c | %c{ent.fighter.hp_string.capitalize()}%c' % (tcod.COLCTRL_1, tcod.COLCTRL_STOP, tcod.COLCTRL_2, tcod.COLCTRL_STOP))
+            tcod.console_print(con, 2, y, f'%c{ent.char} {ent.name}%c | %c{ent.fighter.hp_string.capitalize()}%c' % (tcod.COLCTRL_1, tcod.COLCTRL_STOP, tcod.COLCTRL_2, tcod.COLCTRL_STOP))
 
             y += 2
             if y >= con.height - 2:  # If the limit's of the con are reached, cut the con off

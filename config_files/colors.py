@@ -16,6 +16,7 @@ corpse = tcod.Color(127, 0, 0)
 
 # custom
 beige = tcod.Color(120, 100, 60)
+wood = tcod.Color(193,154,107)
 
 # grey levels
 black = tcod.Color(0, 0, 0)

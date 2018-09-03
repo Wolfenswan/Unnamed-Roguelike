@@ -15,9 +15,9 @@ class SkillUsage:
         tx, ty = game.player.x, game.player.y
 
         ent.color_bg = colors.dark_red
-        ent.turnplan.skip_turns(delay, game.turn)
-        ent.turnplan.plan_turn(game.turn + delay + 1, {'planned_function': SkillUsage.charge_execute,
-                                                       'planned_function_args': (ent, tx, ty, game)})
+        ent.actionplan.add_to_queue(execute_in=delay, planned_function=SkillUsage.charge_execute,
+                                    planned_function_args=(ent, tx, ty, game), fixed=True)
+        #ent.actionplan.add_to_queue(delay, {'planned_function': SkillUsage.charge_execute,'planned_function_args': (ent, tx, ty, game)})
         results.append({'message':Message(f'The {ent.name} prepares to rush forward.', category=MessageCategory.OBSERVATION, type=MessageType.ALERT)})
         return results
 

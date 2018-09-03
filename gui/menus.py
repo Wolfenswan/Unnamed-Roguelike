@@ -43,29 +43,6 @@ def menu_loop(wait_for=None, cancel_with_escape=True, sort_by='str'):
                 return key.vk
 
 
-def inventory_menu(entity):
-    inventory = entity.inventory
-    x, y = pos_on_screen(entity.x + 2, entity.y - 2, entity)
-
-    options = [item.name for item in inventory.items]
-
-    # TODO add optional filter
-    # TODO allow cycling through filters
-
-    body = 'Press the key next to an item to select it.'
-
-    width = len(max(options, key=len))
-
-    draw_window('Inventory', body, options=options, window_x=x, window_y=y, forced_width=width)
-
-    choice = menu_loop(wait_for=len(options))
-
-    if choice is not None:
-        return inventory.items[choice]
-    else:
-        return False
-
-
 def options_menu(title, body, options, sort_by='str', cancel_with_escape=True):
     draw_window(title, body, options, show_cancel_option=cancel_with_escape, sort_by=sort_by)
 
@@ -85,6 +62,29 @@ def yesno_menu(title, body, game):
     choice = menu_loop(wait_for=wait_for)
 
     return True if choice == 'y' else False
+
+
+def inventory_menu(entity, title='Inventory'):
+    inventory = entity.inventory
+    x, y = pos_on_screen(entity.x + 2, entity.y - 2, entity)
+
+    options = [item.name for item in inventory.items]
+
+    # TODO add optional filter
+    # TODO allow cycling through filters
+
+    body = 'Press the key next to an item to select it.'
+
+    width = len(max(options, key=len)) if options else 0
+
+    draw_window(title, body, options=options, window_x=x, window_y=y, forced_width=width)
+
+    choice = menu_loop(wait_for=len(options))
+
+    if choice is not None:
+        return inventory.items[choice]
+    else:
+        return False
 
 
 def equipment_menu(entity):

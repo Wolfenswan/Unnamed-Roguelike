@@ -128,7 +128,7 @@ def gen_architecture(data, x, y):
 
     blocks = data.get('blocks', False)
     blocks_sight = data.get('blocks_sight', False)
-    container_room = data.get('inventory_space', (0,0))
+    container_room = data.get('container_room', (0,0))
     on_collision = data.get('on_collision')
     on_interaction = data.get('on_interaction')
 
@@ -137,7 +137,7 @@ def gen_architecture(data, x, y):
 
     # create the static object using the arguments tuple
     arch = Entity(*arguments, blocks=blocks, blocks_sight=blocks_sight, inventory=inventory_component, architecture=architecture_component, render_order=RenderOrder.BOTTOM)
-    
+
     return arch
 
 

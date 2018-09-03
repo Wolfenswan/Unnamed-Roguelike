@@ -3,9 +3,9 @@ from enum import Enum, auto
 
 import tcod
 
+from components.actionplan import Actionplan
 from components.inventory import Inventory
 from components.paperdoll import Paperdoll
-from components.actors.turnplan import Turnplan
 from gameobjects.util_functions import get_blocking_entity_at_location
 from rendering.render_order import RenderOrder
 
@@ -20,7 +20,9 @@ class Entity:
     """
     A generic object to represent players, enemies, items, etc.
     """
-    def __init__(self, x, y, char, color, name, descr=None, is_player = False, is_corpse = False, blocks=False, blocks_sight = False, render_order=RenderOrder.CORPSE, fighter=None, ai=None, skills=None, item=None, inventory=None, architecture=None):
+    def __init__(self, x, y, char, color, name, descr=None, is_player = False, is_corpse = False,
+                 blocks=False, blocks_sight = False, render_order=RenderOrder.CORPSE,
+                 fighter=None, ai=None, skills=None, item=None, inventory=None, architecture=None):
         """
 
         :param x: pos x
@@ -68,7 +70,7 @@ class Entity:
         # Components #
         self.fighter = fighter
         self.ai = ai
-        self.turnplan = Turnplan()
+        self.actionplan = Actionplan()
         self.item = item
         self.inventory = inventory
         if self.inventory:
@@ -207,7 +209,7 @@ class Entity:
             for skill in self.skills.values():
                 skill.owner = self
 
-        self.turnplan.owner = self
+        self.actionplan.owner = self
 
 
 

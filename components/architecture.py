@@ -1,5 +1,6 @@
 import tcod
 
+from gui.menus import inventory_menu
 from gui.messages import Message, MessageCategory
 
 
@@ -9,8 +10,9 @@ class Architecture:
         self.on_collision = on_collision
 
     @staticmethod
-    def blocks_info(entity):
-        return [{'message': Message(f'A {entity.name} blocks your way.', category=MessageCategory.OBSERVATION)}]
+    def blocks_info(*args):
+        arch_entity = args[1]
+        return [{'message': Message(f'A {arch_entity.name} blocks your way.', category=MessageCategory.OBSERVATION)}]
 
     @staticmethod
     def use_stairs(down):
@@ -22,7 +24,8 @@ class Architecture:
             pass
 
     @staticmethod
-    def toggle_door(door_ent):
+    def toggle_door(*args):
+        door_ent = args[1]
         door_ent_closed = door_ent.blocks
         results = [{'door_toggled': door_ent, 'fov_recompute': True}]
         # TODO doors can be locked too
@@ -44,18 +47,27 @@ class Architecture:
         return results
 
     @staticmethod
-    def open_container(container_ent):
+    def open_container(interacting_ent, container_ent):
         results = []
-        # check for trap
+        # TODO locks & traps
         # display chest_contents
-        # selected_item = container_menu()
-        # if selected_item:
-            # results.append()
+        if container_ent.inventory.is_empty:
+            results.append({'message':Message(f'The {container_ent.name} is empty.', category=MessageCategory.OBSERVATION)})
+        else:
+            selection = inventory_menu(container_ent, title=f'{container_ent.name}')
+            if selection:
+                if not interacting_ent.inventory.is_full:
+                    results.append({'message':Message(f'You take the {selection.name} from the {container_ent.name}.', category=MessageCategory.OBSERVATION)})
+                    container_ent.inventory.remove_from_inv(selection)
+                    interacting_ent.inventory.add(selection)
+                else:
+                    results.append({'message':Message(f'Your inventory is full.', category=MessageCategory.OBSERVATION)})
 
         return results
 
     @staticmethod
-    def smash_object(entity):
+    def smash_object(*args):
+        entity = args[1]
         entity.char = '%'
         entity.color *= 0.3
         entity.blocks = False

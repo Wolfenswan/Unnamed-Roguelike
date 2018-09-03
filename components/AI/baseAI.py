@@ -25,11 +25,10 @@ class BaseAI:
         # free_line = game.map.free_line_between_pos(target.x, target.y, npc.x, npc.y, game)
         # print(free_line)
 
-        # First check if anything has been planned for this turn #
-        turn_plan = npc.turnplan.planned_turns.get(game.turn)
-        if turn_plan:
-            turn_plan_resuls = npc.turnplan.execute_plan(game.turn)
-            results.extend(turn_plan_resuls)
+        # Process action queue and planned action if applicable #
+        planned_action_results = npc.actionplan.process_queue()
+        if planned_action_results:
+            results.extend(planned_action_results)
 
         # Otherwise check if the npc can see the player #
         elif tcod.map_is_in_fov(fov_map, npc.x, npc.y):

@@ -65,11 +65,11 @@ def process_player_input(action, game, fov_map, targeting_item = None):
                     elif target.architecture:
 
                         if interact and target.architecture.on_interaction: # interacting with the object
-                            interaction_results = target.architecture.on_interaction(target)
+                            interaction_results = target.architecture.on_interaction(player, target)
                             turn_results.extend(interaction_results)
 
                         if move and target.architecture.on_collision: # bumping into the object
-                            collision_results = target.architecture.on_collision(target)
+                            collision_results = target.architecture.on_collision(player, target)
                             turn_results.extend(collision_results)
                     elif move:
                         print('Your way is blocked.') # TODO placeholder

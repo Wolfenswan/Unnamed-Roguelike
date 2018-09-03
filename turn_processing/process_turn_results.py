@@ -56,10 +56,9 @@ def process_turn_results(player_turn_results, game, fov_map):
         if waiting:
             if player.in_combat(game):
                 player.fighter.toggle_blocking()
-                #player.turnplan.plan_turn(game.turn+1, {'planned_function': player.fighter.toggle_blocking})
                 game.state = GameStates.ENEMY_TURN
             else:
-                # TODO placeholder for regeneration
+                # TODO placeholder for regeneration/resting
                 player.fighter.hp += player.fighter.max_hp/10
                 player.fighter.stamina += player.fighter.max_stamina/10
                 game.state = GameStates.PLAYER_RESTING

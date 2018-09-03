@@ -8,10 +8,18 @@ class Inventory:
         self.capacity = capacity
         self.items = []
 
+    @property
+    def is_empty(self):
+        return len(self.items) == 0
+
+    @property
+    def is_full(self):
+        return len(self.items) >= self.capacity
+
     def add(self, item):
         results = []
 
-        if len(self.items) >= self.capacity:
+        if self.is_full:
             results.append({
                 'item_added': None,
                 'message': Message('You cannot carry any more, your inventory is full.', category=MessageCategory.OBSERVATION)
@@ -21,7 +29,6 @@ class Inventory:
                 'item_added': item,
                 'message': Message(f'You pick up the {item.name}.', category=MessageCategory.OBSERVATION)
             })
-
             self.items.append(item)
 
         return results
@@ -82,6 +89,3 @@ class Inventory:
         """ removes an item from the player main inventory """
         if item in self.items:
             self.items.remove(item)
-
-    def is_full(self):
-        return True if len(self.items) == self.capacity else False

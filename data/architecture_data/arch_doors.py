@@ -7,7 +7,7 @@ arch_doors_data = {
         'descr': "A wooden door.",
         'chance': 100,
         "char": '-',
-        "color": colors.beige,
+        "color": colors.wood,
         'on_collision': Architecture.toggle_door,
         'on_interaction': Architecture.toggle_door
     }
