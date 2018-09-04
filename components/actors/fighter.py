@@ -157,7 +157,7 @@ class Fighter:
             else:
                 msg_type = MessageType.ALERT if target.is_player else MessageType.COMBAT
 
-                if target == self:
+                if target == self.owner:
                     target_string = 'itself'
                 elif target.is_player:
                     target_string = 'you'

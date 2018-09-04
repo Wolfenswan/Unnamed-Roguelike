@@ -1,3 +1,4 @@
+import logging
 from random import randint, choice
 
 from config_files import cfg
@@ -6,20 +7,30 @@ from data.data_processing import ARCHITECTURE_DATA_MERGED, pick_from_data_dict_b
     CONTAINER_DATA_MERGED
 
 
-def place_architecture(game):
+def place_staticobjects(game):
     dlvl = game.dlvl
     game_map = game.map
     entities = game.entities
+    rooms = game_map.rooms.copy()
 
     # first, remove all items that can't be spawned on the current level
     possible_objects = {k: v for k, v in ARCHITECTURE_DATA_MERGED.items() if dlvl in v.get('dlvls', [0, 0])}
 
-    # pick a random room
-    for room in game_map.rooms:
+    # placed = 0
+    # max_placed = len(rooms) * cfg.SOBJECTS_DUNGEON_FACTOR
+    #
+    # logging.debug(f'Max allowed: {max_items} for {len(rooms)} rooms)')
+    # while placed <= max_placed and len(rooms) > 0:
+    #     room = choice(rooms)
+    #     rooms.remove(room)
+
+    for room in rooms:
 
         # place up to the allowed maximum of items
-        num_of_staticobjects = (randint(0, cfg.MAX_ROOM_STATICOBJECTS))
-        for i in range(num_of_staticobjects):
+        max_in_room = (room.w * room.h) // cfg.SOBJECTS_ROOM_DIVISOR
+        num_to_place = (randint(0, max_in_room))
+
+        for i in range(num_to_place):
             so_key = pick_from_data_dict_by_chance(possible_objects)
             data = possible_objects[so_key]
 
@@ -28,6 +39,8 @@ def place_architecture(game):
                 free_tiles = room.free_tiles(game.map, allow_exits=False)
                 if len(free_tiles) > 0:
                     x, y = choice(free_tiles)
+                else:
+                    break
             else:
                 x, y = room.ranpos(game_map)
 
@@ -56,7 +69,6 @@ def place_doors(game):
 
 
 def place_containers(game):
-    # TODO conside mergining with place_architecture
     dlvl = game.dlvl
     game_map = game.map
     entities = game.entities

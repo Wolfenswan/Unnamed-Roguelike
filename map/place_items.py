@@ -1,19 +1,8 @@
-from random import randint
+import logging
+from random import randint, choice
 
-
-# Store all data dictionaries in a constant for convenience
 from config_files import cfg
 from data.data_processing import gen_item_from_data, pick_from_data_dict_by_chance, ITEM_DATA_MERGED
-from data.item_data.use_potions import use_potions_data
-from data.item_data.use_scrolls import use_scrolls_data
-from data.item_data.wp_swords import wp_swords_data
-
-
-# GAME_DATA = [use_scrolls_data, use_potions_data, wp_swords_data]
-# # Create a super dictionary
-# DATA_DICT = {}
-# for data in GAME_DATA:
-#     DATA_DICT = dict(DATA_DICT, **data)
 
 
 def place_items(game):
@@ -21,23 +10,51 @@ def place_items(game):
 
     dlvl = game.dlvl
     game_map = game.map
+    rooms = game_map.rooms.copy()
 
     # first, remove all items that can't be spawned on the current level
     possible_items = {k: v for k, v in ITEM_DATA_MERGED.items() if dlvl in v.get('dlvls',[0,99])}
 
-    # pick a random room
-    for room in game_map.rooms:
+    items_placed = 0
+    #max_items = (game_map.width * game_map.height) // cfg.ITEMS_DUNGEON_DIVISOR
+    max_items = len(rooms) * cfg.ITEMS_DUNGEON_FACTOR
 
-        # place up to the allowed maximum of items
-        num_of_items = (randint(0, cfg.MAX_ROOM_ITEMS))
-        for i in range(num_of_items):
-            i_key = pick_from_data_dict_by_chance(possible_items)
-            i_dict = possible_items[i_key]
+    logging.debug(f'Max allowed: {max_items} for {len(rooms)} rooms)')
+    while items_placed <= max_items and len(rooms) > 0:
+        room = choice(rooms)
+        rooms.remove(room)
+        
+        max_room_items = (room.w * room.h) // cfg.ITEMS_ROOM_DIVISOR
+        num_of_items = randint(0, max_room_items)
+        if num_of_items > 0:
+            logging.debug(f'Placing items in {room} of size {(room.w * room.h)} and limit of {num_of_items} (max possible: {max_room_items})')
 
-            # Get a random position for the item
-            # TODO make sure items are not placed on blocking architecture
-            x, y = room.ranpos(game_map)
+            items = 0
+            while items <= num_of_items and items_placed <= max_items:
+                logging.debug('Creating item #{0} of #{1} total.'.format(items + 1, num_of_items))
 
-            # Generate the item at the given position
-            item = gen_item_from_data(i_dict, x, y)
-            game.entities.append(item)
+                for i in range(num_of_items):
+                    i_key = pick_from_data_dict_by_chance(possible_items)
+                    i_dict = possible_items[i_key]
+
+                    # check if room would be overfilled
+                    if items + 1 > num_of_items:
+                        logging.debug(
+                            f'... but new item would bring room total to {items+1} thus exceed room maximum({num_of_items})')
+                        items += 1
+                    elif items_placed + 1 > max_items:
+                        logging.debug(
+                            f'... but new item would bring overall total to {items_placed+1} thus exceed total maximum: ({max_items})')
+                        items_placed += 1
+                    else:
+                        # Get a random position for the item
+                        # TODO make sure items are not placed on blocking architecture
+                        x, y = room.ranpos(game_map)
+                        # Generate the item at the given position
+                        item = gen_item_from_data(i_dict, x, y)
+                        game.entities.append(item)
+                        items += 1
+                        items_placed += 1
+                        logging.debug(f'... and created {item} at {x},{y} in {room}, #{items} out of {num_of_items}')
+
+    logging.debug(f'Placed {items_placed} items with {len(rooms)} rooms untouched.')

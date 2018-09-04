@@ -154,7 +154,8 @@ def gen_loadout(actor, loadout, game):
 
 
 def pick_from_data_dict_by_chance(dict):
-    """ picks a random item from the given dictionary, using the items 'chance' value """
+    """ picks a random key from the given dictionary, using the 'chance' value """
+    # TODO add weight by dungeon level & rarity
     keys = list(dict.keys())
     candidate = choice(keys)
 

@@ -13,7 +13,7 @@ SCREEN_WIDTH = MAP_SCREEN_WIDTH + 30
 SCREEN_HEIGHT = MAP_SCREEN_HEIGHT + 15
 LIMIT_FPS = 30
 
-# Dungeon settings
+# DUNGEON SETTINGS #
 DUNGEON_MIN_WIDTH = MAP_SCREEN_WIDTH
 DUNGEON_MAX_WIDTH = DUNGEON_MIN_WIDTH * 2
 DUNGEON_MIN_HEIGHT = MAP_SCREEN_HEIGHT
@@ -22,10 +22,23 @@ DUNGEON_MAX_HEIGHT = DUNGEON_MIN_HEIGHT * 2
 # TODO Set this up so they are relative in size to dungeon/room #
 ROOM_MAX_SIZE = 15
 ROOM_MIN_SIZE = 4
-# MAX_MONSTERS = MAX_ROOMS/2 # TODO implement
-MAX_ROOM_MONSTERS = 9  # TODO Adjust dynamically to room size
-MAX_ROOM_ITEMS = 6  # TODO Adjust dynamically to room size
-MAX_ROOM_STATICOBJECTS = 4  # TODO implement
+
+# NPC SETTINGS #
+MONSTERS_DUNGEON_FACTOR = 3 # total rooms times this
+MONSTERS_ROOM_DIVISOR = 15 # room width * room height through this
+
+# ITEM SETTINGS #
+ITEMS_DUNGEON_FACTOR = 1 # total rooms times this
+ITEMS_ROOM_DIVISOR = 30 # room width * room height through this
+
+# CONTAINER SETTINGS #
+# TODO put in relation to max items?
+CONTAINER_DUNGEON_DIVISOR = 25 # dungeon width * dungeon height through this
+CONTAINER_ROOM_DIVISOR = 25 # room width * room height through this
+
+# STATIC OBJECT SETTINGS #
+#SOBJECTS_DUNGEON_FACTOR = 5 # total rooms times this (UNUSED)
+SOBJECTS_ROOM_DIVISOR = 50  # room width * room height through this
 
 # GUI PANELS
 # PANELS_BORDER_COLOR = colors.dark_grey

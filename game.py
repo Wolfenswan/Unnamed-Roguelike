@@ -22,8 +22,7 @@ class Game:
         self.debug = debug
         self.map = None
         self.dlvl = 1
-        self.player = None
-        self.entities = None
+        self.entities = []
 
         # Turn Processing #
         self.turn = 1
@@ -37,3 +36,18 @@ class Game:
         self.bottom_panel = None
         self.event_log = MessageLog(cfg.MSG_X, cfg.MSG_WIDTH, cfg.MSG_HEIGHT)
         self.observation_log = MessageLog(cfg.MSG_X, cfg.MSG_WIDTH, cfg.MSG_HEIGHT)
+
+    @property
+    def player(self):
+        player = next(v for v in self.entities if v.is_player)
+        return player
+
+    @property
+    def monster_ents(self):
+        monster_ents = [v for v in self.entities if v.ai is not None and v.fighter is not None]
+        return monster_ents
+
+    @property
+    def item_ents(self):
+        item_ents = [v for v in self.entities if v.item is not None]
+        return item_ents

@@ -1,3 +1,4 @@
+import logging
 from random import randint, random, choice
 
 from cffi.backend_ctypes import xrange
@@ -49,6 +50,7 @@ class Tunneling:
                     n_r = rooms[idx]
                 else:
                     n_r = choice(rooms)
+
                 n_x, n_y = n_r.center()
 
                 if randint(0, 1):

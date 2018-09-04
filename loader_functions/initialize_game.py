@@ -8,7 +8,7 @@ from gameobjects.entity import Entity
 from gameobjects.player import Player
 from map.game_map import GameMap
 from map.place_actors import place_monsters
-from map.place_architecture import place_architecture, place_doors, place_containers
+from map.place_architecture import place_staticobjects, place_doors, place_containers
 from map.place_items import place_items
 from rendering.render_order import RenderOrder
 
@@ -17,7 +17,7 @@ def initialize_game(game):
 
     # Setup the Player character #
     game.cursor = Entity(0, 0, 'X', colors.white, 'Cursor', render_order=RenderOrder.CURSOR)
-    game.player = Player('Player')
+    player = Player('Player')
     player_loadouts = {
         'loadout1': {
             'chance': 100,
@@ -26,9 +26,9 @@ def initialize_game(game):
         }
     }
     loadout = pick_from_data_dict_by_chance(player_loadouts)
-    gen_loadout(game.player, player_loadouts[loadout], game)
+    gen_loadout(player, player_loadouts[loadout], game)
 
-    game.entities = [game.player]
+    game.entities.append(player)
 
     # Setup the game map #
     dwidth = randint(cfg.DUNGEON_MIN_WIDTH, cfg.DUNGEON_MAX_WIDTH)
@@ -37,12 +37,12 @@ def initialize_game(game):
     game.map.make_map(game, cfg.ROOM_MIN_SIZE, cfg.ROOM_MAX_SIZE, dwidth, dheight)
 
     # Add the good stuff #
-    place_architecture(game)
-    place_containers(game)
-    place_doors(game)
-    #place_items(game)
-    place_monsters(game)
+    # place_staticobjects(game)
+    # place_items(game)
+    # place_monsters(game)
+    # place_containers(game)
+    # place_doors(game)
 
-    game.player.x, game.player.y = game.map.rooms[0].center()
+    player.x, player.y = game.map.rooms[0].center()
 
     return game

@@ -14,7 +14,7 @@ use_scrolls_data = {
         'on_use_msg': 'Move the cursor over the intended target, press Enter to confirm.',
         'targeting': True,
         "on_use_params": {'dmg': 12, 'radius': 3, 'range': 5},
-        'chance': 30,
+        'chance': 60,
         'dlvls': (1, 99)
     }
 }

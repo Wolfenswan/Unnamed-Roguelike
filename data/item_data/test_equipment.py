@@ -29,7 +29,7 @@ test_equipment_data = {
     'sword_rusty': {
         'name': 'Rusty Sword',
         'descr': 'You are not sure if this sword has seen better days, or if time simply has caught up to shoddy craftsmanship.',
-        'chance': 50,
+        'chance': 10,
         'dlvls': range(1,99),
         "char": WP_CHAR,
         "color": WP_COLOR,
@@ -40,7 +40,7 @@ test_equipment_data = {
     'leather_brittle': {
         'name': 'Brittle Leather Armor',
         'descr': 'A squeaking old piece of leather armor.',
-        'chance': 50,
+        'chance': 10,
         'dlvls': range(1, 99),
         "char": ARM_CHAR,
         "color": ARM_COLOR,
@@ -52,7 +52,7 @@ test_equipment_data = {
     'helmet_rusty': {
         'name': 'Rusty Helmet',
         'descr': 'Hardly better than a bucket.',
-        'chance': 50,
+        'chance': 10,
         'dlvls': range(1,99),
         "char": H_CHAR,
         "color": H_COLOR,
@@ -63,7 +63,7 @@ test_equipment_data = {
     'belt_generic': {
         'name': 'Belt',
         'descr': 'A basic utility belt.',
-        'chance': 50,
+        'chance': 10,
         'dlvls': range(1,99),
         "char": M_CHAR,
         "color": M_COLOR,
@@ -74,7 +74,7 @@ test_equipment_data = {
     'torch': {
         'name': 'Torch',
         'descr': 'A wooden torch to light your way.',
-        'chance': 80,
+        'chance': 60,
         'dlvls': range(1,99),
         "char": OH_CHAR,
         "color": colors.light_orange,
@@ -85,7 +85,7 @@ test_equipment_data = {
     'shield_wood': {
         'name': 'Wooden Shield',
         'descr': 'A wooden plank, full of worm holes.',
-        'chance': 80,
+        'chance': 10,
         'dlvls': range(1,99),
         "char": ')',
         "color": OH_COLOR,
