@@ -75,7 +75,7 @@ def inventory_menu(entity, title='Inventory'):
 
     body = 'Press the key next to an item to select it.'
 
-    width = len(max(options, key=len)) if options else 0
+    width = len(max(options, key=len)) + 4 if options else 0
 
     draw_window(title, body, options=options, window_x=x, window_y=y, forced_width=width)
 
@@ -95,7 +95,7 @@ def equipment_menu(entity):
     body = 'Press the key next to an item to select it.'
     options = [item.name for item in inventory]
 
-    width = len(max(options, key=len))
+    width = len(max(options, key=len)) + 4
 
     draw_window('Equipment', body, options=options, window_x=x, window_y=y, forced_width=width)
 

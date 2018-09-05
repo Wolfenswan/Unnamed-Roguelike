@@ -8,10 +8,13 @@ class Rarity(Enum):
     LEGENDARY = 10
     UNIQUE = -1
 
-class RarityItemClass(Enum):
+class RarityItemType(Enum):
     USEABLE = 100
     WEAPON = 60
     ARMOR = 40
-    HELMET = 40
-    OFFHAND = 40
-    BELT = 30
+    SHIELD = 40
+    ACS = 30
+
+class RarityContainerType(Enum):
+    BARREL = 100
+    CHEST_BASIC = 65

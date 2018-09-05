@@ -1,5 +1,5 @@
 from config_files import colors
-from data.rarity import Rarity
+from data.rarity import Rarity, RarityItemType
 
 WP_CHAR = '\\'
 WP_COLOR = colors.turquoise
@@ -31,6 +31,7 @@ test_equipment_data = {
         'name': 'Rusty Sword',
         'descr': 'You are not sure if this sword has seen better days, or if time simply has caught up to shoddy craftsmanship.',
         'rarity': Rarity.COMMON,
+        'rarity_type': RarityItemType.WEAPON,
         'dlvls': range(1,99),
         "char": WP_CHAR,
         "color": WP_COLOR,
@@ -41,7 +42,8 @@ test_equipment_data = {
     'leather_brittle': {
         'name': 'Brittle Leather Armor',
         'descr': 'A squeaking old piece of leather armor.',
-        'rarity': Rarity.COMMON,
+        'rarity': Rarity.UNCOMMON,
+        'rarity_type': RarityItemType.ARMOR,
         'dlvls': range(1, 99),
         "char": ARM_CHAR,
         "color": ARM_COLOR,
@@ -54,6 +56,7 @@ test_equipment_data = {
         'name': 'Rusty Helmet',
         'descr': 'Hardly better than a bucket.',
         'rarity': Rarity.COMMON,
+        'rarity_type': RarityItemType.ARMOR,
         'dlvls': range(1,99),
         "char": H_CHAR,
         "color": H_COLOR,
@@ -65,6 +68,7 @@ test_equipment_data = {
         'name': 'Belt',
         'descr': 'A basic utility belt.',
         'rarity': Rarity.COMMON,
+        'rarity_type': RarityItemType.ACS,
         'dlvls': range(1,99),
         "char": M_CHAR,
         "color": M_COLOR,
@@ -76,6 +80,7 @@ test_equipment_data = {
         'name': 'Torch',
         'descr': 'A wooden torch to light your way.',
         'rarity': Rarity.COMMON,
+        'rarity_type': RarityItemType.SHIELD,
         'dlvls': range(1,99),
         "char": OH_CHAR,
         "color": colors.light_orange,
@@ -87,6 +92,7 @@ test_equipment_data = {
         'name': 'Wooden Shield',
         'descr': 'A wooden plank, full of worm holes.',
         'rarity': Rarity.COMMON,
+        'rarity_type': RarityItemType.SHIELD,
         'dlvls': range(1,99),
         "char": ')',
         "color": OH_COLOR,

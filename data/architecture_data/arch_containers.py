@@ -1,12 +1,13 @@
 from components.architecture import Architecture
 from config_files import colors
-from data.rarity import Rarity
+from data.rarity import Rarity, RarityContainerType
 
 arch_containers_data = {
     'barrel_wood': {
         'name': 'Wooden Barrel',
         'descr': "A barrel of unknown contents.",
         'rarity': Rarity.COMMON,
+        'rarity_type': RarityContainerType.BARREL,
         'dlvls': (1, 99),
         "char": 'o',
         "color": colors.wood,
@@ -19,6 +20,7 @@ arch_containers_data = {
         'name': 'Wooden Chest',
         'descr': "A simple, yet sturdy chest.",
         'rarity': Rarity.COMMON,
+        'rarity_type': RarityContainerType.CHEST_BASIC,
         'dlvls': (1, 99),
         "char": '+',
         "color": colors.wood,

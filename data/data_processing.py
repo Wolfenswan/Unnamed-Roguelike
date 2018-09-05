@@ -21,7 +21,7 @@ from data.item_data.wp_swords import wp_swords_data
 from gameobjects.entity import Entity
 from gameobjects.npc import NPC
 from rendering.render_order import RenderOrder
-from data.rarity import Rarity
+from data.rarity import Rarity, RarityItemType
 
 
 def merge_dictionaries(dicts):
@@ -156,14 +156,23 @@ def gen_loadout(actor, loadout, game):
 
 def pick_from_data_dict_by_rarity(dict):
     """ picks a random key from the given dictionary, using the 'chance' value """
-    # TODO Implement rarity filters using broad item category as defined in RarityItemClass in rarity.py
 
     keys = list(dict.keys())
-    rarity = -1
+    type_rarity = -1
 
-    # keep picking items at random until the rarity chance passes
-    while rarity < randint(0, 100):
+    # keep picking items at random until the rarity chances pass
+    while True:
         candidate = choice(keys)
         rarity = dict[candidate]['rarity'].value + dict[candidate].get('rarity_mod', 0)
+        logging.debug(f'Rarity for {candidate} is {rarity}.')
+
+        if dict[candidate].get('rarity_type'):
+            type_rarity = dict[candidate]['rarity_type'].value
+            logging.debug(f'Type rarity for {candidate} is {type_rarity}.')
+
+        # Check against type rarity first, then individual rarity of the item
+        if type_rarity == -1 or type_rarity > randint(0, 100):
+            if rarity > randint(0, 100):
+                break
 
     return candidate
