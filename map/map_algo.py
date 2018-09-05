@@ -40,26 +40,25 @@ class Tunneling:
                 rooms.append(new_room)
 
     @staticmethod
-    def create_tunnels(game_map, blocked_only = False, randomize=False):
-        rooms = game_map.rooms
+    def create_tunnels(game_map, room_list = None, randomize=False):
+        all_rooms = game_map.rooms
+        rooms = all_rooms if room_list is None else room_list
         for i, r in enumerate(rooms):
-            if not blocked_only or (blocked_only and len(r.exits(game_map)) == 0):
-                x, y = r.center()
+                x, y = r.center
                 if not randomize:
                     idx = i - 1 if i - 1 >= 0 else i + 1
-                    n_r = rooms[idx]
+                    dest_r = rooms[idx]
                 else:
-                    n_r = choice(rooms)
+                    dest_r = choice(all_rooms)
 
-                n_x, n_y = n_r.center()
+                dest_x, dest_y = dest_r.center
 
                 if randint(0, 1):
-                    Tunneling.create_h_tunnel(game_map, x, n_x, y)
-                    Tunneling.create_v_tunnel(game_map, y, n_y, n_x)
+                    Tunneling.create_h_tunnel(game_map, x, dest_x, y)
+                    Tunneling.create_v_tunnel(game_map, y, dest_y, dest_x)
                 else:
-                    Tunneling.create_v_tunnel(game_map, y, n_y, x)
-                    Tunneling.create_h_tunnel(game_map, x, n_x, n_y)
-
+                    Tunneling.create_v_tunnel(game_map, y, dest_y, x)
+                    Tunneling.create_h_tunnel(game_map, x, dest_x, dest_y)
 
     @staticmethod
     def create_room(game_map, room):

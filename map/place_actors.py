@@ -19,25 +19,25 @@ def place_monsters(game):
     possible_spawns = {k: v for k, v in spawn_data.items() if dlvl in v['dlvls']}
     logging.debug('Creating monster for dungeon-level {0} from this list: {1}.'.format(dlvl, possible_spawns))
 
-    monsters_placed = 0
-    max_monsters = len(rooms) * cfg.MONSTERS_DUNGEON_FACTOR
+    #monsters_placed = 0
+    max_monsters = int(len(rooms) * cfg.MONSTERS_DUNGEON_FACTOR)
     #max_monsters = (game_map.width * game_map.height) // cfg.MONSTERS_DUNGEON_DIVISOR
 
     logging.debug(f'Max allowed: {max_monsters} for {len(rooms)} rooms)')
 
-    while monsters_placed  <= max_monsters and len(rooms) > 1:
+    while len(game.monster_ents) < max_monsters and len(rooms) > 1:
         # monsters are created in all rooms but the first (where the player spawns)
         room = choice(rooms[1:])
         rooms.remove(room)
 
-        max_room_monsters = (room.w * room.h) // cfg.MONSTERS_ROOM_DIVISOR
+        max_room_monsters = (room.w * room.h) // cfg.MONSTERS_ROOM_LIMIT
         num_of_monsters = randint(0, max_room_monsters)
         logging.debug(f'Placing monsters in {room} of size {(room.w * room.h)} and limit of {num_of_monsters} (max possible: {max_room_monsters})')
 
         if num_of_monsters > 0:
             # place up to as many monsters as the settings allow
             m = 0
-            while m <= num_of_monsters and monsters_placed <= max_monsters:
+            while m <= num_of_monsters and len(game.monster_ents) < max_monsters:
                 logging.debug('Creating monster #{0} of #{1} total.'.format(m + 1, num_of_monsters))
 
                 entry = pick_from_data_dict_by_chance(possible_spawns)
@@ -51,23 +51,22 @@ def place_monsters(game):
                         logging.debug(
                             f'... but new monster would bring room total to {m+1} thus exceed room maximum({num_of_monsters})')
                         m += 1
-                    elif  monsters_placed + 1 > max_monsters:
+                    elif  len(game.monster_ents) + 1 > max_monsters:
                         logging.debug(
-                            f'... but new monster would bring overall total to {monsters_placed+1} thus exceed total maximum: ({max_monsters})')
-                        monsters_placed += 1
+                            f'... but new monster would bring overall total to {len(game.monster_ents)+1} thus exceed total maximum: ({max_monsters})')
+                        break
                     else:
                         m += 1
-                        free_tiles = room.free_tiles(game.map)
+                        free_tiles = room.free_tiles(game_map)
                         if len(free_tiles) > 0:
                             # Get a random position for the monster
                             x, y = choice(free_tiles)
                             ent = gen_ent_from_dict(spawn_data, entry, x, y, game)
                             game.entities.append(ent)
-                            monsters_placed += 1
                             logging.debug(f'... and created {ent} at {x},{y} in {room}, #{m} out of {num_of_monsters}')
                         else:
                             logging.debug(
                                f'... but no more free spots left to create monster in {room}, #{m} out of {num_of_monsters}')
 
 
-    logging.debug(f'Placed {monsters_placed} monsters with {len(rooms)} rooms untouched.')
+    logging.debug(f'Placed {len(game.monster_ents)} (maximum: {max_monsters}) monsters with {len(rooms)} rooms untouched.')

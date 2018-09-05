@@ -10,16 +10,17 @@ class Rect:
         self.w = w
         self.h = h
 
+    @property
+    def center(self):
+        center_x = int((self.x1 + self.x2) / 2)
+        center_y = int((self.y1 + self.y2) / 2)
+        return center_x, center_y
+
     def create_room(self, game_map):
         # go through the tiles in the rectangle and make them passable
         for x in range(self.x1 + 1, self.x2):
             for y in range(self.y1 + 1, self.y2):
                 game_map.tiles[x][y].set_attributes(floor=True)
-
-    def center(self):
-        center_x = int((self.x1 + self.x2) / 2)
-        center_y = int((self.y1 + self.y2) / 2)
-        return center_x, center_y
 
     def intersect(self, other):
         # returns true if this rectangle intersects with another one

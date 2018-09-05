@@ -15,46 +15,36 @@ def place_items(game):
     # first, remove all items that can't be spawned on the current level
     possible_items = {k: v for k, v in ITEM_DATA_MERGED.items() if dlvl in v.get('dlvls',[0,99])}
 
-    items_placed = 0
-    #max_items = (game_map.width * game_map.height) // cfg.ITEMS_DUNGEON_DIVISOR
-    max_items = len(rooms) * cfg.ITEMS_DUNGEON_FACTOR
+   #max_items = (game_map.width * game_map.height) // cfg.ITEMS_DUNGEON_DIVISOR
+    max_items = int(len(rooms) * cfg.ITEMS_DUNGEON_FACTOR)
 
     logging.debug(f'Max allowed: {max_items} for {len(rooms)} rooms)')
-    while items_placed <= max_items and len(rooms) > 0:
+    while len(game.item_ents) < max_items and len(rooms) > 0:
         room = choice(rooms)
         rooms.remove(room)
         
-        max_room_items = (room.w * room.h) // cfg.ITEMS_ROOM_DIVISOR
+        max_room_items = (room.w * room.h) // cfg.ITEMS_ROOM_LIMIT
         num_of_items = randint(0, max_room_items)
         if num_of_items > 0:
             logging.debug(f'Placing items in {room} of size {(room.w * room.h)} and limit of {num_of_items} (max possible: {max_room_items})')
 
-            items = 0
-            while items <= num_of_items and items_placed <= max_items:
-                logging.debug('Creating item #{0} of #{1} total.'.format(items + 1, num_of_items))
+            for i in range(num_of_items):
+                logging.debug('Creating item #{0} of #{1} total.'.format(i + 1, num_of_items))
 
-                for i in range(num_of_items):
-                    i_key = pick_from_data_dict_by_chance(possible_items)
-                    i_dict = possible_items[i_key]
+                i_key = pick_from_data_dict_by_chance(possible_items)
+                i_dict = possible_items[i_key]
 
-                    # check if room would be overfilled
-                    if items + 1 > num_of_items:
-                        logging.debug(
-                            f'... but new item would bring room total to {items+1} thus exceed room maximum({num_of_items})')
-                        items += 1
-                    elif items_placed + 1 > max_items:
-                        logging.debug(
-                            f'... but new item would bring overall total to {items_placed+1} thus exceed total maximum: ({max_items})')
-                        items_placed += 1
-                    else:
-                        # Get a random position for the item
-                        # TODO make sure items are not placed on blocking architecture
-                        x, y = room.ranpos(game_map)
-                        # Generate the item at the given position
-                        item = gen_item_from_data(i_dict, x, y)
-                        game.entities.append(item)
-                        items += 1
-                        items_placed += 1
-                        logging.debug(f'... and created {item} at {x},{y} in {room}, #{items} out of {num_of_items}')
+                if len(game.item_ents) + 1 > max_items:
+                    logging.debug(
+                        f'... but new item would bring dungeon total to {len(game.item_ents)+1} thus exceed total maximum: ({max_items})')
+                    break
+                else:
+                    # Get a random position for the item
+                    # TODO make sure items are not placed on blocking architecture
+                    x, y = room.ranpos(game_map)
+                    # Generate the item at the given position
+                    item = gen_item_from_data(i_dict, x, y)
+                    game.entities.append(item)
+                    logging.debug(f'... and created {item} at {x},{y} in {room}.')
 
-    logging.debug(f'Placed {items_placed} items with {len(rooms)} rooms untouched.')
+    logging.debug(f'Placed {len(game.item_ents)} items with {len(rooms)} rooms untouched.')

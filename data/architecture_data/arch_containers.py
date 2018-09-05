@@ -17,7 +17,7 @@ arch_containers_data = {
     'chest_wood': {
         'name': 'Wooden Chest',
         'descr': "A simple, yet sturdy chest.",
-        'chance': 100,
+        'chance': 10,
         'dlvls': (1, 99),
         "char": '+',
         "color": colors.wood,

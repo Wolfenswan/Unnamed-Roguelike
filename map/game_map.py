@@ -24,12 +24,13 @@ class GameMap:
         # TODO placeholder for later implementation
         # algo = choice([Tunneling, DrunkWalk])
         # algo.make_map(game, max_rooms, room_min_size, room_max_size, map_width, map_height)
-        DrunkWalk().make_map(game, max_rooms, room_min_size, room_max_size, map_width, map_height)
+        #DrunkWalk().make_map(game, max_rooms, room_min_size, room_max_size, map_width, map_height)
+        Tunneling().make_map(game, max_rooms, room_min_size, room_max_size, map_width, map_height)
 
         blocked_rooms = [r for r in self.rooms if len(r.exits(self)) == 0]
         if len(blocked_rooms) > 0:
             logging.debug(f'Blocked room fail safe activated for {len(blocked_rooms)} rooms: {blocked_rooms}')
-            Tunneling.create_tunnels(self, blocked_only=True, randomize=False) # safety measure
+            Tunneling.create_tunnels(self, room_list = blocked_rooms, randomize=True) # safety measure
 
     def is_wall(self, x, y):
         """

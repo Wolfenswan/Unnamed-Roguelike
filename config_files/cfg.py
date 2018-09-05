@@ -24,21 +24,21 @@ ROOM_MAX_SIZE = 15
 ROOM_MIN_SIZE = 4
 
 # NPC SETTINGS #
-MONSTERS_DUNGEON_FACTOR = 3 # total rooms times this
-MONSTERS_ROOM_DIVISOR = 15 # room width * room height through this
+MONSTERS_DUNGEON_FACTOR = 5 # total rooms times this
+MONSTERS_ROOM_LIMIT = 15 # room width * room height // this
 
 # ITEM SETTINGS #
-ITEMS_DUNGEON_FACTOR = 1 # total rooms times this
-ITEMS_ROOM_DIVISOR = 30 # room width * room height through this
+ITEMS_DUNGEON_FACTOR = 1.5 # total rooms * this
+ITEMS_ROOM_LIMIT = 30 # room width * room height // this
 
 # CONTAINER SETTINGS #
 # TODO put in relation to max items?
-CONTAINER_DUNGEON_DIVISOR = 25 # dungeon width * dungeon height through this
-CONTAINER_ROOM_DIVISOR = 25 # room width * room height through this
+CONTAINER_DUNGEON_FACTOR = 2 # total rooms * this
+CONTAINER_ROOM_DIVISOR = 50 # room width * room height // this
 
 # STATIC OBJECT SETTINGS #
 #SOBJECTS_DUNGEON_FACTOR = 5 # total rooms times this (UNUSED)
-SOBJECTS_ROOM_DIVISOR = 50  # room width * room height through this
+SOBJECTS_ROOM_DIVISOR = 50  # room width * room height // this
 
 # GUI PANELS
 # PANELS_BORDER_COLOR = colors.dark_grey

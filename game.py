@@ -51,3 +51,8 @@ class Game:
     def item_ents(self):
         item_ents = [v for v in self.entities if v.item is not None]
         return item_ents
+
+    @property
+    def container_ents(self):
+        container_ents = [v for v in self.entities if v.architecture is not None and v.inventory is not None]
+        return container_ents

@@ -37,12 +37,13 @@ def initialize_game(game):
     game.map.make_map(game, cfg.ROOM_MIN_SIZE, cfg.ROOM_MAX_SIZE, dwidth, dheight)
 
     # Add the good stuff #
-    # place_staticobjects(game)
-    # place_items(game)
-    # place_monsters(game)
-    # place_containers(game)
-    # place_doors(game)
+    place_staticobjects(game)
+    place_containers(game)
+    place_doors(game)
+    place_monsters(game)
+    place_items(game)
+    # fill_containers(game)
 
-    player.x, player.y = game.map.rooms[0].center()
+    player.x, player.y = game.map.rooms[0].center
 
     return game

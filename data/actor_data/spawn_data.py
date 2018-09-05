@@ -51,15 +51,15 @@ spawn_data = {
         'ai_attack': Swarm,
         'barks': ('insect'),
         'dlvls': (1,100),
-        'chance': 60,
-        'group_size': (2,4)
+        'chance': 80,
+        'group_size': (2,6)
     },
-    'Dung Beetle': {
+    'Dung_Beetle': {
         'name': 'Dung Beetle',
         'char': 'd',
         'color': colors.beige,
         'descr': "There is something uniquely unsettling about a giant beetle behaving like a agitated bull.",
-        'max_hp': (6,8),
+        'max_hp': (10,12),
         'max_stamina':(4,8),
         'nat_armor': (1,1),
         'nat_power': (6,8),
@@ -69,13 +69,31 @@ spawn_data = {
         'barks': ('insect'),
         'skills': ('skill_charge',  ),
         'dlvls': (1,100),
-        'chance': 60,
+        'chance': 30,
         'group_size': (1,2)
     },
 
+    # 'Bomb_Beetle': {
+    #     'name': 'Bombardier Beetle',
+    #     'char': 'b',
+    #     'color': colors.cyan,
+    #     'descr': ".",
+    #     'max_hp': (4,6),
+    #     'max_stamina':(4,8),
+    #     'nat_armor': (0,0),
+    #     'nat_power': (1,1),
+    #     'nat_vision': 6,
+    #     'ai': BasicAI,
+    #     'barks': ('insect'),
+    #     'ai_movement': Distance,
+    #     'ai_attack': Ranged,
+    #     'loadouts': None,
+    #     'dlvls': (1,100),
+    #     'chance': 50,
+    #     'group_size': (1,3)
+    # },
 
-
-    # 'Exploding Beetle': {
+    # 'Suicide_Beetle': {
     #     'name': 'Volatile Beetle',
     #     'char': 'v',
     #     'color': colors.flame,
@@ -90,7 +108,7 @@ spawn_data = {
     #     'skills': ('skill_prime_expl_beetle',  ),
     #     'loadouts': None,
     #     'dlvls': (1,100),
-    #     'chance': 60,
-    #     'group_size': (1,3)
+    #     'chance': 10,
+    #     'group_size': (1,1)
     # },
 }
