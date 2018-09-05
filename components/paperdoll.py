@@ -17,8 +17,8 @@ class Paperdoll:
 
     def equip(self, item_ent, game):
         results = []
+        e_type = item_ent.item.type.name.lower()
         e_to = item_ent.item.equipment.e_to
-        e_type = item_ent.item.equipment.e_type
         qu_slots = item_ent.item.equipment.qu_slots
 
         extremity = getattr(self, e_to)
@@ -45,7 +45,7 @@ class Paperdoll:
     def dequip(self, item_ent):
         results = []
         e_to = item_ent.item.equipment.e_to
-        e_type = item_ent.item.equipment.e_type
+        e_type = item_ent.item.type.name.lower()
         qu_slots = item_ent.item.equipment.qu_slots
 
         extremity = getattr(self, e_to)
@@ -74,8 +74,8 @@ class Paperdoll:
 
 
 class Head:
-    def __init__(self, helmet=None, amulet=None):
-        self.helmet = helmet
+    def __init__(self, armor=None, amulet=None):
+        self.armor = armor
         self.amulet = amulet
 
 
@@ -86,12 +86,13 @@ class Torso:
         self.shoulder = shoulder
         self.belt = belt
 
+
 class Arms:
     def __init__(self, armor=None, weapon=None, offhand=None, ring=None):
         self.weapon = weapon
         self.offhand = offhand
         self.armor = armor
-        self.rings = ring
+        self.ring = ring
 
 
 class Legs:

@@ -2,7 +2,8 @@ from gui.messages import Message
 
 
 class Item:
-    def __init__(self, useable=None, equipment=None):
+    def __init__(self, type=None, useable=None, equipment=None):
+        self.type = type
         self.useable = useable
         self.equipment = equipment
 
@@ -19,10 +20,10 @@ class Item:
         :rtype: list
         """
         list = ['']
+        if self.type:
+            list.append(f' Type: {self.type.name.capitalize()}')
 
         if self.equipment:
-            if self.equipment.e_type:
-                list.append(f' Type: {self.equipment.e_type.capitalize()}')
 
             if self.equipment.e_to:
                 list.append(f' Equips To: {self.equipment.e_to.capitalize()}')

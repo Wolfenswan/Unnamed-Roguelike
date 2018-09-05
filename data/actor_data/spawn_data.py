@@ -34,7 +34,7 @@
 from components.AI.behavior.simple import Simple
 from components.AI.behavior.swarm import Swarm
 from config_files import colors
-from data.rarity import Rarity
+from data.entitytypes import Rarity
 
 spawn_data = {
     'Roach': {

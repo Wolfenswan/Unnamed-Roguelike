@@ -1,6 +1,6 @@
 from config_files import colors
 from abilities.spells import heal_entity
-from data.rarity import Rarity
+from data.entitytypes import ItemType, Rarity
 from gui.messages import Message
 
 POTION_CHAR = '!'
@@ -9,6 +9,7 @@ use_potions_data = {
     'pot_heal': {
         'name': 'Potion of Healing',
         'descr': 'This potion will heal you for a moderate amount.',
+        'type': ItemType.USEABLE,
         "char": POTION_CHAR,
         "color": colors.violet,
         'on_use': heal_entity,

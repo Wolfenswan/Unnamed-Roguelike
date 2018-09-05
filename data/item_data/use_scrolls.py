@@ -1,6 +1,6 @@
 from config_files import colors
 from abilities.spells import cast_fireball_on
-from data.rarity import Rarity
+from data.entitytypes import ItemType, Rarity
 
 SCROLL_CHAR = '='
 SCROLL_COLOR = colors.light_yellow
@@ -9,6 +9,7 @@ use_scrolls_data = {
     'scr_fireball': {
         "name": 'Scroll of Fireball',
         'descr': 'A timeless classic.',
+        'type': ItemType.USEABLE,
         "char": SCROLL_CHAR,
         "color": SCROLL_COLOR,
         'on_use': cast_fireball_on,

@@ -21,7 +21,6 @@ from data.item_data.wp_swords import wp_swords_data
 from gameobjects.entity import Entity
 from gameobjects.npc import NPC
 from rendering.render_order import RenderOrder
-from data.rarity import Rarity, RarityItemType
 
 
 def merge_dictionaries(dicts):
@@ -96,6 +95,7 @@ def gen_ent_from_dict(dict, entry, x, y, game):
 def gen_item_from_data(data, x, y):
     arguments = (x, y, *get_generic_data(data))
 
+    type = data['type']
     on_use = data.get('on_use', None)
     equip_to = data.get('e_to', None)
 
@@ -109,14 +109,13 @@ def gen_item_from_data(data, x, y):
 
     equipment_component = None
     if equip_to is not None:
-        equip_type = data['e_type']
         dmg = data.get('dmg_range')
         av = data.get('av')
         qu_slots = data.get('qu_slots')
         l_radius = data.get('l_radius')
-        equipment_component = Equipment(equip_to, equip_type, dmg_range = dmg, av = av, qu_slots = qu_slots, l_radius = l_radius)
+        equipment_component = Equipment(equip_to,dmg_range = dmg, av = av, qu_slots = qu_slots, l_radius = l_radius)
 
-    item_component = Item(useable=useable_component, equipment=equipment_component)
+    item_component = Item(type = type, useable=useable_component, equipment=equipment_component)
 
     # create the item using item_class and the arguments tuple
     i = Entity(*arguments, render_order=RenderOrder.ITEM, item = item_component)
@@ -162,17 +161,18 @@ def pick_from_data_dict_by_rarity(dict):
 
     # keep picking items at random until the rarity chances pass
     while True:
+        random = randint(0, 100)
         candidate = choice(keys)
         rarity = dict[candidate]['rarity'].value + dict[candidate].get('rarity_mod', 0)
-        logging.debug(f'Rarity for {candidate} is {rarity}.')
+        logging.debug(f'Rarity for {candidate} is {rarity}, random value is {random}.')
 
-        if dict[candidate].get('rarity_type'):
-            type_rarity = dict[candidate]['rarity_type'].value
+        if dict[candidate].get('type'):
+            type_rarity = dict[candidate].get('type').value #dict[candidate]['rarity_type'].value
             logging.debug(f'Type rarity for {candidate} is {type_rarity}.')
 
         # Check against type rarity first, then individual rarity of the item
-        if type_rarity == -1 or type_rarity > randint(0, 100):
-            if rarity > randint(0, 100):
-                break
+        # TODO use random values for each check if useful
+        if (type_rarity == -1 or type_rarity > random) and rarity > random:
+            break
 
     return candidate

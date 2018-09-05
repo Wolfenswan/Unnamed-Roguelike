@@ -36,7 +36,7 @@ def place_items(game):
 
                 if len(game.item_ents) + 1 > max_items:
                     logging.debug(
-                        f'... but new item would bring dungeon total to {len(game.item_ents)+1} thus exceed total maximum: ({max_items})')
+                        f'New item would bring dungeon total to {len(game.item_ents)+1} thus exceed total maximum: ({max_items})')
                     break
                 else:
                     # Get a random position for the item
@@ -45,6 +45,6 @@ def place_items(game):
                     # Generate the item at the given position
                     item = gen_item_from_data(i_dict, x, y)
                     game.entities.append(item)
-                    logging.debug(f'... and created {item} at {x},{y} in {room}.')
+                    logging.debug(f'Created {item} at {x},{y} in {room}.')
 
     logging.debug(f'Placed {len(game.item_ents)} items with {len(rooms)} rooms untouched.')
