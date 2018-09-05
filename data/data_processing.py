@@ -21,6 +21,7 @@ from data.item_data.wp_swords import wp_swords_data
 from gameobjects.entity import Entity
 from gameobjects.npc import NPC
 from rendering.render_order import RenderOrder
+from data.rarity import Rarity
 
 
 def merge_dictionaries(dicts):
@@ -86,7 +87,7 @@ def gen_ent_from_dict(dict, entry, x, y, game):
     ent = NPC(*arguments, fighter=fighter_component, ai=ai_component, skills=skills_component, inventory=inventory_component)
 
     if loadouts is not None:
-        loadout = pick_from_data_dict_by_chance(loadouts)
+        loadout = pick_from_data_dict_by_rarity(loadouts)
         gen_loadout(ent, loadouts[loadout], game)
 
     return ent
@@ -153,14 +154,16 @@ def gen_loadout(actor, loadout, game):
         actor.inventory.add(item)
 
 
-def pick_from_data_dict_by_chance(dict):
+def pick_from_data_dict_by_rarity(dict):
     """ picks a random key from the given dictionary, using the 'chance' value """
-    # TODO add weight by dungeon level & rarity
+    # TODO Implement rarity filters using broad item category as defined in RarityItemClass in rarity.py
+
     keys = list(dict.keys())
-    candidate = choice(keys)
+    rarity = -1
 
     # keep picking items at random until the rarity chance passes
-    while randint(0, 100) > dict[candidate].get('chance'):
+    while rarity < randint(0, 100):
         candidate = choice(keys)
+        rarity = dict[candidate]['rarity'].value + dict[candidate].get('rarity_mod', 0)
 
     return candidate

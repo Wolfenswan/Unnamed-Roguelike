@@ -3,7 +3,7 @@ from random import randint, choice
 
 from config_files import cfg
 from data.architecture_data.arch_doors import arch_doors_data
-from data.data_processing import ARCHITECTURE_DATA_MERGED, pick_from_data_dict_by_chance, gen_architecture, \
+from data.data_processing import ARCHITECTURE_DATA_MERGED, pick_from_data_dict_by_rarity, gen_architecture, \
     CONTAINER_DATA_MERGED
 
 
@@ -31,7 +31,7 @@ def place_staticobjects(game):
         num_to_place = (randint(0, max_in_room))
 
         for i in range(num_to_place):
-            so_key = pick_from_data_dict_by_chance(possible_objects)
+            so_key = pick_from_data_dict_by_rarity(possible_objects)
             data = possible_objects[so_key]
 
             # Get a random position for the item
@@ -57,7 +57,7 @@ def place_doors(game):
         for e in exits:
             if randint(0,1):
 
-                key = pick_from_data_dict_by_chance(arch_doors_data)
+                key = pick_from_data_dict_by_rarity(arch_doors_data)
                 data = arch_doors_data[key]
 
                 x, y = e
@@ -95,7 +95,7 @@ def place_containers(game):
             for i in range(num_of_containers):
                 logging.debug('Creating item #{0} of #{1} total.'.format(containers + 1, num_of_containers))
 
-                so_key = pick_from_data_dict_by_chance(possible_objects)
+                so_key = pick_from_data_dict_by_rarity(possible_objects)
                 data = possible_objects[so_key]
 
                 # Check if new container would exceed total limit

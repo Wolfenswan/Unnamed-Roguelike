@@ -2,7 +2,7 @@ import logging
 from random import randint, choice
 
 from config_files import cfg
-from data.data_processing import gen_item_from_data, pick_from_data_dict_by_chance, ITEM_DATA_MERGED
+from data.data_processing import gen_item_from_data, pick_from_data_dict_by_rarity, ITEM_DATA_MERGED
 
 
 def place_items(game):
@@ -31,7 +31,7 @@ def place_items(game):
             for i in range(num_of_items):
                 logging.debug('Creating item #{0} of #{1} total.'.format(i + 1, num_of_items))
 
-                i_key = pick_from_data_dict_by_chance(possible_items)
+                i_key = pick_from_data_dict_by_rarity(possible_items)
                 i_dict = possible_items[i_key]
 
                 if len(game.item_ents) + 1 > max_items:

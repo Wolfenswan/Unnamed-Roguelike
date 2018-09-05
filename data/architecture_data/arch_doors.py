@@ -1,11 +1,12 @@
 from components.architecture import Architecture
 from config_files import colors
+from data.rarity import Rarity
 
 arch_doors_data = {
     'door_wooden': {
         'name': 'Door',
         'descr': "A wooden door.",
-        'chance': 100,
+        'rarity': Rarity.COMMON,
         "char": '-',
         "color": colors.wood,
         'on_collision': Architecture.toggle_door,

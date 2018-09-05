@@ -3,7 +3,7 @@
 import logging
 from random import randint, choice
 
-from data.data_processing import gen_ent_from_dict, pick_from_data_dict_by_chance
+from data.data_processing import gen_ent_from_dict, pick_from_data_dict_by_rarity
 from config_files import cfg
 from data.actor_data.spawn_data import spawn_data
 
@@ -40,7 +40,7 @@ def place_monsters(game):
             while m <= num_of_monsters and len(game.monster_ents) < max_monsters:
                 logging.debug('Creating monster #{0} of #{1} total.'.format(m + 1, num_of_monsters))
 
-                entry = pick_from_data_dict_by_chance(possible_spawns)
+                entry = pick_from_data_dict_by_rarity(possible_spawns)
                 group_size = randint(*spawn_data[entry]['group_size'])
                 for i in range(group_size):
                     logging.debug(
