@@ -21,8 +21,8 @@ class MonsterType(Enum):
 class ItemType(Enum):
     USEABLE = 100
     WEAPON = 60
+    OFFHAND = 55
     ARMOR = 40
-    OFFHAND = 40
     BELT = 30
 
 class ContainerType(Enum):

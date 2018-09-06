@@ -8,6 +8,7 @@ from components.architecture import Architecture
 from components.inventory.inventory import Inventory
 from components.items.equipment import Equipment
 from components.items.item import Item
+from components.items.moveset import Moveset
 from components.items.useable import Useable
 from components.skill import Skill
 from data.actor_data.skills_data import skills_data
@@ -113,6 +114,7 @@ def gen_item_from_data(data, x, y):
         qu_slots = data.get('qu_slots')
         l_radius = data.get('l_radius')
         moveset = data.get('moveset')
+
         equipment_component = Equipment(equip_to,dmg_range = dmg, av = av, qu_slots = qu_slots, l_radius = l_radius, moveset = moveset)
 
     item_component = Item(useable=useable_component, equipment=equipment_component)

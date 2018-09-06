@@ -22,17 +22,23 @@ def set_window_on_screen(window_x, window_y, width, height):
 
 
 def draw_window(title, body, options = None, window_x = None, window_y = None, padding_x = 2, padding_y = 2, sort_by = 'str', show_cancel_option=True, forced_width=None, extend_body = None):
+    if not options:
+        options  = []
+
+    if not extend_body:
+        extend_body = []
+
     # Calculate window width #
     if forced_width:
         width = forced_width + padding_x * 2
     else:
         # calculate total width for the box, using the longest unwrapped string from either all options, title or body
-        if options:
-            width = max(len(string) for string in options + [title, body]) + padding_x * 2
+        if options or extend_body:
+            width = max(len(string) for string in (options + extend_body + [title])) + 4 + padding_x * 2
         else:
             width = max(len(title), len(body)) + padding_x * 2
 
-    width = min(width, cfg.SCREEN_WIDTH//3)
+    #width = min(width, cfg.SCREEN_WIDTH//3)
 
     body_wrapped = textwrap.wrap(body, width - padding_x * 2)
     if extend_body:

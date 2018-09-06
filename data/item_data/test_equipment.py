@@ -1,6 +1,6 @@
-from components.items.moveset import MovesetSword
 from config_files import colors
 from data.entitytypes import ItemType, Rarity
+from data.item_data.moveset_data import moveset_sword
 
 WP_CHAR = '\\'
 WP_COLOR = colors.turquoise
@@ -36,7 +36,7 @@ test_equipment_data = {
         'type': WP_TYPE,
         'e_to': WP_EQUIP,
         'dmg_range': (2, 5),
-        'moveset': MovesetSword,
+        'moveset': moveset_sword,
         'rarity': Rarity.COMMON,
         'dlvls': (1,99)
     },

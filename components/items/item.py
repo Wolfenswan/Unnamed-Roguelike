@@ -37,4 +37,10 @@ class Item:
             if self.equipment.l_radius:
                 list.append(f' Light Radius: {self.equipment.l_radius}')
 
+            if self.equipment.moveset:
+                list.append('')
+                list.append('The weapon possesses a distinct attack pattern:')
+                for k, v in self.equipment.moveset.movelist.items():
+                    list.append(f'{k}: {v["descr"]}')
+
         return list

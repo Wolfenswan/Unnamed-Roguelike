@@ -162,11 +162,11 @@ class Fighter:
         extra_targets = None
 
         if self.weapon:
-            moveset_results = self.weapon.moveset.attack(target)
-            mod += moveset_results.get('dmg_mod', 0)
-            ignore_armor += moveset_results.get('ignore_armor', 0)
-            extra_targets = moveset_results.get('extra_targets', None)
-            attack_string = moveset_results.get('attack_string', 'attacks')
+            move_results = self.weapon.moveset.execute()
+            mod += move_results.get('dmg_mod', 0)
+            ignore_armor += move_results.get('ignore_armor', 0)
+            extra_targets = move_results.get('extra_targets', None)
+            attack_string = move_results.get('string', 'attacks')
 
         damage = round(self.power * mod - (target.fighter.defense - ignore_armor))
         results.extend(self.attack_execute(target, damage, attack_string))
@@ -175,7 +175,7 @@ class Fighter:
 
         if extra_targets:
             for target in extra_targets:
-                results.extend(self.attack_execute(target, damage, attack_string))
+                results.extend(self.attack_execute(target, damage, 'further hits'))
 
         return results
 
