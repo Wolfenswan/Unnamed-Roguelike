@@ -30,6 +30,7 @@ def render_panels(game):
 def render_player_panel(game, con, panel_x, panel_y, width, height):
     setup_console(con, caption='Player', borders=True)
 
+    tcod.console_print(con, 1, 1, f'{game.player.fighter.weapon.moveset.current_move}')
 
     tcod.console_blit(con, 0, 0, width, height, 0, panel_x, panel_y)
 

@@ -55,11 +55,12 @@ def process_player_input(action, game, fov_map, targeting_item = None):
 
                 if target:
                     if dodge:
+                        print('dodging into target')
                         # TODO implement
                         pass
                     # If a NPC is blocking the way #
                     elif target.fighter:
-                        attack_results = player.fighter.attack(target)
+                        attack_results = player.fighter.attack_setup(target)
                         turn_results.extend(attack_results)
                     # If a static object is blocking the way #
                     elif target.architecture:
@@ -81,6 +82,11 @@ def process_player_input(action, game, fov_map, targeting_item = None):
                 elif dodge:
                     player.fighter.dodge(dx, dy, game)
                     turn_results.append({'fov_recompute': True})
+
+                if not target or not target.fighter:
+                    # Movement other than fighting resets the current moveset
+                    if player.fighter.weapon:
+                        player.fighter.weapon.moveset.cycle_moves(reset=True)
 
                 game.state = GameStates.ENEMY_TURN
 

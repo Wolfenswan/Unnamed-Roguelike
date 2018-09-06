@@ -28,6 +28,11 @@ def process_turn_results(player_turn_results, game, fov_map):
         # List of results that activate the enemy's turn #
         enemy_turn_on = [item_added, item_dropped, item_consumed, item_equipped, item_dequipped, item_prepared]
 
+        # if not player.in_combat(game):
+        #     pass
+        # else:
+        #     pass
+
         if message:
             message.add_to_log(game)
 
@@ -56,6 +61,7 @@ def process_turn_results(player_turn_results, game, fov_map):
         if waiting:
             if player.in_combat(game):
                 player.fighter.toggle_blocking()
+                player.fighter.weapon.moveset.cycle_moves(reset=True) # Blocking resets weapon moves
                 game.state = GameStates.ENEMY_TURN
             else:
                 # TODO placeholder for regeneration/resting

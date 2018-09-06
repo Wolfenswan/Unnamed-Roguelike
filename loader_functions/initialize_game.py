@@ -39,7 +39,7 @@ def initialize_game(game):
     place_containers(game)
     place_doors(game)
     place_monsters(game)
-    place_items(game)
+    #place_items(game)
 
     player.x, player.y = game.map.rooms[0].center
 

@@ -9,7 +9,7 @@ from game import GameStates
 
 
 def handle_keys(key, game_state):
-    logging.debug(f'Handling {key}, char: {chr(key.c)}')
+    logging.debug(f'Handling {key}')
 
     # Inputs valid in all game states #
     if key.vk == tcod.KEY_ENTER and key.lalt:

@@ -32,11 +32,11 @@ class SkillUsage:
         # TODO add power modifier to charged attacks
         if hit:
             if hit.fighter:
-                results.extend(ent.fighter.attack(hit, mod=2))
+                results.extend(ent.fighter.attack_setup(hit, mod=2))
             elif hit.architecture:
-                results.extend(ent.fighter.attack(ent, mod=0.5))
+                results.extend(ent.fighter.attack_setup(ent, mod=0.5))
         elif hit is False:   # If a wall is hit during the charge, damage the charging entity
-            results.extend(ent.fighter.attack(ent, mod=0.5))
+            results.extend(ent.fighter.attack_setup(ent, mod=0.5))
         return results
 
 class SkillCondition:

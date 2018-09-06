@@ -4,8 +4,8 @@ from enum import Enum, auto
 import tcod
 
 from components.actionplan import Actionplan
-from components.inventory import Inventory
-from components.paperdoll import Paperdoll
+from components.inventory.inventory import Inventory
+from components.inventory.paperdoll import Paperdoll
 from gameobjects.util_functions import get_blocking_entity_at_location
 from rendering.render_order import RenderOrder
 

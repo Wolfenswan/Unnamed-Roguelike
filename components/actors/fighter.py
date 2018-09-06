@@ -104,6 +104,10 @@ class Fighter:
         return power
 
     @property
+    def ignore_armor(self):
+        return 0
+
+    @property
     def defense(self):
         defense = self.base_defense
         for e in self.owner.paperdoll.equipped_items:
@@ -123,6 +127,17 @@ class Fighter:
                 vision += l_radius
         return vision
 
+    @property
+    def weapon(self):
+        """
+        :return: Equipment component of currently equipped weapon.
+        """
+        weapon_ent = self.owner.paperdoll.arms.weapon
+        if weapon_ent:
+            return weapon_ent.item.equipment
+        else:
+            return None
+
     def take_damage(self, amount):
         results = []
         self.hp -= amount
@@ -140,17 +155,38 @@ class Fighter:
 
         logging.debug(f'({self} was healed for {amount}.')
 
-    def attack(self, target, mod=1):
+    def attack_setup(self, target, mod=1):
         results = []
+        ignore_armor = self.ignore_armor
+        attack_string = 'attacks'
+        extra_targets = None
 
-        if target.fighter.stamina > 0:
-            damage = round(self.power * mod - target.fighter.defense)
-        else:
-            damage = round(self.power * mod) * 2 # Targets out of stamina will loose all defense and receive double damage # TODO balancing
+        if self.weapon:
+            moveset_results = self.weapon.moveset.attack(target)
+            mod += moveset_results.get('dmg_mod', 0)
+            ignore_armor += moveset_results.get('ignore_armor', 0)
+            extra_targets = moveset_results.get('extra_targets', None)
+            attack_string = moveset_results.get('attack_string', 'attacks')
+
+        damage = round(self.power * mod - (target.fighter.defense - ignore_armor))
+        results.extend(self.attack_execute(target, damage, attack_string))
 
         logging.debug(f'{self.owner.name.capitalize()} attacks {target.name.capitalize()} with {self.power}*{mod} power against {target.fighter.defense} defense for {damage} damage.')
 
-        # TODO if blocked, reduce stamina
+        if extra_targets:
+            for target in extra_targets:
+                results.extend(self.attack_execute(target, damage, attack_string))
+
+        return results
+
+    def attack_execute(self, target, damage, attack_string):
+        results = []
+
+        # Targets out of stamina will receive double damage, defense value is negated
+        # TODO balancing - Armor piercing currently applied as extra damage
+        if target.fighter.stamina < 0:
+            damage = (damage + target.fighter.defense) * 2
+
         if damage > 0:
             if target.fighter.is_blocking and target.fighter.stamina > 0:
                 results.extend(target.fighter.block(damage))
@@ -165,12 +201,12 @@ class Fighter:
                     target_string = target.name.capitalize()
 
                 results.append({'message': Message(
-                    f'{self.owner.name.capitalize()} attacks {target_string} for {str(damage)} hit points.', type=msg_type)})
+                    f'{self.owner.name.capitalize()} {attack_string} {target_string} for {str(damage)} hit points.', type=msg_type)})
                 results.extend(target.fighter.take_damage(damage))
         else:
             target.fighter.stamina -= 2 # TODO placeholder until balancing (scale stamina drain with armor encumberance)
             results.append(
-                {'message': Message(f'{self.owner.name.capitalize()} attacks {target.name} but does no damage.', type=MessageType.COMBAT)})
+                {'message': Message(f'{self.owner.name.capitalize()} {attack_string} {target.name} but does no damage.', type=MessageType.COMBAT)})
 
         return results
 

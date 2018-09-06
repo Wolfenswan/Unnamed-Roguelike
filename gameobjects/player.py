@@ -1,7 +1,7 @@
 import tcod
 
 from components.actors.fighter import Fighter
-from components.inventory import Inventory
+from components.inventory.inventory import Inventory
 from config_files import cfg
 from gameobjects.entity import Entity
 from rendering.render_order import RenderOrder
