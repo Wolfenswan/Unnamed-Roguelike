@@ -43,7 +43,7 @@ arch_containers_data = {
         "char": '+',
         "color": colors.dark_gray,
         "blocks": False,
-        'container_room': (3, 8),
+        'container_room': (1, 4),
         'contents_rarity': (Rarity.COMMON, Rarity.UNCOMMON),
         'contents_type': (ItemType.WEAPON, ItemType.OFFHAND),
         'on_collision': Architecture.blocks_info,
