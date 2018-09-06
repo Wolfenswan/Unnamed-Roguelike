@@ -58,6 +58,6 @@ def place_doors(game):
                 x, y = e
                 door = gen_architecture(data, x, y)
                 if randint(0, 1):
-                    door.architecture.on_interaction(None, door)
+                    door.architecture.on_interaction(None, door, game)
 
                 entities.append(door)

@@ -28,13 +28,13 @@ MONSTERS_DUNGEON_FACTOR = 5 # total rooms times this
 MONSTERS_ROOM_LIMIT = 15 # room width * room height // this
 
 # ITEM SETTINGS #
-ITEMS_DUNGEON_FACTOR = 1.5 # total rooms * this
-ITEMS_ROOM_LIMIT = 30 # room width * room height // this
+ITEMS_DUNGEON_FACTOR = 1 # total rooms * this
+ITEMS_ROOM_LIMIT = 50 # room width * room height // this
 
 # CONTAINER SETTINGS #
 # TODO put in relation to max items?
 CONTAINER_DUNGEON_FACTOR = 2 # total rooms * this
-CONTAINER_ROOM_DIVISOR = 50 # room width * room height // this
+CONTAINER_ROOM_DIVISOR = 30 # room width * room height // this
 
 # STATIC OBJECT SETTINGS #
 #SOBJECTS_DUNGEON_FACTOR = 5 # total rooms times this (UNUSED)

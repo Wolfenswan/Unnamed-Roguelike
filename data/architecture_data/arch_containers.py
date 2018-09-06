@@ -21,8 +21,8 @@ arch_containers_data = {
     'chest_wood': {
         'name': 'Wooden Chest',
         'descr': "A simple, yet sturdy chest.",
-        'rarity': Rarity.COMMON,
-        'rarity_type': ContainerType.CHEST_BASIC,
+        'type': ContainerType.CHEST_BASIC,
+        'rarity': Rarity.UNCOMMON,
         'dlvls': (1, 99),
         "char": '+',
         "color": colors.wood,
@@ -33,5 +33,20 @@ arch_containers_data = {
         'on_collision': Architecture.blocks_info,
         'on_interaction': Architecture.open_container
     },
-
+    'weapon_rack_old': {
+        'name': 'Old Weapon Rack',
+        'descr': "The rust makes it hard to tell where the rack ends and its content begins.",
+        'type': ContainerType.CHEST_BASIC,
+        'rarity': Rarity.UNCOMMON,
+        'rarity_mod': +5,
+        'dlvls': (1, 99),
+        "char": '+',
+        "color": colors.dark_gray,
+        "blocks": False,
+        'container_room': (3, 8),
+        'contents_rarity': (Rarity.COMMON, Rarity.UNCOMMON),
+        'contents_type': (ItemType.WEAPON, ItemType.OFFHAND),
+        'on_collision': Architecture.blocks_info,
+        'on_interaction': Architecture.open_container
+    },
 }

@@ -10,8 +10,7 @@ class Architecture:
         self.on_collision = on_collision
 
     @staticmethod
-    def blocks_info(*args):
-        arch_entity = args[1]
+    def blocks_info(interacting_ent, arch_entity, game):
         return [{'message': Message(f'A {arch_entity.name} blocks your way.', category=MessageCategory.OBSERVATION)}]
 
     @staticmethod
@@ -24,8 +23,7 @@ class Architecture:
             pass
 
     @staticmethod
-    def toggle_door(*args):
-        door_ent = args[1]
+    def toggle_door(interacting_ent, door_ent, game):
         door_ent_closed = door_ent.blocks
         results = [{'door_toggled': door_ent, 'fov_recompute': True}]
         # TODO doors can be locked too
@@ -47,7 +45,7 @@ class Architecture:
         return results
 
     @staticmethod
-    def open_container(interacting_ent, container_ent):
+    def open_container(interacting_ent, container_ent, game):
         results = []
         # TODO locks & traps
         # display chest_contents
@@ -66,12 +64,16 @@ class Architecture:
         return results
 
     @staticmethod
-    def smash_object(*args):
-        entity = args[1]
-        entity.char = '%'
-        entity.color *= 0.3
-        entity.blocks = False
-        entity.blocks_sight = False
-        entity.architecture = None # TODO not a very elegant solution to prevent rendering in the objects panel
-
-        return [{'message': Message(f'You smash a {entity.name.capitalize()}', category=MessageCategory.OBSERVATION)}]
+    def smash_object(interacting_ent, object_ent, game):
+        object_ent.char = '%'
+        object_ent.color *= 0.3
+        object_ent.blocks = False
+        object_ent.blocks_sight = False
+        object_ent.architecture = None # TODO not a very elegant solution to prevent rendering in the objects panel
+        
+        if object_ent.inventory:
+            for i in object_ent.inventory.items:
+                i.x, i.y = object_ent.x, object_ent.y
+                game.entities.append(i)
+        
+        return [{'message': Message(f'You smash a {object_ent.name.capitalize()}', category=MessageCategory.OBSERVATION)}]
