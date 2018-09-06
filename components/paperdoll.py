@@ -17,7 +17,7 @@ class Paperdoll:
 
     def equip(self, item_ent, game):
         results = []
-        e_type = item_ent.item.type.name.lower()
+        e_type = item_ent.type.name.lower() # Entity.type is a enum member of the ItemType Class.
         e_to = item_ent.item.equipment.e_to
         qu_slots = item_ent.item.equipment.qu_slots
 
@@ -45,7 +45,7 @@ class Paperdoll:
     def dequip(self, item_ent):
         results = []
         e_to = item_ent.item.equipment.e_to
-        e_type = item_ent.item.type.name.lower()
+        e_type = item_ent.type.name.lower()
         qu_slots = item_ent.item.equipment.qu_slots
 
         extremity = getattr(self, e_to)
@@ -64,10 +64,6 @@ class Paperdoll:
             logging.error('Trying to dequip something that is not equipped. This should not happen...')
 
         return results
-
-    def prepare(self, item_ent):
-        # TODO add item to quick use inventory
-        pass
 
     def is_equipped(self, item):
         return item in self.equipped_items

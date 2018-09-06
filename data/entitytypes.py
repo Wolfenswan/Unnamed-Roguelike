@@ -9,6 +9,15 @@ class Rarity(Enum):
     UNIQUE = -1
 
 # Values indicate rarity weight per type #
+class GenericType(Enum):
+    DEFAULT = 100
+    UNIQUE = -1
+
+class MonsterType(Enum):
+    GENERIC = 100
+    ELITE = 60
+    LEADER = 20
+
 class ItemType(Enum):
     USEABLE = 100
     WEAPON = 60

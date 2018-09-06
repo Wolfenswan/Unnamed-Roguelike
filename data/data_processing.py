@@ -14,6 +14,7 @@ from data.actor_data.skills_data import skills_data
 from data.actor_data.spawn_data import spawn_data
 from data.architecture_data.arch_static import arch_static_data
 from data.architecture_data.arch_containers import arch_containers_data
+from data.entitytypes import GenericType
 from data.item_data.test_equipment import test_equipment_data
 from data.item_data.use_potions import use_potions_data
 from data.item_data.use_scrolls import use_scrolls_data
@@ -49,11 +50,12 @@ def get_generic_data(data, randomize_color = False):
     char = data['char']
     color = data['color']
     descr = data['descr']
+    type = data.get('type', GenericType.DEFAULT)
 
     if randomize_color:
         color = tuple(int(uniform(0.5, 1) * x) for x in color) # Slight color randomization for each entity
 
-    return (char, color, name, descr)
+    return (char, color, name, descr, type)
 
 
 def gen_ent_from_dict(data, x, y, game):
@@ -93,7 +95,6 @@ def gen_ent_from_dict(data, x, y, game):
 def gen_item_from_data(data, x, y):
     arguments = (x, y, *get_generic_data(data))
 
-    type = data['type']
     on_use = data.get('on_use', None)
     equip_to = data.get('e_to', None)
 
@@ -113,7 +114,7 @@ def gen_item_from_data(data, x, y):
         l_radius = data.get('l_radius')
         equipment_component = Equipment(equip_to,dmg_range = dmg, av = av, qu_slots = qu_slots, l_radius = l_radius)
 
-    item_component = Item(type = type, useable=useable_component, equipment=equipment_component)
+    item_component = Item(useable=useable_component, equipment=equipment_component)
 
     # create the item using item_class and the arguments tuple
     i = Entity(*arguments, render_order=RenderOrder.ITEM, item = item_component)
@@ -176,7 +177,7 @@ def pick_from_data_dict_by_rarity(dict, dlvl):
         rarity = dict[candidate]['rarity'].value + dict[candidate].get('rarity_mod', 0)
 
         if dict[candidate].get('type'):
-            type_rarity = dict[candidate].get('type').value #dict[candidate]['rarity_type'].value
+            type_rarity = dict[candidate]['type'].value #dict[candidate]['rarity_type'].value
 
         # Check against type rarity first, then individual rarity of the item
         # TODO use random values for each check if useful

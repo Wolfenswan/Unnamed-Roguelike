@@ -20,8 +20,8 @@ class Item:
         :rtype: list
         """
         list = ['']
-        if self.type:
-            list.append(f' Type: {self.type.name.capitalize()}')
+        if self.owner.type:
+            list.append(f' Type: {self.owner.type.name.capitalize()}')
 
         if self.equipment:
 
