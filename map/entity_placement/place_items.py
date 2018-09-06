@@ -11,9 +11,10 @@ def place_items(game):
     dlvl = game.dlvl
     game_map = game.map
     rooms = game_map.rooms.copy()
+    possible_items = ITEM_DATA_MERGED
 
     # first, remove all items that can't be spawned on the current level
-    possible_items = {k: v for k, v in ITEM_DATA_MERGED.items() if dlvl in v.get('dlvls',[0,99])}
+    #possible_items = {k: v for k, v in ITEM_DATA_MERGED.items() if dlvl in v.get('dlvls',[0,99])}
 
    #max_items = (game_map.width * game_map.height) // cfg.ITEMS_DUNGEON_DIVISOR
     max_items = int(len(rooms) * cfg.ITEMS_DUNGEON_FACTOR)
@@ -31,8 +32,8 @@ def place_items(game):
             for i in range(num_of_items):
                 logging.debug('Creating item #{0} of #{1} total.'.format(i + 1, num_of_items))
 
-                i_key = pick_from_data_dict_by_rarity(possible_items)
-                i_dict = possible_items[i_key]
+                data = pick_from_data_dict_by_rarity(possible_items, dlvl)
+                #i_key = pick_item_from_data_dict(possible_items, dlvl)
 
                 if len(game.item_ents) + 1 > max_items:
                     logging.debug(
@@ -43,7 +44,7 @@ def place_items(game):
                     # TODO make sure items are not placed on blocking architecture
                     x, y = room.ranpos(game_map)
                     # Generate the item at the given position
-                    item = gen_item_from_data(i_dict, x, y)
+                    item = gen_item_from_data(data, x, y)
                     game.entities.append(item)
                     logging.debug(f'Created {item} at {x},{y} in {room}.')
 

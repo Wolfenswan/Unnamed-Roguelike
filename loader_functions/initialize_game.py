@@ -1,15 +1,14 @@
 from random import randint
 
-from components.actors.fighter import Fighter
-from components.inventory import Inventory
 from config_files import cfg, colors
-from data.data_processing import pick_from_data_dict_by_rarity, gen_loadout
+from data.data_processing import gen_loadout
 from gameobjects.entity import Entity
 from gameobjects.player import Player
 from map.game_map import GameMap
-from map.place_actors import place_monsters
-from map.place_architecture import place_staticobjects, place_doors, place_containers
-from map.place_items import place_items
+from map.entity_placement.place_actors import place_monsters
+from map.entity_placement.place_architecture import place_staticobjects, place_doors
+from map.entity_placement.place_containers import place_containers
+from map.entity_placement.place_items import place_items
 from rendering.render_order import RenderOrder
 
 
@@ -41,7 +40,6 @@ def initialize_game(game):
     place_doors(game)
     place_monsters(game)
     place_items(game)
-    # fill_containers(game)
 
     player.x, player.y = game.map.rooms[0].center
 

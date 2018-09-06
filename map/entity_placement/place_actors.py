@@ -14,9 +14,10 @@ def place_monsters(game):
     dlvl = game.dlvl
     game_map = game.map
     rooms = game_map.rooms.copy()
+    possible_spawns = spawn_data
 
     # all spawnable actors have a dlvl range, so the spawn_data dictionary is reduced to all spawn-objects where the current dlvl is within this range
-    possible_spawns = {k: v for k, v in spawn_data.items() if dlvl in v['dlvls']}
+    # possible_spawns = {k: v for k, v in spawn_data.items() if dlvl in v['dlvls']}
     logging.debug('Creating monster for dungeon-level {0} from this list: {1}.'.format(dlvl, possible_spawns))
 
     #monsters_placed = 0
@@ -40,8 +41,8 @@ def place_monsters(game):
             while m <= num_of_monsters and len(game.monster_ents) < max_monsters:
                 logging.debug('Creating monster #{0} of #{1} total.'.format(m + 1, num_of_monsters))
 
-                entry = pick_from_data_dict_by_rarity(possible_spawns)
-                group_size = randint(*spawn_data[entry]['group_size'])
+                entry = pick_from_data_dict_by_rarity(possible_spawns, dlvl)
+                group_size = randint(*entry['group_size'])
                 for i in range(group_size):
                     logging.debug(
                         'Attempting to add {0} #{1} to group of size {2}, in room {3}...'.format(entry, i+1, group_size, room))
@@ -61,7 +62,8 @@ def place_monsters(game):
                         if len(free_tiles) > 0:
                             # Get a random position for the monster
                             x, y = choice(free_tiles)
-                            ent = gen_ent_from_dict(spawn_data, entry, x, y, game)
+
+                            ent = gen_ent_from_dict(entry, x, y, game)
                             game.entities.append(ent)
                             logging.debug(f'... and created {ent} at {x},{y} in {room}, #{m} out of {num_of_monsters}')
                         else:

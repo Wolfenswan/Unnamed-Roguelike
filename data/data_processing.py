@@ -17,7 +17,6 @@ from data.architecture_data.arch_containers import arch_containers_data
 from data.item_data.test_equipment import test_equipment_data
 from data.item_data.use_potions import use_potions_data
 from data.item_data.use_scrolls import use_scrolls_data
-from data.item_data.wp_swords import wp_swords_data
 from gameobjects.entity import Entity
 from gameobjects.npc import NPC
 from rendering.render_order import RenderOrder
@@ -57,8 +56,7 @@ def get_generic_data(data, randomize_color = False):
     return (char, color, name, descr)
 
 
-def gen_ent_from_dict(dict, entry, x, y, game):
-    data = dict[entry]
+def gen_ent_from_dict(data, x, y, game):
     arguments = (x, y, *get_generic_data(data, randomize_color=True))
 
     hp = randint(*data['max_hp'])
@@ -86,7 +84,7 @@ def gen_ent_from_dict(dict, entry, x, y, game):
     ent = NPC(*arguments, fighter=fighter_component, ai=ai_component, skills=skills_component, inventory=inventory_component)
 
     if loadouts is not None:
-        loadout = pick_from_data_dict_by_rarity(loadouts)
+        loadout = pick_from_data_dict_by_rarity(loadouts, game.dlvl)
         gen_loadout(ent, loadouts[loadout], game)
 
     return ent
@@ -153,8 +151,20 @@ def gen_loadout(actor, loadout, game):
         actor.inventory.add(item)
 
 
-def pick_from_data_dict_by_rarity(dict):
-    """ picks a random key from the given dictionary, using the 'chance' value """
+def pick_from_data_dict_by_rarity(dict, dlvl):
+    """
+    picks a random key from the given dictionary items, using the 'chance' value
+
+    :param dict_items:
+    :type dict_items: dict
+    :param dlvl:
+    :type dlvl: int
+    :return:
+    :rtype: dict
+    """
+
+    # Using the passed dict_items set a new dictionary is created, filtered by the dungeon level value
+    dict = {k: v for k, v in dict.items() if dlvl in range(*v.get('dlvls', (1, 99)))}
 
     keys = list(dict.keys())
     type_rarity = -1
@@ -164,15 +174,14 @@ def pick_from_data_dict_by_rarity(dict):
         random = randint(0, 100)
         candidate = choice(keys)
         rarity = dict[candidate]['rarity'].value + dict[candidate].get('rarity_mod', 0)
-        logging.debug(f'Rarity for {candidate} is {rarity}, random value is {random}.')
 
         if dict[candidate].get('type'):
             type_rarity = dict[candidate].get('type').value #dict[candidate]['rarity_type'].value
-            logging.debug(f'Type rarity for {candidate} is {type_rarity}.')
 
         # Check against type rarity first, then individual rarity of the item
         # TODO use random values for each check if useful
+        logging.debug(f'Rarity for {candidate} is {rarity} and type rarity is {type_rarity}, random value is {random}.')
         if (type_rarity == -1 or type_rarity > random) and rarity > random:
             break
 
-    return candidate
+    return dict[candidate]

@@ -13,8 +13,8 @@ arch_containers_data = {
         "color": colors.wood,
         "blocks": True,
         'container_room': (0,4),
-        'contents_rarity': (Rarity.COMMON),
-        'contents_type': (ItemType.USEABLE),
+        'contents_rarity': (Rarity.COMMON,),
+        'contents_type': (ItemType.USEABLE,),
         'on_collision': Architecture.blocks_info,
         'on_interaction': Architecture.smash_object
     },
@@ -27,9 +27,9 @@ arch_containers_data = {
         "char": '+',
         "color": colors.wood,
         "blocks": False,
-        'container_room': (1, 6),
+        'container_room': (3, 8),
         'contents_rarity': (Rarity.COMMON, Rarity.UNCOMMON, Rarity.RARE),
-        'contents_type': (ItemType.USEABLE, ItemType.WEAPON, ItemType.ARMOR, ItemType.BELT),
+        'contents_type': (ItemType.USEABLE, ItemType.WEAPON, ItemType.OFFHAND, ItemType.BELT),
         'on_collision': Architecture.blocks_info,
         'on_interaction': Architecture.open_container
     },

@@ -7,6 +7,7 @@ arch_doors_data = {
         'name': 'Door',
         'descr': "A wooden door.",
         'rarity': Rarity.COMMON,
+        'dlvls': (1, 99),
         "char": '-',
         "color": colors.wood,
         'on_collision': Architecture.toggle_door,

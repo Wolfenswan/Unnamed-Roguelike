@@ -8,7 +8,7 @@ class Rarity(Enum):
     LEGENDARY = 10
     UNIQUE = -1
 
-# Values indicate rarity weight of each type #
+# Values indicate rarity weight per type #
 class ItemType(Enum):
     USEABLE = 100
     WEAPON = 60
