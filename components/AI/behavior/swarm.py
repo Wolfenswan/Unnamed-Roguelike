@@ -54,7 +54,7 @@ class Swarm:
                     npc.x, npc.y = tile
 
         # Swarmer will attack after moving around the target #
-        attack_results = npc.fighter.attack_setup(target)
+        attack_results = npc.fighter.attack_setup(target, game)
         results.extend(attack_results)
 
         return results

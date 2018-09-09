@@ -22,7 +22,7 @@ class Simple:
 
         results = []
 
-        attack_results = npc.fighter.attack_setup(target)
+        attack_results = npc.fighter.attack_setup(target, game)
         results.extend(attack_results)
 
         return results

@@ -20,7 +20,7 @@ def initialize_game(game):
     player_loadouts = {
         'loadout1': {
             'equipment': ('sword_rusty','leather_brittle', 'helmet_rusty','belt_generic','shield_wood'),
-            'backpack': ('pot_heal', 'scr_fireball','torch')
+            'backpack': ('pot_heal', 'scr_fireball','torch', 'spear_rusty')
         }
     }
     #loadout = pick_from_data_dict_by_chance(player_loadouts)
@@ -39,7 +39,7 @@ def initialize_game(game):
     place_containers(game)
     place_doors(game)
     place_monsters(game)
-    #place_items(game)
+    place_items(game)
 
     player.x, player.y = game.map.rooms[0].center
 

@@ -1,6 +1,6 @@
 from config_files import colors
 from data.entitytypes import ItemType, Rarity
-from data.item_data.moveset_data import moveset_sword
+from data.item_data.moveset_data import moveset_sword, moveset_spear
 
 WP_CHAR = '\\'
 WP_COLOR = colors.turquoise
@@ -37,6 +37,18 @@ test_equipment_data = {
         'e_to': WP_EQUIP,
         'dmg_range': (2, 5),
         'moveset': moveset_sword,
+        'rarity': Rarity.COMMON,
+        'dlvls': (1,99)
+    },
+    'spear_rusty': {
+        'name': 'Rusty Spear',
+        'descr': 'The tip might break off, but the rust will hopefully poison your enemies.',
+        'char': '|',
+        'color': WP_COLOR,
+        'type': WP_TYPE,
+        'e_to': WP_EQUIP,
+        'dmg_range': (1,7),
+        'moveset': moveset_spear,
         'rarity': Rarity.COMMON,
         'dlvls': (1,99)
     },

@@ -44,7 +44,7 @@ def handle_player_turn_keys(key):
         action = 'dodge'
 
     if key.vk == tcod.KEY_UP or key_char == 'k' or key.vk == tcod.KEY_KP8:
-        return {action: True, 'dir': True, 'dir': (0, -1)}
+        return {action: True, 'dir': (0, -1)}
     elif key.vk == tcod.KEY_DOWN or key_char == 'j' or key.vk == tcod.KEY_KP2:
         return {action: True, 'dir': (0, 1)}
     elif key.vk == tcod.KEY_LEFT or key_char == 'h' or key.vk == tcod.KEY_KP4:

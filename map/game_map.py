@@ -2,7 +2,7 @@ import logging
 from cmath import sqrt
 from random import choice
 
-from gameobjects.util_functions import get_blocking_entity_at_location
+from gameobjects.util_functions import blocking_entity_at_pos
 from map.map_algo import Tunneling, DrunkWalk
 from map.tile import Tile
 
@@ -24,8 +24,8 @@ class GameMap:
         # TODO placeholder for later implementation
         # algo = choice([Tunneling, DrunkWalk])
         # algo.make_map(game, max_rooms, room_min_size, room_max_size, map_width, map_height)
-        #DrunkWalk().make_map(game, max_rooms, room_min_size, room_max_size, map_width, map_height)
-        Tunneling().make_map(game, max_rooms, room_min_size, room_max_size, map_width, map_height)
+        DrunkWalk().make_map(game, max_rooms, room_min_size, room_max_size, map_width, map_height)
+        #Tunneling().make_map(game, max_rooms, room_min_size, room_max_size, map_width, map_height)
 
         blocked_rooms = [r for r in self.rooms if len(r.exits(self)) == 0]
         if len(blocked_rooms) > 0:
@@ -65,7 +65,7 @@ class GameMap:
             return True
 
         print(x, y, game.entities)
-        if get_blocking_entity_at_location(game.entities, x, y) > 0:
+        if blocking_entity_at_pos(game.entities, x, y) > 0:
             return True
 
         return False

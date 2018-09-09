@@ -4,7 +4,7 @@ import textwrap
 import tcod
 
 from config_files import cfg, colors
-from gameobjects.util_functions import get_blocking_entity_at_location
+from gameobjects.util_functions import blocking_entity_at_pos
 from rendering.util_functions import center_x_for_text, draw_console_borders, pos_on_screen
 
 
@@ -34,12 +34,11 @@ def draw_window(title, body, options = None, window_x = None, window_y = None, p
     else:
         # calculate total width for the box, using the longest unwrapped string from either all options, title or body
         if options or extend_body:
-            width = max(len(string) for string in (options + extend_body + [title])) + 4 + padding_x * 2
+            width = max(len(string) for string in (options + extend_body + [title, body])) + 4 + padding_x * 2
         else:
             width = max(len(title), len(body)) + padding_x * 2
 
-    #width = min(width, cfg.SCREEN_WIDTH//3)
-
+    #width = min(width, cfg.SCREEN_WIDTH//2)
     body_wrapped = textwrap.wrap(body, width - padding_x * 2)
     if extend_body:
         body_wrapped.extend(extend_body)
@@ -91,7 +90,7 @@ def draw_window(title, body, options = None, window_x = None, window_y = None, p
 
 
 def render_description_window(game):
-    ent = get_blocking_entity_at_location(game.entities, game.cursor.x, game.cursor.y)
+    ent = blocking_entity_at_pos(game.entities, game.cursor.x, game.cursor.y)
     if ent:
         x, y = pos_on_screen(ent.x + 2, ent.y - 2, game.player)
 

@@ -22,12 +22,13 @@ moveset_spear = {
         'dmg_mod': -0.2
     },
     2: {
-        'descr:': "An accurate thrust, using the weapon's full potential",
+        'descr': 'An accurate thrust, using the weapon\'s full potential.',
         'string': 'thrusts accurately at'
     },
     3: {
         'descr': 'A powerful thrust, piercing the target and potentially hitting someone behind it.',
         'string': 'forcefully thrusts through',
-        'dmg_mod': 0.3
+        'dmg_mod': 0.3,
+        'extra_hits': {'behind_target': True}
     }
 }

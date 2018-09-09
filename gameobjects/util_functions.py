@@ -1,16 +1,26 @@
-def get_entities_at_pos(entities, x, y):
+def entities_at_pos(entities, x, y):
     return [ent for ent in entities if ent.x == x and ent.y == y]
 
 
-def get_blocking_entity_at_location(entities, destination_x, destination_y):
-    for entity in entities:
-        if entity.blocks and entity.x == destination_x and entity.y == destination_y:
-            return entity
-    return None
+def blocking_entity_at_pos(entities, x, y):
+    entity = next((entity for entity in entities if entity.pos == (x, y)
+                   and entity.blocks), None)
+    # for entity in entities:
+    #     if entity.blocks and entity.x == x and entity.y == y:
+    #         return entity
+    return entity
 
 
-def get_interactable_entity_at_location(entities, destination_x, destination_y):
-    for entity in entities:
-        if entity.x == destination_x and entity.y == destination_y and entity.architecture and entity.architecture.on_interaction:
-            return entity
-    return None
+def fighter_entity_at_pos(entities, x, y):
+    entity = next((entity for entity in entities if entity.pos == (x, y)
+                   and entity.blocks and entity.fighter), None)
+    return entity
+
+
+def interactable_entity_at_pos(entities, x, y):
+    entity = next((entity for entity in entities if entity.pos == (x, y)
+                   and entity.architecture and entity.architecture.on_interaction), None)
+    # for entity in entities:
+    #     if entity.x == x and entity.y == y and entity.architecture and entity.architecture.on_interaction:
+    #         return entity
+    return entity

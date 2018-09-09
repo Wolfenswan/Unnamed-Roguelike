@@ -6,7 +6,7 @@ import tcod
 from components.actionplan import Actionplan
 from components.inventory.inventory import Inventory
 from components.inventory.paperdoll import Paperdoll
-from gameobjects.util_functions import get_blocking_entity_at_location
+from gameobjects.util_functions import blocking_entity_at_pos
 from rendering.render_order import RenderOrder
 
 
@@ -55,6 +55,10 @@ class Entity:
         self.delay_turns = 0
         self.execute_after_delay = None
 
+    @property
+    def pos(self):
+        return (self.x, self.y)
+
     def move(self, dx, dy):
         # Move the entity by a given amount
         self.x += dx
@@ -69,7 +73,7 @@ class Entity:
         """
         dest_x, dest_y = self.x + dx, self.y + dy
         if not game.map.is_wall(dest_x, dest_y) or ignore_walls:
-            blocked = get_blocking_entity_at_location(game.entities, dest_x, dest_y)
+            blocked = blocking_entity_at_pos(game.entities, dest_x, dest_y)
             if blocked and not ignore_entities:
                 return blocked
             else:

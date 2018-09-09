@@ -1,3 +1,5 @@
+import textwrap
+
 from gui.messages import Message
 
 
@@ -13,34 +15,33 @@ class Item:
         if self.equipment:
             equipment.owner = self
 
-    @property
-    def attr_list(self):
+    def attr_list(self, max_width=100):
         """
         :return:
         :rtype: list
         """
         list = ['']
         if self.owner.type:
-            list.append(f' Type: {self.owner.type.name.capitalize()}')
+            list.extend(textwrap.wrap(f' Type: {self.owner.type.name.capitalize()}', max_width))
 
         if self.equipment:
 
             if self.equipment.e_to:
-                list.append(f' Equips To: {self.equipment.e_to.capitalize()}')
+                list.extend(textwrap.wrap(f' Equips To: {self.equipment.e_to.capitalize()}', max_width))
 
             if self.equipment.av:
-                list.append(f' Armor: {self.equipment.av}')
+                list.extend(textwrap.wrap(f' Armor: {self.equipment.av}', max_width))
 
             if self.equipment.dmg_range:
-                list.append(f' Damage Potential: {self.equipment.dmg_range[0]}-{self.equipment.dmg_range[1]}')
+                list.extend(textwrap.wrap(f' Damage Potential: {self.equipment.dmg_range[0]}-{self.equipment.dmg_range[1]}', max_width))
 
             if self.equipment.l_radius:
-                list.append(f' Light Radius: {self.equipment.l_radius}')
+                list.extend(textwrap.wrap(f' Light Radius: {self.equipment.l_radius}', max_width))
 
             if self.equipment.moveset:
                 list.append('')
-                list.append('The weapon possesses a distinct attack pattern:')
+                list.extend(textwrap.wrap(f' This weapon cycles through {self.equipment.moveset.moves} attacks:', max_width))
                 for k, v in self.equipment.moveset.movelist.items():
-                    list.append(f'{k}: {v["descr"]}')
+                    list.extend(textwrap.wrap(f'{k}: {v["descr"]}', max_width))
 
         return list

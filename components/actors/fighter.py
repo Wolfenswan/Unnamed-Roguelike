@@ -4,6 +4,7 @@ import logging
 
 from config_files import colors
 from gameobjects.entity import Entity
+from gameobjects.util_functions import fighter_entity_at_pos
 from gui.messages import Message, MessageType, MessageCategory
 from rendering.render_animations import animate_move_line
 from rendering.render_order import RenderOrder
@@ -155,26 +156,27 @@ class Fighter:
 
         logging.debug(f'({self} was healed for {amount}.')
 
-    def attack_setup(self, target, mod=1):
+    def attack_setup(self, target, game, mod=1):
         results = []
         ignore_armor = self.ignore_armor
         attack_string = 'attacks'
-        extra_targets = None
+        extra_targets = []
 
         if self.weapon:
-            move_results = self.weapon.moveset.execute()
+            move_results = self.weapon.moveset.execute(self.owner, target)
             mod += move_results.get('dmg_mod', 0)
             ignore_armor += move_results.get('ignore_armor', 0)
-            extra_targets = move_results.get('extra_targets', None)
             attack_string = move_results.get('string', 'attacks')
+            extra_targets = move_results.get('extra_targets', [])
 
         damage = round(self.power * mod - (target.fighter.defense - ignore_armor))
         results.extend(self.attack_execute(target, damage, attack_string))
 
         logging.debug(f'{self.owner.name.capitalize()} attacks {target.name.capitalize()} with {self.power}*{mod} power against {target.fighter.defense} defense for {damage} damage.')
 
-        if extra_targets:
-            for target in extra_targets:
+            #targets = self.weapon.moveset.get_extra_targets(self.owner.pos, target, extra_targets)
+        for target_pos in extra_targets:
+            if fighter_entity_at_pos(game.entities, *target_pos):
                 results.extend(self.attack_execute(target, damage, 'further hits'))
 
         return results

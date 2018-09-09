@@ -2,7 +2,7 @@
 import tcod
 
 from game import GameStates
-from gameobjects.util_functions import get_blocking_entity_at_location, get_interactable_entity_at_location
+from gameobjects.util_functions import blocking_entity_at_pos, interactable_entity_at_pos
 from gui.manual import display_manual
 from gui.menus import inventory_menu, item_menu, equipment_menu, options_menu
 from gui.messages import Message, MessageType, MessageCategory
@@ -48,10 +48,10 @@ def process_player_input(action, game, fov_map, targeting_item = None):
 
             if not game_map.is_wall(destination_x, destination_y):
 
-                target = get_blocking_entity_at_location(entities, destination_x, destination_y)
+                target = blocking_entity_at_pos(entities, destination_x, destination_y)
 
                 if target is None and interact: # Check for non-blocking interactable objects
-                    target = get_interactable_entity_at_location(entities, destination_x, destination_y)
+                    target = interactable_entity_at_pos(entities, destination_x, destination_y)
 
                 if target:
                     if dodge:
@@ -60,7 +60,7 @@ def process_player_input(action, game, fov_map, targeting_item = None):
                         pass
                     # If a NPC is blocking the way #
                     elif target.fighter:
-                        attack_results = player.fighter.attack_setup(target)
+                        attack_results = player.fighter.attack_setup(target, game)
                         turn_results.extend(attack_results)
                     # If a static object is blocking the way #
                     elif target.architecture:
