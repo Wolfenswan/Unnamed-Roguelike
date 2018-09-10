@@ -35,13 +35,13 @@ def process_player_input(action, game, fov_map, targeting_item = None):
 
     turn_results = []
 
-    # Player moves #
     if player.fighter.is_blocking:
         player.fighter.toggle_blocking()
 
     active_player_states = [GameStates.PLAYERS_TURN, GameStates.PLAYER_RESTING]
     if game.state in active_player_states:
 
+        # Movement and Interaction #
         if move or interact or dodge:
             dx, dy = direction
             destination_x, destination_y = player.x + dx, player.y + dy
@@ -90,17 +90,20 @@ def process_player_input(action, game, fov_map, targeting_item = None):
 
                 game.state = GameStates.ENEMY_TURN
 
+        # Passing a turn #
         elif wait:
-            # turn_results.append({'message': Message(f'You wait.'), 'resting': True})
             turn_results.append({'waiting': True})
 
+        # Picking up an item #
         elif pickup:
-            for entity in entities:  # TODO List comprehension can be tested for possible speed gain
-                if entity.item and entity.same_pos_as(player):
-                    pickup_results = player.inventory.add(entity)
+            items = [item for item in game.item_ents if item.same_pos(player)]
+            if items:
+                # Option menu is displayed if > 1 item is on the ground
+                choice = 0 if len(items) == 1 else\
+                    options_menu('Select Item', 'Pick up which item?', [item.name for item in items])
+                if choice is not None:
+                    pickup_results = player.inventory.add(items[choice])
                     turn_results.extend(pickup_results)
-
-                    break
             else:
                 Message('There is nothing here to pick up.', category=MessageCategory.OBSERVATION).add_to_log(game)
 

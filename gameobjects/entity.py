@@ -141,8 +141,8 @@ class Entity:
 
         return dx, dy
 
-    def same_pos_as(self, other):
-        return (self.x, self.y) == (other.x, other.y)
+    def same_pos(self, other):
+        return self.pos == other.pos
 
     def is_visible(self, fov_map):
         return tcod.map_is_in_fov(fov_map, self.x, self.y)
