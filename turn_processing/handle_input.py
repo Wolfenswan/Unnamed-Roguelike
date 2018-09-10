@@ -20,6 +20,9 @@ def handle_keys(key, game_state):
         return {'exit': True}
     elif chr(key.c) == 'ß' and key.shift:
         return {'manual': True}
+    elif chr(key.c) == 'ß' and key.lalt:
+        return {'debug': True}
+
 
     # Game state specific inputs #
     if game_state in [GameStates.PLAYERS_TURN, GameStates.PLAYER_RESTING, GameStates.CURSOR_ACTIVE]:

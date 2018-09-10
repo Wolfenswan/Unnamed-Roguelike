@@ -19,7 +19,6 @@ class GameStates(Enum):
 
 class Game:
     def __init__(self, debug=False):
-        self.debug = debug
         self.map = None
         self.dlvl = 1
         self.entities = []
@@ -36,6 +35,11 @@ class Game:
         self.bottom_panel = None
         self.event_log = MessageLog(cfg.MSG_X, cfg.MSG_WIDTH, cfg.MSG_HEIGHT)
         self.observation_log = MessageLog(cfg.MSG_X, cfg.MSG_WIDTH, cfg.MSG_HEIGHT)
+
+        self.debug = {
+            'map' : debug,
+            'invin': debug
+        }
 
     @property
     def player(self):

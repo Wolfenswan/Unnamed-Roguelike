@@ -170,14 +170,16 @@ class Fighter:
             extra_targets = move_results.get('extra_targets', [])
 
         damage = round(self.power * mod - (target.fighter.defense - ignore_armor))
-        results.extend(self.attack_execute(target, damage, attack_string))
-
         logging.debug(f'{self.owner.name.capitalize()} attacks {target.name.capitalize()} with {self.power}*{mod} power against {target.fighter.defense} defense for {damage} damage.')
 
-            #targets = self.weapon.moveset.get_extra_targets(self.owner.pos, target, extra_targets)
+        if game.debug['invin'] and target.is_player:
+            damage = 0
+
+        results.extend(self.attack_execute(target, damage, attack_string))
+
         for target_pos in extra_targets:
             if fighter_entity_at_pos(game.entities, *target_pos):
-                results.extend(self.attack_execute(target, damage, 'further hits'))
+                results.extend(self.attack_execute(target, damage//2, 'also hits'))
 
         return results
 

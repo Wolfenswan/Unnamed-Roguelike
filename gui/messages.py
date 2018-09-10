@@ -17,6 +17,7 @@ class MessageType(Enum):
     ALERT = auto()  # alerts about import events, such as health being very low
     COMBAT = auto()
     FLUFF = auto()  # non-important events, such as monster barks
+    SYSTEM = auto()
 
 class Message:
     def __init__(self, text, category = MessageCategory.EVENT, type=MessageType.GENERIC, color=None):

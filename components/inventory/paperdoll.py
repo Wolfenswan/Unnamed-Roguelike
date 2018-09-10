@@ -24,6 +24,17 @@ class Paperdoll:
         extremity = getattr(self, e_to)
         equipped_item = getattr(extremity, e_type)
 
+        print(extremity, equipped_item)
+
+        if item_ent.item.equipment.two_handed and getattr(self.arms, 'offhand'):
+            offhand_item = getattr(self.arms, 'offhand')
+            choice = yesno_menu('Remove Offhand Item', f'Remove {offhand_item.name} to equip the two-handed {item_ent.name}?', game)
+            if choice:
+                results.extend(self.dequip(offhand_item))
+            else:
+                equipped_item = None
+                print('cancelled equipping 2h weapon') # TODO Placeholder
+
         if equipped_item:
             choice = yesno_menu('Remove Item',f'Unequip your {equipped_item.name}?', game)
             if choice:
@@ -31,6 +42,7 @@ class Paperdoll:
                 results.extend(self.equip(item_ent, game))
             else:
                 print('kept') # TODO Placeholder
+
         else:
             setattr(extremity, e_type, item_ent)
             self.equipped_items.append(item_ent)

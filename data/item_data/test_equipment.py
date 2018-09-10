@@ -48,6 +48,7 @@ test_equipment_data = {
         'type': WP_TYPE,
         'e_to': WP_EQUIP,
         'dmg_range': (1,7),
+        'two_handed': True,
         'moveset': moveset_spear,
         'rarity': Rarity.COMMON,
         'dlvls': (1,99)

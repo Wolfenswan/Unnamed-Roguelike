@@ -40,7 +40,7 @@ def game_loop(game):
         if fov_recompute:
             recompute_fov(game, player.x, player.y)
             fov_recompute = False
-        render_all(game, fov_map)
+        render_all(game, fov_map, debug=game.debug['map'])
 
         tcod.sys_wait_for_event(tcod.EVENT_KEY_PRESS, key, None, True)
         action = handle_keys(key, game.state)

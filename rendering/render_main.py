@@ -11,8 +11,8 @@ from rendering.render_panels import render_panels
 from rendering.render_order import RenderOrder
 
 
-def render_all(game, fov_map):
-    render_map_screen(game, fov_map)
+def render_all(game, fov_map, debug=False):
+    render_map_screen(game, fov_map, debug=debug)
     render_panels(game)
 
     if game.state == GameStates.CURSOR_ACTIVE:
@@ -26,7 +26,6 @@ def render_all(game, fov_map):
 def render_map_screen(game, fov_map, debug=False):
     con = game.map_panel
     entities = game.entities
-    debug = game.debug or debug
 
     # Render game map #
     tcod.console_clear(con)

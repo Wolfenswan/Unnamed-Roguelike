@@ -4,10 +4,9 @@ import tcod
 from game import GameStates
 from gameobjects.util_functions import blocking_entity_at_pos, interactable_entity_at_pos
 from gui.manual import display_manual
-from gui.menus import inventory_menu, item_menu, equipment_menu, options_menu
+from gui.menus import inventory_menu, item_menu, equipment_menu, options_menu, debug_menu
 from gui.messages import Message, MessageType, MessageCategory
 from loader_functions.data_loader import save_game
-from rendering.render_windows import render_description_window
 
 
 def process_player_input(action, game, fov_map, targeting_item = None):
@@ -18,6 +17,7 @@ def process_player_input(action, game, fov_map, targeting_item = None):
 
     exit = action.get('exit')
     fullscreen = action.get('fullscreen')
+    debug = action.get('debug')
     manual = action.get('manual')
     move = action.get('move')
     dodge = action.get('dodge')
@@ -210,5 +210,8 @@ def process_player_input(action, game, fov_map, targeting_item = None):
 
     if fullscreen:
         tcod.console_set_fullscreen(not tcod.console_is_fullscreen())
+
+    if debug:
+        debug_menu(game)
 
     return turn_results

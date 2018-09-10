@@ -23,7 +23,7 @@ moveset_spear = {
     },
     2: {
         'descr': 'An accurate thrust, using the weapon\'s full potential.',
-        'string': 'thrusts accurately at'
+        'string': 'accurately thrusts at'
     },
     3: {
         'descr': 'A powerful thrust, piercing the target and potentially hitting someone behind it.',

@@ -22,7 +22,8 @@ class Moveset():
         if self.current_move > self.moves or reset:
             self.current_move = 1
 
-    def get_extra_targets(self, attacker, target, extra_hits):
+    @staticmethod
+    def get_extra_targets(attacker, target, extra_hits):
         extra_targets = []
         x, y = target.pos
         dir_x, dir_y = attacker.direction_to_ent(target)

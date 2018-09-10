@@ -8,7 +8,7 @@ from rendering.render_main import render_map_screen
 from rendering.render_order import RenderOrder
 
 def render_animation(game, anim_delay):
-    render_map_screen(game, game.fov_map)
+    render_map_screen(game, game.fov_map, debug=game.debug['map'])
     time.sleep(anim_delay)
     tcod.console_flush()
 
