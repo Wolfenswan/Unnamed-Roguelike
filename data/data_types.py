@@ -13,7 +13,7 @@ class GenericType(Enum):
     DEFAULT = 100
     UNIQUE = -1
 
-class MonsterType(Enum):
+class MonsterType(Enum): # currently unused
     GENERIC = 100
     ELITE = 60
     LEADER = 20

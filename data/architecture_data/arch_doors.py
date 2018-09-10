@@ -1,6 +1,6 @@
 from components.architecture import Architecture
 from config_files import colors
-from data.entitytypes import Rarity
+from data.data_types import Rarity
 
 arch_doors_data = {
     'door_wooden': {

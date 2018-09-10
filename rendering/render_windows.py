@@ -97,5 +97,7 @@ def render_description_window(game):
         title = ent.name
         body = ent.descr
 
-        draw_window(title, body, window_x=x, window_y=y, show_cancel_option=False)
+        width = min(len(body), cfg.SCREEN_WIDTH//3)
+
+        draw_window(title, body, window_x=x, window_y=y, forced_width=width, show_cancel_option=False)
 

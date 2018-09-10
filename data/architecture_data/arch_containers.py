@@ -1,6 +1,6 @@
 from components.architecture import Architecture
 from config_files import colors
-from data.entitytypes import ItemType, Rarity, ContainerType
+from data.data_types import ItemType, Rarity, ContainerType
 
 arch_containers_data = {
     'barrel_wood': {

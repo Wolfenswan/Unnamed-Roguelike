@@ -1,5 +1,5 @@
 from config_files import colors
-from data.entitytypes import ItemType, Rarity
+from data.data_types import ItemType, Rarity
 from data.item_data.moveset_data import moveset_sword, moveset_spear
 
 WP_CHAR = '\\'
@@ -61,7 +61,7 @@ test_equipment_data = {
         'type': ARM_TYPE,
         'e_to': ARM_EQUIP,
         'av': 2,
-        'qu_slots': 2,
+        'qu_slots': 1,
         'rarity': Rarity.UNCOMMON,
         'dlvls': (1, 99)
     },
@@ -85,7 +85,7 @@ test_equipment_data = {
         "char": M_CHAR,
         "color": M_COLOR,
         'e_to': M_EQUIP,
-        'qu_slots': 6,
+        'qu_slots': 4,
     },
     'torch': {
         'name': 'Torch',
@@ -96,7 +96,7 @@ test_equipment_data = {
         "char": OH_CHAR,
         "color": colors.light_orange,
         'e_to': OH_EQUIP,
-        'l_radius': 2
+        'l_radius': 3
     },
     'shield_wood': {
         'name': 'Wooden Shield',

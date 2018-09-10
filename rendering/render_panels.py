@@ -15,12 +15,11 @@ def render_panels(game):
                        cfg.COMBAT_PANEL_HEIGHT)
     render_object_panel(game, game.lower_right_panel, cfg.SIDE_PANEL_X, cfg.PLAYER_PANEL_HEIGHT + cfg.COMBAT_PANEL_HEIGHT + 1, cfg.SIDE_PANEL_WIDTH,
                        cfg.OBJECT_PANEL_HEIGHT)
-    render_status_panel(game, cfg.STATUS_PANEL_Y, cfg.BOTTOM_PANELS_WIDTH, cfg.STATUS_PANEL_HEIGHT)
+    render_status_panel(game, game.status_panel, cfg.STATUS_PANEL_Y, cfg.BOTTOM_PANELS_WIDTH, cfg.STATUS_PANEL_HEIGHT)
     render_message_panel(game.observation_log, 'Observations', game.bottom_left_panel, 0, cfg.BOTTOM_PANELS_Y, cfg.MSG_PANEL_WIDTH, cfg.BOTTOM_PANELS_HEIGHT)
     render_message_panel(game.event_log, 'Combat', game.bottom_center_panel, cfg.MSG_PANEL2_X, cfg.BOTTOM_PANELS_Y, cfg.MSG_PANEL_WIDTH, cfg.BOTTOM_PANELS_HEIGHT)
 
-
-    # BOTTOM GUI
+    # OLD BOTTOM GUI
     # render_enemy_panel(game, game.bottom_left_panel, 0, cfg.BOTTOM_PANELS_Y, cfg.COMBAT_PANEL_WIDTH,
     #                    cfg.BOTTOM_PANELS_HEIGHT)
     # render_message_panel(game.observation_log, 'Observations', game.bottom_center_panel, cfg.MSG_PANEL1_X, cfg.BOTTOM_PANELS_Y, cfg.MSG_PANEL_WIDTH, cfg.BOTTOM_PANELS_HEIGHT)
@@ -28,10 +27,14 @@ def render_panels(game):
 
 
 def render_player_panel(game, con, panel_x, panel_y, width, height):
-    setup_console(con, caption='Player', borders=True)
+    setup_console(con, caption='Player Status', borders=True)
 
     player = game.player
 
+    #draw_quickslots(con, game)
+
+    # Armor
+    # Weapon  Damage
     # Display weapon move information #
     if player.fighter.weapon and player.fighter.weapon.moveset:
         tcod.console_print(con, 1, 1, f'{game.player.fighter.weapon.moveset.current_move}')
@@ -42,7 +45,8 @@ def render_object_panel(game, con, panel_x, panel_y, width, height):
     setup_console(con, caption='Objects', borders=True)
 
     # check for objects in FOV
-    spotted = [ent for ent in game.entities if ent.is_visible(game.fov_map) and (ent.item is not None or ent.architecture is not None)]
+    spotted = [ent for ent in (game.item_ents + game.architecture_ents) if ent.is_visible(game.fov_map)]
+    #spotted = [ent for ent in game.entities if ent.is_visible(game.fov_map) and (ent.item is not None or ent.architecture is not None)]
 
     if len(spotted):
         spotted.sort(key=game.player.distance_to_ent)  # sort the spotted array by distance to player
@@ -57,7 +61,7 @@ def render_object_panel(game, con, panel_x, panel_y, width, height):
             symbol = '*' if (ent.x, ent.y) == (game.player.x, game.player.y) else f'{ent.char}'
             wrapped_name = textwrap.wrap(f'{symbol} {ent.name}', width-3)
             for i, line in enumerate(wrapped_name):
-                tcod.console_print(con, 2+i, y, f'%c{line}%c' % (
+                tcod.console_print(con, 1+i, y, f'%c{line}%c' % (
                 tcod.COLCTRL_1, tcod.COLCTRL_STOP))
 
                 y += 2
@@ -74,7 +78,8 @@ def render_enemy_panel(game, con, panel_x, panel_y, width, height):
     setup_console(con, caption='Enemies', borders=True, bordercolor=color)
     
     # check for monsters in FOV
-    spotted = [ent for ent in game.entities if ent.ai and ent.fighter.hp > 0 and ent.is_visible(game.fov_map)]
+    spotted = [ent for ent in game.monster_ents if ent.is_visible(game.fov_map) and ent.fighter.hp > 0]
+    #spotted = [ent for ent in game.entities if ent.ai and ent.fighter.hp > 0 and ent.is_visible(game.fov_map)]
 
     if len(spotted):
         spotted.sort(key=game.player.distance_to_ent)  # sort the spotted array by distance to player
@@ -87,7 +92,7 @@ def render_enemy_panel(game, con, panel_x, panel_y, width, height):
             # Draw creature name and stats #
             tcod.console_set_color_control(tcod.COLCTRL_1, ent.color, tcod.black)
             tcod.console_set_color_control(tcod.COLCTRL_2, ent.fighter.hp_color, tcod.black) # TODO make dynamic
-            tcod.console_print(con, 2, y, f'%c{ent.char} {ent.name}%c | %c{ent.fighter.hp_string.capitalize()}%c' % (tcod.COLCTRL_1, tcod.COLCTRL_STOP, tcod.COLCTRL_2, tcod.COLCTRL_STOP))
+            tcod.console_print(con, 1, y, f'%c{ent.char} {ent.name}%c | %c{ent.fighter.hp_string.capitalize()}%c' % (tcod.COLCTRL_1, tcod.COLCTRL_STOP, tcod.COLCTRL_2, tcod.COLCTRL_STOP))
 
             y += 2
             if y >= con.height - 2:  # If the limit's of the con are reached, cut the con off
@@ -115,8 +120,7 @@ def render_message_panel(message_log, title, con, panel_x, panel_y, width, heigh
     tcod.console_blit(con, 0, 0, width, height, 0, panel_x, panel_y)
 
 
-def render_status_panel(game, panel_y, width, height):
-    console = game.status_panel
+def render_status_panel(game, console, panel_y, width, height):
     setup_console(console, fgcolor=colors.light_gray)
 
     draw_bar(console, 1, 1, 20, 'HP', int(game.player.fighter.hp), game.player.fighter.max_hp,
@@ -153,10 +157,12 @@ def draw_quickslots(con, game):
     total_slots = player.qu_inventory.capacity
     width = 3 * total_slots # every slot needs 3 pixels
     start_x = cfg.BOTTOM_PANELS_WIDTH // 2 - width // 2
+    #start_x = cfg.SIDE_PANEL_WIDTH // 2 - width // 2 + 4
+    start_y = 0
 
     if total_slots > 0:
         o_x = start_x
-        o_y = 0
+        o_y = start_y
         tcod.console_set_char(con, o_x, o_y, 218)
         tcod.console_set_char(con, o_x, o_y+1, 179)
         tcod.console_set_char(con, o_x, o_y+2, 192)

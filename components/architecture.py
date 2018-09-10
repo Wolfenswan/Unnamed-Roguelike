@@ -51,6 +51,9 @@ class Architecture:
         # display chest_contents
         if container_ent.inventory.is_empty:
             results.append({'message':Message(f'The {container_ent.name} is empty.', category=MessageCategory.OBSERVATION)})
+            if container_ent.name[-7:] != '(empty)':
+                container_ent.name += ' (empty)'
+            # TODO ability to put things into container
         else:
             selection = inventory_menu(container_ent, title=f'{container_ent.name}')
             if selection:

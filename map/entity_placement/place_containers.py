@@ -38,7 +38,7 @@ def place_containers(game):
                         f'New container would bring dungeon total to {len(game.container_ents)+1} thus exceed total maximum: ({max_containers})')
                     break
                 # If the container is a blocking object, get a free tile
-                elif data.get('blocks', False):
+                if data.get('blocks', False):
                     free_tiles = room.free_tiles(game_map, allow_exits=False)
                     if len(free_tiles) > 0:
                         x, y = choice(free_tiles)
