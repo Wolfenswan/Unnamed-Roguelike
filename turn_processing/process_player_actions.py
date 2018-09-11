@@ -4,7 +4,7 @@ import tcod
 from game import GameStates
 from gameobjects.util_functions import blocking_entity_at_pos, interactable_entity_at_pos
 from gui.manual import display_manual
-from gui.menus import inventory_menu, item_menu, equipment_menu, options_menu, debug_menu
+from gui.menus import item_menu,  options_menu, debug_menu, item_list_menu
 from gui.messages import Message, MessageType, MessageCategory
 from loader_functions.data_loader import save_game
 
@@ -99,8 +99,8 @@ def process_player_input(action, game, fov_map, targeting_item = None):
             items = [item for item in game.item_ents if item.same_pos(player)]
             if items:
                 # Option menu is displayed if > 1 item is on the ground
-                choice = 0 if len(items) == 1 else\
-                    options_menu('Select Item', 'Pick up which item?', [item.name for item in items])
+                choice = 0 if len(items) == 1 else \
+                    item_list_menu(player, items, title='Select Item', body='Pick up which item?')
                 if choice is not None:
                     pickup_results = player.inventory.add(items[choice])
                     turn_results.extend(pickup_results)
@@ -161,10 +161,10 @@ def process_player_input(action, game, fov_map, targeting_item = None):
     selected_item_ent = None
 
     if game.state == GameStates.SHOW_INVENTORY:
-        selected_item_ent = inventory_menu(player)
+        selected_item_ent = item_list_menu(player, player.inventory.items)
 
     elif game.state == GameStates.SHOW_EQUIPMENT:
-        selected_item_ent = equipment_menu(player)
+        selected_item_ent = item_list_menu(player, player.paperdoll.equipped_items, title='Equipment')
 
     if game.state in [GameStates.SHOW_INVENTORY, GameStates.SHOW_EQUIPMENT]:
         if selected_item_ent:

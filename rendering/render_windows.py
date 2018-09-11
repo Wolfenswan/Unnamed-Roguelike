@@ -21,7 +21,9 @@ def set_window_on_screen(window_x, window_y, width, height):
     return window_x, window_y
 
 
-def draw_window(title, body, options = None, window_x = None, window_y = None, padding_x = 2, padding_y = 2, sort_by = 'str', show_cancel_option=True, forced_width=None, extend_body = None):
+def draw_window(title, body, options = None, window_x = None, window_y = None, padding_x = 2, padding_y = 2,
+                sort_by = 'str', show_cancel_option=True, forced_width=None, extend_body = None,
+                title_color=colors.white, options_colors=None):
     if not options:
         options  = []
 
@@ -66,16 +68,21 @@ def draw_window(title, body, options = None, window_x = None, window_y = None, p
         letter_index = ord('a')
         for i, option in enumerate(options):
             if type(sort_by) == str:
-                line = '(' + chr(letter_index) + ') ' + option
+                line = f'({chr(letter_index)}) {option}'
                 letter_index += 1  # by incrementing the ascii code for the letter, we go through the alphabet
             elif type(sort_by) == int:
-                line = '(' + str(i + 1) + ') ' + option
+                line = f'({str(i + 1)}) {option}'
             else:
                 line = option
-            tcod.console_print(window, padding_x, i + y, line)
+            if options_colors:
+                tcod.console_set_color_control(tcod.COLCTRL_1, options_colors[i], colors.black)
+            else:
+                tcod.console_set_color_control(tcod.COLCTRL_1, colors.white, colors.black)
+            tcod.console_print(window, padding_x, i + y, f'%c{line}%c' %(tcod.COLCTRL_1, tcod.COLCTRL_STOP))
 
     draw_console_borders(window, color=colors.white)
-    tcod.console_print(window, padding_x, 0, title)
+    tcod.console_set_color_control(tcod.COLCTRL_1, title_color, colors.black)
+    tcod.console_print(window, padding_x, 0, f'%c{title}%c' %(tcod.COLCTRL_1, tcod.COLCTRL_STOP))
 
     if show_cancel_option:
         # tcod.console_print(window, 0, height - 1, '<ESC TO CANCEL>')

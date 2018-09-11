@@ -22,7 +22,10 @@ class Item:
         """
         list = ['']
         if self.owner.type:
-            list.extend(textwrap.wrap(f' Type: {self.owner.type.name.capitalize()}', max_width))
+            type_str = self.owner.type.name.capitalize()
+            if self.equipment and self.equipment.two_handed:
+                type_str += ' (Two-Handed)'
+            list.extend(textwrap.wrap(f' Type: {type_str}', max_width))
 
         if self.equipment:
 

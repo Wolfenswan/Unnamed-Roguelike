@@ -1,3 +1,4 @@
+from config_files import colors
 from data.data_types import ItemType, Material
 from data.shared_data.rarity_data import Rarity
 from data.item_data.wp_movesets import moveset_sword, moveset_spear
@@ -97,6 +98,7 @@ test_equipment_data = {
         'name': 'Torch',
         'descr': 'A wooden torch to light your way.',
         'type': ItemType.MISC,
+        'color': colors.wood,
         'rarity': Rarity.COMMON,
         'dlvls': (1,99),
         "char": OH_CHAR,

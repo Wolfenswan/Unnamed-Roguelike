@@ -1,6 +1,6 @@
 import tcod
 
-from gui.menus import inventory_menu
+from gui.menus import item_list_menu
 from gui.messages import Message, MessageCategory
 
 
@@ -55,7 +55,7 @@ class Architecture:
                 container_ent.name += ' (empty)'
             # TODO ability to put things into container
         else:
-            selection = inventory_menu(container_ent, title=f'{container_ent.name}')
+            selection = item_list_menu(container_ent, container_ent.inventory.items, title=f'{container_ent.name}')
             if selection:
                 if not interacting_ent.inventory.is_full:
                     results.append({'message':Message(f'You take the {selection.name} from the {container_ent.name}.', category=MessageCategory.OBSERVATION)})

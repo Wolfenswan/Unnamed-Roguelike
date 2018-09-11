@@ -65,47 +65,72 @@ def yesno_menu(title, body, game):
     return True if choice == 'y' else False
 
 
-def inventory_menu(entity, title='Inventory'):
-    inventory = entity.inventory
-    x, y = pos_on_screen(entity.x + 2, entity.y - 2, entity)
-
-    options = [item.name for item in inventory.items]
-
+def item_list_menu(entity, item_list, title='Inventory', body='Press the key next to an item to select it.', colorize_options=True):
     # TODO add optional filter
     # TODO allow cycling through filters
 
-    body = 'Press the key next to an item to select it.'
+    x, y = pos_on_screen(entity.x + 2, entity.y - 2, entity)
+
+    options = [item.name for item in item_list]
+    if colorize_options:
+        options_colors = [item.color for item in item_list]
+    else:
+        options_colors = None
 
     width = len(max(options, key=len)) + 4 if options else 0
 
-    draw_window(title, body, options=options, window_x=x, window_y=y, forced_width=width)
+    draw_window(title, body, options=options, window_x=x, window_y=y, forced_width=width, options_colors=options_colors)
 
     choice = menu_loop(wait_for=len(options))
 
     if choice is not None:
-        return inventory.items[choice]
+        return item_list[choice]
     else:
         return False
 
-
-def equipment_menu(entity):
-    # TODO: Menu will be expanded to provide more detailled information #
-    inventory = entity.paperdoll.equipped_items
-    x, y = pos_on_screen(entity.x + 2, entity.y - 2, entity)
-
-    body = 'Press the key next to an item to select it.'
-    options = [item.name for item in inventory]
-
-    width = len(max(options, key=len)) + 4
-
-    draw_window('Equipment', body, options=options, window_x=x, window_y=y, forced_width=width)
-
-    choice = menu_loop(wait_for=len(options))
-
-    if choice is not None:
-        return inventory[choice]
-    else:
-        return False
+# def inventory_menu(entity, title='Inventory'):
+#     inventory = entity.inventory
+#     x, y = pos_on_screen(entity.x + 2, entity.y - 2, entity)
+#
+#     options = [item.name for item in inventory.items]
+#     options_colors = [item.color for item in inventory.items]
+#
+#     # TODO add optional filter
+#     # TODO allow cycling through filters
+#
+#     body = 'Press the key next to an item to select it.'
+#
+#     width = len(max(options, key=len)) + 4 if options else 0
+#
+#     draw_window(title, body, options=options, window_x=x, window_y=y, forced_width=width, options_colors=options_colors)
+#
+#     choice = menu_loop(wait_for=len(options))
+#
+#     if choice is not None:
+#         return inventory.items[choice]
+#     else:
+#         return False
+#
+#
+# def equipment_menu(entity):
+#     # TODO: Menu will be expanded to provide more detailled information #
+#     inventory = entity.paperdoll.equipped_items
+#     x, y = pos_on_screen(entity.x + 2, entity.y - 2, entity)
+#
+#     body = 'Press the key next to an item to select it.'
+#     options = [item.name for item in inventory]
+#     options_colors = [item.color for item in inventory]
+#
+#     width = len(max(options, key=len)) + 4
+#
+#     draw_window('Equipment', body, options=options, window_x=x, window_y=y, forced_width=width, options_colors=options_colors)
+#
+#     choice = menu_loop(wait_for=len(options))
+#
+#     if choice is not None:
+#         return inventory[choice]
+#     else:
+#         return False
 
 
 def item_menu(item_ent, game):
@@ -139,7 +164,8 @@ def item_menu(item_ent, game):
         wait_for.append('d')
 
     width = min(len(body), round(cfg.SCREEN_WIDTH//2.5))
-    draw_window(title, body, options=options, window_x=x, window_y=y, sort_by=None, forced_width=width, extend_body = item_ent.item.attr_list(max_width=width))
+    draw_window(title, body, options=options, window_x=x, window_y=y, sort_by=None, forced_width=width,
+                extend_body = item_ent.item.attr_list(max_width=width), title_color=item_ent.color)
 
     choice = menu_loop(wait_for=wait_for)
 

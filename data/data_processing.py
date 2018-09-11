@@ -200,7 +200,7 @@ def gen_item_from_data(data, x, y, force_material=False, force_condition=False):
         if dmg_range:
             mat_mod = material.get('dmg_mod',0)
             cond_mod = condition.get('dmg_mod', 0)
-            dmg_range = (dmg_range[0] + mat_mod + cond_mod, dmg_range[1] + mat_mod + cond_mod)
+            dmg_range = (max((dmg_range[0] + mat_mod + cond_mod),1), dmg_range[1] + mat_mod + cond_mod)
 
         av = data.get('av')
         if av:
