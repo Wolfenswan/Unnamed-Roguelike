@@ -29,3 +29,9 @@ class Material(Enum):
     # BUFF LEATHER
     IRON = auto()
     STEEL = auto()
+
+class Condition(Enum):
+    POOR = auto()
+    NORMAL = auto()
+    GOOD = auto()
+    LEGENDARY = auto()

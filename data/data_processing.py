@@ -22,6 +22,7 @@ from data.shared_data.material_data import item_material_data
 from data.item_data.test_equipment import test_equipment_data
 from data.item_data.use_potions import use_potions_data
 from data.item_data.use_scrolls import use_scrolls_data
+from data.string_data.item_descr import item_descr_data
 from gameobjects.entity import Entity
 from gameobjects.npc import NPC
 from rendering.render_order import RenderOrder
@@ -75,11 +76,13 @@ def get_material_data(data, arguments):
     return material
 
 
-def get_condition_data(material):
-    key = pick_from_data_dict_by_rarity(qual_cond_data)
+def get_condition_data(material, arguments):
     if material:
-        condition = qual_cond_data[key].copy() # Dict is copied, so the name value can safely be set
-        condition['name'] = condition['names'].get(material['type'], 'ordinary')
+        key = pick_from_data_dict_by_rarity(qual_cond_data)
+        condition = qual_cond_data[key].copy() # Dict is copied, so the name value can safely be
+        if item_descr_data.get(arguments[6]):
+            cond_descr = choice(item_descr_data[arguments[6]][material['type']][condition['type']]['descr'])
+            arguments[5] += f' {cond_descr}'
     else:
         condition = {}
 
@@ -126,12 +129,8 @@ def gen_item_from_data(data, x, y, force_material=False, force_condition=False):
     equip_to = data.get('e_to', None)
     if not force_material:
         material = get_material_data(data, arguments)
-    else:
-        material = force_material
     if not force_condition:
-        condition = get_condition_data(material)
-    else:
-        condition = force_condition
+        condition = get_condition_data(material, arguments)
 
     useable_component = None
     if on_use is not None:

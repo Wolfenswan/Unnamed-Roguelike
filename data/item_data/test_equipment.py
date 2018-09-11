@@ -26,7 +26,7 @@ test_equipment_data = {
     'sword': {
         'name': 'sword',
         'materials': (Material.IRON, Material.STEEL),
-        'descr': 'You are not sure if this sword has seen better days, or if time simply has caught up to shoddy craftsmanship.',
+        'descr': 'Kill enemies, cut bread, what else could you wish for.',
         "char": WP_CHAR,
         'type': WP_TYPE,
         'e_to': WP_EQUIP,
@@ -38,7 +38,7 @@ test_equipment_data = {
     'spear': {
         'name': 'spear',
         'materials': (Material.OAK, Material.IRON, Material.STEEL),
-        'descr': 'The tip might break off, but the rust will hopefully poison your enemies.',
+        'descr': 'A simple weapon that has stood the test of time.',
         'char': '|',
         'type': WP_TYPE,
         'e_to': WP_EQUIP,
@@ -74,7 +74,7 @@ test_equipment_data = {
     'helmet': {
         'name': 'Helmet',
         'materials': (Material.LEATHER, Material.IRON),
-        'descr': 'Hardly better than a bucket.',
+        'descr': 'At least it is not a bucket.',
         'type': H_TYPE,
         'rarity': Rarity.COMMON,
         'dlvls': (1,99),
@@ -95,7 +95,6 @@ test_equipment_data = {
     },
     'torch': {
         'name': 'Torch',
-        'materials': (Material.OAK,),
         'descr': 'A wooden torch to light your way.',
         'type': OH_TYPE,
         'rarity': Rarity.COMMON,
@@ -107,7 +106,7 @@ test_equipment_data = {
     'shield': {
         'name': 'Shield',
         'materials': (Material.LEATHER, Material.OAK, Material.IRON),
-        'descr': 'A wooden plank, full of worm holes.',
+        'descr': 'A simple shield.',
         'type': OH_TYPE,
         'rarity': Rarity.COMMON,
         'dlvls': (1,99),

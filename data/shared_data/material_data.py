@@ -5,13 +5,13 @@ from data.shared_data.rarity_data import Rarity
 # Note: atm. there's no type rarity set for material. It only takes the rarity value into account #
 
 item_material_data = {
-    Material.OAK: {
+    'wood_1': {
         'name': 'oak',
         'type': Material.OAK,
         'rarity': Rarity.COMMON,
         'color': colors.oak
     },
-    Material.LINEN: {
+    'cloth_1': {
         'name': 'linen',
         'type': Material.LINEN,
         'rarity': Rarity.COMMON,
