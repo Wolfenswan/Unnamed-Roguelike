@@ -1,15 +1,16 @@
 from components.architecture import Architecture
 from config_files import colors
-from data.data_types import Rarity
+from data.data_types import Material
+from data.shared_data.rarity_data import Rarity
 
 arch_doors_data = {
-    'door_wooden': {
+    'door': {
         'name': 'Door',
-        'descr': "A wooden door.",
+        'materials': (Material.OAK, Material.IRON, Material.STEEL),
+        'descr': "A creaky old door.",
         'rarity': Rarity.COMMON,
         'dlvls': (1, 99),
         "char": '-',
-        "color": colors.wood,
         'on_collision': Architecture.toggle_door,
         'on_interaction': Architecture.toggle_door
     }

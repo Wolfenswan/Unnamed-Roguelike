@@ -1,16 +1,17 @@
 from components.architecture import Architecture
 from config_files import colors
-from data.data_types import ItemType, Rarity, ContainerType
+from data.data_types import ItemType, ContainerType, Material
+from data.shared_data.rarity_data import Rarity
 
 arch_containers_data = {
-    'barrel_wood': {
-        'name': 'Wooden Barrel',
+    'barrel': {
+        'name': 'barrel',
+        'materials': (Material.OAK, Material.IRON),
         'descr': "A barrel of unknown contents.",
         'type': ContainerType.BARREL,
         'rarity': Rarity.COMMON,
         'dlvls': (1, 99),
         "char": 'o',
-        "color": colors.wood,
         "blocks": True,
         'container_room': (0,4),
         'contents_rarity': (Rarity.COMMON,),
@@ -18,14 +19,14 @@ arch_containers_data = {
         'on_collision': Architecture.blocks_info,
         'on_interaction': Architecture.smash_object
     },
-    'chest_wood': {
-        'name': 'Wooden Chest',
+    'chest_basic': {
+        'name': 'chest',
+        'materials': (Material.OAK, Material.IRON, Material.STEEL),
         'descr': "A simple, yet sturdy chest.",
         'type': ContainerType.CHEST_BASIC,
         'rarity': Rarity.UNCOMMON,
         'dlvls': (1, 99),
         "char": '+',
-        "color": colors.wood,
         "blocks": False,
         'container_room': (3, 8),
         'contents_rarity': (Rarity.COMMON, Rarity.UNCOMMON, Rarity.RARE),
@@ -34,14 +35,14 @@ arch_containers_data = {
         'on_interaction': Architecture.open_container
     },
     'weapon_rack_old': {
-        'name': 'Old Weapon Rack',
+        'name': 'weapon rack',
+        'materials': (Material.IRON, Material.STEEL),
         'descr': "The rust makes it hard to tell where the rack ends and its content begins.",
         'type': ContainerType.CHEST_BASIC,
         'rarity': Rarity.UNCOMMON,
         'rarity_mod': +5,
         'dlvls': (1, 99),
         "char": '+',
-        "color": colors.dark_gray,
         "blocks": False,
         'container_room': (1, 4),
         'contents_rarity': (Rarity.COMMON, Rarity.UNCOMMON),

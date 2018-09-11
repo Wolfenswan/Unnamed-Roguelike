@@ -1,30 +1,30 @@
-from enum import Enum
+from enum import Enum, auto
 
-class Rarity(Enum):
-    COMMON = 100
-    UNCOMMON = 75
-    RARE = 50
-    EXOTIC = 25
-    LEGENDARY = 10
-    UNIQUE = -1
-
-# Values indicate rarity weight per type #
 class GenericType(Enum):
-    DEFAULT = 100
-    UNIQUE = -1
+    DEFAULT = auto()
+    UNIQUE = auto()
 
 class MonsterType(Enum): # currently unused
-    GENERIC = 100
-    ELITE = 60
-    LEADER = 20
+    GENERIC = auto()
+    ELITE = auto()
+    LEADER = auto()
 
 class ItemType(Enum):
-    USEABLE = 100
-    WEAPON = 60
-    OFFHAND = 55
-    ARMOR = 40
-    BELT = 30
+    USEABLE = auto()
+    WEAPON = auto()
+    OFFHAND = auto()
+    ARMOR = auto()
+    BELT = auto()
 
 class ContainerType(Enum):
-    BARREL = 100
-    CHEST_BASIC = 65
+    BARREL = auto()
+    CHEST_BASIC = auto()
+
+class Material(Enum):
+    OAK = auto()
+    LINEN = auto()
+    COTTON = auto()
+    LEATHER = auto()
+    # BUFF LEATHER
+    IRON = auto()
+    STEEL = auto()

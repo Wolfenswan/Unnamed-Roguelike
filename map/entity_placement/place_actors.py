@@ -3,7 +3,7 @@
 import logging
 from random import randint, choice
 
-from data.data_processing import gen_ent_from_dict, pick_from_data_dict_by_rarity
+from data.data_processing import gen_npc_from_dict, pick_from_data_dict_by_rarity
 from config_files import cfg
 from data.actor_data.spawn_data import spawn_data
 
@@ -63,7 +63,7 @@ def place_monsters(game):
                             # Get a random position for the monster
                             x, y = choice(free_tiles)
 
-                            ent = gen_ent_from_dict(entry, x, y, game)
+                            ent = gen_npc_from_dict(entry, x, y, game)
                             game.entities.append(ent)
                             logging.debug(f'... and created {ent} at {x},{y} in {room}, #{m} out of {num_of_monsters}')
                         else:

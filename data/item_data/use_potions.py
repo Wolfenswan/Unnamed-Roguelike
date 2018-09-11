@@ -1,6 +1,7 @@
 from config_files import colors
 from abilities.spells import heal_entity
-from data.data_types import ItemType, Rarity
+from data.data_types import ItemType
+from data.shared_data.rarity_data import Rarity
 from gui.messages import Message
 
 POTION_CHAR = '!'

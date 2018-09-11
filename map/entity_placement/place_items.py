@@ -19,7 +19,7 @@ def place_items(game):
    #max_items = (game_map.width * game_map.height) // cfg.ITEMS_DUNGEON_DIVISOR
     max_items = int(len(rooms) * cfg.ITEMS_DUNGEON_FACTOR)
 
-    logging.debug(f'Max allowed: {max_items} for {len(rooms)} rooms)')
+    logging.debug(f'Max allowed: {max_items} for {len(rooms)} rooms')
     while len(game.item_ents) < max_items and len(rooms) > 0:
         room = choice(rooms)
         rooms.remove(room)

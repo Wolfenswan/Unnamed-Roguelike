@@ -1,5 +1,5 @@
 from config_files import colors
-from data.data_types import Rarity
+from data.shared_data.rarity_data import Rarity
 
 SO_COLOR = colors.white
 

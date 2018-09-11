@@ -8,14 +8,16 @@ from components.architecture import Architecture
 from components.inventory.inventory import Inventory
 from components.items.equipment import Equipment
 from components.items.item import Item
-from components.items.moveset import Moveset
 from components.items.useable import Useable
 from components.skill import Skill
+from config_files import colors
 from data.actor_data.skills_data import skills_data
 from data.actor_data.spawn_data import spawn_data
 from data.architecture_data.arch_static import arch_static_data
 from data.architecture_data.arch_containers import arch_containers_data
+from data.shared_data.rarity_data import rarity_types, Rarity
 from data.data_types import GenericType
+from data.shared_data.material_data import item_material_data
 from data.item_data.test_equipment import test_equipment_data
 from data.item_data.use_potions import use_potions_data
 from data.item_data.use_scrolls import use_scrolls_data
@@ -47,10 +49,10 @@ CONTAINER_DATA_MERGED = merge_dictionaries(container_data)
 
 
 def get_generic_data(data, randomize_color = False):
-    name = data['name']
     char = data['char']
-    color = data['color']
-    descr = data['descr']
+    color = data.get('color', colors.white)
+    name = data['name'].title()
+    descr = data.get('descr', 'No description')
     type = data.get('type', GenericType.DEFAULT)
 
     if randomize_color:
@@ -59,14 +61,26 @@ def get_generic_data(data, randomize_color = False):
     return (char, color, name, descr, type)
 
 
-def gen_ent_from_dict(data, x, y, game):
+def get_material_data(data, arguments):
+    materials = {mat: rarity for mat, rarity in item_material_data.items() if mat in data.get('materials',{})}
+    if materials:
+        material = pick_from_data_dict_by_rarity(materials)
+        arguments[3] = material['color'] # Update the entity's color
+        arguments[4] = f"{material['name']} {arguments[4]}".title() # Update the entity's name
+    else:
+        material = {}
+
+    return material
+
+
+def gen_npc_from_dict(data, x, y, game):
     arguments = (x, y, *get_generic_data(data, randomize_color=True))
 
     hp = randint(*data['max_hp'])
     stamina = randint(*data['max_stamina'])
     defense = randint(*data['nat_armor'])
     power = randint(*data['nat_power'])
-    loadouts = data.get('loadouts', None)
+    loadouts = data.get('loadouts')
     vision = data.get('nat_vision', 8)
     ai_movement = data.get('ai_movement', Simple)
     ai_attack = data.get('ai_attack', Simple)
@@ -83,21 +97,21 @@ def gen_ent_from_dict(data, x, y, game):
             skill = Skill(**skills_data[k])
             skills_component[k] = (skill)
 
-    # create the static object using the arguments tuple
-    ent = NPC(*arguments, fighter=fighter_component, ai=ai_component, skills=skills_component, inventory=inventory_component)
+    npc = NPC(*arguments, fighter=fighter_component, ai=ai_component, skills=skills_component, inventory=inventory_component)
 
     if loadouts is not None:
         loadout = pick_from_data_dict_by_rarity(loadouts, game.dlvl)
-        gen_loadout(ent, loadouts[loadout], game)
+        gen_loadout(npc, loadouts[loadout], game)
 
-    return ent
+    return npc
 
 
 def gen_item_from_data(data, x, y):
-    arguments = (x, y, *get_generic_data(data))
+    arguments = [x, y, *get_generic_data(data)]
 
     on_use = data.get('on_use', None)
     equip_to = data.get('e_to', None)
+    material = get_material_data(data, arguments)
 
     useable_component = None
     if on_use is not None:
@@ -116,7 +130,13 @@ def gen_item_from_data(data, x, y):
         two_handed = data.get('two_handed')
         moveset = data.get('moveset')
 
-        equipment_component = Equipment(equip_to,dmg_range = dmg, av = av, qu_slots = qu_slots, l_radius = l_radius, moveset = moveset, two_handed = two_handed)
+        if material.get('dmg_mod') and dmg:
+            dmg = (dmg[0] + material['dmg_mod'], dmg[1] + material['dmg_mod'])
+
+        if material.get('av_mod') and av:
+            av += material['av_mod']
+
+        equipment_component = Equipment(equip_to, dmg_range = dmg, av = av, qu_slots = qu_slots, l_radius = l_radius, moveset = moveset, two_handed = two_handed)
 
     item_component = Item(useable=useable_component, equipment=equipment_component)
 
@@ -127,7 +147,8 @@ def gen_item_from_data(data, x, y):
 
 
 def gen_architecture(data, x, y):
-    arguments = (x, y, *get_generic_data(data))
+    arguments = [x, y, *get_generic_data(data)]
+    material = get_material_data(data, arguments) # atm material only affects architecture's name and color
 
     blocks = data.get('blocks', False)
     blocks_sight = data.get('blocks_sight', False)
@@ -156,12 +177,12 @@ def gen_loadout(actor, loadout, game):
         actor.inventory.add(item)
 
 
-def pick_from_data_dict_by_rarity(dict, dlvl):
+def pick_from_data_dict_by_rarity(dict, dlvl=0):
     """
     picks a random key from the given dictionary items, using the 'chance' value
 
-    :param dict_items:
-    :type dict_items: dict
+    :param dict:
+    :type dict: dict
     :param dlvl:
     :type dlvl: int
     :return:
@@ -169,7 +190,8 @@ def pick_from_data_dict_by_rarity(dict, dlvl):
     """
 
     # Using the passed dict_items set a new dictionary is created, filtered by the dungeon level value
-    dict = {k: v for k, v in dict.items() if dlvl in range(*v.get('dlvls', (1, 99)))}
+    if dlvl > 0:
+        dict = {k: v for k, v in dict.items() if dlvl in range(*v.get('dlvls', (1, 99)))}
 
     keys = list(dict.keys())
     type_rarity = -1
@@ -178,10 +200,12 @@ def pick_from_data_dict_by_rarity(dict, dlvl):
     while True:
         random = randint(0, 100)
         candidate = choice(keys)
-        rarity = dict[candidate]['rarity'].value + dict[candidate].get('rarity_mod', 0)
+        rarity = dict[candidate].get('rarity', Rarity.COMMON).value + dict[candidate].get('rarity_mod', 0)
 
         if dict[candidate].get('type'):
-            type_rarity = dict[candidate]['type'].value #dict[candidate]['rarity_type'].value
+            #type_rarity = dict[candidate]['type'].value #dict[candidate]['rarity_type'].value
+            type = dict[candidate]['type']
+            type_rarity = rarity_types[type]
 
         # Check against type rarity first, then individual rarity of the item
         # TODO use random values for each check if useful

@@ -17,10 +17,10 @@ def initialize_game(game):
     # Setup the Player character #
     game.cursor = Entity(0, 0, 'X', colors.white, 'Cursor', render_order=RenderOrder.CURSOR)
     player = Player('Player')
-    player_loadouts = {
+    player_loadouts = { # TODO adapt entries
         'loadout1': {
-            'equipment': ('sword_rusty','leather_brittle', 'helmet_rusty','belt_generic','shield_wood'),
-            'backpack': ('pot_heal', 'scr_fireball','torch', 'spear_rusty')
+            'equipment': ('sword','brigandine', 'helmet','belt_generic','shield'),
+            'backpack': ('pot_heal', 'scr_fireball','torch', 'spear')
         }
     }
     #loadout = pick_from_data_dict_by_chance(player_loadouts)
@@ -38,7 +38,7 @@ def initialize_game(game):
     place_staticobjects(game)
     place_containers(game)
     place_doors(game)
-    place_monsters(game)
+    # place_monsters(game)
     place_items(game)
 
     player.x, player.y = game.map.rooms[0].center

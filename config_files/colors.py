@@ -14,6 +14,16 @@ dark_ground_fg = tcod.Color(95, 95, 95)
 # Entities
 corpse = tcod.Color(127, 0, 0)
 
+# Materials #
+oak = tcod.Color(120, 81, 45)
+linen = tcod.Color(186, 183, 162)
+cotton = tcod.Color(191, 186, 175)
+leather = tcod.Color(181, 121, 84)
+iron = tcod.Color(110, 96, 93)
+steel = tcod.Color(106, 108, 112)
+
+
+
 # custom
 beige = tcod.Color(120, 100, 60)
 wood = tcod.Color(193,154,107)

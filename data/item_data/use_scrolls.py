@@ -1,6 +1,7 @@
 from config_files import colors
 from abilities.spells import cast_fireball_on
-from data.data_types import ItemType, Rarity
+from data.data_types import ItemType
+from data.shared_data.rarity_data import Rarity
 
 SCROLL_CHAR = '='
 SCROLL_COLOR = colors.light_yellow
