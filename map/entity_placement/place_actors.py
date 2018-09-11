@@ -41,7 +41,8 @@ def place_monsters(game):
             while m <= num_of_monsters and len(game.monster_ents) < max_monsters:
                 logging.debug('Creating monster #{0} of #{1} total.'.format(m + 1, num_of_monsters))
 
-                entry = pick_from_data_dict_by_rarity(possible_spawns, dlvl)
+                key= pick_from_data_dict_by_rarity(possible_spawns, dlvl)
+                entry = possible_spawns[key]
                 group_size = randint(*entry['group_size'])
                 for i in range(group_size):
                     logging.debug(

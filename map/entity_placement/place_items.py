@@ -32,7 +32,8 @@ def place_items(game):
             for i in range(num_of_items):
                 logging.debug('Creating item #{0} of #{1} total.'.format(i + 1, num_of_items))
 
-                data = pick_from_data_dict_by_rarity(possible_items, dlvl)
+                key = pick_from_data_dict_by_rarity(possible_items, dlvl)
+                data = possible_items[key]
                 #i_key = pick_item_from_data_dict(possible_items, dlvl)
 
                 if len(game.item_ents) + 1 > max_items:

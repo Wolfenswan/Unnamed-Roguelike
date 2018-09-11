@@ -24,7 +24,7 @@ class Paperdoll:
         extremity = getattr(self, e_to)
         equipped_item = getattr(extremity, e_type)
 
-        print(extremity, equipped_item)
+        print(item_ent.name, extremity, equipped_item)
 
         if item_ent.item.equipment.two_handed and getattr(self.arms, 'offhand'):
             offhand_item = getattr(self.arms, 'offhand')

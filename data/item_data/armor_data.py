@@ -2,3 +2,4 @@
 # hauberk
 # kasten-brust
 # ring rmor
+# plate armor

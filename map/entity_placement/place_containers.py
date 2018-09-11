@@ -30,7 +30,8 @@ def place_containers(game):
             for i in range(num_of_containers):
                 logging.debug('Creating item #{0} of #{1} total.'.format(containers + 1, num_of_containers))
 
-                data = pick_from_data_dict_by_rarity(possible_objects, dlvl)
+                key = pick_from_data_dict_by_rarity(possible_objects, dlvl)
+                data = possible_objects[key]
 
                 # Check if new container would exceed total limit
                 if len(game.container_ents) + 1 > max_containers:
@@ -82,6 +83,7 @@ def fill_container(container, dlvl, rarity_filter=None, type_filter=None, forced
                           and v.get('rarity') in rarity_filter}
         num_of_items = randint(0, container.inventory.capacity)
         for i in range(num_of_items):
-            data = pick_from_data_dict_by_rarity(possible_items, dlvl)
+            key = pick_from_data_dict_by_rarity(possible_items, dlvl)
+            data = possible_items[key]
             item = gen_item_from_data(data, 0, 0)
             container.inventory.add(item)

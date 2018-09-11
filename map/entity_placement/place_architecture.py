@@ -26,7 +26,8 @@ def place_staticobjects(game):
         num_to_place = (randint(0, max_in_room))
 
         for i in range(num_to_place):
-            data = pick_from_data_dict_by_rarity(possible_objects, dlvl)
+            key = pick_from_data_dict_by_rarity(possible_objects, dlvl)
+            data = possible_objects[key]
 
             # Get a random position for the item
             if data.get('blocks', False):
@@ -53,7 +54,8 @@ def place_doors(game):
         for e in exits:
             if randint(0,1):
 
-                data = pick_from_data_dict_by_rarity(possible_objects, dlvl)
+                key = pick_from_data_dict_by_rarity(possible_objects, dlvl)
+                data = possible_objects[key]
 
                 x, y = e
                 door = gen_architecture(data, x, y)

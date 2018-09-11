@@ -4,8 +4,8 @@ from gui.messages import Message
 
 
 class Item:
-    def __init__(self, type=None, useable=None, equipment=None):
-        self.type = type
+    def __init__(self, condition=None, useable=None, equipment=None):
+        self.condition = condition
         self.useable = useable
         self.equipment = equipment
 
@@ -14,6 +14,13 @@ class Item:
 
         if self.equipment:
             equipment.owner = self
+
+    @property
+    def condition_name(self):
+        type = self.owner.type
+        str = self.condition
+
+        return str
 
     def attr_list(self, max_width=100):
         """

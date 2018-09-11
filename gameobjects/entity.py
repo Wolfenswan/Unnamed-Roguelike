@@ -20,7 +20,9 @@ class Entity:
     """
     A generic object to represent players, enemies, items, etc.
     """
-    def __init__(self, x, y, char, color, name, descr=None, type=None, is_player = False, is_corpse = False,
+    def __init__(self, x, y, char, color, name, descr=None,
+                 type=None, material=None, condition=None,
+                 is_player = False, is_corpse = False,
                  blocks=False, blocks_sight = False, render_order=RenderOrder.CORPSE,
                  fighter=None, ai=None, skills=None, item=None, inventory=None, architecture=None):
         self.state = EntityStates.ENTITY_ACTIVE
@@ -30,8 +32,10 @@ class Entity:
         self.color = color
         self.color_bg = None
         self.name = name
-        self.descr = descr
+        self.__descr = descr
         self.type = type
+        self.material = material
+        self.condition = condition
         self.is_player = is_player
         self.is_corpse = is_corpse
         self.blocks = blocks
@@ -58,6 +62,15 @@ class Entity:
     @property
     def pos(self):
         return (self.x, self.y)
+
+    @property
+    def descr(self):
+        descr = self.__descr
+
+        if self.condition: # TODO placeholder
+            descr += f'It appears to be {self.condition}.'
+
+        return descr
 
     def move(self, dx, dy):
         # Move the entity by a given amount

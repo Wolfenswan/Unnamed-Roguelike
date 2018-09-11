@@ -30,11 +30,11 @@ rarity_types = {
     MonsterType.LEADER: 10
 }
 
-rarity_material = {
-    Material.OAK: 100,
-    Material.LINEN: 100,
-    Material.LEATHER: 90,
-    Material.COTTON: 90,
-    Material.IRON: 75,
-    Material.STEEL: 50
-}
+# rarity_material = {
+#     Material.OAK: 100,
+#     Material.LINEN: 100,
+#     Material.LEATHER: 90,
+#     Material.COTTON: 90,
+#     Material.IRON: 75,
+#     Material.STEEL: 50
+# }

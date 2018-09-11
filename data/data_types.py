@@ -25,6 +25,7 @@ class Material(Enum):
     LINEN = auto()
     COTTON = auto()
     LEATHER = auto()
+    # cuir bouilli
     # BUFF LEATHER
     IRON = auto()
     STEEL = auto()

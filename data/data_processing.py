@@ -15,6 +15,7 @@ from data.actor_data.skills_data import skills_data
 from data.actor_data.spawn_data import spawn_data
 from data.architecture_data.arch_static import arch_static_data
 from data.architecture_data.arch_containers import arch_containers_data
+from data.item_data.item_quality import qual_cond_data
 from data.shared_data.rarity_data import rarity_types, Rarity
 from data.data_types import GenericType
 from data.shared_data.material_data import item_material_data
@@ -62,15 +63,27 @@ def get_generic_data(data, randomize_color = False):
 
 
 def get_material_data(data, arguments):
-    materials = {mat: rarity for mat, rarity in item_material_data.items() if mat in data.get('materials',{})}
+    materials = {k:v for k, v in item_material_data.items() if v['type'] in data.get('materials',{})}
     if materials:
-        material = pick_from_data_dict_by_rarity(materials)
+        key = pick_from_data_dict_by_rarity(materials)
+        material = materials[key]
         arguments[3] = material['color'] # Update the entity's color
         arguments[4] = f"{material['name']} {arguments[4]}".title() # Update the entity's name
     else:
         material = {}
 
     return material
+
+
+def get_condition_data(material):
+    key = pick_from_data_dict_by_rarity(qual_cond_data)
+    if material:
+        condition = qual_cond_data[key].copy() # Dict is copied, so the name value can safely be set
+        condition['name'] = condition['names'].get(material['type'], 'ordinary')
+    else:
+        condition = {}
+
+    return condition
 
 
 def gen_npc_from_dict(data, x, y, game):
@@ -106,12 +119,19 @@ def gen_npc_from_dict(data, x, y, game):
     return npc
 
 
-def gen_item_from_data(data, x, y):
+def gen_item_from_data(data, x, y, force_material=False, force_condition=False):
     arguments = [x, y, *get_generic_data(data)]
 
     on_use = data.get('on_use', None)
     equip_to = data.get('e_to', None)
-    material = get_material_data(data, arguments)
+    if not force_material:
+        material = get_material_data(data, arguments)
+    else:
+        material = force_material
+    if not force_condition:
+        condition = get_condition_data(material)
+    else:
+        condition = force_condition
 
     useable_component = None
     if on_use is not None:
@@ -123,25 +143,30 @@ def gen_item_from_data(data, x, y):
 
     equipment_component = None
     if equip_to is not None:
-        dmg = data.get('dmg_range')
+        dmg_range = data.get('dmg_range')
+        if dmg_range:
+            mat_mod = material.get('dmg_mod',0)
+            cond_mod = condition.get('dmg_mod', 0)
+            dmg_range = (dmg_range[0] + mat_mod + cond_mod, dmg_range[1] + mat_mod + cond_mod)
+
         av = data.get('av')
+        if av:
+            mat_mod = material.get('av_mod', 0)
+            cond_mod = condition.get('av_mod', 0)
+            dmg_range = av + mat_mod + cond_mod
+
         qu_slots = data.get('qu_slots')
         l_radius = data.get('l_radius')
         two_handed = data.get('two_handed')
         moveset = data.get('moveset')
 
-        if material.get('dmg_mod') and dmg:
-            dmg = (dmg[0] + material['dmg_mod'], dmg[1] + material['dmg_mod'])
 
-        if material.get('av_mod') and av:
-            av += material['av_mod']
-
-        equipment_component = Equipment(equip_to, dmg_range = dmg, av = av, qu_slots = qu_slots, l_radius = l_radius, moveset = moveset, two_handed = two_handed)
+        equipment_component = Equipment(equip_to, dmg_range = dmg_range, av = av, qu_slots = qu_slots, l_radius = l_radius, moveset = moveset, two_handed = two_handed)
 
     item_component = Item(useable=useable_component, equipment=equipment_component)
 
     # create the item using item_class and the arguments tuple
-    i = Entity(*arguments, render_order=RenderOrder.ITEM, item = item_component)
+    i = Entity(*arguments, material=material.get('type'), condition=condition.get('name'), render_order=RenderOrder.ITEM, item = item_component)
 
     return i
 
@@ -160,7 +185,7 @@ def gen_architecture(data, x, y):
     architecture_component = Architecture(on_collision = on_collision, on_interaction = on_interaction)
 
     # create the static object using the arguments tuple
-    arch = Entity(*arguments, blocks=blocks, blocks_sight=blocks_sight, inventory=inventory_component, architecture=architecture_component, render_order=RenderOrder.BOTTOM)
+    arch = Entity(*arguments, material=material.get('type'), blocks=blocks, blocks_sight=blocks_sight, inventory=inventory_component, architecture=architecture_component, render_order=RenderOrder.BOTTOM)
 
     return arch
 
@@ -200,12 +225,13 @@ def pick_from_data_dict_by_rarity(dict, dlvl=0):
     while True:
         random = randint(0, 100)
         candidate = choice(keys)
-        rarity = dict[candidate].get('rarity', Rarity.COMMON).value + dict[candidate].get('rarity_mod', 0)
+        logging.debug(f'Trying to calculate rarity for {candidate}')
+        #rarity = dict[candidate].get('rarity', Rarity.COMMON).value + dict[candidate].get('rarity_mod', 0)
+        rarity = dict[candidate]['rarity'].value + dict[candidate].get('rarity_mod', 0)
 
         if dict[candidate].get('type'):
-            #type_rarity = dict[candidate]['type'].value #dict[candidate]['rarity_type'].value
             type = dict[candidate]['type']
-            type_rarity = rarity_types[type]
+            type_rarity = rarity_types.get(type, -1)
 
         # Check against type rarity first, then individual rarity of the item
         # TODO use random values for each check if useful
@@ -213,4 +239,4 @@ def pick_from_data_dict_by_rarity(dict, dlvl=0):
         if (type_rarity == -1 or type_rarity > random) and rarity > random:
             break
 
-    return dict[candidate]
+    return candidate
