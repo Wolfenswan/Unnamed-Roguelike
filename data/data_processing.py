@@ -17,7 +17,7 @@ from data.architecture_data.arch_static import arch_static_data
 from data.architecture_data.arch_containers import arch_containers_data
 from data.shared_data.quality_data import qual_cond_data
 from data.shared_data.rarity_data import rarity_types
-from data.data_types import GenericType
+from data.data_types import GenericType, Condition
 from data.shared_data.material_data import item_material_data
 from data.item_data.test_equipment import test_equipment_data
 from data.item_data.use_potions import use_potions_data
@@ -123,10 +123,20 @@ def get_condition_data(material, arguments):
     if material:
         key = pick_from_data_dict_by_rarity(qual_cond_data)
         condition = qual_cond_data[key].copy() # Dict is copied, so the name value can safely be
+
+        # Add randomized condition description to the main description #
         if item_descr_data.get(arguments[6]):
             cond_descr = choice(item_descr_data[arguments[6]][material['type']][condition['type']])
             arguments[5] += f' {cond_descr}'
-            # Color adjustment
+
+        # Tweak the color slightly to indicate quality level #
+        # TODO Tweak as necessary
+        if condition['type'] == Condition.POOR:
+            arguments[3] = randomize_rgb_color(arguments[3], factor_range=(0.2, 0.2), darken=True)
+        elif condition['type'] == Condition.GOOD:
+            arguments[3] = randomize_rgb_color(arguments[3], factor_range=(0.2, 0.2), darken=False)
+        elif condition['type'] == Condition.LEGENDARY:
+            arguments[3] = randomize_rgb_color(arguments[3], factor_range=(0.4, 0.4), darken=False)
     else:
         condition = {}
 

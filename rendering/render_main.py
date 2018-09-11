@@ -98,7 +98,6 @@ def draw_entity(game, con, entity, fov_map, debug=False):
 
         # Set the entity colors #
         color = entity.color
-        print(color)
         if entity is not game.cursor:
             color = darken_color_by_fov_distance(game.player, entity.color, entity.x, entity.y)
 

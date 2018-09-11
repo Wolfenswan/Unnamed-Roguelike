@@ -61,20 +61,17 @@ def pos_on_screen(x, y, player):
     Returns coordinate on the visible screen, in relation to the player
 
     """
-
     x = max(cfg.MAP_SCREEN_WIDTH // 2 + (x - player.x), 0)
     y = max(cfg.MAP_SCREEN_HEIGHT // 2 + (y - player.y), 0)
 
     return x, y
 
 
-def randomize_rgb_color(color, darken=False):
-    print(darken, color)
-    factor = uniform(0, 0.2)
+def randomize_rgb_color(color, factor_range = (0, 0.25), darken=False):
+    factor = uniform(*factor_range)
     if darken:
-
         color = (int(v * (1 - factor)) for v in color)
     else:
         color = (int(v + (255 - v) * factor) for v in color)
-    print(tcod.Color(*color))
-    return (tcod.Color(*color))
+    color = tcod.Color(*color)
+    return color

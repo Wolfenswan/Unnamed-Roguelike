@@ -20,7 +20,7 @@ def initialize_game(game):
     player_loadouts = { # TODO adapt entries
         'loadout1': {
             'equipment': ('sword','brigandine', 'helmet','belt_generic','shield'),
-            'backpack': ('pot_heal', 'scr_fireball','torch', 'spear')
+            'backpack': ('pot_heal', 'scr_fireball','torch', 'spear', 'spear', 'spear', 'spear', 'spear', 'spear', 'spear', 'spear')
         }
     }
     #loadout = pick_from_data_dict_by_chance(player_loadouts)
