@@ -192,13 +192,12 @@ def gen_item_from_data(data, x, y, force_material=False, force_condition=False):
         if av:
             mat_mod = material.get('av_mod', 0)
             cond_mod = condition.get('av_mod', 0)
-            dmg_range = av + mat_mod + cond_mod
+            av += mat_mod + cond_mod
 
         qu_slots = data.get('qu_slots')
         l_radius = data.get('l_radius')
         two_handed = data.get('two_handed')
         moveset = data.get('moveset')
-
 
         equipment_component = Equipment(equip_to, dmg_range = dmg_range, av = av, qu_slots = qu_slots, l_radius = l_radius, moveset = moveset, two_handed = two_handed)
 

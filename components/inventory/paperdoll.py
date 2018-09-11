@@ -97,26 +97,34 @@ class Torso:
 
 
 class Arm:
-    def __init__(self, armor=None, carried=None, ring=None):
-        self.__carried = carried
+    def __init__(self, carried=None, armor=None, ring=None):
+        self.carried = carried
         self.armor = armor
         self.ring = ring
 
     @property
     def weapon(self):
-        return self.__carried
+        return self.carried
 
     @weapon.setter
     def weapon(self, item):
-        self.__carried = item
+        self.carried = item
 
     @property
     def shield(self):
-        return self.__carried
+        return self.carried
 
     @shield.setter
     def shield(self, item):
-        self.__carried = item
+        self.carried = item
+
+    @property
+    def misc(self):
+        return self.carried
+
+    @misc.setter
+    def misc(self, item):
+        self.carried = item
 
 
 class Legs:
