@@ -118,6 +118,7 @@ class Arm:
         self.armor = armor
         self.ring = ring
 
+    # Due to the properties and respective setters equipment of various types will only occupy the self.carried slot
     @property
     def weapon(self):
         return self.carried

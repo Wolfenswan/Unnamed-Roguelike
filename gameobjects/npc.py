@@ -17,7 +17,6 @@ class NPC(Entity):
     """ Class for the all active non-player objects """
 
     def __init__(self, x, y, char, color, name, descr, barks=None, fighter=None, ai=None, inventory=None, skills=None):
-
         super().__init__(x, y, char, color, name, descr, blocks=True, render_order=RenderOrder.ACTOR, fighter=fighter, ai=ai, skills=skills, inventory=inventory)
         self.barks = barks
 

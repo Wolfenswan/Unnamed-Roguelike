@@ -26,6 +26,7 @@ from data.string_data.item_descr import item_descr_data
 from gameobjects.entity import Entity
 from gameobjects.npc import NPC
 from rendering.render_order import RenderOrder
+from rendering.util_functions import randomize_rgb_color
 
 
 def merge_dictionaries(dicts):
@@ -98,7 +99,9 @@ def get_generic_data(data, randomize_color = False):
     type = data.get('type', GenericType.DEFAULT)
 
     if randomize_color:
-        color = tuple(int(uniform(0.5, 1) * x) for x in color) # Slight color randomization for each entity
+        darken = True if randint(0, 1) else False
+        color = randomize_rgb_color(color, darken = darken) # Slight color randomization for each entity
+        print(color)
 
     return (char, color, name, descr, type)
 
@@ -123,6 +126,7 @@ def get_condition_data(material, arguments):
         if item_descr_data.get(arguments[6]):
             cond_descr = choice(item_descr_data[arguments[6]][material['type']][condition['type']])
             arguments[5] += f' {cond_descr}'
+            # Color adjustment
     else:
         condition = {}
 

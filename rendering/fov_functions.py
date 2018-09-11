@@ -56,5 +56,5 @@ def darken_color_by_fov_distance(ent, color, x, y, randomness = 0):
     if color_coefficient < 0:
         color_coefficient = 0.1
 
-    new_color = tuple(int(color_coefficient * x) for x in color)
-    return new_color
+    new_color = (int(color_coefficient * x) for x in color)
+    return tcod.Color(*new_color)
