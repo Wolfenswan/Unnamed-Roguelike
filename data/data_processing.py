@@ -215,10 +215,10 @@ def gen_item_from_data(data, x, y, force_material=False, force_condition=False):
 
         equipment_component = Equipment(equip_to, dmg_range = dmg_range, av = av, qu_slots = qu_slots, l_radius = l_radius, moveset = moveset, two_handed = two_handed)
 
-    item_component = Item(identified=False, useable=useable_component, equipment=equipment_component)
+    item_component = Item(useable=useable_component, equipment=equipment_component)
 
     # create the item using item_class and the arguments tuple
-    i = Entity(*arguments, material=material.get('type'), condition=condition.get('name'), render_order=RenderOrder.ITEM, item = item_component)
+    i = Entity(*arguments, material=material.get('type'), condition=condition.get('type'), render_order=RenderOrder.ITEM, item = item_component)
 
     return i
 

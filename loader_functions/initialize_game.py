@@ -25,6 +25,8 @@ def initialize_game(game):
     }
     #loadout = pick_from_data_dict_by_chance(player_loadouts)
     gen_loadout(player, player_loadouts['loadout1'], game)
+    for item_ent in player.inventory.items + player.paperdoll.equipped_items:
+        item_ent.item.identify()
 
     game.entities.append(player)
 
@@ -35,9 +37,9 @@ def initialize_game(game):
     game.map.make_map(game, cfg.ROOM_MIN_SIZE, cfg.ROOM_MAX_SIZE, dwidth, dheight)
 
     # Add the good stuff #
-    # place_staticobjects(game)
+    place_staticobjects(game)
     place_containers(game)
-    # place_doors(game)
+    place_doors(game)
     place_monsters(game)
     place_items(game)
 

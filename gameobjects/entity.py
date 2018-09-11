@@ -67,9 +67,6 @@ class Entity:
     def descr(self):
         descr = self.__descr
 
-        if self.condition: # TODO placeholder
-            descr += f'It appears to be {self.condition}.'
-
         return descr
 
     def move(self, dx, dy):

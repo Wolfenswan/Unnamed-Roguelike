@@ -1,5 +1,6 @@
 import textwrap
 
+from data.data_types import Condition
 from gui.messages import Message
 
 
@@ -14,6 +15,16 @@ class Item:
 
         if self.equipment:
             equipment.owner = self
+
+    def identify(self):
+        condition = self.owner.condition
+        if condition == Condition.POOR:
+            self.owner.name += ' (-)'
+        elif condition == Condition.GOOD:
+            self.owner.name += ' (+)'
+        elif condition == Condition.LEGENDARY:
+            self.owner.name += ' (++)'
+        self.identified = True
 
     def attr_list(self, max_width=100):
         """
