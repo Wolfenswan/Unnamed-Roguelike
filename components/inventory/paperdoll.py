@@ -16,6 +16,12 @@ class Paperdoll:
         self.shield_arm = Arm()
         self.legs = Legs()
 
+    @property
+    def two_handed(self):
+        if self.weapon_arm.carried:
+            return self.weapon_arm.carried.item.equipment.two_handed
+        return False
+
     def equip(self, item_ent, game):
         results = []
         e_type = item_ent.type.name.lower() # Entity.type is a enum member of the ItemType Class.
@@ -25,16 +31,26 @@ class Paperdoll:
         extremity = getattr(self, e_to)
         equipped_item = getattr(extremity, e_type)
 
-        print(item_ent.name, extremity, equipped_item)
-
-        if item_ent.item.equipment.two_handed and getattr(self.shield_arm, 'carried'):
-            offhand_item = getattr(self.shield_arm, 'carried')
+        # If new item is two-handed, check if shield arm is occupied #
+        if item_ent.item.equipment.two_handed and self.shield_arm.carried:
+            offhand_item = self.shield_arm.carried
             choice = yesno_menu('Remove Offhand Item', f'Remove {offhand_item.name} to equip the two-handed {item_ent.name}?', game)
             if choice:
                 results.extend(self.dequip(offhand_item))
             else:
                 equipped_item = None
                 print('cancelled equipping 2h weapon') # TODO Placeholder
+
+        # If new item is shield, check if current weapon is two-handed #
+        if e_to == 'shield_arm' and self.two_handed:
+            main_weapon = self.weapon_arm.carried
+            choice = yesno_menu('Remove Two-Handed Weapon',
+                                f'Remove {main_weapon.name} to equip the {item_ent.name}?', game)
+            if choice:
+                results.extend(self.dequip(main_weapon))
+            else:
+                equipped_item = None
+                print('cancelled equipping shield bc of 2h weapon') # TODO Placeholder
 
         if equipped_item:
             choice = yesno_menu('Remove Item',f'Unequip your {equipped_item.name}?', game)
