@@ -22,7 +22,7 @@ from data.shared_data.material_data import item_material_data
 from data.item_data.test_equipment import test_equipment_data
 from data.item_data.use_potions import use_potions_data
 from data.item_data.use_scrolls import use_scrolls_data
-from data.string_data.item_descr import item_descr_data
+from data.descr_data.qual_descr import qual_descr_data
 from gameobjects.entity import Entity
 from gameobjects.npc import NPC
 from rendering.render_order import RenderOrder
@@ -125,8 +125,9 @@ def get_condition_data(material, arguments):
         condition = qual_cond_data[key].copy() # Dict is copied, so the name value can safely be
 
         # Add randomized condition description to the main description #
-        if item_descr_data.get(arguments[6]):
-            cond_descr = choice(item_descr_data[arguments[6]][material['type']][condition['type']])
+        type = arguments[6]
+        if qual_descr_data.get(type):
+            cond_descr = choice(qual_descr_data[type][material['type']][condition['type']])
             arguments[5] += f' {cond_descr}'
 
         # Tweak the color slightly to indicate quality level #
@@ -206,7 +207,7 @@ def gen_item_from_data(data, x, y, force_material=False, force_condition=False):
         if av:
             mat_mod = material.get('av_mod', 0)
             cond_mod = condition.get('av_mod', 0)
-            av += mat_mod + cond_mod
+            av += max(mat_mod + cond_mod,1)
 
         qu_slots = data.get('qu_slots')
         l_radius = data.get('l_radius')

@@ -17,12 +17,12 @@ item_material_data = {
         'rarity': Rarity.COMMON,
         'color': colors.linen
     },
-    'cloth_2': {
-        'name': 'cotton',
-        'type': Material.COTTON,
-        'rarity': Rarity.COMMON,
-        'color': colors.cotton
-    },
+    # 'cloth_2': {
+    #     'name': 'cotton',
+    #     'type': Material.WOOL,
+    #     'rarity': Rarity.COMMON,
+    #     'color': colors.WOOL
+    # },
     'leather_1': {
         'name': 'leather',
         'type': Material.LEATHER,

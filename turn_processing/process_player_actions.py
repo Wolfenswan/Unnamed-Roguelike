@@ -99,10 +99,10 @@ def process_player_input(action, game, fov_map, targeting_item = None):
             items = [item for item in game.item_ents if item.same_pos(player)]
             if items:
                 # Option menu is displayed if > 1 item is on the ground
-                choice = 0 if len(items) == 1 else \
+                choice = items[0] if len(items) == 1 else \
                     item_list_menu(player, items, title='Select Item', body='Pick up which item?')
                 if choice is not None:
-                    pickup_results = player.inventory.add(items[choice])
+                    pickup_results = player.inventory.add(choice)
                     turn_results.extend(pickup_results)
             else:
                 Message('There is nothing here to pick up.', category=MessageCategory.OBSERVATION).add_to_log(game)

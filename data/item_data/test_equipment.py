@@ -51,8 +51,8 @@ test_equipment_data = {
     },
     'gambeson': {
         'name': 'Gambeson',
-        'materials': (Material.LINEN, Material.COTTON),
-        'descr': 'No descr.',
+        'materials': (Material.LINEN, ),
+        'descr': 'A sewn coat with padded fodder for added protection.',
         "char": ARM_CHAR,
         'type': ARM_TYPE,
         'e_to': ARM_EQUIP,
@@ -62,13 +62,13 @@ test_equipment_data = {
         'dlvls': (1, 99)
     },
     'brigandine': {
-        'name': 'Brigadine',
-        'materials': (Material.COTTON, Material.LEATHER, Material.IRON),
-        'descr': 'No descr.',
+        'name': 'Brigandine',
+        'materials': (Material.LEATHER, Material.IRON),
+        'descr': 'A flexible armor with layers of small, riveted plates.',
         "char": ARM_CHAR,
         'type': ARM_TYPE,
         'e_to': ARM_EQUIP,
-        'av': 2,
+        'av': 3,
         'rarity': Rarity.UNCOMMON,
         'dlvls': (1, 99)
     },
@@ -85,8 +85,8 @@ test_equipment_data = {
     },
     'belt_generic': {
         'name': 'Belt',
-        'materials': (Material.LEATHER,),
         'descr': 'A basic utility belt.',
+        'color': colors.leather,
         'type': M_TYPE,
         'rarity': Rarity.COMMON,
         'dlvls': (1,99),

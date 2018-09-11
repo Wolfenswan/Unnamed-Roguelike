@@ -7,7 +7,7 @@ qual_cond_data = {
         # 'names': {
         #     Material.OAK: 'splintered',
         #     Material.LINEN: 'frayed',
-        #     Material.COTTON: 'frayed',
+        #     Material.WOOL: 'frayed',
         #     Material.LEATHER: 'brittle',
         #     Material.IRON: 'rusty',
         #     Material.STEEL: 'rusty'
@@ -26,7 +26,7 @@ qual_cond_data = {
         # 'names': {
         #     Material.OAK: 'sturdy',
         #     Material.LINEN: 'well fitting',
-        #     Material.COTTON: 'well fitting',
+        #     Material.WOOL: 'well fitting',
         #     Material.LEATHER: 'hardened',
         #     Material.IRON: 'well honed',
         #     Material.STEEL: 'well honed'
@@ -40,7 +40,7 @@ qual_cond_data = {
         # 'names': {
         #     Material.OAK: 'legendary',
         #     Material.LINEN: 'legendary',
-        #     Material.COTTON: 'legendary',
+        #     Material.WOOL: 'legendary',
         #     Material.LEATHER: 'legendary',
         #     Material.IRON: 'legendary',
         #     Material.STEEL: 'legendary'
