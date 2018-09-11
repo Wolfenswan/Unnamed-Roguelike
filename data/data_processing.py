@@ -81,7 +81,7 @@ def get_condition_data(material, arguments):
         key = pick_from_data_dict_by_rarity(qual_cond_data)
         condition = qual_cond_data[key].copy() # Dict is copied, so the name value can safely be
         if item_descr_data.get(arguments[6]):
-            cond_descr = choice(item_descr_data[arguments[6]][material['type']][condition['type']]['descr'])
+            cond_descr = choice(item_descr_data[arguments[6]][material['type']][condition['type']])
             arguments[5] += f' {cond_descr}'
     else:
         condition = {}
