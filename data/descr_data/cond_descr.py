@@ -1,13 +1,15 @@
 from data.shared_data.types_data import Material, ItemType, Condition
 
-# Default string for a missing description
-MISSING_DESCR = ('(Quality description missing)',)
 
-# Default description for normal condition
-NORMAL_DESCR =  (
-                'It is in a fairly ordinary condition.',
-                'There is nothing remarkable about its condition.'
-                )
+# Default description strings
+default_descr = {
+    'poor': (),
+    'normal': ('It is in a fairly ordinary condition.',
+                'There is nothing remarkable about its condition.'),
+    'good': (),
+    'legend': ()
+}
+
 
 cond_descr_data = {
     ItemType.WEAPON: {
@@ -16,36 +18,36 @@ cond_descr_data = {
                 'You are worried it might snap at any second.',
                 "It is terribly splintered, but at least the enemy might loose an eye when it breaks."
             ),
-            Condition.NORMAL: NORMAL_DESCR,
+            Condition.NORMAL: default_descr['normal'],
             Condition.GOOD: (
                 'The wood seems sturdy and in good condition.',
                 'The wood has been spared by worms and is in nearly mint condition.'
             ),
-            Condition.LEGENDARY: MISSING_DESCR
+            Condition.LEGENDARY: ()
         },
         Material.IRON: {
             Condition.POOR:(
                 'If you are lucky, all that rust might poison the enemy.',
                 'It is so rusted, you are not sure if using wood would be sturdier.'
             ),
-            Condition.NORMAL: NORMAL_DESCR,
+            Condition.NORMAL: default_descr['normal'],
             Condition.GOOD: (
                 'It is well honed and the edges are still sharp.',
                 'You reckon it will fell your foes easily.'
             ),
-            Condition.LEGENDARY: MISSING_DESCR
+            Condition.LEGENDARY: ()
         },
         Material.STEEL: {
             Condition.POOR:(
                 'If you are lucky, all that rust might poison the enemy.',
                 'It is so rusted, you are not sure if using wood would be sturdier.'
             ),
-            Condition.NORMAL: NORMAL_DESCR,
+            Condition.NORMAL: default_descr['normal'],
             Condition.GOOD: (
                 'It is well honed and the edges are still sharp.',
                 'You reckon it will fell your foes easily.'
             ),
-            Condition.LEGENDARY: MISSING_DESCR
+            Condition.LEGENDARY: ()
         }
     },
     ItemType.ARMOR: {
@@ -54,39 +56,33 @@ cond_descr_data = {
                 'You are worried it might snap at any second.',
                 "It is terribly splintered, but at least the enemy might loose an eye when it breaks."
             ),
-            Condition.NORMAL: NORMAL_DESCR,
-            Condition.GOOD: MISSING_DESCR,
-            Condition.LEGENDARY: MISSING_DESCR
+            Condition.NORMAL: default_descr['normal'],
+            Condition.GOOD: (),
+            Condition.LEGENDARY: ()
         },
         Material.LEATHER: {
-            Condition.POOR:MISSING_DESCR,
-            Condition.NORMAL: NORMAL_DESCR,
-            Condition.GOOD: MISSING_DESCR,
-            Condition.LEGENDARY: MISSING_DESCR
+            Condition.POOR:(),
+            Condition.NORMAL: default_descr['normal'],
+            Condition.GOOD: (),
+            Condition.LEGENDARY: ()
         },
-        # Material.WOOL: {
-        #     Condition.POOR:MISSING_DESCR,
-        #     Condition.NORMAL: NORMAL_DESCR,
-        #     Condition.GOOD: MISSING_DESCR,
-        #     Condition.LEGENDARY: MISSING_DESCR
-        # },
         Material.LINEN: {
-            Condition.POOR:MISSING_DESCR,
-            Condition.NORMAL: NORMAL_DESCR,
-            Condition.GOOD: MISSING_DESCR,
-            Condition.LEGENDARY: MISSING_DESCR
+            Condition.POOR:(),
+            Condition.NORMAL: default_descr['normal'],
+            Condition.GOOD: (),
+            Condition.LEGENDARY: ()
         },
         Material.IRON: {
-            Condition.POOR:MISSING_DESCR,
-            Condition.NORMAL: NORMAL_DESCR,
-            Condition.GOOD: MISSING_DESCR,
-            Condition.LEGENDARY: MISSING_DESCR
+            Condition.POOR:(),
+            Condition.NORMAL: default_descr['normal'],
+            Condition.GOOD: (),
+            Condition.LEGENDARY: ()
         },
         Material.STEEL: {
-            Condition.POOR:MISSING_DESCR,
-            Condition.NORMAL: NORMAL_DESCR,
-            Condition.GOOD: MISSING_DESCR,
-            Condition.LEGENDARY: MISSING_DESCR
+            Condition.POOR:(),
+            Condition.NORMAL: default_descr['normal'],
+            Condition.GOOD: (),
+            Condition.LEGENDARY: ()
         }},
     ItemType.SHIELD: {
         Material.OAK: {
@@ -94,31 +90,31 @@ cond_descr_data = {
                 'However, calling this worm-riddled plank a "shield" is rather generous.',
                 "You wonder if the splinters in your hand are worth the dubious protection it offers."
             ),
-            Condition.NORMAL: NORMAL_DESCR,
-            Condition.GOOD: MISSING_DESCR,
-            Condition.LEGENDARY: MISSING_DESCR
+            Condition.NORMAL: default_descr['normal'],
+            Condition.GOOD: (),
+            Condition.LEGENDARY: ()
         },
         Material.LEATHER: {
-            Condition.POOR:MISSING_DESCR,
-            Condition.NORMAL: NORMAL_DESCR,
-            Condition.GOOD: MISSING_DESCR,
-            Condition.LEGENDARY: MISSING_DESCR
+            Condition.POOR:(),
+            Condition.NORMAL: default_descr['normal'],
+            Condition.GOOD: (),
+            Condition.LEGENDARY: ()
         },
         Material.IRON: {
-            Condition.POOR:MISSING_DESCR,
-            Condition.NORMAL: NORMAL_DESCR,
-            Condition.GOOD: MISSING_DESCR,
-            Condition.LEGENDARY: MISSING_DESCR
+            Condition.POOR:(),
+            Condition.NORMAL: default_descr['normal'],
+            Condition.GOOD: (),
+            Condition.LEGENDARY: ()
         },
         Material.STEEL: {
-            Condition.POOR:MISSING_DESCR,
-            Condition.NORMAL: NORMAL_DESCR,
-            Condition.GOOD: MISSING_DESCR,
-            Condition.LEGENDARY: MISSING_DESCR
+            Condition.POOR:(),
+            Condition.NORMAL: default_descr['normal'],
+            Condition.GOOD: (),
+            Condition.LEGENDARY: ()
         }}
 }
 
-# Old names #
+# Old name list #
 # 'names': {
         #     Material.OAK: 'splintered',
         #     Material.LINEN: 'frayed',

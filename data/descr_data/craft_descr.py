@@ -1,10 +1,14 @@
 from data.shared_data.types_data import Material, Craftsmanship
 
-# Default string for a missing description
-MISSING_DESCR = ('(Craftsmanship description missing)',)
+# Default description strings
+default_descr = {
+    'poor': ('It seems to be the work of an amateur.',
+              'It is very possbile that it was created by an untalented child.'),
+    'normal': (),
+    'good': (),
+    'legend': ()
+}
 
-POOR_DESCR = ('It seems to be the work of an amateur.',
-              'A very untalented child appears to be the creator.')
 
 craft_name_data = {
     Craftsmanship.POOR: 'shoddy',
@@ -14,33 +18,33 @@ craft_name_data = {
 
 craft_descr_data = {
     Material.OAK: {
-        Craftsmanship.POOR: POOR_DESCR,
-        Craftsmanship.NORMAL: MISSING_DESCR,
-        Craftsmanship.GOOD: MISSING_DESCR,
-        Craftsmanship.LEGENDARY: MISSING_DESCR
+        Craftsmanship.POOR: default_descr['poor'],
+        Craftsmanship.NORMAL: (),
+        Craftsmanship.GOOD: (),
+        Craftsmanship.LEGENDARY: ()
     },
     Material.LINEN: {
-        Craftsmanship.POOR: POOR_DESCR,
-        Craftsmanship.NORMAL: MISSING_DESCR,
-        Craftsmanship.GOOD: MISSING_DESCR,
-        Craftsmanship.LEGENDARY: MISSING_DESCR
+        Craftsmanship.POOR: default_descr['poor'],
+        Craftsmanship.NORMAL: (),
+        Craftsmanship.GOOD: (),
+        Craftsmanship.LEGENDARY: ()
     },
     Material.LEATHER: {
-        Craftsmanship.POOR: POOR_DESCR,
-        Craftsmanship.NORMAL: MISSING_DESCR,
-        Craftsmanship.GOOD: MISSING_DESCR,
-        Craftsmanship.LEGENDARY: MISSING_DESCR
+        Craftsmanship.POOR: default_descr['poor'],
+        Craftsmanship.NORMAL: (),
+        Craftsmanship.GOOD: (),
+        Craftsmanship.LEGENDARY: ()
     },
     Material.IRON: {
-        Craftsmanship.POOR: POOR_DESCR,
-        Craftsmanship.NORMAL: MISSING_DESCR,
-        Craftsmanship.GOOD: MISSING_DESCR,
-        Craftsmanship.LEGENDARY: MISSING_DESCR
+        Craftsmanship.POOR: default_descr['poor'],
+        Craftsmanship.NORMAL: (),
+        Craftsmanship.GOOD: (),
+        Craftsmanship.LEGENDARY: ()
     },
     Material.STEEL: {
-        Craftsmanship.POOR: POOR_DESCR,
-        Craftsmanship.NORMAL: MISSING_DESCR,
-        Craftsmanship.GOOD: MISSING_DESCR,
-        Craftsmanship.LEGENDARY: MISSING_DESCR
+        Craftsmanship.POOR: default_descr['poor'],
+        Craftsmanship.NORMAL: (),
+        Craftsmanship.GOOD: (),
+        Craftsmanship.LEGENDARY: ()
     }
 }

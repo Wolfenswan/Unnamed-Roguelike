@@ -24,8 +24,8 @@ ROOM_MAX_SIZE = 15
 ROOM_MIN_SIZE = 4
 
 # NPC SETTINGS #
-MONSTERS_DUNGEON_FACTOR = 3 # total rooms times this
-MONSTERS_ROOM_LIMIT = 25 # room width * room height // this
+MONSTERS_DUNGEON_FACTOR = 4 # total rooms times this
+MONSTERS_ROOM_LIMIT = 20 # room width * room height // this
 
 # ITEM SETTINGS #
 ITEMS_DUNGEON_FACTOR = 1 # total rooms * this

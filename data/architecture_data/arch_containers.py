@@ -45,7 +45,7 @@ arch_containers_data = {
         "blocks": False,
         'container_room': (1, 4),
         'contents_rarity': (RarityType.COMMON, RarityType.UNCOMMON),
-        'contents_type': (ItemType.WEAPON, ItemType.SHIELD, ItemType.MISC),
+        'contents_type': (ItemType.WEAPON, ItemType.SHIELD),
         'on_collision': Architecture.blocks_info,
         'on_interaction': Architecture.open_container
     },

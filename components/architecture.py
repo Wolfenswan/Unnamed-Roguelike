@@ -51,8 +51,6 @@ class Architecture:
         # display chest_contents
         if container_ent.inventory.is_empty:
             results.append({'message':Message(f'The {container_ent.name} is empty.', category=MessageCategory.OBSERVATION)})
-            if container_ent.name[-7:] != '(empty)':
-                container_ent.name += ' (empty)'
             # TODO ability to put things into container
         else:
             selection = item_list_menu(container_ent, container_ent.inventory.items, title=f'{container_ent.name}')
@@ -63,6 +61,9 @@ class Architecture:
                     interacting_ent.inventory.add(selection)
                 else:
                     results.append({'message':Message(f'Your inventory is full.', category=MessageCategory.OBSERVATION)})
+
+        if container_ent.inventory.is_empty and container_ent.name[-7:] != '(empty)':
+            container_ent.name += ' (empty)'
 
         return results
 
@@ -79,4 +80,4 @@ class Architecture:
                 i.x, i.y = object_ent.x, object_ent.y
                 game.entities.append(i)
         
-        return [{'message': Message(f'You smash a {object_ent.name.capitalize()}', category=MessageCategory.OBSERVATION)}]
+        return [{'message': Message(f'You smash a {object_ent.name.title()}.', category=MessageCategory.OBSERVATION)}]

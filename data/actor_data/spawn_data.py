@@ -52,7 +52,7 @@ spawn_data = {
         'barks': ('insect'),
         'dlvls': (1,100),
         'rarity': RarityType.COMMON,
-        'group_size': (2,6)
+        'group_size': (3,7)
     },
     'Dung_Beetle': {
         'name': 'Dung Beetle',

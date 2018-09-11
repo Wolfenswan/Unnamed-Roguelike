@@ -4,6 +4,7 @@ from random import choice, randint
 from config_files import cfg
 from data.data_processing import CONTAINER_DATA_MERGED, pick_from_data_dict_by_rarity, gen_architecture, \
     gen_item_from_data, ITEM_DATA_MERGED
+from data.shared_data.types_data import RarityType
 
 
 def place_containers(game):
@@ -80,7 +81,7 @@ def fill_container(container, dlvl, rarity_filter=None, type_filter=None, forced
         possible_items = {k: v for k, v in ITEM_DATA_MERGED.items() if
                           dlvl in range(*v.get('dlvls', (1, 99)))
                           and v.get('type') in type_filter
-                          and v.get('rarity') in rarity_filter}
+                          and v.get('rarity', RarityType.COMMON) in rarity_filter}
         num_of_items = randint(0, container.inventory.capacity)
         for i in range(num_of_items):
             key = pick_from_data_dict_by_rarity(possible_items, dlvl)

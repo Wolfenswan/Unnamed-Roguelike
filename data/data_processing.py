@@ -96,76 +96,84 @@ def pick_from_data_dict_by_rarity(dict, dlvl=0):
     return candidate
 
 
-def get_generic_data(data, randomize_color = False):
+# Data retrieving functions #
+def get_generic_data(data, material=None, condition=None, craftsmanship=None, randomize_color = False):
+    """
+    Retrieves basic attributes from the data dictionary and if necessary modifies them as to material, condition and
+    craftsmanship values.
+    """
     char = data['char']
     color = data.get('color', colors.white)
     name = data['name'].title()
     descr = data.get('descr', 'No description')
     type = data.get('type', GenericType.DEFAULT)
 
-    if randomize_color:
-        darken = True if randint(0, 1) else False
-        color = randomize_rgb_color(color, darken = darken) # Slight color randomization for each entity
-        print(color)
-
-    return (char, color, name, descr, type)
-
-
-def get_material_data(data, arguments):
-    materials = {k:v for k, v in item_material_data.items() if v['type'] in data.get('materials',{})}
-    if materials:
-        key = pick_from_data_dict_by_rarity(materials)
-        material = materials[key]
-        arguments[3] = material['color'] # Update the entity's color
-        arguments[4] = f"{material['name']} {arguments[4]}".title() # Update the entity's name
-    else:
-        material = {}
-
-    return material
-
-
-def get_condition_data(material, arguments):
     if material:
-        key = pick_from_data_dict_by_rarity(qual_cond_data)
-        condition = qual_cond_data[key]
+        color = material['color']  # Update the entity's color
+        name = f"{material['name']} {name}".title()  # Update the entity's name
 
+    if condition:
         # Append randomized condition description to the main description #
-        type = arguments[6]
         if cond_descr_data.get(type):
-            cond_descr = choice(cond_descr_data[type][material['type']][condition['type']])
-            arguments[5] += f' {cond_descr}'
+            descr_options = cond_descr_data[type][material['type']][condition['type']]
+            if descr_options:
+                cond_descr = choice(descr_options)
+                descr += f' {cond_descr}'
+            else:
+                descr += f" (Description missing for {type}/{material['type']}/{craftsmanship['type']})"
 
         # Tweak the color slightly to indicate quality level #
         # TODO Tweak as necessary
         if condition['type'] == Condition.POOR:
-            arguments[3] = randomize_rgb_color(arguments[3], factor_range=(0.2, 0.2), darken=True)
+            color = randomize_rgb_color(color, factor_range=(0.2, 0.2), darken=True)
         elif condition['type'] == Condition.GOOD:
-            arguments[3] = randomize_rgb_color(arguments[3], factor_range=(0.2, 0.2), darken=False)
+            color = randomize_rgb_color(color, factor_range=(0.2, 0.2), darken=False)
         elif condition['type'] == Condition.LEGENDARY:
-            arguments[3] = randomize_rgb_color(arguments[3], factor_range=(0.4, 0.4), darken=False)
-    else:
-        condition = {}
+            color = randomize_rgb_color(color, factor_range=(0.4, 0.4), darken=False)
 
+    if craftsmanship:
+        # Append randomized condition description to the main description #
+        if craft_descr_data.get(material['type']):
+            descr_options = craft_descr_data[material['type']][craftsmanship['type']]
+            if descr_options:
+                craft_descr = choice(descr_options)
+                descr += f' {craft_descr}'
+            else:
+                descr += f" (Description missing for {material['type']}/{craftsmanship['type']})"
+
+    if randomize_color:
+        darken = True if randint(0, 1) else False
+        color = randomize_rgb_color(color, darken = darken) # Slight color randomization for each entity
+
+    return (char, color, name, descr, type)
+
+
+def get_material_data(data):
+    materials = {k:v for k, v in item_material_data.items() if v['type'] in data.get('materials',{})}
+    material = {}
+    if materials:
+        key = pick_from_data_dict_by_rarity(materials)
+        material = materials[key]
+    return material
+
+
+def get_condition_data(material):
+    condition = {}
+    if material:
+        key = pick_from_data_dict_by_rarity(qual_cond_data)
+        condition = qual_cond_data[key]
     return condition
 
 
-def get_craftsmanship_data(material, arguments):
+def get_craftsmanship_data(material):
+    craftsmanship = {}
     if material:
         key = pick_from_data_dict_by_rarity(qual_craft_data)
         craftsmanship = qual_craft_data[key]
-
-        # Append randomized condition description to the main description #
-        if craft_descr_data.get(material['type']):
-            craft_descr = choice(craft_descr_data[material['type']][craftsmanship['type']])
-            print(craft_descr)
-            arguments[5] += f' {craft_descr}'
-    else:
-        craftsmanship = {}
-
     return craftsmanship
 
 
-
+# Generating Functions #
 def gen_npc_from_dict(data, x, y, game):
     arguments = (x, y, *get_generic_data(data, randomize_color=True))
 
@@ -200,20 +208,20 @@ def gen_npc_from_dict(data, x, y, game):
 
 
 def gen_item_from_data(data, x, y, force_material=False, force_condition=False, force_craftsmanship=False):
-    arguments = [x, y, *get_generic_data(data)]
+    if not force_material:
+        material = get_material_data(data)
+    if not force_condition:
+        condition = get_condition_data(material)
+    if not force_craftsmanship:
+        craftsmanship = get_craftsmanship_data(material)
+
+    arguments = [x, y, *get_generic_data(data, material=material, condition=condition, craftsmanship=craftsmanship)]
 
     on_use = data.get('on_use', None)
     equip_to = data.get('e_to', None)
-    if not force_material:
-        material = get_material_data(data, arguments)
-    if not force_condition:
-        condition = get_condition_data(material, arguments)
-    if not force_craftsmanship:
-        craftsmanship = get_craftsmanship_data(material, arguments)
 
     useable_component = None
     if on_use is not None:
-    # depending on the item's class new values are received and the arguments tuple expanded
         targeting = data['targeting']
         on_use_msg = data['on_use_msg']
         on_use_params = data['on_use_params']
@@ -249,8 +257,8 @@ def gen_item_from_data(data, x, y, force_material=False, force_condition=False, 
 
 
 def gen_architecture(data, x, y):
-    arguments = [x, y, *get_generic_data(data)]
-    material = get_material_data(data, arguments) # atm material only affects architecture's name and color
+    material = get_material_data(data)  # atm material only affects architecture's name and color
+    arguments = [x, y, *get_generic_data(data, material=material)]
 
     blocks = data.get('blocks', False)
     blocks_sight = data.get('blocks_sight', False)
