@@ -15,7 +15,7 @@ arch_containers_data = {
         "blocks": True,
         'container_room': (0,4),
         'contents_rarity': (Rarity.COMMON,),
-        'contents_type': (ItemType.USEABLE,),
+        'contents_type': (ItemType.USEABLE, ItemType.MISC),
         'on_collision': Architecture.blocks_info,
         'on_interaction': Architecture.smash_object
     },
@@ -30,7 +30,7 @@ arch_containers_data = {
         "blocks": False,
         'container_room': (3, 8),
         'contents_rarity': (Rarity.COMMON, Rarity.UNCOMMON, Rarity.RARE),
-        'contents_type': (ItemType.USEABLE, ItemType.WEAPON, ItemType.OFFHAND, ItemType.BELT),
+        'contents_type': (ItemType.USEABLE, ItemType.WEAPON, ItemType.SHIELD, ItemType.MISC, ItemType.BELT),
         'on_collision': Architecture.blocks_info,
         'on_interaction': Architecture.open_container
     },
@@ -46,7 +46,7 @@ arch_containers_data = {
         "blocks": False,
         'container_room': (1, 4),
         'contents_rarity': (Rarity.COMMON, Rarity.UNCOMMON),
-        'contents_type': (ItemType.WEAPON, ItemType.OFFHAND),
+        'contents_type': (ItemType.WEAPON, ItemType.SHIELD, ItemType.MISC),
         'on_collision': Architecture.blocks_info,
         'on_interaction': Architecture.open_container
     },

@@ -133,7 +133,7 @@ class Fighter:
         """
         :return: Equipment component of currently equipped weapon.
         """
-        weapon_ent = self.owner.paperdoll.arms.weapon
+        weapon_ent = self.owner.paperdoll.weapon_arm.weapon # TODO add check for 2nd hand after implementing dual wielding
         if weapon_ent:
             return weapon_ent.item.equipment
         else:

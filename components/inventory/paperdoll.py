@@ -12,7 +12,8 @@ class Paperdoll:
         self.equipped_items = [] # TODO make @property
         self.head = Head()
         self.torso = Torso()
-        self.arms = Arms()
+        self.weapon_arm = Arm()
+        self.shield_arm = Arm()
         self.legs = Legs()
 
     def equip(self, item_ent, game):
@@ -26,8 +27,8 @@ class Paperdoll:
 
         print(item_ent.name, extremity, equipped_item)
 
-        if item_ent.item.equipment.two_handed and getattr(self.arms, 'offhand'):
-            offhand_item = getattr(self.arms, 'offhand')
+        if item_ent.item.equipment.two_handed and getattr(self.shield_arm, 'carried'):
+            offhand_item = getattr(self.shield_arm, 'carried')
             choice = yesno_menu('Remove Offhand Item', f'Remove {offhand_item.name} to equip the two-handed {item_ent.name}?', game)
             if choice:
                 results.extend(self.dequip(offhand_item))
@@ -95,12 +96,27 @@ class Torso:
         self.belt = belt
 
 
-class Arms:
-    def __init__(self, armor=None, weapon=None, offhand=None, ring=None):
-        self.weapon = weapon
-        self.offhand = offhand
+class Arm:
+    def __init__(self, armor=None, carried=None, ring=None):
+        self.__carried = carried
         self.armor = armor
         self.ring = ring
+
+    @property
+    def weapon(self):
+        return self.__carried
+
+    @weapon.setter
+    def weapon(self, item):
+        self.__carried = item
+
+    @property
+    def shield(self):
+        return self.__carried
+
+    @shield.setter
+    def shield(self, item):
+        self.__carried = item
 
 
 class Legs:

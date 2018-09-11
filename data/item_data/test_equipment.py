@@ -3,7 +3,7 @@ from data.shared_data.rarity_data import Rarity
 from data.item_data.wp_movesets import moveset_sword, moveset_spear
 
 WP_CHAR = '\\'
-WP_EQUIP = 'arms'  # which extremity the item is equipped to
+WP_EQUIP = 'weapon_arm'  # which extremity the item is equipped to
 WP_TYPE = ItemType.WEAPON  # which slot it will take
 
 ARM_CHAR = ']'
@@ -19,8 +19,8 @@ M_EQUIP = 'torso'  # which extremity the item is equipped to
 M_TYPE = ItemType.BELT  # which slot it will take
 
 OH_CHAR = '/'
-OH_EQUIP = 'arms'  # which extremity the item is equipped to
-OH_TYPE = ItemType.OFFHAND  # which slot it will take
+OH_EQUIP = 'shield_arm'  # which extremity the item is equipped to
+#OH_TYPE = ItemType.SHIELD, ItemType.MISC  # which slot it will take
 
 test_equipment_data = {
     'sword': {
@@ -96,7 +96,7 @@ test_equipment_data = {
     'torch': {
         'name': 'Torch',
         'descr': 'A wooden torch to light your way.',
-        'type': OH_TYPE,
+        'type': ItemType.MISC,
         'rarity': Rarity.COMMON,
         'dlvls': (1,99),
         "char": OH_CHAR,
@@ -107,7 +107,7 @@ test_equipment_data = {
         'name': 'Shield',
         'materials': (Material.LEATHER, Material.OAK, Material.IRON),
         'descr': 'A simple shield.',
-        'type': OH_TYPE,
+        'type': ItemType.SHIELD,
         'rarity': Rarity.COMMON,
         'dlvls': (1,99),
         "char": ')',

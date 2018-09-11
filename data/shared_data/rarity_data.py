@@ -18,9 +18,10 @@ rarity_types = {
 
     ItemType.USEABLE:100,
     ItemType.WEAPON:60,
-    ItemType.OFFHAND:60,
+    ItemType.SHIELD:60,
     ItemType.ARMOR:40,
     ItemType.BELT:30,
+    ItemType.MISC: 80,
 
     ContainerType.BARREL: 100,
     ContainerType.CHEST_BASIC: 65,

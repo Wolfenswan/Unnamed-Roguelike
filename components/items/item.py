@@ -4,8 +4,8 @@ from gui.messages import Message
 
 
 class Item:
-    def __init__(self, condition=None, useable=None, equipment=None):
-        self.condition = condition
+    def __init__(self, identified=False, useable=None, equipment=None):
+        self.identified = identified
         self.useable = useable
         self.equipment = equipment
 
@@ -14,13 +14,6 @@ class Item:
 
         if self.equipment:
             equipment.owner = self
-
-    @property
-    def condition_name(self):
-        type = self.owner.type
-        str = self.condition
-
-        return str
 
     def attr_list(self, max_width=100):
         """
@@ -34,7 +27,8 @@ class Item:
         if self.equipment:
 
             if self.equipment.e_to:
-                list.extend(textwrap.wrap(f' Equips To: {self.equipment.e_to.capitalize()}', max_width))
+                e_str = self.equipment.e_to.replace('_',' ').title()
+                list.extend(textwrap.wrap(f' Equips To: {e_str}', max_width))
 
             if self.equipment.av:
                 list.extend(textwrap.wrap(f' Armor: {self.equipment.av}', max_width))

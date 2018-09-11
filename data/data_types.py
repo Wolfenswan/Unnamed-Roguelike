@@ -12,9 +12,10 @@ class MonsterType(Enum): # currently unused
 class ItemType(Enum):
     USEABLE = auto()
     WEAPON = auto()
-    OFFHAND = auto()
+    SHIELD = auto()
     ARMOR = auto()
     BELT = auto()
+    MISC = auto()
 
 class ContainerType(Enum):
     BARREL = auto()

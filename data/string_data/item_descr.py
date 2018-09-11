@@ -115,7 +115,7 @@ item_descr_data = {
             Condition.GOOD: ('No description',),
             Condition.LEGENDARY: ('No description',)
         }},
-    ItemType.OFFHAND: {
+    ItemType.SHIELD: {
         Material.OAK: {
             Condition.POOR: ('However, calling this worm-riddled plank a "shield" is rather generous.',
                           "You wonder if the splinters in your hand are worth the dubious protection it offers."

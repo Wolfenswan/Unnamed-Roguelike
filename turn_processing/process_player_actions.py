@@ -168,6 +168,9 @@ def process_player_input(action, game, fov_map, targeting_item = None):
 
     if game.state in [GameStates.SHOW_INVENTORY, GameStates.SHOW_EQUIPMENT]:
         if selected_item_ent:
+            # if not selected_item_ent.identified:
+            #     selected_item_ent.identify()
+
             item_use_choice = item_menu(selected_item_ent, game)
             if item_use_choice:
                 if item_use_choice == 'u':
