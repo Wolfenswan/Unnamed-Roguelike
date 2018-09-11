@@ -34,7 +34,7 @@
 from components.AI.behavior.simple import Simple
 from components.AI.behavior.swarm import Swarm
 from config_files import colors
-from data.shared_data.rarity_data import Rarity
+from data.shared_data.types_data import RarityType
 
 spawn_data = {
     'Roach': {
@@ -51,7 +51,7 @@ spawn_data = {
         'ai_attack': Swarm,
         'barks': ('insect'),
         'dlvls': (1,100),
-        'rarity': Rarity.COMMON,
+        'rarity': RarityType.COMMON,
         'group_size': (2,6)
     },
     'Dung_Beetle': {
@@ -69,7 +69,7 @@ spawn_data = {
         'barks': ('insect'),
         'skills': ('skill_charge',  ),
         'dlvls': (1,100),
-        'rarity': Rarity.UNCOMMON,
+        'rarity': RarityType.UNCOMMON,
         'rarity_mod': +5,
         'group_size': (1,2)
     },

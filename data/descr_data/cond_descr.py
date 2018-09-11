@@ -1,4 +1,4 @@
-from data.data_types import Material, ItemType, Condition
+from data.shared_data.types_data import Material, ItemType, Condition
 
 # Default string for a missing description
 MISSING_DESCR = ('(Quality description missing)',)
@@ -9,7 +9,7 @@ NORMAL_DESCR =  (
                 'There is nothing remarkable about its condition.'
                 )
 
-qual_descr_data = {
+cond_descr_data = {
     ItemType.WEAPON: {
         Material.OAK: {
             Condition.POOR: (
@@ -117,3 +117,21 @@ qual_descr_data = {
             Condition.LEGENDARY: MISSING_DESCR
         }}
 }
+
+# Old names #
+# 'names': {
+        #     Material.OAK: 'splintered',
+        #     Material.LINEN: 'frayed',
+        #     Material.WOOL: 'frayed',
+        #     Material.LEATHER: 'brittle',
+        #     Material.IRON: 'rusty',
+        #     Material.STEEL: 'rusty'
+        # },
+# 'names': {
+        #     Material.OAK: 'sturdy',
+        #     Material.LINEN: 'well fitting',
+        #     Material.WOOL: 'well fitting',
+        #     Material.LEATHER: 'hardened',
+        #     Material.IRON: 'well honed',
+        #     Material.STEEL: 'well honed'
+        # },

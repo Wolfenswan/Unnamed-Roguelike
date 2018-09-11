@@ -1,6 +1,6 @@
 from config_files import colors
-from data.data_types import ItemType, Material
-from data.shared_data.rarity_data import Rarity
+from data.shared_data.types_data import ItemType, Material
+from data.shared_data.types_data import RarityType
 from data.item_data.wp_movesets import moveset_sword, moveset_spear
 
 WP_CHAR = '\\'
@@ -33,7 +33,7 @@ test_equipment_data = {
         'e_to': WP_EQUIP,
         'dmg_range': (2, 5),
         'moveset': moveset_sword,
-        'rarity': Rarity.COMMON,
+        'rarity': RarityType.COMMON,
         'dlvls': (1,99)
     },
     'spear': {
@@ -46,7 +46,7 @@ test_equipment_data = {
         'dmg_range': (1,7),
         'two_handed': True,
         'moveset': moveset_spear,
-        'rarity': Rarity.COMMON,
+        'rarity': RarityType.COMMON,
         'dlvls': (1,99)
     },
     'gambeson': {
@@ -58,26 +58,26 @@ test_equipment_data = {
         'e_to': ARM_EQUIP,
         'av': 2,
         'qu_slots': 1,
-        'rarity': Rarity.COMMON,
+        'rarity': RarityType.COMMON,
         'dlvls': (1, 99)
     },
     'brigandine': {
         'name': 'Brigandine',
-        'materials': (Material.LEATHER, Material.IRON),
+        'materials': (Material.LEATHER, Material.LINEN),
         'descr': 'A flexible armor with layers of small, riveted plates.',
         "char": ARM_CHAR,
         'type': ARM_TYPE,
         'e_to': ARM_EQUIP,
         'av': 3,
-        'rarity': Rarity.UNCOMMON,
+        'rarity': RarityType.UNCOMMON,
         'dlvls': (1, 99)
     },
     'helmet': {
-        'name': 'Helmet',
+        'name': 'Round Helmet',
         'materials': (Material.LEATHER, Material.IRON),
         'descr': 'At least it is not a bucket.',
         'type': H_TYPE,
-        'rarity': Rarity.COMMON,
+        'rarity': RarityType.COMMON,
         'dlvls': (1,99),
         "char": H_CHAR,
         'e_to': H_EQUIP,
@@ -88,7 +88,7 @@ test_equipment_data = {
         'descr': 'A basic utility belt.',
         'color': colors.leather,
         'type': M_TYPE,
-        'rarity': Rarity.COMMON,
+        'rarity': RarityType.COMMON,
         'dlvls': (1,99),
         "char": M_CHAR,
         'e_to': M_EQUIP,
@@ -99,7 +99,7 @@ test_equipment_data = {
         'descr': 'A wooden torch to light your way.',
         'type': ItemType.MISC,
         'color': colors.wood,
-        'rarity': Rarity.COMMON,
+        'rarity': RarityType.COMMON,
         'dlvls': (1,99),
         "char": OH_CHAR,
         'e_to': OH_EQUIP,
@@ -110,7 +110,7 @@ test_equipment_data = {
         'materials': (Material.LEATHER, Material.OAK, Material.IRON),
         'descr': 'A simple shield.',
         'type': ItemType.SHIELD,
-        'rarity': Rarity.COMMON,
+        'rarity': RarityType.COMMON,
         'dlvls': (1,99),
         "char": ')',
         'e_to': OH_EQUIP,

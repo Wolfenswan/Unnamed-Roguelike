@@ -1,41 +1,46 @@
-from enum import Enum
+from data.shared_data.types_data import MonsterType, ContainerType, ItemType, GenericType, Material, Condition, \
+    RarityType, Craftsmanship
 
-from data.data_types import MonsterType, ContainerType, ItemType, GenericType, Material
-
-# Rarity defines the overall weight for an item to appear
-class Rarity(Enum):
-    COMMON = 100
-    UNCOMMON = 75
-    RARE = 50
-    EXOTIC = 25
-    LEGENDARY = 10
-    UNIQUE = -1
-
-# The rarity_types dict assigns a weight to each item type
-rarity_types = {
+# Each type is assigned a weight value that is taken into account when creating an item of the corresponding type
+# RarityType can be assigned as an additional value to data entries, to add a weight specific to that data entry
+rarity_values = {
     GenericType.DEFAULT: 100,
     GenericType.UNIQUE: -1,
 
-    ItemType.USEABLE:100,
-    ItemType.WEAPON:60,
-    ItemType.SHIELD:60,
-    ItemType.ARMOR:40,
-    ItemType.BELT:30,
+    RarityType.COMMON: 100,
+    RarityType.UNCOMMON: 75,
+    RarityType.RARE: 50,
+    RarityType.EXOTIC: 30,
+    RarityType.LEGENDARY: 10,
+    RarityType.UNIQUE: -1,
+
+    ItemType.USEABLE: 100,
     ItemType.MISC: 80,
+    ItemType.WEAPON: 60,
+    ItemType.SHIELD: 60,
+    ItemType.ARMOR: 40,
+    ItemType.BELT: 30,
 
     ContainerType.BARREL: 100,
     ContainerType.CHEST_BASIC: 65,
 
     MonsterType.GENERIC: 100,
     MonsterType.ELITE: 60,
-    MonsterType.LEADER: 10
-}
+    MonsterType.LEADER: 10,
 
-# rarity_material = {
-#     Material.OAK: 100,
-#     Material.LINEN: 100,
-#     Material.LEATHER: 90,
-#     Material.WOOL: 90,
-#     Material.IRON: 75,
-#     Material.STEEL: 50
-# }
+    Material.OAK: 100,
+    Material.LINEN: 100,
+    Material.LEATHER: 90,
+    Material.IRON: 80,
+    Material.STEEL: 50,
+
+    Condition.POOR: 100,
+    Condition.NORMAL: 80,
+    Condition.GOOD: 60,
+    Condition.LEGENDARY: 10,
+
+    Craftsmanship.POOR: 100,
+    Craftsmanship.NORMAL: 80,
+    Craftsmanship.GOOD: 60,
+    Craftsmanship.LEGENDARY: 10
+}

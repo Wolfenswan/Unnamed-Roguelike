@@ -1,48 +1,39 @@
 from config_files import colors
-from data.data_types import Material
-from data.shared_data.rarity_data import Rarity
-
-# Note: atm. there's no type rarity set for material. It only takes the rarity value into account #
+from data.shared_data.types_data import Material
 
 item_material_data = {
     'wood_1': {
         'name': 'oak',
         'type': Material.OAK,
-        'rarity': Rarity.COMMON,
         'color': colors.oak
     },
     'cloth_1': {
         'name': 'linen',
         'type': Material.LINEN,
-        'rarity': Rarity.COMMON,
         'color': colors.linen
     },
     # 'cloth_2': {
     #     'name': 'cotton',
     #     'type': Material.WOOL,
-    #     'rarity': Rarity.COMMON,
+    #     'rarity': RarityType.COMMON,
     #     'color': colors.WOOL
     # },
     'leather_1': {
         'name': 'leather',
         'type': Material.LEATHER,
-        'rarity': Rarity.COMMON,
         'color': colors.leather
     },
     'metal_1': {
         'name': 'iron',
         'type': Material.IRON,
-        'rarity': Rarity.UNCOMMON,
-        'rarity_mod': 5,
-        'color': colors.iron
+        'color': colors.iron,
+        'av_mod': 1
     },
     'metal_2': {
         'name': 'steel',
         'type': Material.STEEL,
-        'rarity': Rarity.UNCOMMON,
-        'rarity_mod': -5,
         'color': colors.steel,
-        'dmg_mod': 1,
-        'av_mod': 1
+        'dmg_mod': 2,
+        'av_mod': 2
     }
 }

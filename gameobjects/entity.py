@@ -21,8 +21,7 @@ class Entity:
     A generic object to represent players, enemies, items, etc.
     """
     def __init__(self, x, y, char, color, name, descr=None,
-                 type=None, material=None, condition=None,
-                 is_player = False, is_corpse = False,
+                 type=None, material=None, is_player=False, is_corpse=False,
                  blocks=False, blocks_sight = False, render_order=RenderOrder.CORPSE,
                  fighter=None, ai=None, skills=None, item=None, inventory=None, architecture=None):
         self.state = EntityStates.ENTITY_ACTIVE
@@ -35,7 +34,6 @@ class Entity:
         self.__descr = descr
         self.type = type
         self.material = material
-        self.condition = condition
         self.is_player = is_player
         self.is_corpse = is_corpse
         self.blocks = blocks
@@ -54,10 +52,6 @@ class Entity:
         self.skills = skills  # dictionary
         self.architecture = architecture
         self.set_ownership() # Sets ownership for all components
-
-        # AI related attributes #
-        self.delay_turns = 0
-        self.execute_after_delay = None
 
     @property
     def pos(self):

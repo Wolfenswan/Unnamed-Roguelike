@@ -1,11 +1,13 @@
 import textwrap
 
-from data.data_types import Condition
-from gui.messages import Message
+from data.descr_data.craft_descr import craft_name_data
+from data.shared_data.types_data import Condition, Craftsmanship
 
 
 class Item:
-    def __init__(self, identified=False, useable=None, equipment=None):
+    def __init__(self, condition=None, craftsmanship=None, identified=False, useable=None, equipment=None):
+        self.condition = condition
+        self.craftsmanship = craftsmanship
         self.identified = identified
         self.useable = useable
         self.equipment = equipment
@@ -17,13 +19,21 @@ class Item:
             equipment.owner = self
 
     def identify(self):
-        condition = self.owner.condition
+        new_name = self.owner.name
+        condition = self.condition
+        craftsmanship = self.craftsmanship
+
         if condition == Condition.POOR:
-            self.owner.name += ' (-)'
+            new_name += ' (-)'
         elif condition == Condition.GOOD:
-            self.owner.name += ' (+)'
+            new_name += ' (+)'
         elif condition == Condition.LEGENDARY:
-            self.owner.name += ' (++)'
+            new_name += ' (++)'
+
+        if craftsmanship != Craftsmanship.NORMAL and craftsmanship is not None:
+            new_name = f'{craft_name_data[craftsmanship]} {new_name}'
+
+        self.owner.name = new_name.title()
         self.identified = True
 
     def attr_list(self, max_width=100):

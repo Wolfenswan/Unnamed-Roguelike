@@ -1,7 +1,7 @@
 from config_files import colors
 from abilities.spells import heal_entity
-from data.data_types import ItemType
-from data.shared_data.rarity_data import Rarity
+from data.shared_data.types_data import ItemType
+from data.shared_data.types_data import RarityType
 from gui.messages import Message
 
 POTION_CHAR = '!'
@@ -17,7 +17,7 @@ use_potions_data = {
         'on_use_msg': Message('You drink down the potion.'),
         'targeting': False,
         "on_use_params": {'pwr': (6, 10)},
-        'rarity': Rarity.COMMON,
+        'rarity': RarityType.COMMON,
         'dlvls': (1, 99)
     }
 }
