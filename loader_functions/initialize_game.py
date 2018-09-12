@@ -2,6 +2,7 @@ from random import randint
 
 from config_files import cfg, colors
 from data.data_processing import gen_loadout
+from data.shared_data.types_data import Material, Condition, Craftsmanship
 from gameobjects.entity import Entity
 from gameobjects.player import Player
 from map.game_map import GameMap
@@ -19,7 +20,17 @@ def initialize_game(game):
     player = Player('Player')
     player_loadouts = { # TODO adapt entries
         'loadout1': {
-            'equipment': ('sword','brigandine', 'helmet','belt_generic','shield'),
+            'equipment': {
+                'sword': {
+                    'material': Material.IRON,
+                    'condition': Condition.NORMAL,
+                    'craftsmanship': Craftsmanship.POOR
+                },
+                'brigandine':{},
+                'helmet':{},
+                'belt_generic':{},
+                'shield':{}
+            },
             'backpack': ('pot_heal', 'scr_fireball','torch', 'spear')
         }
     }
@@ -37,11 +48,11 @@ def initialize_game(game):
     game.map.make_map(game, cfg.ROOM_MIN_SIZE, cfg.ROOM_MAX_SIZE, dwidth, dheight)
 
     # Add the good stuff #
-    place_staticobjects(game)
-    place_containers(game)
-    place_doors(game)
-    place_monsters(game)
-    place_items(game)
+    # place_staticobjects(game)
+    # place_containers(game)
+    # place_doors(game)
+    # place_monsters(game)
+    # place_items(game)
 
     player.x, player.y = game.map.rooms[0].center
 

@@ -7,7 +7,7 @@ default_descr = {
     'normal': ('It is in a fairly ordinary condition.',
                 'There is nothing remarkable about its condition.'),
     'good': (),
-    'legend': ()
+    'legend': ('You are in awe of its more than pristine condition.',)
 }
 
 
@@ -23,7 +23,7 @@ cond_descr_data = {
                 'The wood seems sturdy and in good condition.',
                 'The wood has been spared by worms and is in nearly mint condition.'
             ),
-            Condition.LEGENDARY: ()
+            Condition.LEGENDARY: default_descr['legend']
         },
         Material.IRON: {
             Condition.POOR:(
@@ -35,7 +35,7 @@ cond_descr_data = {
                 'It is well honed and the edges are still sharp.',
                 'You reckon it will fell your foes easily.'
             ),
-            Condition.LEGENDARY: ()
+            Condition.LEGENDARY: default_descr['legend']
         },
         Material.STEEL: {
             Condition.POOR:(
@@ -47,7 +47,7 @@ cond_descr_data = {
                 'It is well honed and the edges are still sharp.',
                 'You reckon it will fell your foes easily.'
             ),
-            Condition.LEGENDARY: ()
+            Condition.LEGENDARY: default_descr['legend']
         }
     },
     ItemType.ARMOR: {
@@ -58,31 +58,31 @@ cond_descr_data = {
             ),
             Condition.NORMAL: default_descr['normal'],
             Condition.GOOD: (),
-            Condition.LEGENDARY: ()
+            Condition.LEGENDARY: default_descr['legend']
         },
         Material.LEATHER: {
             Condition.POOR:(),
             Condition.NORMAL: default_descr['normal'],
             Condition.GOOD: (),
-            Condition.LEGENDARY: ()
+            Condition.LEGENDARY: default_descr['legend']
         },
         Material.LINEN: {
             Condition.POOR:(),
             Condition.NORMAL: default_descr['normal'],
             Condition.GOOD: (),
-            Condition.LEGENDARY: ()
+            Condition.LEGENDARY: default_descr['legend']
         },
         Material.IRON: {
             Condition.POOR:(),
             Condition.NORMAL: default_descr['normal'],
             Condition.GOOD: (),
-            Condition.LEGENDARY: ()
+            Condition.LEGENDARY: default_descr['legend']
         },
         Material.STEEL: {
             Condition.POOR:(),
             Condition.NORMAL: default_descr['normal'],
             Condition.GOOD: (),
-            Condition.LEGENDARY: ()
+            Condition.LEGENDARY: default_descr['legend']
         }},
     ItemType.SHIELD: {
         Material.OAK: {
@@ -92,25 +92,25 @@ cond_descr_data = {
             ),
             Condition.NORMAL: default_descr['normal'],
             Condition.GOOD: (),
-            Condition.LEGENDARY: ()
+            Condition.LEGENDARY: default_descr['legend']
         },
         Material.LEATHER: {
             Condition.POOR:(),
             Condition.NORMAL: default_descr['normal'],
             Condition.GOOD: (),
-            Condition.LEGENDARY: ()
+            Condition.LEGENDARY: default_descr['legend']
         },
         Material.IRON: {
             Condition.POOR:(),
             Condition.NORMAL: default_descr['normal'],
             Condition.GOOD: (),
-            Condition.LEGENDARY: ()
+            Condition.LEGENDARY: default_descr['legend']
         },
         Material.STEEL: {
             Condition.POOR:(),
             Condition.NORMAL: default_descr['normal'],
             Condition.GOOD: (),
-            Condition.LEGENDARY: ()
+            Condition.LEGENDARY: default_descr['legend']
         }}
 }
 

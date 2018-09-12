@@ -64,7 +64,6 @@ class GameMap:
         if self.is_wall(x, y):
             return True
 
-        print(x, y, game.entities)
         if blocking_entity_at_pos(game.entities, x, y) > 0:
             return True
 

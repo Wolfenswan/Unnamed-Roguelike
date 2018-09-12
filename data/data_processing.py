@@ -148,8 +148,15 @@ def get_generic_data(data, material=None, condition=None, craftsmanship=None, ra
     return (char, color, name, descr, type)
 
 
-def get_material_data(data):
-    materials = {k:v for k, v in item_material_data.items() if v['type'] in data.get('materials',{})}
+def get_material_data(data, forced=False):
+    """
+    Retrieves material data as defined in the item_material_data dict.
+    Forced can be set to a MaterialType Enum member to return the respective material.
+    """
+    if not forced:
+        materials = {k:v for k, v in item_material_data.items() if v['type'] in data.get('materials',{})}
+    else:
+        materials = {k: v for k, v in item_material_data.items() if v['type'] == forced}
     material = {}
     if materials:
         key = pick_from_data_dict_by_rarity(materials)
@@ -157,18 +164,29 @@ def get_material_data(data):
     return material
 
 
-def get_condition_data(material):
+def get_condition_data(material, forced=False):
+    """
+    Retrieves condition data as defined in the qual_cond_data dict.
+    Forced can be set to a Condition Enum member to return the respective material.
+    """
     condition = {}
     if material:
-        key = pick_from_data_dict_by_rarity(qual_cond_data)
+        dict = qual_cond_data if not forced else {k: v for k, v in qual_cond_data.items() if v['type'] == forced}
+        print(dict)
+        key = pick_from_data_dict_by_rarity(dict)
         condition = qual_cond_data[key]
     return condition
 
 
-def get_craftsmanship_data(material):
+def get_craftsmanship_data(material, forced=False):
+    """
+    Retrieves craftsmanship data as defined in the qual_craft_data dict.
+    Forced can be set to a Craftsmanship Enum member to return the respective material.
+    """
     craftsmanship = {}
     if material:
-        key = pick_from_data_dict_by_rarity(qual_craft_data)
+        dict = qual_craft_data if not forced else {k: v for k, v in qual_craft_data.items() if v['type'] == forced}
+        key = pick_from_data_dict_by_rarity(dict)
         craftsmanship = qual_craft_data[key]
     return craftsmanship
 
@@ -207,13 +225,13 @@ def gen_npc_from_dict(data, x, y, game):
     return npc
 
 
-def gen_item_from_data(data, x, y, force_material=False, force_condition=False, force_craftsmanship=False):
-    if not force_material:
-        material = get_material_data(data)
-    if not force_condition:
-        condition = get_condition_data(material)
-    if not force_craftsmanship:
-        craftsmanship = get_craftsmanship_data(material)
+def gen_item_from_data(data, x, y, material=False, condition=False, craftsmanship=False):
+
+    material = get_material_data(data, forced=material)
+
+    condition = get_condition_data(material, forced=condition)
+
+    craftsmanship = get_craftsmanship_data(material, forced=craftsmanship)
 
     arguments = [x, y, *get_generic_data(data, material=material, condition=condition, craftsmanship=craftsmanship)]
 
@@ -278,10 +296,12 @@ def gen_architecture(data, x, y):
 def gen_loadout(actor, loadout, game):
     """ creates inventory and equipment for the given actor """
     logging.debug(f'Generating loadout from {loadout} for {actor.name}({actor}).')
-    for e in loadout.get('equipment',[]):
-        item = gen_item_from_data(ITEM_DATA_MERGED.get(e), 0, 0)
+    equipment = loadout.get('equipment',{})
+    backpack = loadout.get('backpack',{})
+    for k in equipment.keys():
+        item = gen_item_from_data(ITEM_DATA_MERGED.get(k), 0, 0, **equipment[k])
         actor.paperdoll.equip(item, game)
 
-    for i in loadout.get('backpack',[]):
+    for i in loadout.get('backpack',()):
         item = gen_item_from_data(ITEM_DATA_MERGED.get(i), 0, 0)
         actor.inventory.add(item)
