@@ -43,6 +43,22 @@ class GameMap:
             logging.debug(f'Blocked room fail safe activated for {len(blocked_rooms)} rooms: {blocked_rooms}')
             Tunneling.create_tunnels(self, room_list = blocked_rooms, randomize=True) # safety measure
 
+    def is_floor(self, x, y):
+        """
+        Returns True if position is a floor.
+
+        :param x: x-coord
+        :type x: int
+        :param y: y-coord
+        :type y: int
+        :return: floor?
+        :rtype: bool
+        """
+        if self.tiles[(x, y)].walkable:
+            return True
+
+        return False
+
     def is_wall(self, x, y):
         """
         Returns True if position is a wall.
@@ -51,7 +67,7 @@ class GameMap:
         :type x: int
         :param y: y-coord
         :type y: int
-        :return: wall
+        :return: wall?
         :rtype: bool
         """
         if self.tiles[(x,y)].blocked:

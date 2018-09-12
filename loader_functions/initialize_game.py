@@ -35,7 +35,7 @@ def initialize_game(game):
         }
     }
     #loadout = pick_from_data_dict_by_chance(player_loadouts)
-    gen_loadout(player, player_loadouts['loadout1'], game)
+    #gen_loadout(player, player_loadouts['loadout1'], game)
     for item_ent in player.inventory.items + player.paperdoll.equipped_items:
         item_ent.item.identify()
 
