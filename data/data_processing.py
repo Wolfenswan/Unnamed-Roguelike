@@ -156,7 +156,7 @@ def get_material_data(data, forced=False):
     if not forced:
         materials = {k:v for k, v in item_material_data.items() if v['type'] in data.get('materials',{})}
     else:
-        materials = {k: v for k, v in item_material_data.items() if v['type'] == forced}
+        materials = {k: v for k, v in item_material_data.items() if v['type'] in forced}
     material = {}
     if materials:
         key = pick_from_data_dict_by_rarity(materials)
@@ -171,7 +171,7 @@ def get_condition_data(material, forced=False):
     """
     condition = {}
     if material:
-        dict = qual_cond_data if not forced else {k: v for k, v in qual_cond_data.items() if v['type'] == forced}
+        dict = qual_cond_data if not forced else {k: v for k, v in qual_cond_data.items() if v['type'] in forced}
         print(dict)
         key = pick_from_data_dict_by_rarity(dict)
         condition = qual_cond_data[key]
@@ -185,7 +185,7 @@ def get_craftsmanship_data(material, forced=False):
     """
     craftsmanship = {}
     if material:
-        dict = qual_craft_data if not forced else {k: v for k, v in qual_craft_data.items() if v['type'] == forced}
+        dict = qual_craft_data if not forced else {k: v for k, v in qual_craft_data.items() if v['type'] in forced}
         key = pick_from_data_dict_by_rarity(dict)
         craftsmanship = qual_craft_data[key]
     return craftsmanship
@@ -225,13 +225,13 @@ def gen_npc_from_dict(data, x, y, game):
     return npc
 
 
-def gen_item_from_data(data, x, y, material=False, condition=False, craftsmanship=False):
+def gen_item_from_data(data, x, y, materials=False, conditions=False, craftsmanships=False):
 
-    material = get_material_data(data, forced=material)
+    material = get_material_data(data, forced=materials)
 
-    condition = get_condition_data(material, forced=condition)
+    condition = get_condition_data(material, forced=conditions)
 
-    craftsmanship = get_craftsmanship_data(material, forced=craftsmanship)
+    craftsmanship = get_craftsmanship_data(material, forced=craftsmanships)
 
     arguments = [x, y, *get_generic_data(data, material=material, condition=condition, craftsmanship=craftsmanship)]
 

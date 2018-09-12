@@ -22,9 +22,9 @@ def initialize_game(game):
         'loadout1': {
             'equipment': {
                 'sword': {
-                    'material': Material.IRON,
-                    'condition': Condition.NORMAL,
-                    'craftsmanship': Craftsmanship.POOR
+                    'materials': (Material.IRON,),
+                    'conditions': (Condition.NORMAL,),
+                    'craftsmanships': (Craftsmanship.POOR,)
                 },
                 'brigandine':{},
                 'helmet':{},
