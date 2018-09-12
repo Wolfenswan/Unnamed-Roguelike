@@ -13,20 +13,14 @@ def create_ent_position(room, data, game, allow_exits=True):
         return pos
     elif blocks.get('walk', False):
         free_tiles = room.free_tiles(game, allow_exits=allow_exits, filter=('walks', 'floor'))
-        if free_tiles:
-            pos = choice(free_tiles)
-        else:
-            logging.debug(f'No free spots in {room}, thus aborting.')
-            return False
     else:
-        #pos = room.ranpos(game_map)
+        #pos = room.ranpos(game_map) # This is faster but can cause bugs with items created on blocking objects
         free_tiles = room.free_tiles(game, allow_exits=allow_exits, filter=('walks'))
-        if free_tiles:
-            pos = choice(free_tiles)
-        else:
-            logging.debug(f'No free spots in {room}, thus aborting.')
-            return False
 
-
+    if free_tiles:
+        pos = choice(free_tiles)
+    else:
+        logging.debug(f'No free spots in {room}, thus aborting.')
+        return False
 
     return pos
