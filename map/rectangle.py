@@ -41,25 +41,27 @@ class Rect:
         return (self.x1 <= other.x2 and self.x2 >= other.x1 and
                 self.y1 <= other.y2 and self.y2 >= other.y1)
 
-    def ranpos(self, game_map, force_floor = True, force_wall=False):
-        """returns a random position within the room"""
-        if force_floor and force_wall:
-            logging.error(f'Can not force both floor and wall.')
-
-        x, y = choice(self.pos_list)
-        if force_floor:
+    def ranpos(self, game_map, floor = True):
+        """
+        Returns a random position within the room.
+        If floor is True a floor position will be returned, otherwise a wall position will be returned.
+        If floor is None any position will be returned.
+        """
+        if floor:
             positions = [pos for pos in self.pos_list if game_map.is_floor(*pos)]
             if positions:
-                x, y = choice(positions)
+                pos = choice(positions)
             else:
                 return False
-        elif force_wall:
+        elif not floor:
             positions = [pos for pos in self.pos_list if game_map.is_wall(*pos)]
             if positions:
-                x, y = choice(positions)
+                pos = choice(positions)
             else:
                 return False
-        return x, y
+        else:
+            pos = choice(self.pos_list)
+        return pos
 
     def free_tiles(self, game, allow_exits = True):
         """
@@ -73,7 +75,7 @@ class Rect:
         exits = self.exits(game_map)
         free_tiles = [pos for pos in self.pos_list if not game_map.is_blocked(*pos, game) and (allow_exits or pos not in exits)]
         #free_tiles = []
-        # for x in range(self.x1, self.x2):   # TODO use zip()?
+        # for x in range(self.x1, self.x2):
         #     for y in range(self.y1, self.y2):
         #         if not game_map.is_blocked(x, y, game):
         #             if allow_exits or ((x, y) not in exits):
@@ -90,6 +92,7 @@ class Rect:
         """
 
         # TODO properly avoid out of index errors
+        # TODO Candidate for list comprehension and using game_map.is_floor/.is_wall methods
 
         exits = []
 

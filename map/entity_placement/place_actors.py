@@ -6,7 +6,7 @@ from random import randint, choice
 from data.data_processing import gen_npc_from_dict, pick_from_data_dict_by_rarity
 from config_files import cfg
 from data.actor_data.spawn_data import spawn_data
-from map.entity_placement.util_functions import get_ent_position
+from map.entity_placement.util_functions import create_ent_position
 
 
 def place_monsters(game):
@@ -60,7 +60,7 @@ def place_monsters(game):
                         break
                     else:
                         m += 1
-                        pos = get_ent_position(room, entry, game)
+                        pos = create_ent_position(room, entry, game)
                         if pos:
                             ent = gen_npc_from_dict(entry, *pos, game)
                             game.entities.append(ent)

@@ -99,10 +99,11 @@ class GameMap:
     def empty_tiles_near_ent(self, ent, game):
         """ returns list of nearby empty (= walkable and not occupied by blocking object) coordinates """
         near_empty_tiles = []
+        # TODO list comprehension candidate
         for dx in [-1, 0, 1]:
             for dy in [-1, 0, 1]:
                 to_x, to_y = ent.x + dx, ent.y + dy
-                cond1 = not self.tiles[to_x][to_y].blocked
+                cond1 = not game.map.is_blocked(to_x, to_y, game)#self.tiles[(to_x,to_y].blocked
                 cond2 = not any([obj.x, obj.y] == [to_x, to_y] and obj.blocks for obj in game.entities)
                 if cond1 and cond2:
                     near_empty_tiles.append((to_x, to_y))

@@ -245,8 +245,8 @@ class Fighter:
         # TODO Consider force of impact (amount of damage done beyond 0 hp?) to vary spread
         for i in range(1, randint(2, 4)):
             c_x, c_y = (randint(x - 1, x + 1), randint(y - 1, y + 1))
-            game.map.tiles[c_x][c_y].gibbed = True
-            if not game.map.tiles[c_x][c_y].blocked and randint(0, 100) > 85:
+            game.map.tiles[(c_x,c_y)].gibbed = True
+            if not game.map.tiles[(c_x,c_y)].blocked and randint(0, 100) > 85:
                 c = Entity(c_x, c_y, '~', colors.corpse, f'{ent.name.capitalize()} bits', is_corpse=True)
                 c.render_order = RenderOrder.CORPSE
                 game.entities.append(c)

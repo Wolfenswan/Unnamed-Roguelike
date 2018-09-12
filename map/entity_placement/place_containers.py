@@ -5,7 +5,7 @@ from config_files import cfg
 from data.data_processing import CONTAINER_DATA_MERGED, pick_from_data_dict_by_rarity, gen_architecture, \
     gen_item_from_data, ITEM_DATA_MERGED
 from data.shared_data.types_data import RarityType
-from map.entity_placement.util_functions import get_ent_position
+from map.entity_placement.util_functions import create_ent_position
 
 
 def place_containers(game):
@@ -41,7 +41,7 @@ def place_containers(game):
                         f'New container would bring dungeon total to {len(game.container_ents)+1} thus exceed total maximum: ({max_containers})')
                     break
                 # If the container is a blocking object, get a free tile
-                pos = get_ent_position(room, data, game)
+                pos = create_ent_position(room, data, game)
                 if pos:
                     con = gen_architecture(data, *pos)
                     fill_container(con, dlvl, rarity_filter=data['contents_rarity'], type_filter=data['contents_type'], forced_content=data.get('content_forced'))
