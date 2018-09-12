@@ -1,5 +1,5 @@
 def entities_at_pos(entities, x, y):
-    return [ent for ent in entities if ent.x == x and ent.y == y]
+    return [ent for ent in entities if ent.pos == (x, y)]
 
 
 def blocking_entity_at_pos(entities, x, y):

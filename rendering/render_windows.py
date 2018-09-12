@@ -4,7 +4,7 @@ import textwrap
 import tcod
 
 from config_files import cfg, colors
-from gameobjects.util_functions import blocking_entity_at_pos
+from gameobjects.util_functions import blocking_entity_at_pos, entities_at_pos
 from rendering.util_functions import center_x_for_text, draw_console_borders, pos_on_screen
 
 
@@ -97,8 +97,13 @@ def draw_window(title, body, options = None, window_x = None, window_y = None, p
 
 
 def render_description_window(game):
-    ent = blocking_entity_at_pos(game.entities, game.cursor.x, game.cursor.y)
-    if ent:
+    ent = None
+    ents = entities_at_pos(game.monster_ents + game.architecture_ents, *game.cursor.pos)
+    if ents:
+        if len(ents) > 1:
+            ent = blocking_entity_at_pos(ents, *game.cursor.pos)
+        if len(ents) == 1 or ent is None:
+            ent = ents[0]
         x, y = pos_on_screen(ent.x + 2, ent.y - 2, game.player)
 
         title = ent.name
