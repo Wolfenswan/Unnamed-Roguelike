@@ -60,6 +60,7 @@ def place_monsters(game):
                         break
                     else:
                         m += 1
+                        entry['blocks'] = {'walk': True}
                         pos = create_ent_position(room, entry, game)
                         if pos:
                             ent = gen_npc_from_dict(entry, *pos, game)

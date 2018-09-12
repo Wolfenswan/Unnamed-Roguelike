@@ -73,7 +73,7 @@ class Rect:
 
         game_map = game.map
         exits = self.exits(game_map)
-        free_tiles = [pos for pos in self.pos_list if not game_map.is_blocked(*pos, game, filter=filter) and (allow_exits or pos not in exits)]
+        free_tiles = [pos for pos in self.pos_list if not game_map.is_blocked(*pos, game.blocking_ents, filter=filter) and (allow_exits or pos not in exits)]
         #free_tiles = []
         # for x in range(self.x1, self.x2):
         #     for y in range(self.y1, self.y2):

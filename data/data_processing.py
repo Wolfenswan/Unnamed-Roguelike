@@ -173,7 +173,6 @@ def get_condition_data(material, forced=False):
     condition = {}
     if material:
         dict = qual_cond_data if not forced else {k: v for k, v in qual_cond_data.items() if v['type'] in forced}
-        print(dict)
         key = pick_from_data_dict_by_rarity(dict)
         condition = qual_cond_data[key]
     return condition
