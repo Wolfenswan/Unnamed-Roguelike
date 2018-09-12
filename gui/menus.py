@@ -28,16 +28,16 @@ def menu_loop(wait_for=None, cancel_with_escape=True, sort_by='str'):
         # elif type(wait_for) is dict:
         #     if char.lower() in wait_for.keys():
         #         return wait_for[char]
-        elif type(wait_for) == int:  # If menu is waiting to receive an index
-            if type(sort_by) == str:
+        elif isinstance(wait_for, int):  # If menu is waiting to receive an index
+            if isinstance(sort_by, str):
                 index = ord(char) - ord('a')
                 if 0 <= index < wait_for:
                     return index
-            elif type(sort_by) == int:
+            elif isinstance(sort_by, int):
                 index = int(key.c - ord('1'))
                 if 0 <= index < wait_for:
                     return index
-        elif type(wait_for) == list:  # If menu is waiting for a specific key input
+        elif isinstance(wait_for, list):  # If menu is waiting for a specific key input
             if char.lower() in wait_for:
                 return char
             if key.vk in wait_for:

@@ -67,10 +67,10 @@ def draw_window(title, body, options = None, window_x = None, window_y = None, p
         y += padding_y
         letter_index = ord('a')
         for i, option in enumerate(options):
-            if type(sort_by) == str:
+            if isinstance(sort_by, str):
                 line = f'({chr(letter_index)}) {option}'
                 letter_index += 1  # by incrementing the ascii code for the letter, we go through the alphabet
-            elif type(sort_by) == int:
+            elif isinstance(sort_by, int):
                 line = f'({str(i + 1)}) {option}'
             else:
                 line = option

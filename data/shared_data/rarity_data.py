@@ -36,11 +36,11 @@ rarity_values = {
 
     Condition.POOR: 100,
     Condition.NORMAL: 80,
-    Condition.GOOD: 60,
+    Condition.GOOD: 50,
     Condition.LEGENDARY: 10,
 
-    Craftsmanship.POOR: 100,
-    Craftsmanship.NORMAL: 80,
-    Craftsmanship.GOOD: 60,
+    Craftsmanship.POOR: 80,
+    Craftsmanship.NORMAL: 100,
+    Craftsmanship.GOOD: 50,
     Craftsmanship.LEGENDARY: 10
 }

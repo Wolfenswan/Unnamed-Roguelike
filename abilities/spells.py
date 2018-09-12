@@ -12,7 +12,7 @@ def heal_entity(*args, **kwargs):
     entity = kwargs.get('caster')
     amount = kwargs.get('pwr')
 
-    if type(amount) is not int:
+    if not isinstance(amount, int):
         amount = randint(*amount)
 
     results = []
