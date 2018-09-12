@@ -257,7 +257,7 @@ class Fighter:
             message = Message(f'The {ent.name.capitalize()} is dead!', type=MessageType.GOOD, category=MessageCategory.OBSERVATION)
 
             ent.render_order = RenderOrder.CORPSE
-            ent.blocks = False
+            ent.blocks['walk'] = False
             ent.ai = None
             ent.is_corpse = True
             ent.name = f'{ent.name.capitalize()} remains'

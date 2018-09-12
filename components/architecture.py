@@ -24,21 +24,21 @@ class Architecture:
 
     @staticmethod
     def toggle_door(interacting_ent, door_ent, game):
-        door_ent_closed = door_ent.blocks
+        door_ent_closed = door_ent.blocks.get('walk', False)
         results = [{'door_toggled': door_ent, 'fov_recompute': True}]
         # TODO doors can be locked too
         if door_ent_closed:
             door_ent.architecture.on_collision = None
             door_ent.char = '-'
-            door_ent.blocks = False
-            door_ent.blocks_sight = False
+            door_ent.blocks['walk'] = False
+            door_ent.blocks['sight'] = False
             door_ent.__descr = 'This door is open.'
             #results.append({'message': Message('You open a door.')})
         else:
             door_ent.architecture.on_collision = Architecture.toggle_door
             door_ent.char = '+'
-            door_ent.blocks = True
-            door_ent.blocks_sight = True
+            door_ent.blocks['walk'] = True
+            door_ent.blocks['sight'] = True
             door_ent.__descr = 'This door is closed.'
             #results.append({'message': Message('You close a door.')})
 
@@ -71,8 +71,8 @@ class Architecture:
     def smash_object(interacting_ent, object_ent, game):
         object_ent.char = '%'
         object_ent.color *= 0.3
-        object_ent.blocks = False
-        object_ent.blocks_sight = False
+        object_ent.blocks['walk'] = False
+        object_ent.blocks['sight'] = False
         object_ent.architecture = None # TODO not a very elegant solution to prevent rendering in the objects panel
         
         if object_ent.inventory:

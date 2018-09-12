@@ -17,7 +17,7 @@ class NPC(Entity):
     """ Class for the all active non-player objects """
 
     def __init__(self, x, y, char, color, name, descr, barks=None, fighter=None, ai=None, inventory=None, skills=None):
-        super().__init__(x, y, char, color, name, descr, blocks=True, render_order=RenderOrder.ACTOR, fighter=fighter, ai=ai, skills=skills, inventory=inventory)
+        super().__init__(x, y, char, color, name, descr, blocks={'walk':True}, render_order=RenderOrder.ACTOR, fighter=fighter, ai=ai, skills=skills, inventory=inventory)
         self.barks = barks
 
     def move_towards(self, target_x, target_y, game_map, entities):
@@ -46,7 +46,7 @@ class NPC(Entity):
         # Check also that the object isn't self or the target (so that the start and the end points are free)
         # The AI class handles the situation if self is next to the target so it will not use this A* function anyway
         for entity in entities:
-            if entity.blocks and entity != self and entity != target:
+            if entity.blocks.get('walk', False) and entity != self and entity != target:
                 # Set the tile as a wall so it must be navigated around
                 tcod.map_set_properties(fov, entity.x, entity.y, True, False)
 

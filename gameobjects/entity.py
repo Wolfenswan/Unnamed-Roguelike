@@ -22,7 +22,7 @@ class Entity:
     """
     def __init__(self, x, y, char, color, name, descr=None,
                  type=None, material=None, is_player=False, is_corpse=False,
-                 blocks=False, blocks_sight = False, render_order=RenderOrder.CORPSE,
+                 blocks=None, render_order=RenderOrder.CORPSE,
                  fighter=None, ai=None, skills=None, item=None, inventory=None, architecture=None):
         self.state = EntityStates.ENTITY_ACTIVE
         self.x = x
@@ -37,7 +37,8 @@ class Entity:
         self.is_player = is_player
         self.is_corpse = is_corpse
         self.blocks = blocks
-        self.blocks_sight = blocks_sight
+        if not self.blocks:
+            self.blocks = {}
         self.render_order = render_order
 
         # Components #

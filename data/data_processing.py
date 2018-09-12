@@ -281,8 +281,7 @@ def gen_architecture(data, x, y):
     material = get_material_data(data)  # atm material only affects architecture's name and color
     arguments = [x, y, *get_generic_data(data, material=material)]
 
-    blocks = data.get('blocks', False)
-    blocks_sight = data.get('blocks_sight', False)
+    blocks = data.get('blocks', {})
     container_room = data.get('container_room', (0,0))
     on_collision = data.get('on_collision')
     on_interaction = data.get('on_interaction')
@@ -291,7 +290,7 @@ def gen_architecture(data, x, y):
     architecture_component = Architecture(on_collision = on_collision, on_interaction = on_interaction)
 
     # create the static object using the arguments tuple
-    arch = Entity(*arguments, material=material.get('type'), blocks=blocks, blocks_sight=blocks_sight, inventory=inventory_component, architecture=architecture_component, render_order=RenderOrder.BOTTOM)
+    arch = Entity(*arguments, material=material.get('type'), blocks=blocks, inventory=inventory_component, architecture=architecture_component, render_order=RenderOrder.BOTTOM)
 
     return arch
 

@@ -4,16 +4,16 @@ def entities_at_pos(entities, x, y):
 
 def blocking_entity_at_pos(entities, x, y):
     entity = next((entity for entity in entities if entity.pos == (x, y)
-                   and entity.blocks), None)
+                   and entity.blocks.get('walk', False)), None)
     # for entity in entities:
-    #     if entity.blocks and entity.x == x and entity.y == y:
+    #     if entity.blocks.get('walk', False) and entity.x == x and entity.y == y:
     #         return entity
     return entity
 
 
 def fighter_entity_at_pos(entities, x, y):
     entity = next((entity for entity in entities if entity.pos == (x, y)
-                   and entity.blocks and entity.fighter), None)
+                   and entity.blocks.get('walk', False) and entity.fighter), None)
     return entity
 
 

@@ -13,9 +13,9 @@ def initialize_fov(game):
             tcod.map_set_properties(fov_map, x, y, not game_map.tiles[(x,y)].block_sight,
                                        not game_map.tiles[(x,y)].blocked)
             for e in game.entities:
-                if (e.x, e.y) == (x, y) and e.blocks_sight:
-                    tcod.map_set_properties(fov_map, x, y, not e.blocks_sight,
-                                            not e.blocks)
+                if (e.x, e.y) == (x, y) and e.blocks.get('sight', False):
+                    tcod.map_set_properties(fov_map, x, y, not e.blocks.get('sight', False),
+                                            not e.blocks.get('walk', False))
                     break
 
     return fov_map
