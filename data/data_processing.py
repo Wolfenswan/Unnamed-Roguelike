@@ -251,13 +251,15 @@ def gen_item_from_data(data, x, y, materials=False, conditions=False, craftsmans
         if dmg_range:
             mat_mod = material.get('dmg_mod',0)
             cond_mod = condition.get('dmg_mod', 0)
-            dmg_range = (max((dmg_range[0] + mat_mod + cond_mod),1), dmg_range[1] + mat_mod + cond_mod)
+            craft_mod = craftsmanship.get('mod', 1)
+            dmg_range = (round(max((dmg_range[0] + mat_mod + cond_mod)*craft_mod,1)), round((dmg_range[1] + mat_mod + cond_mod)*craft_mod))
 
         av = data.get('av')
         if av:
             mat_mod = material.get('av_mod', 0)
             cond_mod = condition.get('av_mod', 0)
-            av += max(mat_mod + cond_mod,1)
+            craft_mod = craftsmanship.get('mod', 1)
+            av += round((max(mat_mod + cond_mod,1))*craft_mod)
 
         qu_slots = data.get('qu_slots')
         l_radius = data.get('l_radius')

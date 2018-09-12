@@ -25,15 +25,18 @@ qual_cond_data = {
 
 qual_craft_data = {
     'poor_craft': {
-        'type': Craftsmanship.POOR
+        'type': Craftsmanship.POOR,
+        'mod': 0.8
     },
     'normal_craft': {
         'type': Craftsmanship.NORMAL,
     },
     'good_craft': {
-        'type': Craftsmanship.GOOD
+        'type': Craftsmanship.GOOD,
+        'mod': 1.2
     },
     'legendary_craft': {
-        'type': Craftsmanship.LEGENDARY
+        'type': Craftsmanship.LEGENDARY,
+        'mod': 1.5
     },
 }
