@@ -11,6 +11,6 @@ class Cave:
         # go through the tiles in the rectangle and make them passable
         for x in range(self.x1 + 1, self.x2):
             for y in range(self.y1 + 1, self.y2):
-                game_map.tiles[x][y].blocked = False
-                game_map.tiles[x][y].block_sight = False
-                game_map.tiles[x][y].walkable = True
+                game_map.tiles[(x,y)].blocked = False
+                game_map.tiles[(x,y)].block_sight = False
+                game_map.tiles[(x,y)].walkable = True

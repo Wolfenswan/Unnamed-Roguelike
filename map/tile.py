@@ -16,6 +16,10 @@ class Tile:
         self.explored = 0
         self.gibbed = gibbed
 
+    @property
+    def pos(self):
+        return (self.x, self.y)
+
     def toggle_attributes(self):
         self.blocked = not self.blocked
         self.block_sight = not self.block_sight

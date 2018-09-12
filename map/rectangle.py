@@ -20,21 +20,28 @@ class Rect:
         # go through the tiles in the rectangle and make them passable
         for x in range(self.x1 + 1, self.x2):
             for y in range(self.y1 + 1, self.y2):
-                game_map.tiles[x][y].set_attributes(floor=True)
+                game_map.tiles[(x,y)].set_attributes(floor=True)
 
     def intersect(self, other):
         # returns true if this rectangle intersects with another one
         return (self.x1 <= other.x2 and self.x2 >= other.x1 and
                 self.y1 <= other.y2 and self.y2 >= other.y1)
 
-    def ranpos(self, game_map, ignore_blocked = True):
-        """returns a random, walkable position within the room"""
-        x = randint(self.x1 + 1, self.x2 - 1)
-        y = randint(self.y1 + 1, self.y2 - 1)
-        if not ignore_blocked:
+    def ranpos(self, game_map, force_floor = True, force_wall=False):
+        """returns a random position within the room"""
+        if force_floor and force_wall:
+            logging.error(f'Can not force both floor and wall.')
+
+        x = randint(self.x1, self.x2)
+        y = randint(self.y1, self.y2)
+        if force_floor:
             while game_map.is_wall(x, y):
-                x = randint(self.x1 + 1, self.x2 - 1)
-                y = randint(self.y1 + 1, self.y2 - 1)
+                x = randint(self.x1, self.x2)
+                y = randint(self.y1, self.y2)
+        elif force_wall:
+            while not game_map.is_wall(x, y):
+                x = randint(self.x1, self.x2)
+                y = randint(self.y1, self.y2)
         return x, y
 
     def free_tiles(self, game, allow_exits = True):
@@ -72,7 +79,7 @@ class Rect:
         x, y = self.x1, self.y1
         for i in range(self.h + 1):
             try:
-                if game_map.tiles[x][y].walkable:
+                if game_map.tiles[(x,y)].walkable:
                     if not game_map.tiles[x][y+max_width].walkable and not game_map.tiles[x][y-max_width].walkable:
                         #tcod.console_set_char_foreground(game.con, *pos_on_screen(x, y, game.player), colors.green)
                         exits.append((x, y))
@@ -84,7 +91,7 @@ class Rect:
         x, y = self.x2, self.y1+1
         for i in range(self.h + 1):
             try:
-                if game_map.tiles[x][y].walkable:
+                if game_map.tiles[(x,y)].walkable:
                     if not game_map.tiles[x][y + max_width].walkable and not game_map.tiles[x][y - max_width].walkable:
                         #tcod.console_set_char_foreground(game.con, *pos_on_screen(x, y, game.player), colors.green)
                         exits.append((x, y))
@@ -96,7 +103,7 @@ class Rect:
         x, y = self.x1, self.y2
         for i in range(self.w + 1):
             try:
-                if game_map.tiles[x][y].walkable:
+                if game_map.tiles[(x,y)].walkable:
                     if not game_map.tiles[x + max_width][y].walkable and not game_map.tiles[x - max_width][y].walkable:
                         #tcod.console_set_char_foreground(game.con, *pos_on_screen(x, y, game.player), colors.green)
                         exits.append((x, y))
@@ -108,7 +115,7 @@ class Rect:
         x, y = self.x1, self.y1
         for i in range(self.w + 1):
             try:
-                if game_map.tiles[x][y].walkable:
+                if game_map.tiles[(x,y)].walkable:
                     if not game_map.tiles[x + max_width][y].walkable and not game_map.tiles[x - max_width][y].walkable:
                         #tcod.console_set_char_foreground(game.con, *pos_on_screen(x, y, game.player), colors.green)
                         exits.append((x, y))

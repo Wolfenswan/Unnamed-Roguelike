@@ -239,7 +239,7 @@ class Fighter:
         ent.char = '%'
         ent.color = colors.corpse
         ent.color_bg = colors.black
-        game.map.tiles[x][y].gibbed = True
+        game.map.tiles[(x,y)].gibbed = True
 
         # Create gibs
         # TODO Consider force of impact (amount of damage done beyond 0 hp?) to vary spread

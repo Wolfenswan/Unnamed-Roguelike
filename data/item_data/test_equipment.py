@@ -27,7 +27,7 @@ test_equipment_data = {
     'sword': {
         'name': 'sword',
         'materials': (Material.IRON, Material.STEEL),
-        'descr': 'Kill enemies, cut bread, what else could you wish for.',
+        'descr': 'Kills enemies and cuts bread, what else could you wish for. Just make sure to clean it in between.',
         "char": WP_CHAR,
         'type': WP_TYPE,
         'e_to': WP_EQUIP,

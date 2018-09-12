@@ -4,6 +4,8 @@ from random import randint, choice
 from config_files import cfg
 from data.architecture_data.arch_doors import arch_doors_data
 from data.data_processing import ARCHITECTURE_DATA_MERGED, pick_from_data_dict_by_rarity, gen_architecture
+from map.entity_placement.util_functions import get_ent_position
+
 
 def place_staticobjects(game):
     dlvl = game.dlvl
@@ -20,6 +22,8 @@ def place_staticobjects(game):
     #     room = choice(rooms)
     #     rooms.remove(room)
 
+    logging.debug(f'Placing architecture in {len(rooms)} rooms')
+
     for room in rooms:
 
         # place up to the allowed maximum of items
@@ -30,19 +34,11 @@ def place_staticobjects(game):
             key = pick_from_data_dict_by_rarity(possible_objects, dlvl)
             data = possible_objects[key]
 
-            # Get a random position for the item
-            if data.get('blocks', False):
-                free_tiles = room.free_tiles(game, allow_exits=False)
-                if len(free_tiles) > 0:
-                    x, y = choice(free_tiles)
-                else:
-                    logging.debug(f'No more free spots in {room}, thus aborting.')
-                    break
-            else:
-                x, y = room.ranpos(game_map)
+            pos = get_ent_position(room, data, game)
+            if pos:
+                arch = gen_architecture(data, *pos)
+                entities.append(arch)
 
-            arch = gen_architecture(data, x, y)
-            entities.append(arch)
 
 def place_doors(game):
     dlvl = game.dlvl

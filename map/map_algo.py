@@ -65,17 +65,17 @@ class Tunneling:
         # go through the tiles in the rectangle and make them passable
         for x in range(room.x1 + 1, room.x2):
             for y in range(room.y1 + 1, room.y2):
-                game_map.tiles[x][y].set_attributes(floor=True)
+                game_map.tiles[(x,y)].set_attributes(floor=True)
 
     @staticmethod
     def create_h_tunnel(game_map, x1, x2, y):
         for x in range(min(x1, x2), max(x1, x2) + 1):
-            game_map.tiles[x][y].set_attributes(floor = True)
+            game_map.tiles[(x,y)].set_attributes(floor = True)
 
     @staticmethod
     def create_v_tunnel(game_map, y1, y2, x):
         for y in range(min(y1, y2), max(y1, y2) + 1):
-            game_map.tiles[x][y].set_attributes(floor = True)
+            game_map.tiles[(x,y)].set_attributes(floor = True)
 
 class DrunkWalk:
     """
@@ -165,7 +165,7 @@ class DrunkWalk:
         if (0 < self.drunkardX + dx < mapWidth - 1) and (0 < self.drunkardY + dy < mapHeight - 1):
             self.drunkardX += dx
             self.drunkardY += dy
-            if game_map.tiles[self.drunkardX][self.drunkardY].blocked:
-                game_map.tiles[self.drunkardX][self.drunkardY].toggle_attributes()
+            if game_map.tiles[(self.drunkardX, self.drunkardY)].blocked:
+                game_map.tiles[(self.drunkardX, self.drunkardY)].toggle_attributes()
                 self._filled += 1
             self._previousDirection = direction

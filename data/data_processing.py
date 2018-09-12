@@ -90,6 +90,7 @@ def pick_from_data_dict_by_rarity(dict, dlvl=0):
         # TODO use random values for each check if useful
         logging.debug(f'Rarity for {candidate} is {item_rarity} and type rarity is {type_rarity}, random value is {random}.')
         if (type_rarity == -1 or type_rarity > random) and item_rarity > random:
+            logging.debug(f'Decided on {candidate}')
             break
         logging.debug(f'Dropping {candidate}')
 

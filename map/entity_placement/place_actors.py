@@ -6,6 +6,7 @@ from random import randint, choice
 from data.data_processing import gen_npc_from_dict, pick_from_data_dict_by_rarity
 from config_files import cfg
 from data.actor_data.spawn_data import spawn_data
+from map.entity_placement.util_functions import get_ent_position
 
 
 def place_monsters(game):
@@ -59,17 +60,11 @@ def place_monsters(game):
                         break
                     else:
                         m += 1
-                        free_tiles = room.free_tiles(game)
-                        if len(free_tiles) > 0:
-                            # Get a random position for the monster
-                            x, y = choice(free_tiles)
-
-                            ent = gen_npc_from_dict(entry, x, y, game)
+                        pos = get_ent_position(room, entry, game)
+                        if pos:
+                            ent = gen_npc_from_dict(entry, *pos, game)
                             game.entities.append(ent)
-                            logging.debug(f'... and created {ent} at {x},{y} in {room}, #{m} out of {num_of_monsters}')
-                        else:
-                            logging.debug(
-                               f'... but no more free spots left to create monster in {room}, #{m} out of {num_of_monsters}')
+                            logging.debug(f'... and created {ent} at {pos} in {room}, #{m} out of {num_of_monsters}')
 
 
     logging.debug(f'Placed {len(game.monster_ents)} (maximum: {max_monsters}) monsters with {len(rooms)} rooms untouched.')

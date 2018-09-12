@@ -13,10 +13,21 @@ class GameMap:
         self.rooms = []
         self.tiles = self.initialize_tiles()
 
-    def initialize_tiles(self):
-        tiles = [[Tile(True, x, y) for y in range(self.height)] for x in range(self.width)]
+    @property
+    def floor_tiles(self):
+        return [tile for tile in self.tiles.values() if tile.walkable]
 
-        return tiles
+    @property
+    def wall_tiles(self):
+        return [tile for tile in self.tiles.values() if tile.blocked]
+
+    def initialize_tiles(self):
+        tiles_dict = {}
+        positions = [[y for y in range(self.height)] for x in range(self.width)]
+        for x, y_list in enumerate(positions):
+            for y in y_list:
+                tiles_dict.setdefault((x, y), Tile(True, x, y))
+        return tiles_dict
 
     def make_map(self, game, room_min_size, room_max_size, map_width, map_height):
 
@@ -43,7 +54,7 @@ class GameMap:
         :return: wall
         :rtype: bool
         """
-        if self.tiles[x][y].blocked:
+        if self.tiles[(x,y)].blocked:
             return True
 
         return False

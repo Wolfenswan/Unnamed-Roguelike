@@ -18,10 +18,11 @@ def initialize_window(game):
         'dejavu12x12_gs_tc',  # 6
         'terminal8x8_gs_ro',  # 7
         'terminal10x10_gs_tc',  # 8
-        'terminal12x12_gs_ro'  # 9 # FONT_LAYOUT_ASCII_INROW
+        'terminal12x12_gs_ro',  # 9 # FONT_LAYOUT_ASCII_INROW
+        'terminal16x16_gs_ro',  # 10 # FONT_LAYOUT_ASCII_INROW
     )
 
-    font = fonts[9]+'.png'
+    font = fonts[10]+'.png'
     path = 'resources/fonts/'
     tcod.console_set_custom_font(os.path.join(path, font), tcod.FONT_TYPE_GREYSCALE | tcod.FONT_LAYOUT_ASCII_INROW)
     #tcod.console_set_custom_font(os.path.join(path, font), tcod.FONT_TYPE_GREYSCALE | tcod.FONT_LAYOUT_TCOD)
