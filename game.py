@@ -65,3 +65,18 @@ class Game:
     def container_ents(self):
         container_ents = [v for v in self.entities if v.architecture is not None and v.inventory is not None]
         return container_ents
+
+    @property
+    def blocking_ents(self):
+        blocking_ents = [v for v in self.entities if v.blocks.get('walk', False) or v.blocks.get('floor', False)]
+        return blocking_ents
+
+    @property
+    def walk_blocking_ents(self):
+        blocking_ents = [v for v in self.entities if v.blocks.get('walk', False)]
+        return blocking_ents
+
+    @property
+    def floor_blocking_ents(self):
+        blocking_ents = [v for v in self.entities if v.blocks.get('floor', False)]
+        return blocking_ents

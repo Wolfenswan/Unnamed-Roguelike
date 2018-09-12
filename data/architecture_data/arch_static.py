@@ -8,7 +8,7 @@ arch_static_data = {
         'dlvls': (1, 99),
         "char": chr(186),
         "color": colors.white,
-        "blocks": {'walk':True,'sight':True}
+        "blocks": {'walk':True,'sight':True,'floor':True}
     },
     'arch': {
         'name': 'Arch',

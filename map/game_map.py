@@ -75,7 +75,7 @@ class GameMap:
 
         return False
 
-    def is_blocked(self, x, y, game):
+    def is_blocked(self, x, y, game, filter = ('walks', 'floor')):
         """
         Returns True if position is either a wall or occupied by a blocking object.
 
@@ -91,8 +91,9 @@ class GameMap:
         if self.is_wall(x, y):
             return True
 
-        if blocking_entity_at_pos(game.entities, x, y):
-            return True
+        for value in filter:
+            if any(ent for ent in game.blocking_ents if ent.pos == (x, y) and ent.blocks.get(value, False)):
+                return True
 
         return False
 

@@ -11,7 +11,7 @@ arch_containers_data = {
         'rarity': RarityType.COMMON,
         'dlvls': (1, 99),
         "char": 'o',
-        "blocks": {'walk':True},
+        "blocks": {'walk':True, 'floor':True},
         'container_room': (0,4),
         'contents_rarity': (RarityType.COMMON,),
         'contents_type': (ItemType.USEABLE, ItemType.MISC),
