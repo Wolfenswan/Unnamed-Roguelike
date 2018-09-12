@@ -37,24 +37,24 @@ class Rect:
                 y = randint(self.y1 + 1, self.y2 - 1)
         return x, y
 
-    def free_tiles(self, game_map, allow_exits = True):
+    def free_tiles(self, game, allow_exits = True):
         """
         Returns all free (walkable and not occupied by a blocking object) tiles in a room
 
         :return: list of free coordinates in the room
         :rtype: list of tuples
         """
+
+        game_map = game.map
         exits = self.exits(game_map)
         free_tiles = []
-        for x in range(self.x1, self.x2):
+        for x in range(self.x1, self.x2):   # TODO use zip()?
             for y in range(self.y1, self.y2):
-                #print(game.map.is_blocked(x, y))
-                try:
-                    if not game_map.is_wall(x, y):
-                        if allow_exits or (x, y) not in exits:
-                            free_tiles.append((x, y))
-                except:
-                    logging.error(f'Position {x}/{y} in room {self} of size {self.w}/{self.h} is out of bounds')
+                if not game_map.is_blocked(x, y, game):
+                    if allow_exits or ((x, y) not in exits):
+                        free_tiles.append((x, y))
+                # except:
+                #     logging.error(f'Position {x}/{y} in room {self} of size {self.w}/{self.h} at x{self.x1}/y{self.y1}-x{self.x2}/y{self.y2} is out of bounds')
 
         return free_tiles
 

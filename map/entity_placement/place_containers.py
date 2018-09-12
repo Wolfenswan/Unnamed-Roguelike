@@ -41,10 +41,11 @@ def place_containers(game):
                     break
                 # If the container is a blocking object, get a free tile
                 if data.get('blocks', False):
-                    free_tiles = room.free_tiles(game_map, allow_exits=False)
+                    free_tiles = room.free_tiles(game, allow_exits=False)
                     if len(free_tiles) > 0:
                         x, y = choice(free_tiles)
                     else:
+                        logging.debug(f'No more free spots in {room}, thus aborting.')
                         break
                 else:
                     x, y = room.ranpos(game_map)

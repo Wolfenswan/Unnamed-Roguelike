@@ -59,7 +59,7 @@ def place_monsters(game):
                         break
                     else:
                         m += 1
-                        free_tiles = room.free_tiles(game_map)
+                        free_tiles = room.free_tiles(game)
                         if len(free_tiles) > 0:
                             # Get a random position for the monster
                             x, y = choice(free_tiles)
