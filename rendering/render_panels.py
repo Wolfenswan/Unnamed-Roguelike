@@ -70,14 +70,15 @@ def render_object_panel(game, con, panel_x, panel_y, width, height):
             symbol = '*' if (ent.x, ent.y) == (game.player.x, game.player.y) else f'{ent.char}'
             wrapped_name = textwrap.wrap(f'{symbol} {ent.name}', width-3)
             for i, line in enumerate(wrapped_name):
-                tcod.console_print(con, 1+i, y, f'%c{line}%c' % (
-                tcod.COLCTRL_1, tcod.COLCTRL_STOP))
-
-                y += 2
                 if y >= con.height - 2:  # If the limit's of the con are reached, cut the con off
                     x = center_x_for_text(width, '~ ~ ~ MORE ~ ~ ~')
                     tcod.console_print(con, x, y, '~ ~ ~ MORE ~ ~ ~')
                     break
+
+                tcod.console_print(con, 1+i, y, f'%c{line}%c' % (
+                tcod.COLCTRL_1, tcod.COLCTRL_STOP))
+
+                y += 2
 
     tcod.console_blit(con, 0, 0, width, height, 0, panel_x, panel_y)
 
@@ -97,6 +98,10 @@ def render_enemy_panel(game, con, panel_x, panel_y, width, height):
         y = 2
 
         for ent in spotted:  # Go through the object names and wrap them according to the panel's width
+            if y >= con.height - 2:  # If the limit's of the con are reached, cut the con off
+                x = center_x_for_text(width, '~ ~ ~ MORE ~ ~ ~')
+                tcod.console_print(con, x, y, '~ ~ ~ MORE ~ ~ ~')
+                break
 
             # Draw creature name and stats #
             tcod.console_set_color_control(tcod.COLCTRL_1, ent.color, tcod.black)
@@ -104,10 +109,6 @@ def render_enemy_panel(game, con, panel_x, panel_y, width, height):
             tcod.console_print(con, 1, y, f'%c{ent.char} {ent.name}%c | %c{ent.fighter.hp_string.capitalize()}%c' % (tcod.COLCTRL_1, tcod.COLCTRL_STOP, tcod.COLCTRL_2, tcod.COLCTRL_STOP))
 
             y += 2
-            if y >= con.height - 2:  # If the limit's of the con are reached, cut the con off
-                x = center_x_for_text(width, '~ ~ ~ MORE ~ ~ ~')
-                tcod.console_print(con, x, y, '~ ~ ~ MORE ~ ~ ~')
-                break
 
     tcod.console_blit(con, 0, 0, width, height, 0, panel_x, panel_y)
 
