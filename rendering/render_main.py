@@ -91,11 +91,11 @@ def draw_tile(game, con, fov_map, tile_x, tile_y, screen_x, screen_y, debug=Fals
 
 
 def draw_entity(game, con, entity, fov_map, debug=False):
-    if entity.render_order == RenderOrder.ALWAYS or tcod.map_is_in_fov(fov_map, entity.x, entity.y) or debug:
-        x, y = pos_on_screen(entity.x, entity.y, game.player)
+    if entity.render_order == RenderOrder.ALWAYS or tcod.map_is_in_fov(fov_map, *entity.pos) or debug:
+        x, y = pos_on_screen(*entity.pos, game.player)
 
         tcod.console_put_char(con, x, y, entity.char)
-
+        # print(entity.char, entity.blocks)
         # Set the entity colors #
         color = entity.color
         if entity is not game.cursor:

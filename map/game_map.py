@@ -75,17 +75,12 @@ class GameMap:
 
         return False
 
-    def is_blocked(self, x, y, blocking_ents, filter = ('walks', 'floor')):
+    def is_blocked(self, x, y, blocking_ents, filter = ('walks',)):
         """
         Returns True if position is either a wall or occupied by a blocking object.
+        Filter corresponds to values in the Entity blocks attribute (dictionary)
 
-        :param x: x-coord
-        :type x: int
-        :param y: y-coord
-        :type y: int
-        :param game: game-object
-        :type game: game-object
-        :return: blocked
+        :return: blocked?
         :rtype: bool
         """
         if self.is_wall(x, y):
@@ -104,9 +99,7 @@ class GameMap:
         for dx in [-1, 0, 1]:
             for dy in [-1, 0, 1]:
                 to_x, to_y = ent.x + dx, ent.y + dy
-                cond1 = not game.map.is_blocked(to_x, to_y, game)#self.tiles[(to_x,to_y].blocked
-                cond2 = not any([obj.x, obj.y] == [to_x, to_y] and obj.blocks.get('walk', False) for obj in game.entities)
-                if cond1 and cond2:
+                if not game.map.is_blocked(to_x, to_y, game.blocking_ents):
                     near_empty_tiles.append((to_x, to_y))
 
         return near_empty_tiles

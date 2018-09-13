@@ -8,7 +8,7 @@ arch_doors_data = {
         'materials': (Material.OAK, Material.IRON, Material.STEEL),
         'descr': "A creaky old door.",
         'rarity': RarityType.COMMON,
-        'blocks': {'floor':True},
+        'blocks': {'floor': True, 'walk': False},
         'dlvls': (1, 99),
         "char": '-',
         'on_collision': Architecture.toggle_door,

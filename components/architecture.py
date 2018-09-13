@@ -26,15 +26,15 @@ class Architecture:
     def toggle_door(interacting_ent, door_ent, game):
         door_ent_closed = door_ent.blocks.get('walk', False)
         results = [{'door_toggled': door_ent, 'fov_recompute': True}]
-        # TODO doors can be locked too
-        if door_ent_closed:
+
+        if door_ent_closed: # Open the door
             door_ent.architecture.on_collision = None
             door_ent.char = '-'
             door_ent.blocks['walk'] = False
             door_ent.blocks['sight'] = False
             door_ent.__descr = 'This door is open.'
             #results.append({'message': Message('You open a door.')})
-        else:
+        else: # Close the door
             door_ent.architecture.on_collision = Architecture.toggle_door
             door_ent.char = '+'
             door_ent.blocks['walk'] = True

@@ -13,7 +13,7 @@ class Simple:
 
         results = []
 
-        npc.move_astar(target, entities, game_map)
+        npc.move_astar(target, game)
 
         return results
     

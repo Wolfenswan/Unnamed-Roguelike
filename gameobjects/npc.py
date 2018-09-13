@@ -20,19 +20,26 @@ class NPC(Entity):
         super().__init__(x, y, char, color, name, descr, blocks={'walk':True}, render_order=RenderOrder.ACTOR, fighter=fighter, ai=ai, skills=skills, inventory=inventory)
         self.barks = barks
 
-    def move_towards(self, target_x, target_y, game_map, entities):
+    def move_towards(self, target_x, target_y, game):
+        game_map = game.map
+        blocking_ents = game.blocking_ents
+
         dx = target_x - self.x
         dy = target_y - self.y
         distance = math.sqrt(dx ** 2 + dy ** 2)
-
+        print(distance)
         dx = int(round(dx / distance))
         dy = int(round(dy / distance))
 
-        if not (game_map.is_wall(self.x + dx, self.y + dy) or
-                blocking_entity_at_pos(entities, self.x + dx, self.y + dy)):
+        if not game_map.is_blocked(self.x + dx, self.y + dy, blocking_ents):
             self.move(dx, dy)
+        # if not (game_map.is_wall(self.x + dx, self.y + dy) or
+        #         entity_at_pos(entities, self.x + dx, self.y + dy)):
 
-    def move_astar(self, target, entities, game_map):
+    def move_astar(self, target, game):
+        game_map = game.map
+        blocking_ents = game.blocking_ents
+
         # Create a FOV map that has the dimensions of the map
         fov = tcod.map_new(game_map.width, game_map.height)
 
@@ -45,8 +52,9 @@ class NPC(Entity):
         # Scan all the objects to see if there are objects that must be navigated around
         # Check also that the object isn't self or the target (so that the start and the end points are free)
         # The AI class handles the situation if self is next to the target so it will not use this A* function anyway
-        for entity in entities:
+        for entity in blocking_ents + [target]:
             if entity.blocks.get('walk', False) and entity != self and entity != target:
+                print('blocks', target)
                 # Set the tile as a wall so it must be navigated around
                 tcod.map_set_properties(fov, entity.x, entity.y, True, False)
 
@@ -70,7 +78,7 @@ class NPC(Entity):
         else:
             # Keep the old move function as a backup so that if there are no paths (for example another monster blocks a corridor)
             # it will still try to move towards the player (closer to the corridor opening)
-            self.move_towards(target.x, target.y, game_map, entities)
+            self.move_towards(target.x, target.y, game)
 
             # Delete the path to free memory
         tcod.path_delete(my_path)

@@ -1,6 +1,8 @@
 import logging
+import tcod
 from random import randint, choice
 
+from components.architecture import Architecture
 from config_files import cfg
 from data.architecture_data.arch_doors import arch_doors_data
 from data.data_processing import ARCHITECTURE_DATA_MERGED, pick_from_data_dict_by_rarity, gen_architecture
@@ -44,14 +46,15 @@ def place_doors(game):
 
         exits = room.exits(game_map, max_width=1)
         for e in exits:
-            if randint(0,1):
+            if randint(0,100) <= 75:
 
                 key = pick_from_data_dict_by_rarity(possible_objects, dlvl)
                 data = possible_objects[key]
 
                 x, y = e
                 door = gen_architecture(data, x, y)
-                if randint(0, 1): # 50% chance door will already be open (TODO tweak once adding locked doors)
+
+                if randint(0, 1): # 50% chance door will already be closed (TODO tweak once adding locked doors)
                     door.architecture.on_interaction(None, door, game)
 
                 entities.append(door)

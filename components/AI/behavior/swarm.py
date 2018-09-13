@@ -21,12 +21,12 @@ class Swarm:
         # 1. Check: Is Target either surrounded by friendlies or friendlies are next to self #
         if friendlies_nearby or friendlies_near_target:
             logging.debug(f'{npc} has friendly nearby and moves to player.')
-            npc.move_astar(target, entities, game_map)
+            npc.move_astar(target, game)
         # 2. Check: Are friendlies in vision range? #
         elif friendlies_in_area:
             nearest_ent = npc.get_nearby_entities(game, dist=npc.fighter.vision, **filter_kwargs)[0]
             logging.debug(f'{npc} is moving to friendly.')
-            npc.move_astar(nearest_ent, entities, game_map)
+            npc.move_astar(nearest_ent, game)
 
         # 3. Check: If all else fails, try to flee #
         else: # TODO coin toss whether to cower or flee?
@@ -45,7 +45,7 @@ class Swarm:
         if tiles:
             tile = next((t for t in tiles if npc.distance_to_pos(*t) <= 2), None)
             if tile:
-                npc.move_towards(*tile, game_map, game.entities)
+                npc.move_towards(*tile, game)
 
             elif tile is None:
                 tile = choice(tiles)

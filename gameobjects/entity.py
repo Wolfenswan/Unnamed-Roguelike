@@ -6,7 +6,7 @@ import tcod
 from components.actionplan import Actionplan
 from components.inventory.inventory import Inventory
 from components.inventory.paperdoll import Paperdoll
-from gameobjects.util_functions import blocking_entity_at_pos
+from gameobjects.util_functions import blocking_entity_at_pos, entity_at_pos
 from rendering.render_order import RenderOrder
 
 
@@ -78,7 +78,7 @@ class Entity:
         """
         dest_x, dest_y = self.x + dx, self.y + dy
         if not game.map.is_wall(dest_x, dest_y) or ignore_walls:
-            blocked = blocking_entity_at_pos(game.entities, dest_x, dest_y)
+            blocked = entity_at_pos(game.blocking_ents, dest_x, dest_y)
             if blocked and not ignore_entities:
                 return blocked
             else:

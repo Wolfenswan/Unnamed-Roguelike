@@ -62,8 +62,13 @@ class Game:
         return container_ents
 
     @property
+    def interactable_ents(self):
+        interactable_ents = [v for v in self.architecture_ents if v.architecture.on_interaction is not None]
+        return interactable_ents
+
+    @property
     def container_ents(self):
-        container_ents = [v for v in self.entities if v.architecture is not None and v.inventory is not None]
+        container_ents = [v for v in self.architecture_ents if v.inventory is not None]
         return container_ents
 
     @property
@@ -77,6 +82,20 @@ class Game:
         return blocking_ents
 
     @property
+    def sight_blocking_ents(self):
+        blocking_ents = [v for v in self.entities if v.blocks.get('sight', False)]
+        return blocking_ents
+
+    @property
     def floor_blocking_ents(self):
         blocking_ents = [v for v in self.entities if v.blocks.get('floor', False)]
         return blocking_ents
+
+    def interactable_entity_at_pos(self, x, y):
+        entity = next((entity for entity in self.entities if entity.pos == (x, y)
+                   and entity.architecture and entity.architecture.on_interaction), None)
+        return entity
+
+    def test_walk_blocking_ents(self):
+        for e in self.architecture_ents:
+            print(e, e.blocks)

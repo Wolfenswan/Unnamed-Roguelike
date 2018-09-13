@@ -1,8 +1,9 @@
 """ Processes the actions from handle_keys into game-events """
 import tcod
 
+from components.architecture import Architecture
 from game import GameStates
-from gameobjects.util_functions import blocking_entity_at_pos, interactable_entity_at_pos
+from gameobjects.util_functions import entity_at_pos
 from gui.manual import display_manual
 from gui.menus import item_menu,  options_menu, debug_menu, item_list_menu
 from gui.messages import Message, MessageType, MessageCategory
@@ -47,11 +48,13 @@ def process_player_input(action, game, fov_map, targeting_item = None):
             destination_x, destination_y = player.x + dx, player.y + dy
 
             if not game_map.is_wall(destination_x, destination_y):
-
-                target = blocking_entity_at_pos(entities, destination_x, destination_y)
+                target = entity_at_pos(game.walk_blocking_ents, destination_x, destination_y)
 
                 if target is None and interact: # Check for non-blocking interactable objects
-                    target = interactable_entity_at_pos(entities, destination_x, destination_y)
+                    #print(len(game.interactable_ents))
+                    #print(game.interactable_ents)
+                    target = entity_at_pos(game.interactable_ents, destination_x, destination_y)
+                    #target = game.interactable_entity_at_pos(destination_x, destination_y)
 
                 if target:
                     if dodge:
@@ -66,6 +69,8 @@ def process_player_input(action, game, fov_map, targeting_item = None):
                     elif target.architecture:
 
                         if interact and target.architecture.on_interaction: # interacting with the object
+                            #interaction_results  = Architecture.toggle_door(player, target, game)
+                            #interaction_results = target.architecture.on_interaction(player, target, game)
                             interaction_results = target.architecture.on_interaction(player, target, game)
                             turn_results.extend(interaction_results)
 
