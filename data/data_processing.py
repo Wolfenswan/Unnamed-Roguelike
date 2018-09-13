@@ -197,15 +197,15 @@ def gen_npc_from_dict(data, x, y, game):
 
     hp = randint(*data['max_hp'])
     stamina = randint(*data['max_stamina'])
-    defense = randint(*data['nat_armor'])
-    power = randint(*data['nat_power'])
+    base_defense = randint(*data['base_armor'])
+    base_dmg_range = data['base_dmg_range']
     loadouts = data.get('loadouts')
     vision = data.get('nat_vision', 8)
     ai_movement = data.get('ai_movement', Simple)
     ai_attack = data.get('ai_attack', Simple)
     skills = data.get('skills', None)
 
-    fighter_component = Fighter(hp, stamina, defense, power, vision)
+    fighter_component = Fighter(hp, stamina, base_defense, base_dmg_range, vision)
     ai_component = BaseAI(movement=ai_movement(), attack=ai_attack())
     inventory_component = Inventory(12) # Todo Placeholder #
     skills_component = None

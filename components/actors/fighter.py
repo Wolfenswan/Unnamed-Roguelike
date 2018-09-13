@@ -11,7 +11,7 @@ from rendering.render_order import RenderOrder
 
 
 class Fighter:
-    def __init__(self, hp, stamina, base_defense, base_power, base_vision):
+    def __init__(self, hp, stamina, base_defense, base_dmg_range, base_vision):
         """
 
         :param hp:
@@ -30,9 +30,9 @@ class Fighter:
         self.__hp = hp
         self.max_stamina = stamina
         self.__stamina = stamina
-        self.base_defense = base_defense
-        self.base_power = base_power
-        self.base_vision = base_vision
+        self.__base_defense = base_defense
+        self.__base_dmg_range = base_dmg_range
+        self.__base_vision = base_vision
 
         self.is_blocking = False
 
@@ -117,13 +117,13 @@ class Fighter:
         :rtype:
         """
         if self.weapon:
-            return (self.base_power + self.weapon.dmg_range[0], self.base_power + self.weapon.dmg_range[1])
-        return (self.base_power, self.base_power)
+            return (self.__base_dmg_range[0] + self.weapon.dmg_range[0], self.__base_dmg_range[1] + self.weapon.dmg_range[1])
+        return (self.__base_dmg_range[0], self.__base_dmg_range[1])
 
     @property
     def modded_dmg_range(self):
         mod = self.weapon.moveset.dmg_mod
-        return (round((self.base_power + self.weapon.dmg_range[0]) * mod), round((self.base_power + self.weapon.dmg_range[1]) * mod))
+        return (round(self.base_dmg_range[0] * mod), round(self.base_dmg_range[1] * mod))
 
     @property
     def ignore_armor(self):
@@ -131,7 +131,7 @@ class Fighter:
 
     @property
     def defense(self):
-        defense = self.base_defense
+        defense = self.__base_defense
         for e in self.owner.paperdoll.equipped_items:
             av = vars(e.item.equipment).get('av')
             # This extra step is required as av value is set to None for all Equipments during data processing
@@ -141,7 +141,7 @@ class Fighter:
 
     @property
     def vision(self):
-        vision = self.base_vision
+        vision = self.__base_vision
         for e in self.owner.paperdoll.equipped_items:
             l_radius = vars(e.item.equipment).get('l_radius')
             # This extra step is required as l_radius value is set to None for all Equipments during data processing
