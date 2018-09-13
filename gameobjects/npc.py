@@ -38,7 +38,7 @@ class NPC(Entity):
 
     def move_astar(self, target, game):
         game_map = game.map
-        blocking_ents = game.blocking_ents
+        blocking_ents = game.walk_blocking_ents
 
         # Create a FOV map that has the dimensions of the map
         fov = tcod.map_new(game_map.width, game_map.height)
@@ -52,9 +52,8 @@ class NPC(Entity):
         # Scan all the objects to see if there are objects that must be navigated around
         # Check also that the object isn't self or the target (so that the start and the end points are free)
         # The AI class handles the situation if self is next to the target so it will not use this A* function anyway
-        for entity in blocking_ents + [target]:
+        for entity in blocking_ents:
             if entity.blocks.get('walk', False) and entity != self and entity != target:
-                print('blocks', target)
                 # Set the tile as a wall so it must be navigated around
                 tcod.map_set_properties(fov, entity.x, entity.y, True, False)
 

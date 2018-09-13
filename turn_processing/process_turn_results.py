@@ -61,7 +61,8 @@ def process_turn_results(player_turn_results, game, fov_map):
         if waiting:
             if player.in_combat(game):
                 player.fighter.toggle_blocking()
-                player.fighter.weapon.moveset.cycle_moves(reset=True) # Blocking resets weapon moves
+                if player.fighter.weapon:
+                    player.fighter.weapon.moveset.cycle_moves(reset=True) # Blocking resets weapon moves
                 game.state = GameStates.ENEMY_TURN
             else:
                 # TODO placeholder for regeneration/resting

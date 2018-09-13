@@ -95,7 +95,7 @@ def game_loop(game):
             targeting_item = turn_result.get('targeting_item')
 
 if __name__ == '__main__':
-    initialize_logging(debugging=False)
+    initialize_logging(debugging=True)
     game = Game(debug=False)
     initialize_window(game)
 

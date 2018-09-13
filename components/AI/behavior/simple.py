@@ -7,8 +7,6 @@ class Simple:
     """
 
     def decide_move(self, target, game):
-        game_map = game.map
-        entities = game.entities
         npc = self.owner.owner
 
         results = []

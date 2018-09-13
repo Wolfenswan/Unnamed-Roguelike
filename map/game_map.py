@@ -98,9 +98,10 @@ class GameMap:
         # TODO list comprehension candidate
         for dx in [-1, 0, 1]:
             for dy in [-1, 0, 1]:
-                to_x, to_y = ent.x + dx, ent.y + dy
-                if not game.map.is_blocked(to_x, to_y, game.blocking_ents):
-                    near_empty_tiles.append((to_x, to_y))
+                if not (dx, dy == 0, 0):
+                    to_x, to_y = ent.x + dx, ent.y + dy
+                    if not game.map.is_blocked(to_x, to_y, game.blocking_ents):
+                        near_empty_tiles.append((to_x, to_y))
 
         return near_empty_tiles
 

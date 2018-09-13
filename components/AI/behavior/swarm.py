@@ -48,7 +48,6 @@ class Swarm:
                 npc.move_towards(*tile, game)
 
             elif tile is None:
-                tile = choice(tiles)
                 if randint(0, 1): # TODO proper skill check later
                     tile = choice(tiles)
                     npc.x, npc.y = tile
