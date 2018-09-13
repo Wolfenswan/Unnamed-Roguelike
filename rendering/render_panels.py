@@ -33,11 +33,20 @@ def render_player_panel(game, con, panel_x, panel_y, width, height):
 
     #draw_quickslots(con, game)
 
-    # Armor
-    # Weapon  Damage
-    # Display weapon move information #
+    # Armor #
+    tcod.console_print(con, 1, 2, f'Defense: {game.player.fighter.defense}')
+    # Weapon #
     if player.fighter.weapon and player.fighter.weapon.moveset:
-        tcod.console_print(con, 1, 1, f'{game.player.fighter.weapon.moveset.current_move}')
+        tcod.console_set_color_control(tcod.COLCTRL_1, game.player.fighter.weapon.color, tcod.black)
+        tcod.console_print(con, 1, 4, f'- %c{game.player.fighter.weapon.name}%c -' % (tcod.COLCTRL_1, tcod.COLCTRL_STOP))
+        tcod.console_print(con, 2, 5,
+                           f'Attack: {game.player.fighter.weapon.moveset.current_move}/{game.player.fighter.weapon.moveset.moves}')
+        tcod.console_print(con, 2, 6, f'Damage: {game.player.fighter.modded_dmg_range[0]}-{game.player.fighter.modded_dmg_range[1]}')
+
+        tcod.console_print(con, 2, 9, f'Targets:')
+        tcod.console_set_color_control(tcod.COLCTRL_1, colors.red, tcod.black)
+        for i, line in enumerate(player.fighter.weapon.moveset.targets_gui):
+            tcod.console_print(con, 10, 8+i, ''.join(line))
 
     tcod.console_blit(con, 0, 0, width, height, 0, panel_x, panel_y)
 

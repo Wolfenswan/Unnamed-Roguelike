@@ -1,4 +1,4 @@
-from random import randint
+from random import randint, choice
 
 import logging
 
@@ -94,15 +94,36 @@ class Fighter:
         else:
             self.__stamina = value
 
+    # @property
+    # def attack_power(self):
+    #     """
+    #     Power
+    #
+    #     :return:
+    #     :rtype:
+    #     """
+    #     power = self.base_power
+    #     for e in self.owner.paperdoll.equipped_items:
+    #         dmg_range = vars(e.item.equipment).get('dmg_range')
+    #         if dmg_range:
+    #             power += randint(*dmg_range)
+    #     return power
+
     @property
-    def power(self): # TODO placeholder - later weapon damage should be separated from fighter power
-        power = self.base_power
-        for e in self.owner.paperdoll.equipped_items:
-            dmg_range = vars(e.item.equipment).get('dmg_range')
-            # This extra step is required as dmg_range is set to None for all Equipments during data processing
-            if dmg_range:
-                power += randint(*dmg_range)
-        return power
+    def base_dmg_range(self):
+        """
+        Attribute returns the currently equipped weapon's range with the fighter's base power added.
+        :return:
+        :rtype:
+        """
+        if self.weapon:
+            return (self.base_power + self.weapon.dmg_range[0], self.base_power + self.weapon.dmg_range[1])
+        return (self.base_power, self.base_power)
+
+    @property
+    def modded_dmg_range(self):
+        mod = self.weapon.moveset.dmg_mod
+        return (round((self.base_power + self.weapon.dmg_range[0]) * mod), round((self.base_power + self.weapon.dmg_range[1]) * mod))
 
     @property
     def ignore_armor(self):
@@ -169,8 +190,9 @@ class Fighter:
             attack_string = move_results.get('string', 'attacks')
             extra_targets = move_results.get('extra_targets', [])
 
-        damage = round(self.power * mod - (target.fighter.defense - ignore_armor))
-        logging.debug(f'{self.owner.name.capitalize()} attacks {target.name.capitalize()} with {self.power}*{mod} power against {target.fighter.defense} defense for {damage} damage.')
+        attack_power = choice(self.base_dmg_range) * mod
+        damage = round(attack_power - (target.fighter.defense - ignore_armor))
+        logging.debug(f'{self.owner.name.capitalize()} attacks {target.name.capitalize()} with {attack_power} power against {target.fighter.defense} defense for {damage} damage.')
 
         if game.debug['invin'] and target.is_player:
             damage = 0

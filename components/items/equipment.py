@@ -13,3 +13,11 @@ class Equipment():
         self.moveset = moveset
         if self.moveset:
             self.moveset = Moveset(self.moveset)
+
+    @property
+    def name(self):
+        return self.owner.owner.name
+
+    @property
+    def color(self):
+        return self.owner.owner.color

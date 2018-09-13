@@ -1,4 +1,5 @@
 import logging
+import tcod
 
 
 class Moveset():
@@ -9,6 +10,25 @@ class Moveset():
     @property
     def moves(self):
         return len(self.movelist.keys())
+
+    @property
+    def dmg_mod(self):
+        return self.movelist[self.current_move].get('dmg_mod', 1)
+
+    @property
+    def targets_gui(self):
+        l_1 = [' ',' ',' ']
+        l_2 = [' ','@','%cX%c'  % (tcod.COLCTRL_1, tcod.COLCTRL_STOP)]#f' @%cX%c' % (tcod.COLCTRL_1, tcod.COLCTRL_STOP)
+        l_3 = [' ',' ',' ']
+        extra_hits = self.movelist[self.current_move].get('extra_hits', {})
+        if extra_hits.get('target_behind'):
+            l_2 += '%cX%c' % (tcod.COLCTRL_1, tcod.COLCTRL_STOP)
+        if extra_hits.get('target_left'):
+            l_1[2] = '%cX%c' % (tcod.COLCTRL_1, tcod.COLCTRL_STOP)
+        if extra_hits.get('target_right'):
+            l_3[2] = 'X'
+
+        return (l_1,l_2,l_3)
 
     def execute(self, attacker, target):
         move = self.movelist[self.current_move]
@@ -28,7 +48,7 @@ class Moveset():
         x, y = target.pos
         dir_x, dir_y = attacker.direction_to_ent(target)
 
-        if extra_hits.get('behind_target'):
+        if extra_hits.get('target_behind'):
             target_x = x - dir_x if dir_x > 0 else x + dir_x
             target_y = y - dir_y if dir_y > 0 else y + dir_y
             extra_targets.append((target_x, target_y))

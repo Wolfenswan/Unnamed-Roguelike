@@ -33,7 +33,7 @@ arch_containers_data = {
         'on_collision': Architecture.blocks_info,
         'on_interaction': Architecture.open_container
     },
-    'weapon_rack_old': {
+    'weapon_rack': {
         'name': 'weapon rack',
         'materials': (Material.IRON, Material.STEEL),
         'descr': "The rust makes it hard to tell where the rack ends and its content begins.",
@@ -42,7 +42,7 @@ arch_containers_data = {
         'rarity_mod': +5,
         'dlvls': (1, 99),
         "char": '+',
-        "blocks": {'floor':True},
+        "blocks": {'floor':True, 'walk':True},
         'container_room': (1, 4),
         'contents_rarity': (RarityType.COMMON, RarityType.UNCOMMON),
         'contents_type': (ItemType.WEAPON, ItemType.SHIELD),
