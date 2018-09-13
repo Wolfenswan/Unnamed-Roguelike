@@ -288,8 +288,6 @@ def gen_architecture(data, x, y):
     inventory_component = Inventory(randint(*container_room))
     architecture_component = Architecture(on_collision = on_collision, on_interaction = on_interaction)
 
-    print(blocks)
-
     # create the static object using the arguments tuple
     arch = Entity(*arguments, material=material.get('type'), blocks=blocks, inventory=inventory_component, architecture=architecture_component, render_order=RenderOrder.BOTTOM)
 
