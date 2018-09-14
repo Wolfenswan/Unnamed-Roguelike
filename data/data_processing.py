@@ -70,18 +70,19 @@ def pick_from_data_dict_by_rarity(dict, dlvl=0):
         dict = {k: v for k, v in dict.items() if dlvl in range(*v.get('dlvls', (1, 99)))}
 
     keys = list(dict.keys())
-    type_rarity = -1
 
     # keep picking items at random until the rarity chances pass
     while True:
         random = randint(0, 100)
         candidate = choice(keys)
-        logging.debug(f'Trying to calculate rarity for {candidate}')
+        logging.debug(f'Calculating rarity for {candidate}')
 
         # If an overall type is assigned to the candidate, calculate its rarity weight
         if dict[candidate].get('type'):
             type = dict[candidate]['type']
-            type_rarity = rarity_values.get(type, -1)
+            type_rarity = rarity_values[type]
+        else:
+            type_rarity = 100
 
         # Set the rarity for the individual item. Defaults to 100 if the value is not set in the data entry.
         rarity_type = dict[candidate].get('rarity', RarityType.COMMON)
@@ -89,8 +90,8 @@ def pick_from_data_dict_by_rarity(dict, dlvl=0):
 
         # Check against type rarity first, then individual rarity of the item
         # TODO use random values for each check if useful
-        logging.debug(f'Rarity for {candidate} is {item_rarity} and type rarity is {type_rarity}, random value is {random}.')
-        if (type_rarity == -1 or type_rarity > random) and item_rarity > random:
+        logging.debug(f'Type rarity for {candidate} is {type_rarity} and data specific rarity is {item_rarity}, random value is {random}.')
+        if (type_rarity >= random and item_rarity >= random):
             logging.debug(f'Decided on {candidate}')
             break
         logging.debug(f'Dropping {candidate}')
@@ -146,6 +147,7 @@ def get_generic_data(data, material=None, condition=None, craftsmanship=None, ra
     if bodytype:
         if bodytype['type'].name != 'NORMAL':
             name = (f'{bodytype["type"].name} ' + name).title()
+            # TODO extra description
 
     if randomize_color:
         darken = True if randint(0, 1) else False

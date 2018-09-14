@@ -50,7 +50,7 @@ def initialize_game(game):
     place_staticobjects(game)
     place_containers(game)
     place_doors(game)
-    place_items(game)
+    # place_items(game)
     place_monsters(game)
 
     player.x, player.y = game.map.rooms[0].center

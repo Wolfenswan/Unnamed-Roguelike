@@ -75,9 +75,10 @@ def render_object_panel(game, con, panel_x, panel_y, width, height):
                     tcod.console_print(con, x, y, '~ ~ ~ MORE ~ ~ ~')
                     break
 
-                tcod.console_print(con, 1+i, y, f'%c{line}%c' % (
+                # Some symbols don't print properly with console_print, that's why it's split into put_char_ex and print
+                tcod.console_put_char_ex(con, 1+i, y, symbol, ent.color, tcod.black)
+                tcod.console_print(con, 3+i, y, f'%c{ent.name}%c' % (
                 tcod.COLCTRL_1, tcod.COLCTRL_STOP))
-
                 y += 2
 
     tcod.console_blit(con, 0, 0, width, height, 0, panel_x, panel_y)
@@ -106,9 +107,11 @@ def render_enemy_panel(game, con, panel_x, panel_y, width, height):
             # Draw creature name and stats #
             tcod.console_set_color_control(tcod.COLCTRL_1, ent.color, tcod.black)
             tcod.console_set_color_control(tcod.COLCTRL_2, ent.fighter.hp_color, tcod.black) # TODO make dynamic
-            tcod.console_print(con, 1, y, f'%c{ent.char} {ent.name}%c' % (tcod.COLCTRL_1, tcod.COLCTRL_STOP))
+            tcod.console_put_char_ex(con, 1, y, ent.char, ent.color, tcod.black)
+            tcod.console_print(con, 3, y, f'%c{ent.name}%c' % (tcod.COLCTRL_1, tcod.COLCTRL_STOP))
             y += 1
-            tcod.console_print(con, 2, y, f'- %c{ent.fighter.hp_string.title()}%c' % (tcod.COLCTRL_2, tcod.COLCTRL_STOP))
+            tcod.console_put_char_ex(con, 3, y, chr(192), tcod.gray, tcod.black)
+            tcod.console_print(con, 4, y, f'%c{ent.fighter.hp_string.title()}%c' % (tcod.COLCTRL_2, tcod.COLCTRL_STOP))
             y += 1
 
     tcod.console_blit(con, 0, 0, width, height, 0, panel_x, panel_y)

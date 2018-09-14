@@ -20,7 +20,7 @@ arch_static_data = {
     'moss': {
         'name': 'Moss',
         'descr': 'Sickly green patches are spreading across this wall.',
-        'char': '#',
+        'char': chr(177),
         'walls_only': True,
         'color': colors.dark_green
     }
