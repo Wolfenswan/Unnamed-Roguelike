@@ -20,7 +20,7 @@ def get_names_under_mouse(mouse, entities, fov_map):
              if entity.x == x and entity.y == y and tcod.map_is_in_fov(fov_map, entity.x, entity.y)]
     names = ', '.join(names)
 
-    return names.capitalize()
+    return names.title()
 
 
 def setup_console(con, caption=None, fgcolor=tcod.white, bgcolor =tcod.black, borders=False, bordercolor = colors.dark_gray):

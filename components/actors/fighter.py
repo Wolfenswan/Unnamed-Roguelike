@@ -192,7 +192,7 @@ class Fighter:
 
         attack_power = choice(self.base_dmg_range) * mod
         damage = round(attack_power - (target.fighter.defense - ignore_armor))
-        logging.debug(f'{self.owner.name.capitalize()} attacks {target.name.capitalize()} with {attack_power} power against {target.fighter.defense} defense for {damage} damage.')
+        logging.debug(f'{self.owner.name.title()} attacks {target.name.title()} with {attack_power} power against {target.fighter.defense} defense for {damage} damage.')
 
         if game.debug['invin'] and target.is_player:
             damage = 0
@@ -224,15 +224,15 @@ class Fighter:
                 elif target.is_player:
                     target_string = 'you'
                 else:
-                    target_string = target.name.capitalize()
+                    target_string = target.name.title()
 
                 results.append({'message': Message(
-                    f'{self.owner.name.capitalize()} {attack_string} {target_string} for {str(damage)} hit points.', type=msg_type)})
+                    f'{self.owner.name.title()} {attack_string} {target_string} for {str(damage)} hit points.', type=msg_type)})
                 results.extend(target.fighter.take_damage(damage))
         else:
             target.fighter.stamina -= 2 # TODO placeholder until balancing (scale stamina drain with armor encumberance)
             results.append(
-                {'message': Message(f'{self.owner.name.capitalize()} {attack_string} {target.name} but does no damage.', type=MessageType.COMBAT)})
+                {'message': Message(f'{self.owner.name.title()} {attack_string} {target.name} but does no damage.', type=MessageType.COMBAT)})
 
         return results
 
@@ -242,7 +242,7 @@ class Fighter:
         if self.owner.is_player:
             message = Message(f'You were able to block the attack!', type=MessageType.GOOD)
         else:
-            message = Message(f'{self.owner.name.capitalize()} was able to block the attack!', type=MessageType.COMBAT)
+            message = Message(f'{self.owner.name.title()} was able to block the attack!', type=MessageType.COMBAT)
         results.append({'message': message})
         return results
 
@@ -269,19 +269,19 @@ class Fighter:
             c_x, c_y = (randint(x - 1, x + 1), randint(y - 1, y + 1))
             game.map.tiles[(c_x,c_y)].gibbed = True
             if not game.map.tiles[(c_x,c_y)].blocked and randint(0, 100) > 85:
-                c = Entity(c_x, c_y, '~', colors.corpse, f'{ent.name.capitalize()} bits', is_corpse=True)
+                c = Entity(c_x, c_y, '~', colors.corpse, f'{ent.name.title()} bits', is_corpse=True)
                 c.render_order = RenderOrder.CORPSE
                 game.entities.append(c)
 
         if ent.is_player:
             message = Message('You died!', type=MessageType.BAD)
         else:
-            message = Message(f'The {ent.name.capitalize()} is dead!', type=MessageType.GOOD, category=MessageCategory.OBSERVATION)
+            message = Message(f'The {ent.name.title()} is dead!', type=MessageType.GOOD, category=MessageCategory.OBSERVATION)
 
             ent.render_order = RenderOrder.CORPSE
             ent.blocks['walk'] = False
             ent.ai = None
             ent.is_corpse = True
-            ent.name = f'{ent.name.capitalize()} remains'
+            ent.name = f'{ent.name.title()} remains'
 
         return message

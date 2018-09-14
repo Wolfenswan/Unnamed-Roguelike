@@ -106,9 +106,10 @@ def render_enemy_panel(game, con, panel_x, panel_y, width, height):
             # Draw creature name and stats #
             tcod.console_set_color_control(tcod.COLCTRL_1, ent.color, tcod.black)
             tcod.console_set_color_control(tcod.COLCTRL_2, ent.fighter.hp_color, tcod.black) # TODO make dynamic
-            tcod.console_print(con, 1, y, f'%c{ent.char} {ent.name}%c | %c{ent.fighter.hp_string.capitalize()}%c' % (tcod.COLCTRL_1, tcod.COLCTRL_STOP, tcod.COLCTRL_2, tcod.COLCTRL_STOP))
-
-            y += 2
+            tcod.console_print(con, 1, y, f'%c{ent.char} {ent.name}%c' % (tcod.COLCTRL_1, tcod.COLCTRL_STOP))
+            y += 1
+            tcod.console_print(con, 2, y, f'- %c{ent.fighter.hp_string.title()}%c' % (tcod.COLCTRL_2, tcod.COLCTRL_STOP))
+            y += 1
 
     tcod.console_blit(con, 0, 0, width, height, 0, panel_x, panel_y)
 

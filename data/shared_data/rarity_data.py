@@ -1,8 +1,6 @@
 from data.shared_data.types_data import MonsterType, ContainerType, ItemType, GenericType, Material, Condition, \
-    RarityType, Craftsmanship
+    RarityType, Craftsmanship, BodyType
 
-# Each type is assigned a weight value that is taken into account when creating an item of the corresponding type
-# RarityType can be assigned as an additional value to data entries, to add a weight specific to that data entry
 rarity_values = {
     GenericType.DEFAULT: 100,
     GenericType.UNIQUE: -1,
@@ -42,5 +40,13 @@ rarity_values = {
     Craftsmanship.POOR: 80,
     Craftsmanship.NORMAL: 100,
     Craftsmanship.GOOD: 50,
-    Craftsmanship.LEGENDARY: 10
+    Craftsmanship.LEGENDARY: 10,
+
+    BodyType.NORMAL: 100,
+    BodyType.SCRAWNY: 60,
+    BodyType.OBESE: 20,
+    BodyType.TINY: 40,
+    BodyType.SMALL: 80,
+    BodyType.LARGE: 20,
+    BodyType.GARGANTUAN: 5
 }

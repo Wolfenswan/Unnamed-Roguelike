@@ -16,6 +16,7 @@ from data.actor_data.spawn_data import spawn_data
 from data.architecture_data.arch_static import arch_static_data
 from data.architecture_data.arch_containers import arch_containers_data
 from data.descr_data.craft_descr import craft_descr_data
+from data.shared_data.bodytype_data import bodytype_data
 from data.shared_data.quality_data import qual_cond_data, qual_craft_data
 from data.shared_data.types_data import GenericType, Condition, RarityType
 from data.shared_data.material_data import item_material_data
@@ -98,7 +99,7 @@ def pick_from_data_dict_by_rarity(dict, dlvl=0):
 
 
 # Data retrieving functions #
-def get_generic_data(data, material=None, condition=None, craftsmanship=None, randomize_color = False):
+def get_generic_data(data, material=None, condition=None, craftsmanship=None, randomize_color = False, bodytype=False):
     """
     Retrieves basic attributes from the data dictionary and if necessary modifies them as to material, condition and
     craftsmanship values.
@@ -141,6 +142,10 @@ def get_generic_data(data, material=None, condition=None, craftsmanship=None, ra
                 descr += f' {craft_descr}'
             else:
                 descr += f" (Description missing for {material['type']}/{craftsmanship['type']})"
+
+    if bodytype:
+        if bodytype['type'].name != 'NORMAL':
+            name = (f'{bodytype["type"].name} ' + name).title()
 
     if randomize_color:
         darken = True if randint(0, 1) else False
@@ -191,9 +196,25 @@ def get_craftsmanship_data(material, forced=False):
     return craftsmanship
 
 
+def get_bodytype_data(data, forced=False):
+    if forced:
+        dict = {k: v for k, v in bodytype_data.items() if v['type'] in forced}
+    elif data.get('bodytypes'):
+        dict = {k:v for k, v in bodytype_data.items() if v['type'] in data.get('bodytypes',{})}
+    else:
+        dict = bodytype_data
+
+    key = pick_from_data_dict_by_rarity(dict)
+    bodytype = dict[key]
+
+    return bodytype
+
+
 # Generating Functions #
 def gen_npc_from_dict(data, x, y, game):
-    arguments = (x, y, *get_generic_data(data, randomize_color=True))
+    bodytype = get_bodytype_data(data, forced=False)
+
+    arguments = (x, y, *get_generic_data(data, randomize_color=True, bodytype=bodytype))
 
     hp = randint(*data['max_hp'])
     stamina = randint(*data['max_stamina'])
@@ -250,16 +271,16 @@ def gen_item_from_data(data, x, y, materials=False, conditions=False, craftsmans
         dmg_range = data.get('dmg_range')
         if dmg_range:
             mat_mod = material.get('dmg_mod',0)
-            cond_mod = condition.get('dmg_mod', 0)
-            craft_mod = craftsmanship.get('mod', 1)
-            dmg_range = (round(max((dmg_range[0] + mat_mod + cond_mod)*craft_mod,1)), round((dmg_range[1] + mat_mod + cond_mod)*craft_mod))
+            craft_mod = craftsmanship.get('dmg_mod', 0)
+            cond_mod = condition.get('mod', 1)
+            dmg_range = (round(max((dmg_range[0] + mat_mod + craft_mod)*cond_mod,1)), round(max((dmg_range[1] + mat_mod + craft_mod)*cond_mod,1)))
 
         av = data.get('av')
         if av:
             mat_mod = material.get('av_mod', 0)
-            cond_mod = condition.get('av_mod', 0)
-            craft_mod = craftsmanship.get('mod', 1)
-            av += round((max(mat_mod + cond_mod,1))*craft_mod)
+            craft_mod = craftsmanship.get('av_mod', 0)
+            cond_mod = condition.get('mod', 1)
+            av += round((max(mat_mod + craft_mod,1))*cond_mod)
 
         qu_slots = data.get('qu_slots')
         l_radius = data.get('l_radius')

@@ -6,7 +6,7 @@ arch_static_data = {
         'name': 'Old Pillar',
         'descr': 'An old, crumbling pillar.',
         'dlvls': (1, 99),
-        "char": chr(186),
+        "char": chr(20), #tcod.CHAR_PILCROW
         "color": colors.white,
         "blocks": {'walk':True,'sight':True,'floor':True}
     },

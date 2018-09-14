@@ -35,7 +35,7 @@ class RarityType(Enum):
     UNIQUE = auto()
 
 
-# Item Quality #
+# Entity Quality #
 class Material(Enum):
     OAK = auto()
     LINEN = auto()
@@ -58,3 +58,13 @@ class Craftsmanship(Enum):
     NORMAL = auto()
     GOOD = auto()
     LEGENDARY = auto()
+
+
+class BodyType(Enum):
+    NORMAL = auto()
+    SCRAWNY = auto()
+    OBESE = auto()
+    TINY = auto()
+    SMALL = auto()
+    LARGE = auto()
+    GARGANTUAN = auto()

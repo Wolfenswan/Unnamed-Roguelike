@@ -43,7 +43,7 @@ class Item:
         """
         list = ['']
         if self.owner.type:
-            type_str = self.owner.type.name.capitalize()
+            type_str = self.owner.type.name.title()
             if self.equipment and self.equipment.two_handed:
                 type_str += ' (Two-Handed)'
             list.extend(textwrap.wrap(f' Type: {type_str}', max_width))
