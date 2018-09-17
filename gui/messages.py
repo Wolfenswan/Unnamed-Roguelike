@@ -5,7 +5,7 @@ from config_files import cfg as cfg, colors
 import textwrap
 
 class MessageCategory(Enum):
-    EVENT = auto()
+    COMBAT = auto()
     OBSERVATION = auto()
 
 class MessageType(Enum):
@@ -16,11 +16,14 @@ class MessageType(Enum):
     BAD = auto()  # information about harmful events
     ALERT = auto()  # alerts about import events, such as health being very low
     COMBAT = auto()
+    COMBAT_INFO = auto()
+    COMBAT_GOOD = auto()
+    COMBAT_BAD = auto()
     FLUFF = auto()  # non-important events, such as monster barks
     SYSTEM = auto()
 
 class Message:
-    def __init__(self, text, category = MessageCategory.EVENT, type=MessageType.GENERIC, color=None):
+    def __init__(self, text, category = MessageCategory.OBSERVATION, type=MessageType.GENERIC, color=None):
         self.text = text
         self.category = category
         self.type = type
@@ -41,12 +44,18 @@ class Message:
             return colors.red
         elif self.type == MessageType.COMBAT:
             return colors.dark_azure
-        
+        elif self.type == MessageType.COMBAT_INFO:
+            return colors.dark_azure
+        elif self.type == MessageType.COMBAT_GOOD:
+            return colors.dark_cyan
+        elif self.type == MessageType.COMBAT_BAD:
+            return colors.dark_orange
+
     def add_to_log(self, game):
         #self.text = f'T{game.turn}: ' + self.text
 
-        if self.category == MessageCategory.EVENT:
-            game.event_log.add_message(self)
+        if self.category == MessageCategory.COMBAT:
+            game.combat_log.add_message(self)
         else:
             game.observation_log.add_message(self)
             

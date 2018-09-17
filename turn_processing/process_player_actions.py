@@ -8,6 +8,7 @@ from gui.manual import display_manual
 from gui.menus import item_menu,  options_menu, debug_menu, item_list_menu
 from gui.messages import Message, MessageType, MessageCategory
 from loader_functions.data_loader import save_game
+from rendering.render_windows import render_equipment_window
 
 
 def process_player_input(action, game, fov_map, targeting_item = None):
@@ -169,6 +170,7 @@ def process_player_input(action, game, fov_map, targeting_item = None):
         selected_item_ent = item_list_menu(player, player.inventory.items)
 
     elif game.state == GameStates.SHOW_EQUIPMENT:
+        #render_equipment_window(player.paperdoll.equipped_items, game)
         selected_item_ent = item_list_menu(player, player.paperdoll.equipped_items, title='Equipment')
 
     if game.state in [GameStates.SHOW_INVENTORY, GameStates.SHOW_EQUIPMENT]:

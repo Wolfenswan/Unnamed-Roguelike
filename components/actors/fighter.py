@@ -217,7 +217,7 @@ class Fighter:
             if target.fighter.is_blocking and target.fighter.stamina > 0:
                 results.extend(target.fighter.block(damage))
             else:
-                msg_type = MessageType.ALERT if target.is_player else MessageType.COMBAT
+                msg_type = MessageType.COMBAT_BAD if target.is_player else MessageType.COMBAT_INFO
 
                 if target == self.owner:
                     target_string = 'itself'
@@ -227,12 +227,13 @@ class Fighter:
                     target_string = target.name.title()
 
                 results.append({'message': Message(
-                    f'{self.owner.name.title()} {attack_string} {target_string} for {str(damage)} hit points.', type=msg_type)})
+                    f'{self.owner.name.title()} {attack_string} {target_string} for {str(damage)} hit points.', category=MessageCategory.COMBAT, type=msg_type)})
                 results.extend(target.fighter.take_damage(damage))
         else:
             target.fighter.stamina -= 2 # TODO placeholder until balancing (scale stamina drain with armor encumberance)
+            msg_type = MessageType.COMBAT_BAD if not target.is_player else MessageType.COMBAT_GOOD
             results.append(
-                {'message': Message(f'{self.owner.name.title()} {attack_string} {target.name} but does no damage.', type=MessageType.COMBAT)})
+                {'message': Message(f'{self.owner.name.title()} {attack_string} {target.name} but does no damage.', category=MessageCategory.COMBAT, type=msg_type)})
 
         return results
 
@@ -240,9 +241,9 @@ class Fighter:
         results = []
         self.stamina -= damage
         if self.owner.is_player:
-            message = Message(f'You were able to block the attack!', type=MessageType.GOOD)
+            message = Message(f'You were able to block the attack!', category=MessageCategory.COMBAT, type=MessageType.GOOD)
         else:
-            message = Message(f'{self.owner.name.title()} was able to block the attack!', type=MessageType.COMBAT)
+            message = Message(f'{self.owner.name.title()} was able to block the attack!', category=MessageCategory.COMBAT, type=MessageType.COMBAT)
         results.append({'message': message})
         return results
 

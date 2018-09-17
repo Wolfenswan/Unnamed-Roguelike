@@ -36,5 +36,5 @@ def initialize_window(game):
     game.top_right_panel = tcod.console_new(cfg.SIDE_PANEL_WIDTH, cfg.PLAYER_PANEL_HEIGHT)
     game.center_right_panel = tcod.console_new(cfg.SIDE_PANEL_WIDTH, cfg.COMBAT_PANEL_HEIGHT)
     game.lower_right_panel = tcod.console_new(cfg.SIDE_PANEL_WIDTH, cfg.OBJECT_PANEL_HEIGHT)
-    game.bottom_left_panel = tcod.console_new(cfg.MSG_PANEL_WIDTH, cfg.BOTTOM_PANELS_HEIGHT)
-    game.bottom_center_panel = tcod.console_new(cfg.MSG_PANEL_WIDTH, cfg.BOTTOM_PANELS_HEIGHT)
+    game.bottom_left_panel = tcod.console_new(cfg.MSG_PANEL1_WIDTH, cfg.BOTTOM_PANELS_HEIGHT)
+    game.bottom_center_panel = tcod.console_new(cfg.MSG_PANEL2_WIDTH, cfg.BOTTOM_PANELS_HEIGHT)

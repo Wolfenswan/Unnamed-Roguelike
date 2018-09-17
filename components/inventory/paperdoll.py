@@ -9,12 +9,22 @@ class Paperdoll:
 
     def __init__(self):
         # TODO allow various combination of Heads, Arms etc.
-        self.equipped_items = [] # TODO make @property
-        self.head = Head()
-        self.torso = Torso()
+        #self.equipped_items = [] # TODO make @property
         self.weapon_arm = Arm()
         self.shield_arm = Arm()
+        self.head = Head()
+        self.torso = Torso()
         self.legs = Legs()
+
+    @property
+    def equipped_items(self):
+        items = []
+        for attribute, extremity in self.__dict__.items():
+            if attribute is not 'owner':
+                for slot, equipped in extremity.__dict__.items():
+                    if equipped is not None:
+                        items.append(equipped)
+        return items
 
     @property
     def two_handed(self):
@@ -62,7 +72,6 @@ class Paperdoll:
 
         else:
             setattr(extremity, e_type, item_ent)
-            self.equipped_items.append(item_ent)
             self.owner.inventory.remove_from_inv(item_ent)
             if qu_slots:
                 self.owner.qu_inventory.capacity += qu_slots
@@ -82,7 +91,6 @@ class Paperdoll:
 
         if equipped_item:
             setattr(extremity, e_type, None)
-            self.equipped_items.remove(equipped_item)
             self.owner.inventory.add(equipped_item)
             if qu_slots:
                 # TODO make sure items over capacity are moved to regular inventory

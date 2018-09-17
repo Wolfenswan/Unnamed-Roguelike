@@ -33,8 +33,8 @@ class Game:
         self.con = None
         self.fov_map = None
         self.bottom_panel = None
-        self.event_log = MessageLog(cfg.MSG_X, cfg.MSG_WIDTH, cfg.MSG_HEIGHT)
-        self.observation_log = MessageLog(cfg.MSG_X, cfg.MSG_WIDTH, cfg.MSG_HEIGHT)
+        self.observation_log = MessageLog(cfg.MSG_X, cfg.MSG_PANEL1_WIDTH-1, cfg.MSG_HEIGHT)
+        self.combat_log = MessageLog(cfg.MSG_X, cfg.MSG_PANEL2_WIDTH-1, cfg.MSG_HEIGHT)
 
         self.debug = {
             'map' : debug,

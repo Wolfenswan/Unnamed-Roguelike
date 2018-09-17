@@ -122,3 +122,74 @@ def render_description_window(game):
 
         draw_window(title, body, window_x=x, window_y=y, forced_width=width, show_cancel_option=False, title_color=ent.color, extend_body=debug_info)
 
+def render_equipment_window(equipment): # Experimental - Not implemented#
+
+    x_coord = {
+        # left side
+        'torso': (0, 5, 28),
+        'head': (0, 15, 28),
+        'weapon_arm': (0, 40, 10),
+        # right side
+        'shield_arm': (85, 15, -10),
+    }
+    x_coord = {
+        # left side
+        'armor': cfg.MAP_SCREEN_WIDTH//2,
+        'weapon': 0,
+        'shield': cfg.MAP_SCREEN_WIDTH + 30,
+        'belt': cfg.MAP_SCREEN_WIDTH//2
+    }
+    y_coord = {
+        'torso': 10,
+        'head': 2,
+        'weapon_arm': 5,
+        # right side
+        'shield_arm': 5,
+    }
+
+    body = []
+    
+    for item_ent in equipment:
+        type = item_ent.item.equipment.e_to # Entity.type is a enum member of the ItemType Class.
+        #px, py = w_coord[type][0], w_coord[type][1]
+        py = y_coord[item_ent.item.equipment.e_to]
+        px = x_coord[item_ent.type.name.lower()]
+
+        draw_window(item_ent.name, item_ent.descr, window_x=px, window_y=py, forced_width=30, show_cancel_option=False,
+                    title_color=item_ent.color, extend_body=item_ent.item.attr_list(max_width=30))
+        #
+        # descr_wrapped = textwrap.wrap(item_ent.descr, width)
+        # height = len(descr_wrapped)
+        #
+        # window = tdl.Window(gv.root, px, py, width, height)
+        # # window.caption = type.title() + ':'
+        # window.caption = '({0}) {1}'.format(character, item_ent.name)
+        # window.border_color = settings.PANELS_BORDER_COLOR
+        #
+        # setup_panel(window)
+    
+        # window.draw_str(1,2,'{0}'.format(item_ent.name))
+        #
+        # y = 2
+        # lines = draw_wrapped_text(window, item_ent.description, width, o_y=y)
+        #
+        # y += 1 + lines
+        # # if getattr(item_ent, 'weight', 0):
+        # # lines = draw_wrapped_text(window, 'It is {0}.'.format(item_ent.get_weight_as_string()), window.width - 2, o_y=y)
+        # # y += lines + 2
+        #
+        # if getattr(item_ent, 'slots', 0):
+        #     lines = draw_wrapped_text(window, 'It has {0} pockets for quick access.'.format(item_ent.slots),
+        #                               window.width - 2, o_y=y)
+        #     y += lines + 2
+        #
+        # dist = w_coord[type][2]
+        # if dist > 0:
+        #     for i in range(dist):
+        #         gv.root.draw_char(px + width + i, py + 2, '196', bg=None, fg=colors.grey)
+        # else:
+        #     for i in range(-dist):
+        #         gv.root.draw_char(px - i, py + 2, '196', bg=None, fg=colors.grey)
+
+
+
