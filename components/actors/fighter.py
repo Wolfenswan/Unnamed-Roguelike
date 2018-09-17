@@ -11,7 +11,7 @@ from rendering.render_order import RenderOrder
 
 
 class Fighter:
-    def __init__(self, hp, stamina, base_defense, base_dmg_range, base_vision):
+    def __init__(self, hp, stamina, base_av, base_dmg_range, base_vision):
         """
 
         :param hp:
@@ -30,7 +30,7 @@ class Fighter:
         self.__hp = hp
         self.max_stamina = stamina
         self.__stamina = stamina
-        self.__base_defense = base_defense
+        self.__base_av = base_av
         self.__base_dmg_range = base_dmg_range
         self.__base_vision = base_vision
 
@@ -131,7 +131,7 @@ class Fighter:
 
     @property
     def defense(self):
-        defense = self.__base_defense
+        defense = self.__base_av
         for e in self.owner.paperdoll.equipped_items:
             av = vars(e.item.equipment).get('av')
             # This extra step is required as av value is set to None for all Equipments during data processing

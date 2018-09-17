@@ -18,7 +18,7 @@ from data.architecture_data.arch_containers import arch_containers_data
 from data.descr_data.craft_descr import craft_descr_data
 from data.shared_data.bodytype_data import bodytype_data
 from data.shared_data.quality_data import qual_cond_data, qual_craft_data
-from data.shared_data.types_data import GenericType, Condition, RarityType
+from data.shared_data.types_data import GenericType, Condition, RarityType, BodyType
 from data.shared_data.material_data import item_material_data
 from data.item_data.test_equipment import test_equipment_data
 from data.item_data.use_potions import use_potions_data
@@ -100,7 +100,7 @@ def pick_from_data_dict_by_rarity(dict, dlvl=0):
 
 
 # Data retrieving functions #
-def get_generic_data(data, material=None, condition=None, craftsmanship=None, randomize_color = False, bodytype=False):
+def get_generic_data(data, material=None, condition=None, craftsmanship=None, bodytype=None, randomize_color = False):
     """
     Retrieves basic attributes from the data dictionary and if necessary modifies them as to material, condition and
     craftsmanship values.
@@ -110,6 +110,10 @@ def get_generic_data(data, material=None, condition=None, craftsmanship=None, ra
     name = data['name'].title()
     descr = data.get('descr', 'No description')
     type = data.get('type', GenericType.DEFAULT)
+
+    if randomize_color:
+        darken = True if randint(0, 1) else False
+        color = randomize_rgb_color(color, darken = darken) # Slight color randomization for each entity
 
     if material:
         color = material['color']  # Update the entity's color
@@ -130,9 +134,9 @@ def get_generic_data(data, material=None, condition=None, craftsmanship=None, ra
         if condition['type'] == Condition.POOR:
             color = randomize_rgb_color(color, factor_range=(0.2, 0.2), darken=True)
         elif condition['type'] == Condition.GOOD:
-            color = randomize_rgb_color(color, factor_range=(0.2, 0.2), darken=False)
+            color = randomize_rgb_color(color, factor_range=(0.25, 0.25), darken=False)
         elif condition['type'] == Condition.LEGENDARY:
-            color = randomize_rgb_color(color, factor_range=(0.4, 0.4), darken=False)
+            color = randomize_rgb_color(color, factor_range=(0.6, 0.6), darken=False)
 
     if craftsmanship:
         # Append randomized condition description to the main description #
@@ -149,9 +153,20 @@ def get_generic_data(data, material=None, condition=None, craftsmanship=None, ra
             name = (f'{bodytype["type"].name} ' + name).title()
             # TODO extra description
 
-    if randomize_color:
-        darken = True if randint(0, 1) else False
-        color = randomize_rgb_color(color, darken = darken) # Slight color randomization for each entity
+            # Tweak the color slightly to indicate enemy type #
+            # TODO Tweak as necessary
+            # if bodytype['type'] == BodyType.SCRAWNY:
+            #     color = randomize_rgb_color(color, factor_range=(0.2, 0.2), darken=True)
+            # elif bodytype['type'] == BodyType.OBESE:
+            #     color = randomize_rgb_color(color, factor_range=(0.2, 0.2), darken=True)
+            # elif bodytype['type'] == BodyType.TINY:
+            #     color = randomize_rgb_color(color, factor_range=(0.3, 0.3), darken=True)
+            # elif bodytype['type'] == BodyType.SMALL:
+            #     color = randomize_rgb_color(color, factor_range=(0.2, 0.2), darken=True)
+            if bodytype['type'] == BodyType.LARGE:
+                color = randomize_rgb_color(color, factor_range=(0.2, 0.2), darken=False)
+            elif bodytype['type'] == BodyType.GARGANTUAN:
+                color = randomize_rgb_color(color, factor_range=(0.6, 0.6), darken=False)
 
     return (char, color, name, descr, type)
 
@@ -220,7 +235,7 @@ def gen_npc_from_dict(data, x, y, game):
 
     hp = randint(*data['max_hp'])
     stamina = randint(*data['max_stamina'])
-    base_defense = randint(*data['base_armor'])
+    base_av = randint(*data['base_armor'])
     base_dmg_range = data['base_dmg_range']
     loadouts = data.get('loadouts')
     vision = data.get('nat_vision', 8)
@@ -228,7 +243,15 @@ def gen_npc_from_dict(data, x, y, game):
     ai_attack = data.get('ai_attack', Simple)
     skills = data.get('skills', None)
 
-    fighter_component = Fighter(hp, stamina, base_defense, base_dmg_range, vision)
+
+    hp_mod_multipl = bodytype.get('hp_mod_multipl', 1)
+    dmg_mod_multipl = bodytype.get('dmg_mod_multipl',1)
+    av_mod_multipl = bodytype.get('av_mod_multipl', 1)
+    hp = round(hp * hp_mod_multipl)
+    base_dmg_range = (round(base_dmg_range[0] * dmg_mod_multipl), round(base_dmg_range[1] * dmg_mod_multipl))
+    base_av = round(base_av * av_mod_multipl)
+
+    fighter_component = Fighter(hp, stamina, base_av, base_dmg_range, vision)
     ai_component = BaseAI(movement=ai_movement(), attack=ai_attack())
     inventory_component = Inventory(12) # Todo Placeholder #
     skills_component = None
@@ -274,14 +297,14 @@ def gen_item_from_data(data, x, y, materials=False, conditions=False, craftsmans
         if dmg_range:
             mat_mod = material.get('dmg_mod',0)
             craft_mod = craftsmanship.get('dmg_mod', 0)
-            cond_mod = condition.get('mod', 1)
+            cond_mod = condition.get('mod_multipl', 1)
             dmg_range = (round(max((dmg_range[0] + mat_mod + craft_mod)*cond_mod,1)), round(max((dmg_range[1] + mat_mod + craft_mod)*cond_mod,1)))
 
         av = data.get('av')
         if av:
             mat_mod = material.get('av_mod', 0)
             craft_mod = craftsmanship.get('av_mod', 0)
-            cond_mod = condition.get('mod', 1)
+            cond_mod = condition.get('mod_multipl', 1)
             av += round((max(mat_mod + craft_mod,1))*cond_mod)
 
         qu_slots = data.get('qu_slots')

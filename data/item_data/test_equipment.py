@@ -31,7 +31,7 @@ test_equipment_data = {
         "char": WP_CHAR,
         'type': WP_TYPE,
         'e_to': WP_EQUIP,
-        'dmg_range': (2, 5),
+        'dmg_range': (4, 6),
         'moveset': moveset_sword,
         'rarity': RarityType.COMMON,
         'dlvls': (1,99)
@@ -43,7 +43,7 @@ test_equipment_data = {
         'char': '|',
         'type': WP_TYPE,
         'e_to': WP_EQUIP,
-        'dmg_range': (1,7),
+        'dmg_range': (2,10),
         'two_handed': True,
         'moveset': moveset_spear,
         'rarity': RarityType.COMMON,

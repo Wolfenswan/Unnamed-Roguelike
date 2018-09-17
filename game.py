@@ -38,7 +38,8 @@ class Game:
 
         self.debug = {
             'map' : debug,
-            'invin': debug
+            'invin': debug,
+            'ent_info': debug
         }
 
     @property

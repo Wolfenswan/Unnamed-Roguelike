@@ -106,10 +106,19 @@ def render_description_window(game):
             ent = ents[0]
         x, y = pos_on_screen(ent.x + 2, ent.y - 2, game.player)
 
-        title = ent.name
+        #title = f'{ent.char} {ent.name}'
+        title = f' {ent.name} '
         body = ent.descr
-
         width = min(len(body), cfg.SCREEN_WIDTH//3)
 
-        draw_window(title, body, window_x=x, window_y=y, forced_width=width, show_cancel_option=False)
+        debug_info = []
+        if game.debug['ent_info']:
+            if ent.fighter:
+                debug_info.extend([' ',f'hp:{ent.fighter.hp}/{ent.fighter.max_hp}', f'av:{ent.fighter.defense}', f'dmg:{ent.fighter.base_dmg_range}'])
+            if ent.architecture:
+                ext1 = ent.architecture.on_interaction.__name__ if ent.architecture.on_interaction else None
+                ext2 = ent.architecture.on_collision.__name__ if ent.architecture.on_collision else None
+                debug_info.extend([' ',f'interact:{ext1}', f'collision:{ext2}'])
+
+        draw_window(title, body, window_x=x, window_y=y, forced_width=width, show_cancel_option=False, title_color=ent.color, extend_body=debug_info)
 

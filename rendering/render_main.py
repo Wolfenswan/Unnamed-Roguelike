@@ -68,14 +68,14 @@ def draw_tile(game, con, fov_map, tile_x, tile_y, screen_x, screen_y, debug=Fals
 
     wall = tile.block_sight and not tile.walkable
 
-    fg_color = darken_color_by_fov_distance(game.player, colors.light_fov, tile_x, tile_y, randomness = 0)
-    if debug:
-        fg_color = colors.light_fov
-
     if visible:
         char = chr(178) if wall else '.'
+
+        fg_color = darken_color_by_fov_distance(game.player, colors.light_fov, tile_x, tile_y, randomness=0)
         if tile.gibbed:
             fg_color =  darken_color_by_fov_distance(game.player, colors.corpse, tile_x, tile_y, randomness = 0)
+        if debug:
+            fg_color = colors.light_fov
 
         #tcod.console_put_char(con, screen_x, screen_y, char, tcod.BKGND_NONE)
         tcod.console_put_char_ex(con, screen_x, screen_y, char, fg_color, colors.black)

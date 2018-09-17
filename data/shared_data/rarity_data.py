@@ -43,8 +43,8 @@ rarity_values = {
     Craftsmanship.LEGENDARY: 10,
 
     BodyType.NORMAL: 100,
-    BodyType.SCRAWNY: 60,
-    BodyType.OBESE: 20,
+    BodyType.SCRAWNY: 50,
+    BodyType.OBESE: 30,
     BodyType.TINY: 40,
     BodyType.SMALL: 80,
     BodyType.LARGE: 20,
