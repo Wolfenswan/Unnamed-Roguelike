@@ -1,7 +1,7 @@
 from enum import Enum, auto
 
 from config_files import cfg
-from gameobjects.block_levels import BlockLevel
+from gameobjects.block_level import BlockLevel
 from gui.messages import MessageLog
 
 
@@ -49,9 +49,9 @@ class Game:
         return player
 
     @property
-    def monster_ents(self):
-        monster_ents = [v for v in self.entities if v.ai is not None and v.fighter is not None]
-        return monster_ents
+    def npc_ents(self):
+        npc_ents = [v for v in self.entities if v.ai is not None and v.fighter is not None]
+        return npc_ents
 
     @property
     def item_ents(self):
@@ -97,7 +97,3 @@ class Game:
         entity = next((entity for entity in self.entities if entity.pos == (x, y)
                    and entity.architecture and entity.architecture.on_interaction), None)
         return entity
-
-    def test_walk_blocking_ents(self):
-        for e in self.architecture_ents:
-            print(e, e.blocks)

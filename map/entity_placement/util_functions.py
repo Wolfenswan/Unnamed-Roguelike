@@ -1,7 +1,7 @@
 import logging
 from random import choice
 
-from gameobjects.block_levels import BlockLevel
+from gameobjects.block_level import BlockLevel
 
 
 def create_ent_position(room, data, game, allow_exits=True):

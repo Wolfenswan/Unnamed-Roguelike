@@ -1,7 +1,7 @@
 from components.architecture import Architecture
 from data.shared_data.types_data import Material
 from data.shared_data.types_data import RarityType
-from gameobjects.block_levels import BlockLevel
+from gameobjects.block_level import BlockLevel
 
 arch_doors_data = {
     'door': {

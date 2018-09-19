@@ -10,7 +10,7 @@ from turn_processing.handle_input import handle_keys
 from turn_processing.process_npc_actions import process_npc_actions
 from turn_processing.process_player_actions import process_player_input
 from loader_functions.initialize_game import initialize_game
-from debug import initialize_logging
+from debug.logger import initialize_logging
 from loader_functions.initialize_window import initialize_window
 from rendering.fov_functions import initialize_fov, recompute_fov
 from rendering.render_main import render_all

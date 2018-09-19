@@ -168,4 +168,3 @@ def item_menu(item_ent, game):
     choice = menu_loop(wait_for=wait_for)
 
     return choice
-

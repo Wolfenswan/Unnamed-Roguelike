@@ -3,7 +3,7 @@ from random import randint, choice
 import logging
 
 from config_files import colors
-from gameobjects.block_levels import BlockLevel
+from gameobjects.block_level import BlockLevel
 from gameobjects.entity import Entity
 from gameobjects.util_functions import fighter_entity_at_pos, entity_at_pos
 from gui.messages import Message, MessageType, MessageCategory
@@ -201,7 +201,7 @@ class Fighter:
         results.extend(self.attack_execute(target, damage, attack_string))
 
         for target_pos in extra_targets:
-            if entity_at_pos(game.monster_ents, *target_pos):
+            if entity_at_pos(game.npc_ents, *target_pos):
                 results.extend(self.attack_execute(target, damage//2, 'also hits'))
 
         return results

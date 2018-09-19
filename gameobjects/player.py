@@ -3,7 +3,7 @@ import tcod
 from components.actors.fighter import Fighter
 from components.inventory.inventory import Inventory
 from config_files import cfg
-from gameobjects.block_levels import BlockLevel
+from gameobjects.block_level import BlockLevel
 from gameobjects.entity import Entity
 from rendering.render_order import RenderOrder
 

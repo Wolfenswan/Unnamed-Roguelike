@@ -98,7 +98,7 @@ def draw_window(title, body, options = None, window_x = None, window_y = None, p
 
 def render_description_window(game):
     ent = None
-    ents = entities_at_pos(game.monster_ents + game.architecture_ents, *game.cursor.pos)
+    ents = entities_at_pos(game.npc_ents + game.architecture_ents, *game.cursor.pos)
     if ents:
         if len(ents) > 1:
             ent = entity_at_pos(ents, *game.cursor.pos)

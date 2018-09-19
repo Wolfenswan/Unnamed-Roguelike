@@ -37,7 +37,7 @@ from config_files import colors
 from data.shared_data.types_data import RarityType
 
 spawn_data = {
-    'Roach': {
+    'roach': {
         'name': 'Roach',
         'char': 'r',
         'color': colors.light_amber,
@@ -54,7 +54,7 @@ spawn_data = {
         'rarity': RarityType.COMMON,
         'group_size': (3,7)
     },
-    'Dung_Beetle': {
+    'dung_beetle': {
         'name': 'Dung Beetle',
         'char': 'd',
         'color': colors.beige,

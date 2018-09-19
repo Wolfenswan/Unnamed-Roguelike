@@ -3,7 +3,7 @@ from random import randint
 from config_files import cfg, colors
 from data.data_processing import gen_loadout
 from data.shared_data.types_data import Material, Condition, Craftsmanship
-from debug import debug_timer
+from debug.debug_timer import debug_timer
 from gameobjects.entity import Entity
 from gameobjects.player import Player
 from map.game_map import GameMap

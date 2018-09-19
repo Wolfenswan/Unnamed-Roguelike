@@ -1,9 +1,9 @@
-from debug import debug_timer
+from debug.debug_timer import debug_timer
 from game import GameStates
 
 @debug_timer
 def process_npc_actions(game):
-    move_order = sorted(game.monster_ents, key=lambda i: i.distance_to_ent(game.player))
+    move_order = sorted(game.npc_ents, key=lambda i: i.distance_to_ent(game.player))
     for entity in move_order:
         if entity.ai:
             enemy_turn_results = entity.ai.take_turn(game, game.fov_map)

@@ -89,7 +89,7 @@ def render_enemy_panel(game, con, panel_x, panel_y, width, height):
     setup_console(con, caption='Enemies', borders=True, bordercolor=color)
     
     # check for monsters in FOV
-    spotted = [ent for ent in game.monster_ents if ent.is_visible(game.fov_map) and ent.fighter.hp > 0]
+    spotted = [ent for ent in game.npc_ents if ent.is_visible(game.fov_map) and ent.fighter.hp > 0]
     #spotted = [ent for ent in game.entities if ent.ai and ent.fighter.hp > 0 and ent.is_visible(game.fov_map)]
 
     if len(spotted):

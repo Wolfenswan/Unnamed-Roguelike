@@ -9,7 +9,7 @@ from components.inventory.paperdoll import Paperdoll
 from data.shared_data.types_data import BodyType
 from data.string_data.bodytype_strings import bodytype_name_data
 from data.string_data.material_strings import material_name_data
-from debug import debug_timer
+from debug.debug_timer import debug_timer
 from gameobjects.util_functions import blocking_entity_at_pos, entity_at_pos
 from rendering.render_order import RenderOrder
 

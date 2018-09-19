@@ -6,7 +6,7 @@ from random import randint, choice
 from data.data_processing import gen_npc_from_dict, pick_from_data_dict_by_rarity
 from config_files import cfg
 from data.actor_data.spawn_data import spawn_data
-from gameobjects.block_levels import BlockLevel
+from gameobjects.block_level import BlockLevel
 from map.entity_placement.util_functions import create_ent_position
 
 
@@ -28,7 +28,7 @@ def place_monsters(game):
 
     logging.debug(f'Max allowed: {max_monsters} for {len(rooms)} rooms)')
 
-    while len(game.monster_ents) < max_monsters and len(rooms) > 1:
+    while len(game.npc_ents) < max_monsters and len(rooms) > 1:
         # monsters are created in all rooms but the first (where the player spawns)
         room = choice(rooms[1:])
         rooms.remove(room)
@@ -40,7 +40,7 @@ def place_monsters(game):
         if num_of_monsters > 0:
             # place up to as many monsters as the settings allow
             m = 0
-            while m <= num_of_monsters and len(game.monster_ents) < max_monsters:
+            while m <= num_of_monsters and len(game.npc_ents) < max_monsters:
                 logging.debug('Creating monster #{0} of #{1} total.'.format(m + 1, num_of_monsters))
 
                 key= pick_from_data_dict_by_rarity(possible_spawns, dlvl)
@@ -55,9 +55,9 @@ def place_monsters(game):
                         logging.debug(
                             f'... but new monster would bring room total to {m+1} thus exceed room maximum({num_of_monsters})')
                         m += 1
-                    elif  len(game.monster_ents) + 1 > max_monsters:
+                    elif  len(game.npc_ents) + 1 > max_monsters:
                         logging.debug(
-                            f'... but new monster would bring overall total to {len(game.monster_ents)+1} thus exceed total maximum: ({max_monsters})')
+                            f'... but new monster would bring overall total to {len(game.npc_ents)+1} thus exceed total maximum: ({max_monsters})')
                         break
                     else:
                         m += 1
@@ -69,4 +69,4 @@ def place_monsters(game):
                             logging.debug(f'... and created {ent} at {pos} in {room}, #{m} out of {num_of_monsters}')
 
 
-    logging.debug(f'Placed {len(game.monster_ents)} (maximum: {max_monsters}) monsters with {len(rooms)} rooms untouched.')
+    logging.debug(f'Placed {len(game.npc_ents)} (maximum: {max_monsters}) monsters with {len(rooms)} rooms untouched.')

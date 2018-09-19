@@ -1,4 +1,4 @@
-from gameobjects.block_levels import BlockLevel
+from gameobjects.block_level import BlockLevel
 
 
 def entities_at_pos(entities, x, y):
