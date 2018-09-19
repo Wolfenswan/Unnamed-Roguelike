@@ -1,8 +1,8 @@
 import tcod
 
+from debug import debug_timer
 from game import GameStates
 from gui.messages import Message
-
 
 def process_turn_results(player_turn_results, game, fov_map):
     player = game.player

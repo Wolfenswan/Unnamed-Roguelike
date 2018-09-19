@@ -190,7 +190,7 @@ class Fighter:
             attack_string = move_results.get('string', 'attacks')
             extra_targets = move_results.get('extra_targets', [])
 
-        attack_power = choice(self.base_dmg_range) * mod
+        attack_power = round(choice(self.base_dmg_range) * mod)
         damage = round(attack_power - (target.fighter.defense - ignore_armor))
         logging.debug(f'{self.owner.name.title()} attacks {target.name.title()} with {attack_power} power against {target.fighter.defense} defense for {damage} damage.')
 

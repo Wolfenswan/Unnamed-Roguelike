@@ -15,7 +15,7 @@ from data.actor_data.skills_data import skills_data
 from data.actor_data.spawn_data import spawn_data
 from data.architecture_data.arch_static import arch_static_data
 from data.architecture_data.arch_containers import arch_containers_data
-from data.descr_data.craft_descr import craft_descr_data
+from data.string_data.craft_descr import craft_descr_data
 from data.shared_data.bodytype_data import bodytype_data
 from data.shared_data.quality_data import qual_cond_data, qual_craft_data
 from data.shared_data.types_data import GenericType, Condition, RarityType, BodyType
@@ -23,7 +23,7 @@ from data.shared_data.material_data import item_material_data
 from data.item_data.test_equipment import test_equipment_data
 from data.item_data.use_potions import use_potions_data
 from data.item_data.use_scrolls import use_scrolls_data
-from data.descr_data.cond_descr import cond_descr_data
+from data.string_data.cond_descr import cond_descr_data
 from data.shared_data.rarity_data import rarity_values
 from gameobjects.entity import Entity
 from gameobjects.npc import NPC
@@ -102,12 +102,13 @@ def pick_from_data_dict_by_rarity(dict, dlvl=0):
 # Data retrieving functions #
 def get_generic_data(data, material=None, condition=None, craftsmanship=None, bodytype=None, randomize_color = False):
     """
-    Retrieves basic attributes from the data dictionary and if necessary modifies them as to material, condition and
+    Retrieves basic attributes from the data dictionary and if necessary modifies them as per material, condition and
     craftsmanship values.
     """
     char = data['char']
     color = data.get('color', colors.white)
     name = data['name'].title()
+    short_name = name
     descr = data.get('descr', 'No description')
     type = data.get('type', GenericType.DEFAULT)
 
@@ -168,7 +169,7 @@ def get_generic_data(data, material=None, condition=None, craftsmanship=None, bo
             elif bodytype['type'] == BodyType.GARGANTUAN:
                 color = randomize_rgb_color(color, factor_range=(0.6, 0.6), darken=False)
 
-    return (char, color, name, descr, type)
+    return (char, color, name, short_name, descr, type)
 
 
 def get_material_data(data, forced=False):

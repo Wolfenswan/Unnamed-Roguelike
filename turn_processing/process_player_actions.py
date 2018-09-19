@@ -5,11 +5,11 @@ from components.architecture import Architecture
 from game import GameStates
 from gameobjects.util_functions import entity_at_pos
 from gui.manual import display_manual
-from gui.menus import item_menu,  options_menu, debug_menu, item_list_menu
+from gui.menus import item_menu,  options_menu, item_list_menu
+from debug import debug_menu, debug_timer
 from gui.messages import Message, MessageType, MessageCategory
 from loader_functions.data_loader import save_game
 from rendering.render_windows import render_equipment_window
-
 
 def process_player_input(action, game, fov_map, targeting_item = None):
     player = game.player

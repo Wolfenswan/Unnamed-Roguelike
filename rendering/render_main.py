@@ -81,13 +81,14 @@ def draw_tile(game, con, fov_map, tile_x, tile_y, screen_x, screen_y, debug=Fals
         tcod.console_put_char_ex(con, screen_x, screen_y, char, fg_color, colors.black)
         tile.explored = 50
 
-    elif tile.explored > 0:
+    # Automap is only displayed outside of combat when actively pausing #
+    elif tile.explored > 0: #and not game.player.in_combat(game):
         tile.explored -= randint(0, 1)
         if game.state == GameStates.PLAYER_RESTING:
             if wall:
-                tcod.console_put_char_ex(con, screen_x, screen_y, chr(178), colors.dark_wall_fg, colors.dark_ground)
+                tcod.console_put_char_ex(con, screen_x, screen_y, chr(178), colors.dark_wall_fg, colors.dark_bg)
             else:
-                tcod.console_put_char_ex(con, screen_x, screen_y, '.', colors.dark_ground_fg, colors.dark_ground)
+                tcod.console_put_char_ex(con, screen_x, screen_y, '.', colors.dark_ground_fg, colors.dark_bg)
 
 
 def draw_entity(game, con, entity, fov_map, debug=False):

@@ -1,8 +1,6 @@
 import tcod
 
 from config_files import cfg
-from game import GameStates
-from gui.messages import Message, MessageCategory, MessageType
 from rendering.util_functions import pos_on_screen
 from rendering.render_windows import draw_window
 
@@ -171,19 +169,3 @@ def item_menu(item_ent, game):
 
     return choice
 
-def debug_menu(game):
-    choice = options_menu('Debug Menu', 'Select Debug Option:',
-                          ['Show full map', 'Invincible Player', 'Entity Debug Information', 'Spawn Monster (Not implemented!)', 'Spawn Item (Not implemented!)'], sort_by=1,
-                          cancel_with_escape=True)
-    if choice == 0:
-        game.debug['map'] = not game.debug['map']
-        Message(f'Map visibility set to {game.debug["map"]}', type=MessageType.GAME,
-                category=MessageCategory.OBSERVATION).add_to_log(game)
-    elif choice == 1:
-        game.debug['invin'] = not game.debug['invin']
-        Message(f'Player Invincibility set to {game.debug["invin"]}', type=MessageType.GAME,
-                category=MessageCategory.OBSERVATION).add_to_log(game)
-    elif choice == 2:
-        game.debug['ent_info'] = not game.debug['ent_info']
-        Message(f'Entity Debug Information set to {game.debug["map"]}', type=MessageType.GAME,
-                category=MessageCategory.OBSERVATION).add_to_log(game)

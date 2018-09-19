@@ -1,6 +1,6 @@
 import textwrap
 
-from data.descr_data.craft_descr import craft_name_data
+from data.string_data.craft_descr import craft_name_data
 from data.shared_data.types_data import Condition, Craftsmanship
 
 

@@ -3,11 +3,17 @@ from data.shared_data.types_data import Material, ItemType, Condition
 
 # Default description strings
 default_descr = {
-    'poor': (),
+    'poor': ('It is in poor condition',
+             'You expect it to break any second.'),
     'normal': ('It is in a fairly ordinary condition.',
+               'It should hold... for a while.'
                 'There is nothing remarkable about its condition.'),
-    'good': (),
-    'legend': ('You are in awe of its more than pristine condition.',)
+    'good': ('It is in a good condition.',
+             'You are suprised at its better than average condition',
+             ),
+    'legend': ('It is in perfect condition',
+               'You are in awe of its more than pristine condition.'
+               )
 }
 
 
@@ -20,17 +26,21 @@ cond_descr_data = {
             ),
             Condition.NORMAL: default_descr['normal'],
             Condition.GOOD: (
-                'The wood seems sturdy and in good condition.',
-                'The wood has been spared by worms and is in nearly mint condition.'
+                'The oak wood seems sturdy and in good condition.',
+                'The oak frame has been spared by worms and is in nearly mint condition.'
             ),
             Condition.LEGENDARY: default_descr['legend']
         },
         Material.IRON: {
             Condition.POOR:(
                 'If you are lucky, all that rust might poison the enemy.',
-                'It is so rusted, you are not sure if using wood would be sturdier.'
+                'It is so rusted, you are not sure if using wood would be sturdier.',
+                'It appears to be more rust than actual metal.'
             ),
-            Condition.NORMAL: default_descr['normal'],
+            Condition.NORMAL: (
+                'There is some rust here and there, but it is in a generally okay condition.',
+                'The metal has some kinks but overall it is in a solid state.'
+            ),
             Condition.GOOD: (
                 'It is well honed and the edges are still sharp.',
                 'You reckon it will fell your foes easily.'

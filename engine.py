@@ -7,9 +7,10 @@ from game import GameStates, Game
 from gui.menus import options_menu
 from loader_functions.data_loader import load_game
 from turn_processing.handle_input import handle_keys
+from turn_processing.process_npc_actions import process_npc_actions
 from turn_processing.process_player_actions import process_player_input
 from loader_functions.initialize_game import initialize_game
-from loader_functions.initialize_logging import initialize_logging
+from debug import initialize_logging
 from loader_functions.initialize_window import initialize_window
 from rendering.fov_functions import initialize_fov, recompute_fov
 from rendering.render_main import render_all
@@ -60,33 +61,7 @@ def game_loop(game):
 
         # Enemies take turns #
         if game.state == GameStates.ENEMY_TURN:
-            move_order = sorted(entities, key=lambda i: i.distance_to_ent(player))
-            for entity in move_order:
-                if entity.ai:
-                    enemy_turn_results = entity.ai.take_turn(game, fov_map)
-
-                    for enemy_turn_result in enemy_turn_results:
-                        message = enemy_turn_result.get('message')
-                        dead_entity = enemy_turn_result.get('dead')
-
-                        if message:
-                            message.add_to_log(game)
-
-                        if dead_entity:
-                            message = dead_entity.fighter.death(game)
-                            if dead_entity.is_player:
-                                game.state = GameStates.PLAYER_DEAD
-
-                            message.add_to_log(game)
-
-                            if game.state == GameStates.PLAYER_DEAD:
-                                break
-
-                    if game.state == GameStates.PLAYER_DEAD:
-                        break
-            else:
-                game.state = GameStates.PLAYERS_TURN
-
+            process_npc_actions(game)
             game.turn += 1
 
         # Prepare for next turn #

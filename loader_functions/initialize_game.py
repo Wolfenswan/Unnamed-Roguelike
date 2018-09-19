@@ -3,6 +3,7 @@ from random import randint
 from config_files import cfg, colors
 from data.data_processing import gen_loadout
 from data.shared_data.types_data import Material, Condition, Craftsmanship
+from debug import debug_timer
 from gameobjects.entity import Entity
 from gameobjects.player import Player
 from map.game_map import GameMap
@@ -12,7 +13,7 @@ from map.entity_placement.place_containers import place_containers
 from map.entity_placement.place_items import place_items
 from rendering.render_order import RenderOrder
 
-
+@debug_timer
 def initialize_game(game):
 
     # Setup the Player character #
@@ -50,7 +51,7 @@ def initialize_game(game):
     place_staticobjects(game)
     place_containers(game)
     place_doors(game)
-    # place_items(game)
+    place_items(game)
     place_monsters(game)
 
     player.x, player.y = game.map.rooms[0].center
