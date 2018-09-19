@@ -6,6 +6,10 @@ import tcod
 from components.actionplan import Actionplan
 from components.inventory.inventory import Inventory
 from components.inventory.paperdoll import Paperdoll
+from data.shared_data.types_data import BodyType
+from data.string_data.bodytype_strings import bodytype_name_data
+from data.string_data.material_strings import material_name_data
+from debug import debug_timer
 from gameobjects.util_functions import blocking_entity_at_pos, entity_at_pos
 from rendering.render_order import RenderOrder
 
@@ -31,7 +35,7 @@ class Entity:
         self.color = color
         self.color_bg = None
         self.name = name
-        self.__descr = descr
+        self.descr = descr
         self.type = type
         self.material = material
         self.bodytype = bodytype
@@ -63,10 +67,10 @@ class Entity:
     def full_name(self):
         full_name = self.name
         if self.material:
-            full_name = f'{self.material["name"]} {self.name}'
+            full_name = f'{material_name_data[self.material]} {self.name}'
 
-        if self.bodytype:
-            full_name = f'{self.bodytype["type"].name} {self.name}'
+        if self.bodytype and self.bodytype != BodyType.NORMAL:
+            full_name = f'{bodytype_name_data[self.bodytype]} {self.name}'
 
         if self.item:
             if self.item.prefix:
@@ -78,15 +82,12 @@ class Entity:
             if self.inventory.is_empty:
                 full_name += ' (empty)'
 
+        if self.fighter and self.fighter.hp <= 0:
+            full_name += ' remains'
+
         # TODO doors (open & unlocked)
 
         return full_name.title()
-
-    @property
-    def descr(self):
-        descr = self.__descr
-
-        return descr
 
     def move(self, dx, dy):
         # Move the entity by a given amount

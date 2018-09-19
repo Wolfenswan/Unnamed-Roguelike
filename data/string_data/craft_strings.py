@@ -16,6 +16,7 @@ craft_name_data = {
     Craftsmanship.LEGENDARY: 'bespoke'
 }
 
+
 craft_descr_data = {
     Material.OAK: {
         Craftsmanship.POOR: default_descr['poor'],

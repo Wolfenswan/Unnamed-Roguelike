@@ -1,6 +1,7 @@
 from components.architecture import Architecture
 from data.shared_data.types_data import ItemType, ContainerType, Material
 from data.shared_data.types_data import RarityType
+from gameobjects.block_levels import BlockLevel
 
 arch_containers_data = {
     'barrel': {
@@ -11,7 +12,7 @@ arch_containers_data = {
         'rarity': RarityType.COMMON,
         'dlvls': (1, 99),
         "char": 'o',
-        "blocks": {'walk':True, 'floor':True},
+        "blocks": {BlockLevel.WALK:True, BlockLevel.FLOOR:True},
         'container_room': (0,4),
         'contents_rarity': (RarityType.COMMON,),
         'contents_type': (ItemType.USEABLE, ItemType.MISC),
@@ -26,7 +27,7 @@ arch_containers_data = {
         'rarity': RarityType.UNCOMMON,
         'dlvls': (1, 99),
         "char": '+',
-        "blocks": {'floor':True},
+        "blocks": {BlockLevel.FLOOR:True},
         'container_room': (3, 8),
         'contents_rarity': (RarityType.COMMON, RarityType.UNCOMMON, RarityType.RARE),
         'contents_type': (ItemType.USEABLE, ItemType.WEAPON, ItemType.SHIELD, ItemType.MISC, ItemType.BELT),
@@ -42,7 +43,7 @@ arch_containers_data = {
         'rarity_mod': +5,
         'dlvls': (1, 99),
         "char": '+',
-        "blocks": {'floor':True, 'walk':True},
+        "blocks": {BlockLevel.FLOOR:True, BlockLevel.WALK:True},
         'container_room': (1, 4),
         'contents_rarity': (RarityType.COMMON, RarityType.UNCOMMON),
         'contents_type': (ItemType.WEAPON, ItemType.SHIELD),

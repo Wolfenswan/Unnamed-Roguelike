@@ -25,12 +25,12 @@ class Item:
     @property
     def prefix(self):
         if self.craftsmanship:
-            return craft_name_data.get(self.craftsmanship['type'])
+            return craft_name_data.get(self.craftsmanship)
 
     @property
     def suffix(self):
         if self.condition and self.identified:
-            return cond_name_data.get(self.condition['type'])
+            return cond_name_data.get(self.condition)
 
     def attr_list(self, max_width=100):
         """

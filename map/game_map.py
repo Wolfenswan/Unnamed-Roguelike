@@ -2,6 +2,7 @@ import logging
 from cmath import sqrt
 from random import choice
 
+from gameobjects.block_levels import BlockLevel
 from gameobjects.util_functions import blocking_entity_at_pos
 from map.map_algo import Tunneling, DrunkWalk
 from map.tile import Tile
@@ -75,7 +76,7 @@ class GameMap:
 
         return False
 
-    def is_blocked(self, x, y, blocking_ents, filter = ('walks',)):
+    def is_blocked(self, x, y, blocking_ents, filter = (BlockLevel.WALK,)):
         """
         Returns True if position is either a wall or occupied by a blocking object.
         Filter corresponds to values in the Entity blocks attribute (dictionary)
@@ -87,8 +88,8 @@ class GameMap:
             return True
 
         for value in filter:
-            if any(ent.pos == (x, y) and ent.blocks.get(value, False) for ent in blocking_ents):
-                return True
+            if any((ent.pos == (x, y) and ent.blocks.get(value, False)) for ent in blocking_ents):
+              return True
 
         return False
 

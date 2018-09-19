@@ -1,6 +1,7 @@
 from enum import Enum, auto
 
 from config_files import cfg
+from gameobjects.block_levels import BlockLevel
 from gui.messages import MessageLog
 
 
@@ -74,22 +75,22 @@ class Game:
 
     @property
     def blocking_ents(self):
-        blocking_ents = [v for v in self.entities if v.blocks.get('walk', False) or v.blocks.get('floor', False)]
+        blocking_ents = [v for v in self.entities if v.blocks.get(BlockLevel.WALK, False) or v.blocks.get(BlockLevel.FLOOR, False)]
         return blocking_ents
 
     @property
     def walk_blocking_ents(self):
-        blocking_ents = [v for v in self.entities if v.blocks.get('walk', False)]
+        blocking_ents = [v for v in self.entities if v.blocks.get(BlockLevel.WALK, False)]
         return blocking_ents
 
     @property
     def sight_blocking_ents(self):
-        blocking_ents = [v for v in self.entities if v.blocks.get('sight', False)]
+        blocking_ents = [v for v in self.entities if v.blocks.get(BlockLevel.SIGHT, False)]
         return blocking_ents
 
     @property
     def floor_blocking_ents(self):
-        blocking_ents = [v for v in self.entities if v.blocks.get('floor', False)]
+        blocking_ents = [v for v in self.entities if v.blocks.get(BlockLevel.FLOOR, False)]
         return blocking_ents
 
     def interactable_entity_at_pos(self, x, y):

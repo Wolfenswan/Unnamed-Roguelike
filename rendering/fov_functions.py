@@ -2,6 +2,7 @@ import random
 
 import tcod
 import config_files.cfg as cfg
+from gameobjects.block_levels import BlockLevel
 from gameobjects.util_functions import entity_at_pos
 
 
@@ -15,8 +16,8 @@ def initialize_fov(game):
                                        not game_map.tiles[(x,y)].blocked)
             ent = entity_at_pos(game.sight_blocking_ents, x, y)
             if ent:
-                tcod.map_set_properties(fov_map, x, y, not ent.blocks.get('sight', False),
-                                        not ent.blocks.get('walk', False))
+                tcod.map_set_properties(fov_map, x, y, not ent.blocks.get(BlockLevel.SIGHT, False),
+                                        not ent.blocks.get(BlockLevel.WALK, False))
 
     return fov_map
 

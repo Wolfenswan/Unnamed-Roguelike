@@ -16,6 +16,7 @@ default_descr = {
                )
 }
 
+
 cond_name_data = {
     Condition.POOR: '(-)',
     Condition.GOOD: '(+)',

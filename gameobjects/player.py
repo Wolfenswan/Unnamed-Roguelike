@@ -3,6 +3,7 @@ import tcod
 from components.actors.fighter import Fighter
 from components.inventory.inventory import Inventory
 from config_files import cfg
+from gameobjects.block_levels import BlockLevel
 from gameobjects.entity import Entity
 from rendering.render_order import RenderOrder
 
@@ -15,7 +16,7 @@ class Player(Entity):
         fighter_component = Fighter(30, 50, 0, (1,1), cfg.FOV_RADIUS)
         inventory_component = Inventory(26)
 
-        super().__init__(0, 0, '@', tcod.white, name, descr='This is you.', is_player=True, blocks={'walk':True}, render_order=RenderOrder.PLAYER, fighter=fighter_component, inventory=inventory_component)
+        super().__init__(0, 0, '@', tcod.white, name, descr='This is you.', is_player=True, blocks={BlockLevel.WALK:True}, render_order=RenderOrder.PLAYER, fighter=fighter_component, inventory=inventory_component)
 
 
     def enemies_in_distance(self, entities, dist=2):

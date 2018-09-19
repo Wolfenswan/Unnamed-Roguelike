@@ -3,6 +3,7 @@ from random import randint, choice
 import logging
 
 from config_files import colors
+from gameobjects.block_levels import BlockLevel
 from gameobjects.entity import Entity
 from gameobjects.util_functions import fighter_entity_at_pos, entity_at_pos
 from gui.messages import Message, MessageType, MessageCategory
@@ -280,9 +281,9 @@ class Fighter:
             message = Message(f'The {ent.name.title()} is dead!', type=MessageType.GOOD, category=MessageCategory.OBSERVATION)
 
             ent.render_order = RenderOrder.CORPSE
-            ent.blocks['walk'] = False
+            ent.blocks[BlockLevel.WALK] = False
             ent.ai = None
             ent.is_corpse = True
-            ent.name = f'{ent.name.title()} remains'
+            #ent.name = f'{ent.name.title()} remains'
 
         return message

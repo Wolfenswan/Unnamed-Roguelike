@@ -2,6 +2,7 @@ import tcod
 
 from debug import debug_timer
 from game import GameStates
+from gameobjects.block_levels import BlockLevel
 from gui.messages import Message
 
 def process_turn_results(player_turn_results, game, fov_map):
@@ -75,7 +76,7 @@ def process_turn_results(player_turn_results, game, fov_map):
 
         if door_entity:
             # If the player interacted with a door, the fov map is updated)
-            tcod.map_set_properties(fov_map, door_entity.x, door_entity.y, not door_entity.blocks.get('sight', False), not door_entity.blocks.get('walk', False))
+            tcod.map_set_properties(fov_map, door_entity.x, door_entity.y, not door_entity.blocks.get(BlockLevel.SIGHT, False), not door_entity.blocks.get(BlockLevel.WALK, False))
 
         # Enable enemy turn if at least one of the results is valid
         filtered_enemy_turn_conditions = list(filter(lambda x: x is not None, enemy_turn_on))

@@ -4,6 +4,7 @@ from random import choice
 
 import tcod
 
+from gameobjects.block_levels import BlockLevel
 from gameobjects.entity import Entity
 from gameobjects.util_functions import blocking_entity_at_pos
 from gui.messages import Message, MessageType, MessageCategory
@@ -17,19 +18,20 @@ class NPC(Entity):
     """ Class for the all active non-player objects """
 
     def __init__(self, x, y, char, color, name, descr, type, bodytype=None, barks=None, fighter=None, ai=None, inventory=None, skills=None):
-        super().__init__(x, y, char, color, name, descr, type, blocks={'walk':True}, render_order=RenderOrder.ACTOR, bodytype=bodytype, fighter=fighter, ai=ai, skills=skills, inventory=inventory)
+        super().__init__(x, y, char, color, name, descr, type, blocks={BlockLevel.WALK:True}, render_order=RenderOrder.ACTOR, bodytype=bodytype, fighter=fighter, ai=ai, skills=skills, inventory=inventory)
         self.barks = barks
 
-    def move_towards(self, target_x, target_y, game):
+    def move_towards(self, target, game):
         game_map = game.map
         blocking_ents = game.blocking_ents
 
-        dx = target_x - self.x
-        dy = target_y - self.y
-        distance = math.sqrt(dx ** 2 + dy ** 2)
-        print(distance)
-        dx = int(round(dx / distance))
-        dy = int(round(dy / distance))
+        dx, dy = self.direction_to_ent(target)
+        # dx = target_x - self.x
+        # dy = target_y - self.y
+        #distance = self.distance_to_ent(target)
+        # dx = int(round(dx / distance))
+        # dy = int(round(dy / distance))
+        #print(dx, dy, distance)
 
         if not game_map.is_blocked(self.x + dx, self.y + dy, blocking_ents):
             self.move(dx, dy)
@@ -53,7 +55,7 @@ class NPC(Entity):
         # Check also that the object isn't self or the target (so that the start and the end points are free)
         # The AI class handles the situation if self is next to the target so it will not use this A* function anyway
         for entity in blocking_ents:
-            if entity.blocks.get('walk', False) and entity != self and entity != target:
+            if entity.blocks.get(BlockLevel.WALK, False) and entity != self and entity != target:
                 # Set the tile as a wall so it must be navigated around
                 tcod.map_set_properties(fov, entity.x, entity.y, True, False)
 
@@ -77,7 +79,8 @@ class NPC(Entity):
         else:
             # Keep the old move function as a backup so that if there are no paths (for example another monster blocks a corridor)
             # it will still try to move towards the player (closer to the corridor opening)
-            self.move_towards(target.x, target.y, game)
+            logging.debug(f'{self.name} could not find a* path. falling back to regular movement')
+            self.move_towards(target, game)
 
             # Delete the path to free memory
         tcod.path_delete(my_path)

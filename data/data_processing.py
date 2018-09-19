@@ -117,36 +117,35 @@ def get_generic_data(data, material=None, condition=None, craftsmanship=None, bo
 
     if material:
         color = material['color']  # Update the entity's color
-        #name = f"{material['name']} {name}".title()  # Update the entity's name
 
-    if material and condition:
-        # Append randomized condition description to the main description #
-        if cond_descr_data.get(type):
-            descr_options = cond_descr_data[type][material['type']][condition['type']]
-            if descr_options:
-                cond_descr = choice(descr_options)
-                descr += f' {cond_descr}'
-            else:
-                descr += f" (Description missing for {type}/{material['type']}/{craftsmanship['type']})"
+        if condition:
+            # Append randomized condition description to the main description #
+            if cond_descr_data.get(type):
+                descr_options = cond_descr_data[type][material['type']][condition['type']]
+                if descr_options:
+                    cond_descr = choice(descr_options)
+                    descr += f' {cond_descr}'
+                else:
+                    descr += f" (Description missing for {type}/{material['type']}/{condition['type']})"
 
-        # Tweak the color slightly to indicate quality level #
-        # TODO Tweak as necessary
-        if condition['type'] == Condition.POOR:
-            color = randomize_rgb_color(color, factor_range=(0.2, 0.2), darken=True)
-        elif condition['type'] == Condition.GOOD:
-            color = randomize_rgb_color(color, factor_range=(0.25, 0.25), darken=False)
-        elif condition['type'] == Condition.LEGENDARY:
-            color = randomize_rgb_color(color, factor_range=(0.6, 0.6), darken=False)
+            # Tweak the color slightly to indicate quality level #
+            # TODO Tweak as necessary
+            if condition['type'] == Condition.POOR:
+                color = randomize_rgb_color(color, factor_range=(0.2, 0.2), darken=True)
+            elif condition['type'] == Condition.GOOD:
+                color = randomize_rgb_color(color, factor_range=(0.25, 0.25), darken=False)
+            elif condition['type'] == Condition.LEGENDARY:
+                color = randomize_rgb_color(color, factor_range=(0.6, 0.6), darken=False)
 
-    if material and craftsmanship:
-        # Append randomized condition description to the main description #
-        if craft_descr_data.get(material['type']):
-            descr_options = craft_descr_data[material['type']][craftsmanship['type']]
-            if descr_options:
-                craft_descr = choice(descr_options)
-                descr += f' {craft_descr}'
-            else:
-                descr += f" (Description missing for {material['type']}/{craftsmanship['type']})"
+        if craftsmanship:
+            # Append randomized condition description to the main description #
+            if craft_descr_data.get(material['type']):
+                descr_options = craft_descr_data[material['type']][craftsmanship['type']]
+                if descr_options:
+                    craft_descr = choice(descr_options)
+                    descr += f' {craft_descr}'
+                else:
+                    descr += f" (Description missing for {material['type']}/{craftsmanship['type']})"
 
     if bodytype and bodytype['type'].name != 'NORMAL':
         #name = (f'{bodytype["type"].name} ' + name).title()
@@ -179,7 +178,7 @@ def get_material_data(data, forced=False):
         materials = {k:v for k, v in item_material_data.items() if v['type'] in data.get('materials',{})}
     else:
         materials = {k: v for k, v in item_material_data.items() if v['type'] in forced}
-    material = None
+    material = {}
     if materials:
         key = pick_from_data_dict_by_rarity(materials)
         material = materials[key]
@@ -257,7 +256,7 @@ def gen_npc_from_dict(data, x, y, game):
             skill = Skill(**skills_data[k])
             skills_component[k] = (skill)
 
-    npc = NPC(*arguments, bodytype=bodytype, fighter=fighter_component, ai=ai_component, skills=skills_component, inventory=inventory_component)
+    npc = NPC(*arguments, bodytype=bodytype.get('type'), fighter=fighter_component, ai=ai_component, skills=skills_component, inventory=inventory_component)
 
     if loadouts is not None:
         loadout = pick_from_data_dict_by_rarity(loadouts, game.dlvl)
@@ -269,8 +268,8 @@ def gen_npc_from_dict(data, x, y, game):
 def gen_item_from_data(data, x, y, materials=False, conditions=False, craftsmanships=False):
 
     material = get_material_data(data, forced=materials)
-    condition = get_condition_data(forced=conditions) if material else None
-    craftsmanship = get_craftsmanship_data(forced=craftsmanships) if material else None
+    condition = get_condition_data(forced=conditions) if material else {}
+    craftsmanship = get_craftsmanship_data(forced=craftsmanships) if material else {}
 
     arguments = [x, y, *get_generic_data(data, material=material, condition=condition, craftsmanship=craftsmanship)]
 
@@ -307,10 +306,10 @@ def gen_item_from_data(data, x, y, materials=False, conditions=False, craftsmans
 
         equipment_component = Equipment(equip_to, dmg_range = dmg_range, av = av, qu_slots = qu_slots, l_radius = l_radius, moveset = moveset, two_handed = two_handed)
 
-    item_component = Item(condition=condition, craftsmanship=craftsmanship, useable=useable_component, equipment=equipment_component)
+    item_component = Item(condition=condition.get('type'), craftsmanship=craftsmanship.get('type'), useable=useable_component, equipment=equipment_component)
 
     # create the item using item_class and the arguments tuple
-    i = Entity(*arguments, material=material, render_order=RenderOrder.ITEM, item = item_component)
+    i = Entity(*arguments, material=material.get('type'), render_order=RenderOrder.ITEM, item = item_component)
 
     return i
 
@@ -328,7 +327,7 @@ def gen_architecture(data, x, y):
     architecture_component = Architecture(on_collision = on_collision, on_interaction = on_interaction)
 
     # create the static object using the arguments tuple
-    arch = Entity(*arguments, material=material, blocks=blocks, inventory=inventory_component, architecture=architecture_component, render_order=RenderOrder.BOTTOM)
+    arch = Entity(*arguments, material=material.get('type'), blocks=blocks, inventory=inventory_component, architecture=architecture_component, render_order=RenderOrder.BOTTOM)
 
     return arch
 

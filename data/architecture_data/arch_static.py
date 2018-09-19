@@ -1,5 +1,6 @@
 from config_files import colors
 from data.shared_data.types_data import RarityType
+from gameobjects.block_levels import BlockLevel
 
 arch_static_data = {
     'pillar': {
@@ -8,7 +9,7 @@ arch_static_data = {
         'dlvls': (1, 99),
         "char": chr(20), #tcod.CHAR_PILCROW
         "color": colors.white,
-        "blocks": {'walk':True,'sight':True,'floor':True}
+        "blocks": {BlockLevel.WALK:True,BlockLevel.SIGHT:True,BlockLevel.FLOOR:True}
     },
     'arch': {
         'name': 'Arch',

@@ -1,6 +1,7 @@
 from components.architecture import Architecture
 from data.shared_data.types_data import Material
 from data.shared_data.types_data import RarityType
+from gameobjects.block_levels import BlockLevel
 
 arch_doors_data = {
     'door': {
@@ -8,7 +9,7 @@ arch_doors_data = {
         'materials': (Material.OAK, Material.IRON, Material.STEEL),
         'descr': "A creaky old door.",
         'rarity': RarityType.COMMON,
-        'blocks': {'floor': True, 'walk': False},
+        'blocks': {BlockLevel.FLOOR: True, BlockLevel.WALK: False},
         'dlvls': (1, 99),
         "char": '-',
         'on_collision': Architecture.toggle_door,
