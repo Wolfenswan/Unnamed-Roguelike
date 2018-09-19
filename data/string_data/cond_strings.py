@@ -16,6 +16,12 @@ default_descr = {
                )
 }
 
+cond_name_data = {
+    Condition.POOR: '(-)',
+    Condition.GOOD: '(+)',
+    Condition.LEGENDARY: '(++)'
+}
+
 
 cond_descr_data = {
     ItemType.WEAPON: {

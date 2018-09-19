@@ -20,9 +20,9 @@ class Entity:
     """
     A generic object to represent players, enemies, items, etc.
     """
-    def __init__(self, x, y, char, color, name, short_name=None, descr=None,
-                 type=None, material=None, is_player=False, is_corpse=False,
-                 blocks=None, render_order=RenderOrder.CORPSE,
+    def __init__(self, x, y, char, color, name, descr=None, type=None,
+                 material=None, bodytype=None,
+                 is_player=False, is_corpse=False, blocks=None, render_order=RenderOrder.CORPSE,
                  fighter=None, ai=None, skills=None, item=None, inventory=None, architecture=None):
         self.state = EntityStates.ENTITY_ACTIVE
         self.x = x
@@ -31,10 +31,10 @@ class Entity:
         self.color = color
         self.color_bg = None
         self.name = name
-        self.short_name = short_name
         self.__descr = descr
         self.type = type
         self.material = material
+        self.bodytype = bodytype
         self.is_player = is_player
         self.is_corpse = is_corpse
         self.blocks = blocks
@@ -58,6 +58,29 @@ class Entity:
     @property
     def pos(self):
         return (self.x, self.y)
+
+    @property
+    def full_name(self):
+        full_name = self.name
+        if self.material:
+            full_name = f'{self.material["name"]} {self.name}'
+
+        if self.bodytype:
+            full_name = f'{self.bodytype["type"].name} {self.name}'
+
+        if self.item:
+            if self.item.prefix:
+                full_name = f'{self.item.prefix} {full_name}'
+            if self.item.suffix:
+                full_name += f' {self.item.suffix}'
+
+        if self.architecture and self.inventory.capacity > 0:
+            if self.inventory.is_empty:
+                full_name += ' (empty)'
+
+        # TODO doors (open & unlocked)
+
+        return full_name.title()
 
     @property
     def descr(self):

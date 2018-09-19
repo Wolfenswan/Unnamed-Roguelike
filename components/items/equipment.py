@@ -19,8 +19,8 @@ class Equipment():
         return self.owner.owner.name
 
     @property
-    def short_name(self):
-        return self.owner.owner.short_name
+    def full_name(self):
+        return self.owner.owner.full_name
 
     @property
     def color(self):

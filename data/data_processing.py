@@ -15,7 +15,7 @@ from data.actor_data.skills_data import skills_data
 from data.actor_data.spawn_data import spawn_data
 from data.architecture_data.arch_static import arch_static_data
 from data.architecture_data.arch_containers import arch_containers_data
-from data.string_data.craft_descr import craft_descr_data
+from data.string_data.craft_strings import craft_descr_data
 from data.shared_data.bodytype_data import bodytype_data
 from data.shared_data.quality_data import qual_cond_data, qual_craft_data
 from data.shared_data.types_data import GenericType, Condition, RarityType, BodyType
@@ -23,7 +23,7 @@ from data.shared_data.material_data import item_material_data
 from data.item_data.test_equipment import test_equipment_data
 from data.item_data.use_potions import use_potions_data
 from data.item_data.use_scrolls import use_scrolls_data
-from data.string_data.cond_descr import cond_descr_data
+from data.string_data.cond_strings import cond_descr_data
 from data.shared_data.rarity_data import rarity_values
 from gameobjects.entity import Entity
 from gameobjects.npc import NPC
@@ -108,7 +108,6 @@ def get_generic_data(data, material=None, condition=None, craftsmanship=None, bo
     char = data['char']
     color = data.get('color', colors.white)
     name = data['name'].title()
-    short_name = name
     descr = data.get('descr', 'No description')
     type = data.get('type', GenericType.DEFAULT)
 
@@ -118,9 +117,9 @@ def get_generic_data(data, material=None, condition=None, craftsmanship=None, bo
 
     if material:
         color = material['color']  # Update the entity's color
-        name = f"{material['name']} {name}".title()  # Update the entity's name
+        #name = f"{material['name']} {name}".title()  # Update the entity's name
 
-    if condition:
+    if material and condition:
         # Append randomized condition description to the main description #
         if cond_descr_data.get(type):
             descr_options = cond_descr_data[type][material['type']][condition['type']]
@@ -139,7 +138,7 @@ def get_generic_data(data, material=None, condition=None, craftsmanship=None, bo
         elif condition['type'] == Condition.LEGENDARY:
             color = randomize_rgb_color(color, factor_range=(0.6, 0.6), darken=False)
 
-    if craftsmanship:
+    if material and craftsmanship:
         # Append randomized condition description to the main description #
         if craft_descr_data.get(material['type']):
             descr_options = craft_descr_data[material['type']][craftsmanship['type']]
@@ -149,27 +148,26 @@ def get_generic_data(data, material=None, condition=None, craftsmanship=None, bo
             else:
                 descr += f" (Description missing for {material['type']}/{craftsmanship['type']})"
 
-    if bodytype:
-        if bodytype['type'].name != 'NORMAL':
-            name = (f'{bodytype["type"].name} ' + name).title()
-            # TODO extra description
+    if bodytype and bodytype['type'].name != 'NORMAL':
+        #name = (f'{bodytype["type"].name} ' + name).title()
+        # TODO extra description
 
-            # Tweak the color slightly to indicate enemy type #
-            # TODO Tweak as necessary
-            # if bodytype['type'] == BodyType.SCRAWNY:
-            #     color = randomize_rgb_color(color, factor_range=(0.2, 0.2), darken=True)
-            # elif bodytype['type'] == BodyType.OBESE:
-            #     color = randomize_rgb_color(color, factor_range=(0.2, 0.2), darken=True)
-            # elif bodytype['type'] == BodyType.TINY:
-            #     color = randomize_rgb_color(color, factor_range=(0.3, 0.3), darken=True)
-            # elif bodytype['type'] == BodyType.SMALL:
-            #     color = randomize_rgb_color(color, factor_range=(0.2, 0.2), darken=True)
-            if bodytype['type'] == BodyType.LARGE:
-                color = randomize_rgb_color(color, factor_range=(0.2, 0.2), darken=False)
-            elif bodytype['type'] == BodyType.GARGANTUAN:
-                color = randomize_rgb_color(color, factor_range=(0.6, 0.6), darken=False)
+        # Tweak the color slightly to indicate enemy type #
+        # TODO Tweak as necessary
+        # if bodytype['type'] == BodyType.SCRAWNY:
+        #     color = randomize_rgb_color(color, factor_range=(0.2, 0.2), darken=True)
+        # elif bodytype['type'] == BodyType.OBESE:
+        #     color = randomize_rgb_color(color, factor_range=(0.2, 0.2), darken=True)
+        # elif bodytype['type'] == BodyType.TINY:
+        #     color = randomize_rgb_color(color, factor_range=(0.3, 0.3), darken=True)
+        # elif bodytype['type'] == BodyType.SMALL:
+        #     color = randomize_rgb_color(color, factor_range=(0.2, 0.2), darken=True)
+        if bodytype['type'] == BodyType.LARGE:
+            color = randomize_rgb_color(color, factor_range=(0.2, 0.2), darken=False)
+        elif bodytype['type'] == BodyType.GARGANTUAN:
+            color = randomize_rgb_color(color, factor_range=(0.6, 0.6), darken=False)
 
-    return (char, color, name, short_name, descr, type)
+    return (char, color, name, descr, type)
 
 
 def get_material_data(data, forced=False):
@@ -181,36 +179,32 @@ def get_material_data(data, forced=False):
         materials = {k:v for k, v in item_material_data.items() if v['type'] in data.get('materials',{})}
     else:
         materials = {k: v for k, v in item_material_data.items() if v['type'] in forced}
-    material = {}
+    material = None
     if materials:
         key = pick_from_data_dict_by_rarity(materials)
         material = materials[key]
     return material
 
 
-def get_condition_data(material, forced=False):
+def get_condition_data(forced=False):
     """
     Retrieves condition data as defined in the qual_cond_data dict.
     Forced can be set to a Condition Enum member to return the respective material.
     """
-    condition = {}
-    if material:
-        dict = qual_cond_data if not forced else {k: v for k, v in qual_cond_data.items() if v['type'] in forced}
-        key = pick_from_data_dict_by_rarity(dict)
-        condition = qual_cond_data[key]
+    dict = qual_cond_data if not forced else {k: v for k, v in qual_cond_data.items() if v['type'] in forced}
+    key = pick_from_data_dict_by_rarity(dict)
+    condition = qual_cond_data[key]
     return condition
 
 
-def get_craftsmanship_data(material, forced=False):
+def get_craftsmanship_data(forced=False):
     """
     Retrieves craftsmanship data as defined in the qual_craft_data dict.
     Forced can be set to a Craftsmanship Enum member to return the respective material.
     """
-    craftsmanship = {}
-    if material:
-        dict = qual_craft_data if not forced else {k: v for k, v in qual_craft_data.items() if v['type'] in forced}
-        key = pick_from_data_dict_by_rarity(dict)
-        craftsmanship = qual_craft_data[key]
+    dict = qual_craft_data if not forced else {k: v for k, v in qual_craft_data.items() if v['type'] in forced}
+    key = pick_from_data_dict_by_rarity(dict)
+    craftsmanship = qual_craft_data[key]
     return craftsmanship
 
 
@@ -263,7 +257,7 @@ def gen_npc_from_dict(data, x, y, game):
             skill = Skill(**skills_data[k])
             skills_component[k] = (skill)
 
-    npc = NPC(*arguments, fighter=fighter_component, ai=ai_component, skills=skills_component, inventory=inventory_component)
+    npc = NPC(*arguments, bodytype=bodytype, fighter=fighter_component, ai=ai_component, skills=skills_component, inventory=inventory_component)
 
     if loadouts is not None:
         loadout = pick_from_data_dict_by_rarity(loadouts, game.dlvl)
@@ -275,10 +269,8 @@ def gen_npc_from_dict(data, x, y, game):
 def gen_item_from_data(data, x, y, materials=False, conditions=False, craftsmanships=False):
 
     material = get_material_data(data, forced=materials)
-
-    condition = get_condition_data(material, forced=conditions)
-
-    craftsmanship = get_craftsmanship_data(material, forced=craftsmanships)
+    condition = get_condition_data(forced=conditions) if material else None
+    craftsmanship = get_craftsmanship_data(forced=craftsmanships) if material else None
 
     arguments = [x, y, *get_generic_data(data, material=material, condition=condition, craftsmanship=craftsmanship)]
 
@@ -315,10 +307,10 @@ def gen_item_from_data(data, x, y, materials=False, conditions=False, craftsmans
 
         equipment_component = Equipment(equip_to, dmg_range = dmg_range, av = av, qu_slots = qu_slots, l_radius = l_radius, moveset = moveset, two_handed = two_handed)
 
-    item_component = Item(condition=condition.get('type'), craftsmanship=craftsmanship.get('type'), useable=useable_component, equipment=equipment_component)
+    item_component = Item(condition=condition, craftsmanship=craftsmanship, useable=useable_component, equipment=equipment_component)
 
     # create the item using item_class and the arguments tuple
-    i = Entity(*arguments, material=material.get('type'), render_order=RenderOrder.ITEM, item = item_component)
+    i = Entity(*arguments, material=material, render_order=RenderOrder.ITEM, item = item_component)
 
     return i
 
@@ -336,7 +328,7 @@ def gen_architecture(data, x, y):
     architecture_component = Architecture(on_collision = on_collision, on_interaction = on_interaction)
 
     # create the static object using the arguments tuple
-    arch = Entity(*arguments, material=material.get('type'), blocks=blocks, inventory=inventory_component, architecture=architecture_component, render_order=RenderOrder.BOTTOM)
+    arch = Entity(*arguments, material=material, blocks=blocks, inventory=inventory_component, architecture=architecture_component, render_order=RenderOrder.BOTTOM)
 
     return arch
 

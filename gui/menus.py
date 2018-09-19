@@ -69,7 +69,7 @@ def item_list_menu(entity, item_list, title='Inventory', body='Press the key nex
 
     x, y = pos_on_screen(entity.x + 2, entity.y - 2, entity)
 
-    options = [item.name for item in item_list]
+    options = [item.full_name for item in item_list]
     if colorize_options:
         options_colors = [item.color for item in item_list]
     else:
@@ -135,7 +135,7 @@ def item_menu(item_ent, game):
     player = game.player
     x, y = pos_on_screen(player.x + 2, player.y - 2, game.player)
 
-    title = item_ent.name
+    title = item_ent.full_name
     body = item_ent.descr
 
     options = []

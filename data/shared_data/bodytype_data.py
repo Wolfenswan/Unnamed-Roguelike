@@ -13,33 +13,33 @@ bodytype_data = {
     'normal': {
         'type': BodyType.NORMAL
     },
-    'scrawny': {
+    'weak_1': {
         'type': BodyType.SCRAWNY,
         'dmg_mod_multipl': 0.6,
         'av_mod_multipl': 0.8
     },
-    'obese': {
-        'type': BodyType.OBESE,
-        'hp_mod_multipl': 1.5
-    },
-    'tiny': {
+    'weak_2': {
         'type': BodyType.TINY,
         'hp_mod_multipl': 0.5,
         'dmg_mod_multipl': 0.5
     },
-    'small': {
+    'weak_3': {
         'type': BodyType.SMALL,
         'hp_mod_multipl': 0.9,
         'dmg_mod_multipl': 0.9
     },
-    'large': {
+    'strong_1': {
         'type': BodyType.LARGE,
         'hp_mod_multipl': 1.2,
         'dmg_mod_multipl': 1.2
     },
-    'gargantuan': {
+    'strong_2': {
+        'type': BodyType.OBESE,
+        'hp_mod_multipl': 1.5
+    },
+    'super_1': {
         'type': BodyType.GARGANTUAN,
         'dmg_mod_multipl': 2,
         'hp_mod_multipl': 2.5
-    },
+    }
 }

@@ -62,9 +62,6 @@ class Architecture:
                 else:
                     results.append({'message':Message(f'Your inventory is full.', category=MessageCategory.OBSERVATION)})
 
-        if container_ent.inventory.is_empty and container_ent.name[-7:] != '(empty)':
-            container_ent.name += ' (empty)'
-
         return results
 
     @staticmethod

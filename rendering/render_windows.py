@@ -107,7 +107,7 @@ def render_description_window(game):
         x, y = pos_on_screen(ent.x + 2, ent.y - 2, game.player)
 
         #title = f'{ent.char} {ent.name}'
-        title = f' {ent.name} '
+        title = f' {ent.full_name} '
         body = ent.descr
         width = min(len(body), cfg.SCREEN_WIDTH//3)
 

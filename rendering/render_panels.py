@@ -38,7 +38,7 @@ def render_player_panel(game, con, panel_x, panel_y, width, height):
     # Weapon #
     if player.fighter.weapon and player.fighter.weapon.moveset:
         tcod.console_set_color_control(tcod.COLCTRL_1, game.player.fighter.weapon.color, tcod.black)
-        tcod.console_print(con, 1, 4, f'- %c{game.player.fighter.weapon.short_name}%c -' % (tcod.COLCTRL_1, tcod.COLCTRL_STOP))
+        tcod.console_print(con, 1, 4, f'- %c{game.player.fighter.weapon.name}%c -' % (tcod.COLCTRL_1, tcod.COLCTRL_STOP))
         tcod.console_print(con, 2, 5,
                            f'Attack: {game.player.fighter.weapon.moveset.current_move}/{game.player.fighter.weapon.moveset.moves}')
         tcod.console_print(con, 2, 6, f'Damage: {game.player.fighter.modded_dmg_range[0]}-{game.player.fighter.modded_dmg_range[1]}')
@@ -75,7 +75,7 @@ def render_object_panel(game, con, panel_x, panel_y, width, height):
             # Some symbols don't print properly with console_print, that's why it's split into put_char_ex and print
             symbol = '*' if (ent.x, ent.y) == (game.player.x, game.player.y) else f'{ent.char}'
             tcod.console_put_char_ex(con, 1, y, symbol, ent.color, tcod.black)
-            wrapped_name = textwrap.wrap(f'{ent.name}', width - 3)
+            wrapped_name = textwrap.wrap(f'{ent.full_name}', width - 3)
 
             for i, line in enumerate(wrapped_name):
                 tcod.console_print(con, 3+i, y, f'%c{line}%c' % (tcod.COLCTRL_1, tcod.COLCTRL_STOP))
@@ -108,7 +108,7 @@ def render_enemy_panel(game, con, panel_x, panel_y, width, height):
             tcod.console_set_color_control(tcod.COLCTRL_1, ent.color, tcod.black)
             tcod.console_set_color_control(tcod.COLCTRL_2, ent.fighter.hp_color, tcod.black) # TODO make dynamic
             tcod.console_put_char_ex(con, 1, y, ent.char, ent.color, tcod.black)
-            tcod.console_print(con, 3, y, f'%c{ent.name}%c' % (tcod.COLCTRL_1, tcod.COLCTRL_STOP))
+            tcod.console_print(con, 3, y, f'%c{ent.full_name}%c' % (tcod.COLCTRL_1, tcod.COLCTRL_STOP))
             y += 1
             tcod.console_put_char_ex(con, 3, y, chr(192), tcod.gray, tcod.black)
             tcod.console_print(con, 4, y, f'%c{ent.fighter.hp_string.title()}%c' % (tcod.COLCTRL_2, tcod.COLCTRL_STOP))

@@ -1,6 +1,7 @@
 import textwrap
 
-from data.string_data.craft_descr import craft_name_data
+from data.string_data.cond_strings import cond_name_data
+from data.string_data.craft_strings import craft_name_data
 from data.shared_data.types_data import Condition, Craftsmanship
 
 
@@ -19,22 +20,17 @@ class Item:
             equipment.owner = self
 
     def identify(self):
-        new_name = self.owner.name
-        condition = self.condition
-        craftsmanship = self.craftsmanship
-
-        if condition == Condition.POOR:
-            new_name += ' (-)'
-        elif condition == Condition.GOOD:
-            new_name += ' (+)'
-        elif condition == Condition.LEGENDARY:
-            new_name += ' (++)'
-
-        if craftsmanship != Craftsmanship.NORMAL and craftsmanship is not None:
-            new_name = f'{craft_name_data[craftsmanship]} {new_name}'
-
-        self.owner.name = new_name.title()
         self.identified = True
+
+    @property
+    def prefix(self):
+        if self.craftsmanship:
+            return craft_name_data.get(self.craftsmanship['type'])
+
+    @property
+    def suffix(self):
+        if self.condition and self.identified:
+            return cond_name_data.get(self.condition['type'])
 
     def attr_list(self, max_width=100):
         """
