@@ -45,26 +45,30 @@ class Fighter:
     @property
     def hp_string(self):
         percentage = (self.__hp / self.max_hp * 100)
-        if 86.0 <= percentage <= 100.0:
+        if 86.0 <= percentage:
             return 'healthy'
-        elif 71.0 <= percentage <= 85.0:
+        elif 71.0 <= percentage:
             return 'scratched'
-        elif 25.0 <= percentage <= 70.0:
+        elif 15.0 <= percentage:
             return 'wounded'
-        else:
+        elif 1.0 <= percentage:
             return 'near dead'
+        else:
+            return 'dead'
 
     @property
     def hp_color(self):
         percentage = (self.__hp / self.max_hp * 100)
-        if 86.0 <= percentage <= 100.0:
+        if 86.0 <= percentage:
             return colors.dark_green
-        elif 71.0 <= percentage <= 85.0:
-            return colors.light_green
-        elif 25.0 <= percentage <= 70.0:
-            return colors.light_red
-        else:
+        elif 71.0 <= percentage:
+            return colors.darkest_green
+        elif 15.0 <= percentage:
             return colors.dark_red
+        elif 1.0 <= percentage:
+            return colors.darker_red
+        else:
+            return colors.darkest_red
 
     @hp.setter
     def hp(self, value):
@@ -81,11 +85,32 @@ class Fighter:
 
     @property
     def stamina_string(self):
-        pass
+        percentage = (self.__stamina / self.max_stamina * 100)
+        if 90.0 <= percentage:
+            return 'fit'
+        elif 60.0 <= percentage:
+            return 'active'
+        elif 40.0 <= percentage:
+            return 'strained'
+        elif 20.0 <= percentage:
+            return 'spent'
+        else:
+            return 'exhausted'
 
     @property
     def stamina_color(self):
-        pass
+        # TODO Use RGB Color multiplication
+        percentage = (self.__stamina / self.max_stamina * 100)
+        if 90.0 <= percentage:
+            return colors.light_blue
+        elif 60.0 <= percentage:
+            return  colors.blue
+        elif 40.0 <= percentage:
+            return  colors.dark_blue
+        elif 20.0 <= percentage:
+            return  colors.darker_blue
+        else:
+            return  colors.darkest_blue
 
     @stamina.setter
     def stamina(self, value):
@@ -211,7 +236,7 @@ class Fighter:
                 elif target.is_player:
                     target_string = 'you'
                 else:
-                    target_string = target.name.title()
+                    target_string = f'the {target.name.title()}'
 
                 atk_dmg_string = self.atk_dmg_string(damage, target.fighter.max_hp)
                 results.append({'message': Message(
@@ -221,7 +246,7 @@ class Fighter:
             target.fighter.stamina -= 2 # TODO placeholder until balancing (scale stamina drain with armor encumberance)
             msg_type = MessageType.COMBAT_BAD if not target.is_player else MessageType.COMBAT_GOOD
             results.append(
-                {'message': Message(f'{self.owner.name.title()} {attack_string} {target.name} but does no damage.', category=MessageCategory.COMBAT, type=msg_type)})
+                {'message': Message(f'{self.owner.name.title()} {attack_string} the {target.name} but does no damage.', category=MessageCategory.COMBAT, type=msg_type)})
 
         return results
 
