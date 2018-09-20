@@ -3,6 +3,7 @@ from random import randint, choice
 import logging
 
 from config_files import colors
+from data.string_data.attack_strings import atkdmg_string_data
 from gameobjects.block_level import BlockLevel
 from gameobjects.entity import Entity
 from gameobjects.util_functions import fighter_entity_at_pos, entity_at_pos
@@ -94,21 +95,6 @@ class Fighter:
             self.__stamina = self.max_stamina
         else:
             self.__stamina = value
-
-    # @property
-    # def attack_power(self):
-    #     """
-    #     Power
-    #
-    #     :return:
-    #     :rtype:
-    #     """
-    #     power = self.base_power
-    #     for e in self.owner.paperdoll.equipped_items:
-    #         dmg_range = vars(e.item.equipment).get('dmg_range')
-    #         if dmg_range:
-    #             power += randint(*dmg_range)
-    #     return power
 
     @property
     def base_dmg_range(self):
@@ -227,8 +213,9 @@ class Fighter:
                 else:
                     target_string = target.name.title()
 
+                atk_dmg_string = self.atk_dmg_string(damage, target.fighter.max_hp)
                 results.append({'message': Message(
-                    f'{self.owner.name.title()} {attack_string} {target_string} for {str(damage)} hit points.', category=MessageCategory.COMBAT, type=msg_type)})
+                    f'{self.owner.name} {attack_string} {target_string}, {choice(atkdmg_string_data["verbs"])} {atk_dmg_string} damage.', category=MessageCategory.COMBAT, type=msg_type)})
                 results.extend(target.fighter.take_damage(damage))
         else:
             target.fighter.stamina -= 2 # TODO placeholder until balancing (scale stamina drain with armor encumberance)
@@ -237,6 +224,24 @@ class Fighter:
                 {'message': Message(f'{self.owner.name.title()} {attack_string} {target.name} but does no damage.', category=MessageCategory.COMBAT, type=msg_type)})
 
         return results
+
+    @staticmethod
+    def atk_dmg_string(damage, target_max_hp):
+        percentage = (damage / target_max_hp * 100)
+        if 95 <= percentage:
+            return choice(atkdmg_string_data[95])
+        elif 85.0 <= percentage:
+            return choice(atkdmg_string_data[85])
+        elif 65.0 <= percentage:
+            return choice(atkdmg_string_data[65])
+        elif 40.0 <= percentage:
+            return choice(atkdmg_string_data[40])
+        elif 15.0 <= percentage:
+            return choice(atkdmg_string_data[15])
+        elif 1.0 <= percentage:
+            return choice(atkdmg_string_data[1])
+        else:
+            return 'no'
 
     def block(self, damage):
         results = []
