@@ -40,6 +40,7 @@ def render_map_screen(game, fov_map, debug=False):
         draw_entity(game, con, game.cursor, fov_map, debug=debug)
 
     draw_console_borders(con ,color=colors.white)
+    #game.con.blit(game.map_panel, width=cfg.MAP_SCREEN_WIDTH, height=cfg.MAP_SCREEN_HEIGHT)
     tcod.console_blit(con, 0, 0, cfg.MAP_SCREEN_WIDTH, cfg.MAP_SCREEN_HEIGHT, 0, 0, 0)
 
 

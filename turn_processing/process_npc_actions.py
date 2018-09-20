@@ -1,4 +1,4 @@
-from debug.debug_timer import debug_timer
+from debug.timer import debug_timer
 from game import GameStates
 
 @debug_timer

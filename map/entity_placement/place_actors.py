@@ -1,15 +1,17 @@
 """ Generators for monster-type objects """
 
 import logging
+import time
 from random import randint, choice
 
 from data.data_processing import gen_npc_from_dict, pick_from_data_dict_by_rarity
 from config_files import cfg
 from data.actor_data.spawn_data import spawn_data
+from debug.timer import debug_timer
 from gameobjects.block_level import BlockLevel
 from map.entity_placement.util_functions import create_ent_position
 
-
+@debug_timer
 def place_monsters(game):
     """ generates monsters in the current dungeon level """
 
@@ -41,20 +43,20 @@ def place_monsters(game):
             # place up to as many monsters as the settings allow
             m = 0
             while m <= num_of_monsters and len(game.npc_ents) < max_monsters:
-                logging.debug('Creating monster #{0} of #{1} total.'.format(m + 1, num_of_monsters))
-
                 key= pick_from_data_dict_by_rarity(possible_spawns, dlvl)
                 entry = possible_spawns[key]
                 group_size = randint(*entry['group_size'])
                 for i in range(group_size):
+                    logging.debug('Creating monster #{0} of #{1} total.'.format(m + 1, num_of_monsters))
                     logging.debug(
-                        'Attempting to add {0} #{1} to group of size {2}, in room {3}...'.format(entry, i+1, group_size, room))
+                        'Attempting to add {0} #{1} to group of size {2}, in room {3}...'.format(entry['name'], i+1, group_size, room))
 
                     # check if room would be overfilled
                     if m + 1 > num_of_monsters:
                         logging.debug(
                             f'... but new monster would bring room total to {m+1} thus exceed room maximum({num_of_monsters})')
                         m += 1
+                        break
                     elif  len(game.npc_ents) + 1 > max_monsters:
                         logging.debug(
                             f'... but new monster would bring overall total to {len(game.npc_ents)+1} thus exceed total maximum: ({max_monsters})')

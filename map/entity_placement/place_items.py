@@ -3,9 +3,10 @@ from random import randint, choice
 
 from config_files import cfg
 from data.data_processing import gen_item_from_data, pick_from_data_dict_by_rarity, ITEM_DATA_MERGED
+from debug.timer import debug_timer
 from map.entity_placement.util_functions import create_ent_position
 
-
+@debug_timer
 def place_items(game):
     """ fills the dungeon with items """
 

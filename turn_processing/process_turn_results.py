@@ -1,6 +1,6 @@
 import tcod
 
-from debug.debug_timer import debug_timer
+from debug.timer import debug_timer
 from game import GameStates
 from gameobjects.block_level import BlockLevel
 from gui.messages import Message

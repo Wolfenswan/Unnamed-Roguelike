@@ -25,6 +25,7 @@ from data.item_data.use_potions import use_potions_data
 from data.item_data.use_scrolls import use_scrolls_data
 from data.string_data.cond_strings import cond_descr_data
 from data.shared_data.rarity_data import rarity_values
+from debug.timer import debug_timer
 from gameobjects.entity import Entity
 from gameobjects.npc import NPC
 from rendering.render_order import RenderOrder
@@ -55,7 +56,7 @@ CONTAINER_DATA_MERGED = merge_dictionaries(container_data)
 
 def pick_from_data_dict_by_rarity(dict, dlvl=0):
     """
-    picks a random key from the given dictionary items, using the 'chance' value
+    picks a random key from the given dictionary items, using the 'rarity' and (optionally) 'type' values
 
     :param dict:
     :type dict: dict
@@ -65,38 +66,22 @@ def pick_from_data_dict_by_rarity(dict, dlvl=0):
     :rtype: dict
     """
 
-    # Using the passed dict_items set a new dictionary is created, filtered by the dungeon level value
-    if dlvl > 0:
+    if dlvl > 0: # Filter possible entries by dungeon levels first
         dict = {k: v for k, v in dict.items() if dlvl in range(*v.get('dlvls', (1, 99)))}
 
-    keys = list(dict.keys())
-
-    # keep picking items at random until the rarity chances pass
     while True:
         random = randint(0, 100)
-        candidate = choice(keys)
-        logging.debug(f'Calculating rarity for {candidate}')
-
-        # If an overall type is assigned to the candidate, calculate its rarity weight
-        if dict[candidate].get('type'):
-            type = dict[candidate]['type']
-            type_rarity = rarity_values[type]
-        else:
-            type_rarity = 100
-
-        # Set the rarity for the individual item. Defaults to 100 if the value is not set in the data entry.
-        rarity_type = dict[candidate].get('rarity', RarityType.COMMON)
-        item_rarity = rarity_values[rarity_type] + dict[candidate].get('rarity_mod', 0)
-
-        # Check against type rarity first, then individual rarity of the item
-        # TODO use random values for each check if useful
-        logging.debug(f'Type rarity for {candidate} is {type_rarity} and data specific rarity is {item_rarity}, random value is {random}.')
-        if (type_rarity >= random and item_rarity >= random):
+        possible_items = {
+            k:v for k,v in dict.items()
+              if rarity_values[v.get('rarity', RarityType.COMMON)] + v.get('rarity_mod', 0) >= random
+              and rarity_values[v.get('type', RarityType.COMMON)] >= random
+            }
+        candidates = list(possible_items.keys())
+        logging.debug(f'Randomly choosing from possible candidates: {candidates}, random value was {random}')
+        if len(candidates) > 0:
+            candidate = choice(candidates)
             logging.debug(f'Decided on {candidate}')
-            break
-        logging.debug(f'Dropping {candidate}')
-
-    return candidate
+            return candidate
 
 
 # Data retrieving functions #
@@ -222,6 +207,7 @@ def get_bodytype_data(data, forced=False):
 
 
 # Generating Functions #
+@debug_timer
 def gen_npc_from_dict(data, x, y, game):
     bodytype = get_bodytype_data(data, forced=False)
 

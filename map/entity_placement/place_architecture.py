@@ -6,9 +6,10 @@ from components.architecture import Architecture
 from config_files import cfg
 from data.architecture_data.arch_doors import arch_doors_data
 from data.data_processing import ARCHITECTURE_DATA_MERGED, pick_from_data_dict_by_rarity, gen_architecture
+from debug.timer import debug_timer
 from map.entity_placement.util_functions import create_ent_position
 
-
+@debug_timer
 def place_staticobjects(game):
     dlvl = game.dlvl
     game_map = game.map
@@ -35,7 +36,7 @@ def place_staticobjects(game):
                 arch = gen_architecture(data, *pos)
                 entities.append(arch)
 
-
+@debug_timer
 def place_doors(game):
     dlvl = game.dlvl
     game_map = game.map

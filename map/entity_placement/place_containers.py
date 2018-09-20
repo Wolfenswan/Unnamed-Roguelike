@@ -5,9 +5,10 @@ from config_files import cfg
 from data.data_processing import CONTAINER_DATA_MERGED, pick_from_data_dict_by_rarity, gen_architecture, \
     gen_item_from_data, ITEM_DATA_MERGED
 from data.shared_data.types_data import RarityType
+from debug.timer import debug_timer
 from map.entity_placement.util_functions import create_ent_position
 
-
+@debug_timer
 def place_containers(game):
 
     dlvl = game.dlvl

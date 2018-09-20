@@ -6,7 +6,7 @@ from game import GameStates
 from gameobjects.util_functions import entity_at_pos
 from gui.manual import display_manual
 from gui.menus import item_menu,  options_menu, item_list_menu
-from debug.debug_menu import debug_menu
+from debug.menu import debug_menu
 from gui.messages import Message, MessageType, MessageCategory
 from loader_functions.data_loader import save_game
 
