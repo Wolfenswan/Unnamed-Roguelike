@@ -23,7 +23,7 @@ class NPC(Entity):
 
     def move_towards(self, target, game):
         game_map = game.map
-        blocking_ents = game.blocking_ents
+        blocking_ents = game.walk_blocking_ents
 
         dx, dy = self.direction_to_ent(target)
         # dx = target_x - self.x

@@ -216,22 +216,22 @@ def gen_npc_from_dict(data, x, y, game):
     hp = randint(*data['max_hp'])
     stamina = randint(*data['max_stamina'])
     base_av = randint(*data['base_armor'])
-    base_dmg_range = data['base_dmg_range']
+    base_dmg_potential = data['base_dmg_potential']
     loadouts = data.get('loadouts')
     vision = data.get('nat_vision', 8)
     ai_movement = data.get('ai_movement', Simple)
     ai_attack = data.get('ai_attack', Simple)
     skills = data.get('skills', None)
 
-
+    # Modify values according to bodytype #
     hp_mod_multipl = bodytype.get('hp_mod_multipl', 1)
     dmg_mod_multipl = bodytype.get('dmg_mod_multipl',1)
     av_mod_multipl = bodytype.get('av_mod_multipl', 1)
     hp = round(hp * hp_mod_multipl)
-    base_dmg_range = (round(base_dmg_range[0] * dmg_mod_multipl), round(base_dmg_range[1] * dmg_mod_multipl))
+    base_dmg_potential = (round(base_dmg_potential[0] * dmg_mod_multipl), round(base_dmg_potential[1] * dmg_mod_multipl))
     base_av = round(base_av * av_mod_multipl)
 
-    fighter_component = Fighter(hp, stamina, base_av, base_dmg_range, vision)
+    fighter_component = Fighter(hp, stamina, base_av, base_dmg_potential, vision)
     ai_component = BaseAI(movement=ai_movement(), attack=ai_attack())
     inventory_component = Inventory(12) # Todo Placeholder #
     skills_component = None
@@ -271,12 +271,12 @@ def gen_item_from_data(data, x, y, materials=False, conditions=False, craftsmans
 
     equipment_component = None
     if equip_to is not None:
-        dmg_range = data.get('dmg_range')
-        if dmg_range:
+        dmg_potential = data.get('dmg_potential')
+        if dmg_potential:
             mat_mod = material.get('dmg_mod',0)
             craft_mod = craftsmanship.get('dmg_mod', 0)
             cond_mod = condition.get('mod_multipl', 1)
-            dmg_range = (round(max((dmg_range[0] + mat_mod + craft_mod)*cond_mod,1)), round(max((dmg_range[1] + mat_mod + craft_mod)*cond_mod,1)))
+            dmg_potential = (round(max((dmg_potential[0] + mat_mod + craft_mod)*cond_mod,1)), round(max((dmg_potential[1] + mat_mod + craft_mod)*cond_mod,1)))
 
         av = data.get('av')
         if av:
@@ -285,12 +285,19 @@ def gen_item_from_data(data, x, y, materials=False, conditions=False, craftsmans
             cond_mod = condition.get('mod_multipl', 1)
             av += round((max(mat_mod + craft_mod,1))*cond_mod)
 
+        block_def = data.get('block_def')
+        if block_def:
+            mat_mod = material.get('av_mod', 0)
+            craft_mod = craftsmanship.get('av_mod', 0)
+            cond_mod = condition.get('mod_multipl', 1)
+            block_def += round((max(mat_mod + craft_mod, 1)) * cond_mod)
+
         qu_slots = data.get('qu_slots')
         l_radius = data.get('l_radius')
         two_handed = data.get('two_handed')
         moveset = data.get('moveset')
 
-        equipment_component = Equipment(equip_to, dmg_range = dmg_range, av = av, qu_slots = qu_slots, l_radius = l_radius, moveset = moveset, two_handed = two_handed)
+        equipment_component = Equipment(equip_to, dmg_potential = dmg_potential, av = av, block_def=block_def, qu_slots = qu_slots, l_radius = l_radius, moveset = moveset, two_handed = two_handed)
 
     item_component = Item(condition=condition.get('type'), craftsmanship=craftsmanship.get('type'), useable=useable_component, equipment=equipment_component)
 

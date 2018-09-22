@@ -50,14 +50,16 @@ class Message:
             return colors.dark_cyan
         elif self.type == MessageType.COMBAT_BAD:
             return colors.dark_orange
+        else:
+            return colors.pink
 
     def add_to_log(self, game):
         #self.text = f'T{game.turn}: ' + self.text
 
         if self.category == MessageCategory.COMBAT:
-            game.combat_log.add_message(self)
+            game.combat_log.add_message(self, game.turn)
         else:
-            game.observation_log.add_message(self)
+            game.observation_log.add_message(self, game.turn)
             
             
 class MessageLog:
@@ -67,7 +69,7 @@ class MessageLog:
         self.width = width
         self.height = height
 
-    def add_message(self, message):
+    def add_message(self, message, turn):
 
         # Split the message if necessary, among multiple lines
         new_msg_lines = textwrap.wrap(message.text, self.width)
@@ -78,4 +80,6 @@ class MessageLog:
                 del self.messages[0]
 
             # Add the new line as a Message object, with the text and the color
-            self.messages.append(Message(line, type = message.type, color = message.color))
+            new_message = Message(line, type = message.type, color = message.color)
+            new_message.turn = turn
+            self.messages.append(new_message)

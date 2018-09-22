@@ -32,12 +32,13 @@ def process_player_input(action, game, fov_map, targeting_item = None):
     # drop_inventory = action.get('drop_inventory')
     # menu_selection = action.get('menu_selection')
     toggle_look = action.get('toggle_look')
+    toggle_block = action.get('toggle_block')
     confirm = action.get('confirm')
 
     turn_results = []
 
-    if player.fighter.is_blocking:
-        player.fighter.toggle_blocking()
+    # if player.fighter.is_blocking:
+    #     player.fighter.toggle_blocking()
 
     active_player_states = [GameStates.PLAYERS_TURN, GameStates.PLAYER_RESTING]
     if game.state in active_player_states:
@@ -58,13 +59,14 @@ def process_player_input(action, game, fov_map, targeting_item = None):
 
                 if target:
                     if dodge:
-                        print('dodging into target')
-                        # TODO implement
-                        pass
+                        Message('PLACEHOLDER: cant dodge into target.', type=MessageType.SYSTEM).add_to_log(game)
                     # If a NPC is blocking the way #
                     elif target.fighter:
-                        attack_results = player.fighter.attack_setup(target, game)
-                        turn_results.extend(attack_results)
+                        if not player.fighter.is_blocking:
+                            attack_results = player.fighter.attack_setup(target, game)
+                            turn_results.extend(attack_results)
+                        else:
+                            Message('PLACEHOLDER: cant attack while blocking.', type=MessageType.SYSTEM).add_to_log(game)
                     # If a static object is blocking the way #
                     elif target.architecture:
 
@@ -85,7 +87,8 @@ def process_player_input(action, game, fov_map, targeting_item = None):
                     player.move(dx, dy)
                     turn_results.append({'fov_recompute':True})
                 elif dodge:
-                    player.fighter.dodge(dx, dy, game)
+                    dodge_results = player.fighter.dodge(dx, dy, game)
+                    turn_results.extend(dodge_results)
                     turn_results.append({'fov_recompute': True})
 
                 if not target or not target.fighter:
@@ -110,7 +113,14 @@ def process_player_input(action, game, fov_map, targeting_item = None):
                     pickup_results = player.inventory.add(choice)
                     turn_results.extend(pickup_results)
             else:
-                Message('There is nothing here to pick up.', category=MessageCategory.OBSERVATION).add_to_log(game)
+                Message('There is nothing here.', category=MessageCategory.OBSERVATION).add_to_log(game)
+
+    # Combat related #
+    if toggle_block:
+        if player.fighter.shield:
+            player.fighter.toggle_blocking()
+        else:
+            Message('PLACEHOLDER: Need shield to block.', type=MessageType.SYSTEM).add_to_log(game)
 
     # Cursor Movement & Targeting #
     if toggle_look:

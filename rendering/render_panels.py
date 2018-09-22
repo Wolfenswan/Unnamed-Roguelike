@@ -16,8 +16,8 @@ def render_panels(game):
     render_object_panel(game, game.lower_right_panel, cfg.SIDE_PANEL_X, cfg.PLAYER_PANEL_HEIGHT + cfg.COMBAT_PANEL_HEIGHT, cfg.SIDE_PANEL_WIDTH,
                        cfg.OBJECT_PANEL_HEIGHT)
     render_status_panel(game, game.status_panel, cfg.STATUS_PANEL_Y, cfg.BOTTOM_PANELS_WIDTH, cfg.STATUS_PANEL_HEIGHT)
-    render_message_panel(game.observation_log, 'Observations', game.bottom_left_panel, 0, cfg.BOTTOM_PANELS_Y, cfg.MSG_PANEL1_WIDTH, cfg.BOTTOM_PANELS_HEIGHT)
-    render_message_panel(game.combat_log, 'Combat', game.bottom_center_panel, cfg.MSG_PANEL2_X, cfg.BOTTOM_PANELS_Y, cfg.MSG_PANEL2_WIDTH, cfg.BOTTOM_PANELS_HEIGHT)
+    render_message_panel(game.observation_log, 'Observations', game.bottom_left_panel, 0, cfg.BOTTOM_PANELS_Y, cfg.MSG_PANEL1_WIDTH, cfg.BOTTOM_PANELS_HEIGHT, game.turn)
+    render_message_panel(game.combat_log, 'Combat', game.bottom_center_panel, cfg.MSG_PANEL2_X, cfg.BOTTOM_PANELS_Y, cfg.MSG_PANEL2_WIDTH, cfg.BOTTOM_PANELS_HEIGHT, game.turn)
 
     # OLD BOTTOM GUI
     # render_enemy_panel(game, game.bottom_left_panel, 0, cfg.BOTTOM_PANELS_Y, cfg.COMBAT_PANEL_WIDTH,
@@ -56,15 +56,19 @@ def render_player_panel(game, con, panel_x, panel_y, width, height):
 
     # Equipment-derived stats #
     y += 4
-    # Armor #
+    # Defense Stats #
     tcod.console_print(con, 1, y, f'Defense: {game.player.fighter.defense}')
+
+    color = colors.dark_gray if not player.fighter.is_blocking else colors.white
+    tcod.console_set_color_control(tcod.COLCTRL_1, color, tcod.black)
+    tcod.console_print(con, 12, y, f'%c*BLOCKING*%c' % (tcod.COLCTRL_1, tcod.COLCTRL_STOP))
     # Weapon #
     if player.fighter.weapon and player.fighter.weapon.moveset:
         tcod.console_set_color_control(tcod.COLCTRL_1, game.player.fighter.weapon.color, tcod.black)
         tcod.console_print(con, 2, y+2, f'- %c{game.player.fighter.weapon.name}%c -' % (tcod.COLCTRL_1, tcod.COLCTRL_STOP))
         tcod.console_print(con, 2, y+3,
                            f'Attack: {game.player.fighter.weapon.moveset.current_move}/{game.player.fighter.weapon.moveset.moves}')
-        tcod.console_print(con, 2, y+4, f'Damage: {game.player.fighter.modded_dmg_range[0]}-{game.player.fighter.modded_dmg_range[1]}')
+        tcod.console_print(con, 2, y+4, f'Damage: {game.player.fighter.modded_dmg_range[0]}-{game.player.fighter.modded_dmg_range[-1]}')
 
         tcod.console_print(con, 2, y+6, f'Targets:')
         tcod.console_set_color_control(tcod.COLCTRL_1, colors.red, tcod.black)
@@ -144,19 +148,24 @@ def render_enemy_panel(game, con, panel_x, panel_y, width, height):
     tcod.console_blit(con, 0, 0, width, height, 0, panel_x, panel_y)
 
 
-def render_message_panel(message_log, title, con, panel_x, panel_y, width, height):
+def render_message_panel(message_log, title, con, panel_x, panel_y, width, height, current_turn):
     setup_console(con, caption=title, borders=True)
 
-    y = 2
-    color_coefficient = 1.0
+    y = 1
     for message in reversed(message_log.messages):
+        if current_turn - message.turn <= 1:
+            color_coefficient = 1.0
+        elif current_turn - message.turn <= 2:
+            color_coefficient = 0.6
+        elif current_turn - message.turn <= 3:
+            color_coefficient = 0.4
+        else:
+            color_coefficient = 0.2
+
         color = tuple(int(color_coefficient * x) for x in message.color)
         tcod.console_set_color_control(tcod.COLCTRL_1, color, colors.black)
         tcod.console_print(con, message_log.x, y, f'%c{message.text}%c' %(tcod.COLCTRL_1, tcod.COLCTRL_STOP))
         y += 1
-
-        if color_coefficient >= 0.4:
-            color_coefficient -= 0.1
 
     tcod.console_blit(con, 0, 0, width, height, 0, panel_x, panel_y)
 
@@ -166,7 +175,6 @@ def render_status_panel(game, console, panel_y, width, height):
 
     draw_bar(console, 1, 1, 20, f'{game.player.fighter.hp_string}', int(game.player.fighter.hp), game.player.fighter.max_hp,
              game.player.fighter.hp_color, tcod.darkest_red)
-
     draw_bar(console, width-21, 1, 20, f'{game.player.fighter.stamina_string}', int(game.player.fighter.stamina), game.player.fighter.max_stamina,
              game.player.fighter.stamina_color, colors.darkest_blue)
 
@@ -178,7 +186,6 @@ def render_status_panel(game, console, panel_y, width, height):
 
 def draw_bar(panel, x, y, total_width, name, value, maximum, bar_color, back_color):
     bar_width = int(float(value) / maximum * total_width)
-
 
     tcod.console_set_default_background(panel, back_color)
     tcod.console_rect(panel, x, y, total_width, 1, False, tcod.BKGND_SCREEN)

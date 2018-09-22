@@ -4,7 +4,7 @@ from gui.messages import Message, MessageType
 
 
 class ConfusedAI:
-    def __init__(self, previous_ai, number_of_turns=10):
+    def __init__(self, previous_ai, game, number_of_turns=10):
         self.previous_ai = previous_ai
         self.number_of_turns = number_of_turns
 

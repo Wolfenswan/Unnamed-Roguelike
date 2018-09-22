@@ -109,18 +109,24 @@ def render_description_window(game):
         #title = f'{ent.char} {ent.name}'
         title = f' {ent.full_name} '
         body = ent.descr
-        width = min(len(body), cfg.SCREEN_WIDTH//3)
+        extend_body = []
 
-        debug_info = []
+        if ent.fighter:
+            tcod.console_set_color_control(tcod.COLCTRL_1, colors.dark_crimson, colors.black)
+            extend_body += [' ', f'Blocking its attacks seems %c{game.player.fighter.average_chance_to_block(ent)}%c.' %(tcod.COLCTRL_1, tcod.COLCTRL_STOP)]
+
         if game.debug['ent_info']:
             if ent.fighter:
-                debug_info.extend([' ',f'hp:{ent.fighter.hp}/{ent.fighter.max_hp}', f'av:{ent.fighter.defense}', f'dmg:{ent.fighter.base_dmg_range}'])
+                extend_body += [' ',f'hp:{ent.fighter.hp}/{ent.fighter.max_hp}', f'av:{ent.fighter.defense}',
+                                f'dmg:{ent.fighter.base_dmg_range}', f'Your ctb:{game.player.fighter.average_chance_to_block(ent, debug=True)}']
             if ent.architecture:
                 ext1 = ent.architecture.on_interaction.__name__ if ent.architecture.on_interaction else None
                 ext2 = ent.architecture.on_collision.__name__ if ent.architecture.on_collision else None
-                debug_info.extend([' ',f'interact:{ext1}', f'collision:{ext2}'])
+                extend_body += [' ',f'interact:{ext1}', f'collision:{ext2}']
 
-        draw_window(title, body, window_x=x, window_y=y, forced_width=width, show_cancel_option=False, title_color=ent.color, extend_body=debug_info)
+
+        width = min(len(body), round(cfg.SCREEN_WIDTH//2))
+        draw_window(title, body, window_x=x, window_y=y, forced_width=width, show_cancel_option=False, title_color=ent.color, extend_body=extend_body)
 
 def render_equipment_window(equipment): # Experimental - Not implemented#
 

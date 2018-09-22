@@ -37,15 +37,15 @@ from config_files import colors
 from data.shared_data.types_data import RarityType
 
 spawn_data = {
-    'roach': {
-        'name': 'Roach',
+    'roachling': {
+        'name': 'Roachling',
         'char': 'r',
         'color': colors.light_amber,
-        'descr': 'Twitching antennae and six legs beneath a hardy carapace.',
+        'descr': 'Waddling upright like a clumsy child, the twitching antennae and multitude of freely jittering legs make an quick end to any passing resemblance.',
         'max_hp': (2,6),
         'max_stamina': (20,20),
         'base_armor': (0,0),
-        'base_dmg_range': (2,4),
+        'base_dmg_potential': (2,5),
         #'nat_vision': 6,
         'ai_movement': Swarm,
         'ai_attack': Swarm,
@@ -62,7 +62,7 @@ spawn_data = {
         'max_hp': (12,16),
         'max_stamina': (20,20),
         'base_armor': (2,4),
-        'base_dmg_range': (8,10),
+        'base_dmg_potential': (4,6),
         #'nat_vision': 6,
         'ai_movement': Simple,
         'ai_attack': Simple,

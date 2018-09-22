@@ -1,9 +1,9 @@
-from random import randint, choice
+from random import randint, choice, randrange
 
 import logging
 
 from config_files import colors
-from data.string_data.attack_strings import atkdmg_string_data
+from data.string_data.combat_strings import atkdmg_string_data, stadmg_string_data
 from gameobjects.block_level import BlockLevel
 from gameobjects.entity import Entity
 from gameobjects.util_functions import fighter_entity_at_pos, entity_at_pos
@@ -33,7 +33,7 @@ class Fighter:
         self.max_stamina = stamina
         self.__stamina = stamina
         self.__base_av = base_av
-        self.__base_dmg_range = base_dmg_range
+        self.__base_dmg_potential = base_dmg_range
         self.__base_vision = base_vision
 
         self.is_blocking = False
@@ -52,7 +52,7 @@ class Fighter:
         elif 15.0 <= percentage:
             return 'wounded'
         elif 1.0 <= percentage:
-            return 'near dead'
+            return 'near death'
         else:
             return 'dead'
 
@@ -72,6 +72,7 @@ class Fighter:
 
     @hp.setter
     def hp(self, value):
+        value = int(value)
         if value < 0:
             self.__hp = 0
         elif value > self.max_hp:
@@ -90,30 +91,30 @@ class Fighter:
             return 'fit'
         elif 60.0 <= percentage:
             return 'active'
-        elif 40.0 <= percentage:
+        elif 30.0 <= percentage:
             return 'strained'
-        elif 20.0 <= percentage:
+        elif 15.0 <= percentage:
             return 'spent'
         else:
             return 'exhausted'
 
     @property
     def stamina_color(self):
-        # TODO Use RGB Color multiplication
         percentage = (self.__stamina / self.max_stamina * 100)
         if 90.0 <= percentage:
-            return colors.light_blue
+            return colors.dark_sea
         elif 60.0 <= percentage:
-            return  colors.blue
-        elif 40.0 <= percentage:
-            return  colors.dark_blue
-        elif 20.0 <= percentage:
-            return  colors.darker_blue
+            return  colors.han
+        elif 30.0 <= percentage:
+            return  colors.dark_han
+        elif 15.0 <= percentage:
+            return  colors.darker_han
         else:
-            return  colors.darkest_blue
+            return  colors.darkest_han
 
     @stamina.setter
     def stamina(self, value):
+        value = int(value)
         if value < 0:
             self.__stamina = 0
         elif value > self.max_stamina:
@@ -124,32 +125,32 @@ class Fighter:
     @property
     def base_dmg_range(self):
         """
-        Attribute returns the currently equipped weapon's range with the fighter's base power added.
-        :return:
-        :rtype:
+        Attribute returns the entity's current damage potential (base + weapon)
+        as *inclusive* range with the fighter's base power added.
+        :return: inclusive range of min/max damage
+        :rtype: range
         """
         if self.weapon:
-            return (self.__base_dmg_range[0] + self.weapon.dmg_range[0], self.__base_dmg_range[1] + self.weapon.dmg_range[1])
-        return (self.__base_dmg_range[0], self.__base_dmg_range[1])
+            return range(self.__base_dmg_potential[0] + self.weapon.dmg_potential[0], self.__base_dmg_potential[1]+1 + self.weapon.dmg_potential[1]+1)
+        return range(self.__base_dmg_potential[0], self.__base_dmg_potential[1]+1)
 
     @property
     def modded_dmg_range(self):
+        """
+        This value is only for the player GUI
+        """
         mod = self.weapon.moveset.dmg_mod
-        return (round(self.base_dmg_range[0] * mod), round(self.base_dmg_range[1] * mod))
-
-    @property
-    def ignore_armor(self):
-        return 0
+        return range(round(self.base_dmg_range[0] * mod), round(self.base_dmg_range[-1] * mod))
 
     @property
     def defense(self):
-        defense = self.__base_av
+        total_defense = self.__base_av
         for e in self.owner.paperdoll.equipped_items:
             av = vars(e.item.equipment).get('av')
             # This extra step is required as av value is set to None for all Equipments during data processing
             if av:
-                defense += av
-        return defense
+                total_defense += av
+        return total_defense
 
     @property
     def vision(self):
@@ -172,6 +173,53 @@ class Fighter:
         else:
             return None
 
+    @property
+    def shield(self):
+        """
+        :return: Equipment component of currently equipped shield (or parrying weapon).
+        """
+        shield_ent = self.owner.paperdoll.shield_arm.shield  # TODO add check for 2nd hand after implementing dual wielding
+        if shield_ent:
+            return shield_ent.item.equipment
+        else:
+            return None
+        
+    @staticmethod
+    def atk_dmg_string(damage, target_max_hp):
+        percentage = (damage / target_max_hp * 100)
+        if 90 <= percentage:
+            return choice(atkdmg_string_data[90])
+        elif 65.0 <= percentage:
+            return choice(atkdmg_string_data[65])
+        elif 45.0 <= percentage:
+            return choice(atkdmg_string_data[45])
+        elif 25.0 <= percentage:
+            return choice(atkdmg_string_data[25])
+        elif 5.0 <= percentage:
+            return choice(atkdmg_string_data[5])
+        elif 1.0 <= percentage:
+            return choice(atkdmg_string_data[1])
+        else:
+            return 'no'
+        
+    @staticmethod
+    def sta_dmg_string(damage, target_max_stamina):
+        percentage = (damage / target_max_stamina * 100)
+        if 90 <= percentage:
+            return choice(stadmg_string_data[90])
+        elif 65.0 <= percentage:
+            return choice(stadmg_string_data[65])
+        elif 45.0 <= percentage:
+            return choice(stadmg_string_data[45])
+        elif 25.0 <= percentage:
+            return choice(stadmg_string_data[25])
+        elif 5.0 <= percentage:
+            return choice(stadmg_string_data[5])
+        elif 1.0 <= percentage:
+            return choice(stadmg_string_data[1])
+        else:
+            return 'no'
+
     def take_damage(self, amount):
         results = []
         self.hp -= amount
@@ -191,102 +239,144 @@ class Fighter:
 
     def attack_setup(self, target, game, mod=1):
         results = []
-        ignore_armor = self.ignore_armor
-        attack_string = 'attacks'
+        blocked = False
+        attack_string = 'hits'
         extra_targets = []
 
         if self.weapon:
             move_results = self.weapon.moveset.execute(self.owner, target)
             mod += move_results.get('dmg_mod', 0)
-            ignore_armor += move_results.get('ignore_armor', 0)
             attack_string = move_results.get('string', 'attacks')
             extra_targets = move_results.get('extra_targets', [])
 
         attack_power = round(choice(self.base_dmg_range) * mod)
-        damage = round(attack_power - (target.fighter.defense - ignore_armor))
-        logging.debug(f'{self.owner.name.title()} attacks {target.name.title()} with {attack_power} power against {target.fighter.defense} defense for {damage} damage.')
 
-        if game.debug['invin'] and target.is_player:
-            damage = 0
+        if target.fighter.stamina <= 0: # If the target is out of stamina, base damage is doubled
+            attack_power *= 2
 
-        results.extend(self.attack_execute(target, damage, attack_string))
+        if target.fighter.is_blocking:
+            blocked = target.fighter.attempt_block(attack_power)
+
+        if blocked: # TODO daze attacker
+            sta_dmg = round(attack_power / 2)
+            sta_dmg_string = self.atk_dmg_string(sta_dmg, self.max_stamina)
+            self.exert('block', sta_dmg)
+            if target.is_player:
+                message = Message(f'You block the attack for {sta_dmg_string} exertion!',
+                                  category=MessageCategory.COMBAT, type=MessageType.COMBAT_GOOD)
+            else:
+                message = Message(f'The {self.owner.name.title()} blocks the attack!',
+                                  category=MessageCategory.COMBAT, type=MessageType.COMBAT_BAD)
+            results.append({'message': message})
+        else:
+            results.extend(self.attack_execute(target, attack_power, attack_string))
 
         for target_pos in extra_targets:
             if entity_at_pos(game.npc_ents, *target_pos):
-                results.extend(self.attack_execute(target, damage//2, 'also hits'))
+                extra_target = entity_at_pos(game.npc_ents, *target_pos) # TODO Currently ignores blocking
+                results.extend(self.attack_execute(extra_target, attack_power//2, 'also hits'))
 
         return results
 
-    def attack_execute(self, target, damage, attack_string):
+    def attack_execute(self, target, power, attack_string):
         results = []
 
-        # Targets out of stamina will receive double damage, defense value is negated
-        # TODO balancing - Armor piercing currently applied as extra damage
-        if target.fighter.stamina < 0:
-            damage = (damage + target.fighter.defense) * 2
+        damage = round(power - (target.fighter.defense))
+
+        if target == self.owner:
+            target_string = 'itself'
+        elif target.is_player:
+            target_string = 'you'
+        else:
+            target_string = f'the {target.name.title()}'
 
         if damage > 0:
-            if target.fighter.is_blocking and target.fighter.stamina > 0:
-                results.extend(target.fighter.block(damage))
-            else:
-                msg_type = MessageType.COMBAT_BAD if target.is_player else MessageType.COMBAT_INFO
+            msg_type = MessageType.COMBAT_BAD if target.is_player else MessageType.COMBAT_INFO
 
-                if target == self.owner:
-                    target_string = 'itself'
-                elif target.is_player:
-                    target_string = 'you'
-                else:
-                    target_string = f'the {target.name.title()}'
-
-                atk_dmg_string = self.atk_dmg_string(damage, target.fighter.max_hp)
-                results.append({'message': Message(
-                    f'{self.owner.name} {attack_string} {target_string}, {choice(atkdmg_string_data["verbs"])} {atk_dmg_string} damage.', category=MessageCategory.COMBAT, type=msg_type)})
-                results.extend(target.fighter.take_damage(damage))
+            atk_dmg_string = self.atk_dmg_string(damage, target.fighter.max_hp)
+            results.append({'message': Message(
+                f'{self.owner.name} {attack_string} {target_string}, {choice(atkdmg_string_data["verbs"])} {atk_dmg_string} damage.', category=MessageCategory.COMBAT, type=msg_type)})
+            results.extend(target.fighter.take_damage(damage))
         else:
-            target.fighter.stamina -= 2 # TODO placeholder until balancing (scale stamina drain with armor encumberance)
             msg_type = MessageType.COMBAT_BAD if not target.is_player else MessageType.COMBAT_GOOD
             results.append(
-                {'message': Message(f'{self.owner.name.title()} {attack_string} the {target.name} but does no damage.', category=MessageCategory.COMBAT, type=msg_type)})
+                {'message': Message(f'{self.owner.name.title()} {attack_string} {target_string} but can not pierce armor.', category=MessageCategory.COMBAT, type=msg_type)})
+            results.append(target.fighter.exert('armor deflection', power))
 
+        logging.debug(
+            f'{self.owner.name.title()} attacks {target.name.title()} with {power} power against {target.fighter.defense}({target.fighter.stamina}Stamina) defense for {damage} damage.')
         return results
 
-    @staticmethod
-    def atk_dmg_string(damage, target_max_hp):
-        percentage = (damage / target_max_hp * 100)
-        if 95 <= percentage:
-            return choice(atkdmg_string_data[95])
-        elif 85.0 <= percentage:
-            return choice(atkdmg_string_data[85])
-        elif 65.0 <= percentage:
-            return choice(atkdmg_string_data[65])
-        elif 40.0 <= percentage:
-            return choice(atkdmg_string_data[40])
-        elif 15.0 <= percentage:
-            return choice(atkdmg_string_data[15])
-        elif 1.0 <= percentage:
-            return choice(atkdmg_string_data[1])
-        else:
-            return 'no'
+    def attempt_block(self, damage):
+        block_def = self.shield.block_def
+        if damage <= block_def:
+            return True
+        elif damage <= block_def * 2:
+            chance = self.block_chance(damage)
+            print(chance)
+            if chance > 0 and chance >= randint(0,100):
+                return True
+        return False
 
-    def block(self, damage):
-        results = []
-        self.stamina -= damage
-        if self.owner.is_player:
-            message = Message(f'You were able to block the attack!', category=MessageCategory.COMBAT, type=MessageType.GOOD)
+    def block_chance(self, damage):
+        """
+        Returns the chance to block a strike that surpasses an entitiess's block defense.
+        It is possible to block up to the double of maximum block defense.
+        """
+        block_def = self.shield.block_def
+        return 101 - ((damage - block_def) / block_def * 100)
+
+    def average_chance_to_block(self, attacker, debug=False):
+        """
+        Utility function for debug information and an entities description window.
+        """
+        average = 0
+        dmg_range = attacker.fighter.base_dmg_range
+        for dmg in dmg_range:
+            average += self.block_chance(dmg)
+        average /= len(dmg_range)
+
+        if debug:
+            return average
         else:
-            message = Message(f'{self.owner.name.title()} was able to block the attack!', category=MessageCategory.COMBAT, type=MessageType.COMBAT)
-        results.append({'message': message})
-        return results
+            if average >= 100:
+                return 'guaranteed'
+            elif average >= 75:
+                return 'very good'
+            elif average >= 50:
+                return 'average'
+            elif average >= 25:
+                return 'low'
+            elif average >= 5:
+                return 'very low'
+            else:
+                return 'no'
 
     def dodge(self, dx, dy, game):
-        if self.stamina >= 10:
+        results = []
+        if self.stamina >= self.defense:
             animate_move_line(self.owner, dx, dy, 2, game, anim_delay=0.001)
-            self.stamina -= 10
+            results.append(self.exert('dodge', self.defense))
+        return results
+
+    def exert(self, string, amount):
+        self.stamina -= amount
+        #pronoun = 'Your' if self.owner.isplayer else 'The'
+        if self.owner.is_player:
+            sta_dmg_string = self.sta_dmg_string(amount, self.max_stamina)
+            message = Message(f'Your {string} causes {sta_dmg_string} exertion.', category=MessageCategory.OBSERVATION,
+                              type=MessageType.COMBAT_INFO)
+            return {'message': message}
+        return {}
 
     def toggle_blocking(self):
         self.is_blocking = not self.is_blocking
 
     def death(self, game):
+
+        if game.debug['invin'] and self.owner.is_player:
+            self.owner.fighter.hp = self.owner.fighter.max_hp
+
         ent = self.owner
         ent.ai = None
         x, y = ent.x, ent.y

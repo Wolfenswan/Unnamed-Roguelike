@@ -62,13 +62,14 @@ def game_loop(game):
         # Enemies take turns #
         if game.state == GameStates.ENEMY_TURN:
             process_npc_actions(game)
-            game.turn += 1
 
         # Prepare for next turn #
         for turn_result in processed_turn_results:
             fov_recompute = turn_result.get('fov_recompute', False)
             targeting_item = turn_result.get('targeting_item')
 
+        game.turn += 1
+        
 if __name__ == '__main__':
     initialize_logging(debugging=True)
     game = Game(debug=False)

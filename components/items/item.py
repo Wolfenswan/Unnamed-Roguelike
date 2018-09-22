@@ -53,8 +53,11 @@ class Item:
             if self.equipment.av:
                 list.extend(textwrap.wrap(f' Armor: {self.equipment.av}', max_width))
 
-            if self.equipment.dmg_range:
-                list.extend(textwrap.wrap(f' Damage Potential: {self.equipment.dmg_range[0]}-{self.equipment.dmg_range[1]}', max_width))
+            if self.equipment.block_def:
+                list.extend(textwrap.wrap(f' Armor (Blocking): {self.equipment.block_def}', max_width))
+
+            if self.equipment.dmg_potential:
+                list.extend(textwrap.wrap(f' Damage Potential: {self.equipment.dmg_potential[0]}-{self.equipment.dmg_potential[1]}', max_width))
 
             if self.equipment.l_radius:
                 list.extend(textwrap.wrap(f' Light Radius: {self.equipment.l_radius}', max_width))

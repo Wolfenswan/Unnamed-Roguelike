@@ -57,7 +57,7 @@ Num 5 or . - Wait a turn. Rests outside combat, blocks during combat.
 s   - (s)earch your surroundings
         - use movement keys to control the cursor
         - a description will be displayed if applicable
-        - press the (s) again to stop (s)searching
+        - press (s) again to stop (s)searching
 g   - (g)et an item from the ground
 i   - open the (i)nventory
     - select an item to read it's description
@@ -68,8 +68,8 @@ E   - shows your (e)quipment
 1..9 - Use a prepared item
 
 - MOVEMENT MODIFIERS -
-- CTRL + Movement - Interaction with an object in the given direction
-- ALT + Movement - Try to dodge in the given direction, moving 2 tiles
+- CTRL + Movement - Interact with an object in the given direction
+- ALT + Movement - Attempt a dodge in the given direction, moving 2 tiles
 
 - OTHER ACTIONS -
 ? - Display this manual
@@ -87,10 +87,16 @@ Alt+Enter - toggle Fullscreen
 
 ================================================================================
 
+Features of note:
+
+# ACTIVE DODGING & BLOCKING #
+
+# ITEM USAGE DURING COMBAT #
 Items have to be prepared if you want to use them during combat. To do this,
-interact with them in your (i)ventory and (p)repare them. Then use the number
+interact with an item in your (i)ventory and (p)repare it. Then use the number
 keys to activate a prepared item during combat. You can only prepare a limited
-number of items, depending on the quick-use slots of your equipment.
+number of items, depending on the quick-use slots of your equipment. There's no
+limitation on item usage outside of combat.
 
 <p>
                    ___                _           _

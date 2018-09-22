@@ -76,6 +76,8 @@ def handle_player_turn_keys(key):
         return {'show_equipment': True}
     elif key_char == 's':
         return {'toggle_look': True}
+    elif key_char == 'r':
+        return {'toggle_block': True}
     elif key.vk in [tcod.KEY_ENTER, tcod.KEY_KPENTER]:
         return {'confirm': True}
     # elif key_char == 'd':

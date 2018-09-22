@@ -31,7 +31,7 @@ test_equipment_data = {
         "char": WP_CHAR,
         'type': WP_TYPE,
         'e_to': WP_EQUIP,
-        'dmg_range': (4, 6),
+        'dmg_potential': (4, 7),
         'moveset': moveset_sword,
         'rarity': RarityType.COMMON,
         'dlvls': (1,99)
@@ -43,7 +43,7 @@ test_equipment_data = {
         'char': '|',
         'type': WP_TYPE,
         'e_to': WP_EQUIP,
-        'dmg_range': (2,10),
+        'dmg_potential': (2,11),
         'two_handed': True,
         'moveset': moveset_spear,
         'rarity': RarityType.COMMON,
@@ -56,8 +56,8 @@ test_equipment_data = {
         "char": ARM_CHAR,
         'type': ARM_TYPE,
         'e_to': ARM_EQUIP,
-        'av': 2,
-        'qu_slots': 1,
+        'av': 1,
+        'qu_slots': 2,
         'rarity': RarityType.COMMON,
         'dlvls': (1, 99)
     },
@@ -68,7 +68,7 @@ test_equipment_data = {
         "char": ARM_CHAR,
         'type': ARM_TYPE,
         'e_to': ARM_EQUIP,
-        'av': 3,
+        'av': 2,
         'rarity': RarityType.UNCOMMON,
         'dlvls': (1, 99)
     },
@@ -114,6 +114,6 @@ test_equipment_data = {
         'dlvls': (1,99),
         "char": ')',
         'e_to': OH_EQUIP,
-        'av': 1
+        'block_def': 2
     }
 }
