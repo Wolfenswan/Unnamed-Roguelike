@@ -1,4 +1,4 @@
-from data.shared_data.types_data import Material, Craftsmanship
+from data.data_types import Material, Craftsmanship
 
 # Default description strings
 default_descr = {

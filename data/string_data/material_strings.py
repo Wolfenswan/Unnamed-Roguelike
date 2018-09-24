@@ -1,4 +1,4 @@
-from data.shared_data.types_data import Material
+from data.data_types import Material
 
 material_name_data = {
     Material.OAK: 'oak',

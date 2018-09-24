@@ -2,11 +2,13 @@ from random import randint, choice, randrange
 
 import logging
 
+from components.actors.status_modifiers import Presence
 from config_files import colors
+from data.actor_data.status_mod_data import status_modifiers_data
 from data.string_data.combat_strings import atkdmg_string_data, stadmg_string_data
 from gameobjects.block_level import BlockLevel
 from gameobjects.entity import Entity
-from gameobjects.util_functions import fighter_entity_at_pos, entity_at_pos
+from gameobjects.util_functions import entity_at_pos
 from gui.messages import Message, MessageType, MessageCategory
 from rendering.render_animations import animate_move_line
 from rendering.render_order import RenderOrder
@@ -28,15 +30,19 @@ class Fighter:
         :type vision: int
 
         """
-        self.max_hp = hp
         self.__hp = hp
-        self.max_stamina = stamina
+        self.max_hp = hp
         self.__stamina = stamina
+        self.max_stamina = stamina
         self.__base_av = base_av
         self.__base_dmg_potential = base_dmg_range
         self.__base_vision = base_vision
 
         self.is_blocking = False
+        self.presence = {
+            Presence.DAZED: False,
+            Presence.STUNNED: False
+        }
 
     @property
     def hp(self):
@@ -72,7 +78,7 @@ class Fighter:
 
     @hp.setter
     def hp(self, value):
-        value = int(value)
+        value = round(value)
         if value < 0:
             self.__hp = 0
         elif value > self.max_hp:
@@ -102,19 +108,19 @@ class Fighter:
     def stamina_color(self):
         percentage = (self.__stamina / self.max_stamina * 100)
         if 90.0 <= percentage:
-            return colors.dark_sea
+            return colors.light_sea
         elif 60.0 <= percentage:
-            return  colors.han
+            return  colors.sea
         elif 30.0 <= percentage:
-            return  colors.dark_han
+            return  colors.dark_sea
         elif 15.0 <= percentage:
-            return  colors.darker_han
+            return  colors.darker_sea
         else:
-            return  colors.darkest_han
+            return  colors.darkest_sea
 
     @stamina.setter
     def stamina(self, value):
-        value = int(value)
+        value = round(value)
         if value < 0:
             self.__stamina = 0
         elif value > self.max_stamina:
@@ -136,11 +142,19 @@ class Fighter:
 
     @property
     def modded_dmg_range(self):
-        """
-        This value is only for the player GUI
-        """
-        mod = self.weapon.moveset.dmg_mod
-        return range(round(self.base_dmg_range[0] * mod), round(self.base_dmg_range[-1] * mod))
+        w_mod = 1
+        p_mod = 1
+
+        if self.weapon:
+            w_mod = self.weapon.moveset.dmg_multipl
+
+        if self.presence[Presence.DAZED]:
+            p_mod = status_modifiers_data[Presence.DAZED]['dmg_multipl']
+
+        if self.presence[Presence.STUNNED]:
+            p_mod = status_modifiers_data[Presence.STUNNED]['dmg_multipl']
+            
+        return range(round(self.base_dmg_range[0] * w_mod * p_mod), round(self.base_dmg_range[-1] * w_mod * p_mod))
 
     @property
     def defense(self):
@@ -150,8 +164,19 @@ class Fighter:
             # This extra step is required as av value is set to None for all Equipments during data processing
             if av:
                 total_defense += av
-        return total_defense
 
+        return total_defense
+    
+    @property
+    def modded_defense(self):
+        modded_def = self.defense
+        if self.presence[Presence.DAZED]:
+            modded_def *= status_modifiers_data[Presence.DAZED]['av_multipl']
+
+        if self.presence[Presence.STUNNED]:
+            modded_def *= status_modifiers_data[Presence.STUNNED]['av_multipl']
+        return round(modded_def)
+    
     @property
     def vision(self):
         vision = self.__base_vision
@@ -220,13 +245,31 @@ class Fighter:
         else:
             return 'no'
 
+    def surrounded_value(self, game):
+        nearby_enemies = len(self.owner.enemies_in_distance(game.npc_ents))
+        if nearby_enemies <= 3:
+            return 0
+        elif nearby_enemies <= 5:
+            return 1
+        else:
+            return 2
+
+    def set_presence(self, presence, value, duration=0):
+        self.presence[presence] = value
+        if duration > 0:
+            self.owner.actionplan.add_to_queue(execute_in=duration,
+                                               planned_function=self.set_presence,
+                                               planned_function_args=(presence, False))
+
+    #################################
+    # ATTRIBUTE MODIFYING FUNCTIONS #
+    #################################
+
     def take_damage(self, amount):
         results = []
         self.hp -= amount
-
         if self.hp <= 0:
             results.append({'dead': self.owner})
-
         return results
 
     def heal(self, amount):
@@ -237,6 +280,26 @@ class Fighter:
 
         logging.debug(f'({self} was healed for {amount}.')
 
+    def recover(self, amount):
+        self.stamina += amount
+        if self.stamina > self.max_stamina:
+            self.stamina = self.max_stamina
+        logging.debug(f'({self} recovered stamina for {amount}.')
+
+    def exert(self, string, amount):
+        self.stamina -= amount
+        #pronoun = 'Your' if self.owner.isplayer else 'The'
+        if self.owner.is_player:
+            sta_dmg_string = self.sta_dmg_string(amount, self.max_stamina)
+            message = Message(f'Your {string} causes {sta_dmg_string} exertion.', category=MessageCategory.OBSERVATION,
+                              type=MessageType.COMBAT_INFO)
+            return {'message': message}
+        return {}
+
+    ############################
+    # ATTACK RELATED FUNCTIONS #
+    ############################
+
     def attack_setup(self, target, game, mod=1):
         results = []
         blocked = False
@@ -245,13 +308,21 @@ class Fighter:
 
         if self.weapon:
             move_results = self.weapon.moveset.execute(self.owner, target)
-            mod += move_results.get('dmg_mod', 0)
-            attack_string = move_results.get('string', 'attacks')
+            attack_string = move_results.get('string', 'hits')
             extra_targets = move_results.get('extra_targets', [])
 
-        attack_power = round(choice(self.base_dmg_range) * mod)
+        attack_power = choice(self.modded_dmg_range) * mod
 
-        if target.fighter.stamina <= 0: # If the target is out of stamina, base damage is doubled
+        logging.debug(f'{self.owner.name} prepares to attack {target.name} with base damage {self.base_dmg_range},'
+                      f' (modded {self.modded_dmg_range}) for a power of {attack_power}')
+
+        if self.stamina < attack_power/3:
+            message = Message(f'PLACEHOLDER: Attacking without enough Stamina!', category=MessageCategory.COMBAT,
+                              type=MessageType.SYSTEM)
+            results.append({'message': message})
+            return results
+
+        if target.fighter.stamina <= 0: # If the target is out of stamina, attack power is doubled
             attack_power *= 2
 
         if target.fighter.is_blocking:
@@ -259,29 +330,30 @@ class Fighter:
 
         if blocked: # TODO daze attacker
             sta_dmg = round(attack_power / 2)
-            sta_dmg_string = self.atk_dmg_string(sta_dmg, self.max_stamina)
-            self.exert('block', sta_dmg)
+            results.extend(self.exert('block', sta_dmg))
             if target.is_player:
-                message = Message(f'You block the attack for {sta_dmg_string} exertion!',
+                message = Message(f'You block the attack, dazing the {self.owner.name.title()}!',
                                   category=MessageCategory.COMBAT, type=MessageType.COMBAT_GOOD)
             else:
-                message = Message(f'The {self.owner.name.title()} blocks the attack!',
+                message = Message(f'The {self.owner.name.title()} blocks your attack, dazing you!',
                                   category=MessageCategory.COMBAT, type=MessageType.COMBAT_BAD)
-            results.append({'message': message})
+            self.set_presence(Presence.DAZED, True, 1)
+            results.extend([{'message': message}])
         else:
             results.extend(self.attack_execute(target, attack_power, attack_string))
 
         for target_pos in extra_targets:
             if entity_at_pos(game.npc_ents, *target_pos):
                 extra_target = entity_at_pos(game.npc_ents, *target_pos) # TODO Currently ignores blocking
-                results.extend(self.attack_execute(extra_target, attack_power//2, 'also hits'))
+                results.extend(self.attack_execute(extra_target, attack_power//2, 'further hits'))
 
+        self.exert('attack',attack_power/3)
         return results
 
     def attack_execute(self, target, power, attack_string):
         results = []
 
-        damage = round(power - (target.fighter.defense))
+        damage = round(power - (target.fighter.modded_defense))
 
         if target == self.owner:
             target_string = 'itself'
@@ -304,8 +376,15 @@ class Fighter:
             results.append(target.fighter.exert('armor deflection', power))
 
         logging.debug(
-            f'{self.owner.name.title()} attacks {target.name.title()} with {power} power against {target.fighter.defense}({target.fighter.stamina}Stamina) defense for {damage} damage.')
+            f'{self.owner.name.title()} attacks {target.name.title()} with {power} power against {target.fighter.defense} defense for {damage} damage. Target has {target.fighter.stamina} stamina left.)')
         return results
+
+    #############################
+    # DEFENSE RELATED FUNCTIONS #
+    #############################
+
+    def toggle_blocking(self):
+        self.is_blocking = not self.is_blocking
 
     def attempt_block(self, damage):
         block_def = self.shield.block_def
@@ -342,15 +421,15 @@ class Fighter:
             if average >= 100:
                 return 'guaranteed'
             elif average >= 75:
-                return 'very good'
+                return 'very easy'
             elif average >= 50:
-                return 'average'
+                return 'doable'
             elif average >= 25:
-                return 'low'
+                return 'hard'
             elif average >= 5:
-                return 'very low'
+                return 'very hard'
             else:
-                return 'no'
+                return 'impossible'
 
     def dodge(self, dx, dy, game):
         results = []
@@ -358,19 +437,6 @@ class Fighter:
             animate_move_line(self.owner, dx, dy, 2, game, anim_delay=0.001)
             results.append(self.exert('dodge', self.defense))
         return results
-
-    def exert(self, string, amount):
-        self.stamina -= amount
-        #pronoun = 'Your' if self.owner.isplayer else 'The'
-        if self.owner.is_player:
-            sta_dmg_string = self.sta_dmg_string(amount, self.max_stamina)
-            message = Message(f'Your {string} causes {sta_dmg_string} exertion.', category=MessageCategory.OBSERVATION,
-                              type=MessageType.COMBAT_INFO)
-            return {'message': message}
-        return {}
-
-    def toggle_blocking(self):
-        self.is_blocking = not self.is_blocking
 
     def death(self, game):
 

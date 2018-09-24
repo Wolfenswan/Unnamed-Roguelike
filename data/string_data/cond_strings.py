@@ -1,4 +1,4 @@
-from data.shared_data.types_data import Material, ItemType, Condition
+from data.data_types import Material, ItemType, Condition
 
 
 # Default description strings

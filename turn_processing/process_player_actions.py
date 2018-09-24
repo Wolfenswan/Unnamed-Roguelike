@@ -104,7 +104,7 @@ def process_player_input(action, game, fov_map, targeting_item = None):
 
         # Picking up an item #
         elif pickup:
-            items = [item for item in game.item_ents if item.same_pos(player)]
+            items = [item for item in game.item_ents if item.same_pos_as(player)]
             if items:
                 # Option menu is displayed if > 1 item is on the ground
                 choice = items[0] if len(items) == 1 else \

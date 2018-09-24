@@ -16,9 +16,9 @@ from data.actor_data.spawn_data import spawn_data
 from data.architecture_data.arch_static import arch_static_data
 from data.architecture_data.arch_containers import arch_containers_data
 from data.string_data.craft_strings import craft_descr_data
-from data.shared_data.bodytype_data import bodytype_data
+from data.actor_data.bodytype_data import bodytype_data
 from data.shared_data.quality_data import qual_cond_data, qual_craft_data
-from data.shared_data.types_data import GenericType, Condition, RarityType, BodyType
+from data.data_types import GenericType, Condition, RarityType, BodyType
 from data.shared_data.material_data import item_material_data
 from data.item_data.test_equipment import test_equipment_data
 from data.item_data.use_potions import use_potions_data

@@ -2,7 +2,6 @@ import textwrap
 
 from data.string_data.cond_strings import cond_name_data
 from data.string_data.craft_strings import craft_name_data
-from data.shared_data.types_data import Condition, Craftsmanship
 
 
 class Item:

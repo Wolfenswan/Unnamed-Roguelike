@@ -53,13 +53,13 @@ def draw_manual_page(page, pagecount):
     window.caption = 'Manual'
     setup_console(window, borders=True, bordercolor=colors.darker_red)
 
-    tcod.console_print(window,width - 12, 0, f'Page {pagecount}')
-    tcod.console_print(window, 1, height - 1, '<Left/Right to navigate>')
-    tcod.console_print(window, width - 15, height - 1, '<ESC to close>')
+    print_string(window,width - 12, 0, f'Page {pagecount}')
+    print_string(window, 1, height - 1, '<Left/Right to navigate>')
+    print_string(window, width - 15, height - 1, '<ESC to close>')
 
     offset_y = 2
     for p, paragraph in enumerate(page):
-        tcod.console_print(window, 1, p + offset_y, paragraph)
+        print_string(window, 1, p + offset_y, paragraph)
         #window.draw_str( fg=colors.white, bg=None)
         # lines_wrapped = textwrap.wrap(paragraph, (width-padding_x//2))
         # for l, line in enumerate(lines_wrapped):

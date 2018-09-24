@@ -1,6 +1,7 @@
 from random import uniform
 
 import tcod
+import re
 
 from config_files import colors, cfg as cfg
 
@@ -30,7 +31,7 @@ def setup_console(con, caption=None, fgcolor=tcod.white, bgcolor =tcod.black, bo
     if borders:
         draw_console_borders(con, color = bordercolor)
     if caption:
-        tcod.console_print(con, 2, 0, caption)
+        print_string(con, 2, 0, caption)
 
 
 def draw_console_borders(con, width=None, height=None, color=colors.dark_grey, bgcolor=colors.black):
@@ -75,3 +76,22 @@ def randomize_rgb_color(color, factor_range = (0, 0.25), darken=False):
         color = (int(v + (255 - v) * factor) for v in color)
     color = tcod.Color(*color)
     return color
+
+
+def print_string(con, x, y, string, color=None, bgcolor=colors.black, alignment=tcod.LEFT, background=tcod.BKGND_DEFAULT):
+    color_coded_words = re.findall('(%{1}\w+%{1}\w+%{1})+', string)
+
+    if color_coded_words:
+        for word in color_coded_words:
+            color_code = re.match('%{1}(\w*)%{1}', word)
+            color = eval(f'colors.{color_code.group(1)}') # Resolve the color-code as a config/colors entry: %red%->colors.red
+            new_word = word.replace(color_code.group(), '%c') + 'c' # Replace the color-code with tcod's color-wrappers
+            string = string.replace(word, new_word)
+
+    if color:
+        if not '%c' in string: # If no tcod wrappers are present, wrap the entire string
+            string = f'%c{string}%c'
+        tcod.console_set_color_control(tcod.COLCTRL_1, color, bgcolor)
+        string = string % (tcod.COLCTRL_1, tcod.COLCTRL_STOP)
+
+    tcod.console_print_ex(con, x, y, background, alignment, string)

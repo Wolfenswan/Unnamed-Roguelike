@@ -1,4 +1,4 @@
-from data.shared_data.types_data import Condition, Craftsmanship
+from data.data_types import Condition, Craftsmanship
 
 # Craftsmanship modifiers are added to/substracted from the base stats #
 

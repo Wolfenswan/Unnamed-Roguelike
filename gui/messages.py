@@ -50,7 +50,7 @@ class Message:
             return colors.dark_cyan
         elif self.type == MessageType.COMBAT_BAD:
             return colors.dark_orange
-        else:
+        elif self.type == MessageType.SYSTEM:
             return colors.pink
 
     def add_to_log(self, game):

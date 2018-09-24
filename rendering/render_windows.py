@@ -4,8 +4,8 @@ import textwrap
 import tcod
 
 from config_files import cfg, colors
-from gameobjects.util_functions import blocking_entity_at_pos, entities_at_pos, entity_at_pos
-from rendering.util_functions import center_x_for_text, draw_console_borders, pos_on_screen
+from gameobjects.util_functions import entities_at_pos, entity_at_pos
+from rendering.util_functions import center_x_for_text, draw_console_borders, pos_on_screen, print_string
 
 
 def set_window_on_screen(window_x, window_y, width, height):
@@ -41,7 +41,7 @@ def draw_window(title, body, options = None, window_x = None, window_y = None, p
             width = max(len(title), len(body)) + padding_x * 2
 
     #width = min(width, cfg.SCREEN_WIDTH//2)
-    body_wrapped = textwrap.wrap(body, width - padding_x * 2)
+    body_wrapped = textwrap.wrap(body, width - padding_x * 2, replace_whitespace=False)
     if extend_body:
         body_wrapped.extend(extend_body)
 
@@ -59,7 +59,8 @@ def draw_window(title, body, options = None, window_x = None, window_y = None, p
     # Print the body to the window #
     y = padding_y
     for i, line in enumerate(body_wrapped):
-        tcod.console_print(window, padding_x, y, line)
+        #print_string(window, padding_x, y, line)
+        print_string(window, padding_x, y, line)
         y += 1
 
     # Print options to the window #
@@ -74,21 +75,17 @@ def draw_window(title, body, options = None, window_x = None, window_y = None, p
                 line = f'({str(i + 1)}) {option}'
             else:
                 line = option
-            if options_colors:
-                tcod.console_set_color_control(tcod.COLCTRL_1, options_colors[i], colors.black)
-            else:
-                tcod.console_set_color_control(tcod.COLCTRL_1, colors.white, colors.black)
-            tcod.console_print(window, padding_x, i + y, f'%c{line}%c' %(tcod.COLCTRL_1, tcod.COLCTRL_STOP))
+            color = options_colors[i] if options_colors else colors.white
+            print_string(window, padding_x, i + y, f'{line}', color=color)
 
     draw_console_borders(window, color=colors.white)
-    tcod.console_set_color_control(tcod.COLCTRL_1, title_color, colors.black)
-    tcod.console_print(window, padding_x, 0, f'%c{title}%c' %(tcod.COLCTRL_1, tcod.COLCTRL_STOP))
+    print_string(window, padding_x, 0, f'{title}', color=title_color)
 
     if show_cancel_option:
-        # tcod.console_print(window, 0, height - 1, '<ESC TO CANCEL>')
+        # print_string(window, 0, height - 1, '<ESC TO CANCEL>')
         string = '<ESC TO CANCEL>'
         x = center_x_for_text(width, string)
-        tcod.console_print(window, x, height - 1, string)
+        print_string(window, x, height - 1, string)
 
     window_x, window_y = set_window_on_screen(window_x, window_y, width, height)
     tcod.console_blit(window, 0, 0, width, height, 0, window_x, window_y, 1, 1)
@@ -109,21 +106,7 @@ def render_description_window(game):
         #title = f'{ent.char} {ent.name}'
         title = f' {ent.full_name} '
         body = ent.descr
-        extend_body = []
-
-        if ent.fighter:
-            tcod.console_set_color_control(tcod.COLCTRL_1, colors.dark_crimson, colors.black)
-            extend_body += [' ', f'Blocking its attacks seems %c{game.player.fighter.average_chance_to_block(ent)}%c.' %(tcod.COLCTRL_1, tcod.COLCTRL_STOP)]
-
-        if game.debug['ent_info']:
-            if ent.fighter:
-                extend_body += [' ',f'hp:{ent.fighter.hp}/{ent.fighter.max_hp}', f'av:{ent.fighter.defense}',
-                                f'dmg:{ent.fighter.base_dmg_range}', f'Your ctb:{game.player.fighter.average_chance_to_block(ent, debug=True)}']
-            if ent.architecture:
-                ext1 = ent.architecture.on_interaction.__name__ if ent.architecture.on_interaction else None
-                ext2 = ent.architecture.on_collision.__name__ if ent.architecture.on_collision else None
-                extend_body += [' ',f'interact:{ext1}', f'collision:{ext2}']
-
+        extend_body = ent.extended_descr(game)
 
         width = min(len(body), round(cfg.SCREEN_WIDTH//2))
         draw_window(title, body, window_x=x, window_y=y, forced_width=width, show_cancel_option=False, title_color=ent.color, extend_body=extend_body)

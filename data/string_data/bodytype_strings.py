@@ -1,4 +1,4 @@
-from data.shared_data.types_data import BodyType
+from data.data_types import BodyType
 
 bodytype_name_data = {
     BodyType.SMALL: 'small',

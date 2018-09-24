@@ -1,6 +1,6 @@
 from components.architecture import Architecture
-from data.shared_data.types_data import ItemType, ContainerType, Material
-from data.shared_data.types_data import RarityType
+from data.data_types import ItemType, ContainerType, Material
+from data.data_types import RarityType
 from gameobjects.block_level import BlockLevel
 
 arch_containers_data = {

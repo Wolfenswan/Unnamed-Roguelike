@@ -3,6 +3,11 @@ from random import randint, choice
 
 import tcod
 
+from components.actors.status_modifiers import Presence
+from data.actor_data.status_mod_data import status_modifiers_data
+from gui.messages import Message
+
+
 class BaseAI:
     def __init__(self, movement = None, attack=None):
         self.movement = movement
@@ -18,9 +23,10 @@ class BaseAI:
     def take_turn(self, game, fov_map):
 
         results = []
+        npc = self.owner
+        presence = npc.fighter.presence
         target = game.player
         game_map = game.map
-        npc = self.owner
 
         # free_line = game.map.free_line_between_pos(target.x, target.y, npc.x, npc.y, game)
         # print(free_line)
@@ -29,9 +35,28 @@ class BaseAI:
         planned_action_results = npc.actionplan.process_queue()
         if planned_action_results:
             results.extend(planned_action_results)
+            return results
 
-        # Otherwise check if the npc can see the player #
-        elif tcod.map_is_in_fov(fov_map, npc.x, npc.y):
+        if presence[Presence.STUNNED]:
+            message = Message(f'PLACEHOLDER: {npc.name} is stunned and skipping turn.')
+            results.append({'message': message})
+            return results
+
+        if presence[Presence.DAZED]:
+            if randint(0,100) <= status_modifiers_data[Presence.DAZED]['skip_turn_chance']:
+                message = Message(f'PLACEHOLDER: {npc.name} is dazed and skipping turn.')
+                results.append({'message': message})
+                return results
+
+        if self.owner.fighter.stamina < self.owner.fighter.max_stamina / 10:
+          # Switch to resting AI mode
+          self.owner.fighter.recover(self.owner.fighter.max_stamina / 2)  # TODO Placeholder Stamina Management
+          message = Message(f'PLACEHOLDER: {npc.name} is exhausted and skipping move to rest.')
+          results.append({'message': message})
+          return results
+
+        # First check if the npc can see the player #
+        if tcod.map_is_in_fov(fov_map, npc.x, npc.y):
             npc.color_bg = None  # some special attacks modify a character's background color, this resets it
 
             # Consider using a skill #
@@ -53,7 +78,7 @@ class BaseAI:
             elif npc.distance_to_ent(target) < 2:
                 results.extend(self.movement.decide_attack(target, game))
 
-        # As last alternative, the npc will randomly move around #
+        # If NPC is hidden from FOV, move randomly #
         else:
             dx, dy = randint(-1, 1), randint(-1, 1)
             x, y = npc.x + dx, npc.y + dy
@@ -61,3 +86,11 @@ class BaseAI:
                 npc.move(dx, dy)
 
         return results
+
+    def set_behavior(self, movement=None, attack=None):
+        if movement:
+            self.movement = movement
+            self.movement.owner = self
+        if attack:
+            self.attack = attack
+            self.attack.owner = self

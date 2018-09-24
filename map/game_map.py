@@ -3,7 +3,6 @@ from cmath import sqrt
 from random import choice
 
 from gameobjects.block_level import BlockLevel
-from gameobjects.util_functions import blocking_entity_at_pos
 from map.map_algo import Tunneling, DrunkWalk
 from map.tile import Tile
 

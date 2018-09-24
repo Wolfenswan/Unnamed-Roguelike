@@ -29,11 +29,6 @@ def process_turn_results(player_turn_results, game, fov_map):
         # List of results that activate the enemy's turn #
         enemy_turn_on = [item_added, item_dropped, item_consumed, item_equipped, item_dequipped, item_prepared]
 
-        # if not player.in_combat(game):
-        #     pass
-        # else:
-        #     pass
-
         if message:
             message.add_to_log(game)
 
@@ -67,7 +62,7 @@ def process_turn_results(player_turn_results, game, fov_map):
             else:
                 # TODO placeholder for regeneration/resting
                 player.fighter.hp += player.fighter.max_hp/10
-                player.fighter.stamina += player.fighter.max_stamina/10
+                player.fighter.recover(player.fighter.max_stamina / 10) # TODO Placeholder Stamina Managment
                 game.state = GameStates.PLAYER_RESTING
 
         if fov_recompute:

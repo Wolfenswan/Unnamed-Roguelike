@@ -2,7 +2,7 @@ from random import randint
 
 from gui.messages import Message, MessageType
 
-
+# OLD #
 class ConfusedAI:
     def __init__(self, previous_ai, game, number_of_turns=10):
         self.previous_ai = previous_ai
@@ -16,7 +16,7 @@ class ConfusedAI:
             random_y = self.owner.y + randint(0, 2) - 1
 
             if random_x != self.owner.x and random_y != self.owner.y:
-                self.owner.move_towards(random_x, random_y, game)
+                self.owner.move_towards((random_x, random_y),game)
 
             self.number_of_turns -= 1
         else:

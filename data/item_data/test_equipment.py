@@ -1,6 +1,6 @@
 from config_files import colors
-from data.shared_data.types_data import ItemType, Material
-from data.shared_data.types_data import RarityType
+from data.data_types import ItemType, Material
+from data.data_types import RarityType
 from data.item_data.wp_movesets import moveset_sword, moveset_spear
 
 WP_CHAR = '\\'
@@ -105,15 +105,26 @@ test_equipment_data = {
         'e_to': OH_EQUIP,
         'l_radius': 3
     },
-    'shield': {
+    'round_shield': {
         'name': 'Shield',
         'materials': (Material.LEATHER, Material.OAK, Material.IRON),
-        'descr': 'A simple shield.',
+        'descr': 'A simple, round shield.',
         'type': ItemType.SHIELD,
         'rarity': RarityType.COMMON,
         'dlvls': (1,99),
         "char": ')',
         'e_to': OH_EQUIP,
         'block_def': 2
+    },
+    'tower_shield': {
+        'name': 'tower_shield',
+        'materials': (Material.IRON, Material.STEEL),
+        'descr': 'A large shield, covering most of your upper body.',
+        'type': ItemType.SHIELD,
+        'rarity': RarityType.RARE,
+        'dlvls': (1,99),
+        "char": ')',
+        'e_to': OH_EQUIP,
+        'block_def': 6
     }
 }

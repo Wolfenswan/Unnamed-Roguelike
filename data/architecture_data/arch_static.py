@@ -1,5 +1,4 @@
 from config_files import colors
-from data.shared_data.types_data import RarityType
 from gameobjects.block_level import BlockLevel
 
 arch_static_data = {

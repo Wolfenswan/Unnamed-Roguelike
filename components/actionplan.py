@@ -8,7 +8,7 @@ class Actionplan:
     def add_to_queue(self, execute_in=1, planned_function=None, planned_function_args=None, fixed=False):
         """
         Add function to queue to execute in n turns.
-        # TODO Should instances where an actor has to skip a turn(e.g. stunned) be indicating by a unique switch?
+        # TODO Should instances where an actor has to skip a turn(e.g. stunned) be indicated via a unique switch?
 
         :param execute_in: Delay until plan is executed.
         :type execute_in: int
@@ -63,7 +63,7 @@ class Actionplan:
                 results.extend(self.execute_plan(plan))
                 del self.planned_queue[self.planned_queue.index(plan)]
 
-            logging.debug(f'Planned queue after exexuting plan(s): {self.planned_queue}')
+            logging.debug(f'Planned queue after executing plan(s): {self.planned_queue}')
 
         return results
 
@@ -78,6 +78,8 @@ class Actionplan:
                 return results
 
             if function:
-                results.extend(function(*function_args))
+                returns = function(*function_args)
+                if returns:
+                    results.extend(returns)
 
         return results

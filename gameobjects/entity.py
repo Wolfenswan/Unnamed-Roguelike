@@ -4,13 +4,14 @@ from enum import Enum, auto
 import tcod
 
 from components.actionplan import Actionplan
+from components.actors.status_modifiers import Presence
 from components.inventory.inventory import Inventory
 from components.inventory.paperdoll import Paperdoll
-from data.shared_data.types_data import BodyType
+from config_files import colors
+from data.data_types import BodyType
 from data.string_data.bodytype_strings import bodytype_name_data
 from data.string_data.material_strings import material_name_data
-from debug.timer import debug_timer
-from gameobjects.util_functions import blocking_entity_at_pos, entity_at_pos
+from gameobjects.util_functions import entity_at_pos
 from rendering.render_order import RenderOrder
 
 
@@ -58,6 +59,34 @@ class Entity:
         self.skills = skills  # dictionary
         self.architecture = architecture
         self.set_ownership() # Sets ownership for all components
+    
+    def set_ownership(self):
+        if self.fighter:
+            self.fighter.owner = self
+
+        if self.ai:
+            self.ai.owner = self
+
+        if self.item:
+            self.item.owner = self
+
+        if self.inventory:
+            self.inventory.owner = self
+            self.paperdoll.owner = self
+            self.qu_inventory.owner = self
+
+        if self.architecture:
+            self.architecture.owner = self
+
+        if self.skills is not None:
+            for skill in self.skills.values():
+                skill.owner = self
+
+        self.actionplan.owner = self
+
+    ###############################
+    # ATTRIBUTE RELATED FUNCTIONS #
+    ###############################
 
     @property
     def pos(self):
@@ -88,6 +117,68 @@ class Entity:
         # TODO doors (open & unlocked)
 
         return full_name.title()
+
+    @property
+    def pronoun(self):
+        return 'it' if not self.is_player else 'you'
+
+    @property
+    def state_verb(self):
+        return 'is' if not self.is_player else 'are'
+
+    def extended_descr(self, game):
+        extend_descr = []
+        # TODO All colors are WIP
+        if self.fighter and game.player.fighter.shield:
+            tcod.console_set_color_control(tcod.COLCTRL_1, colors.dark_crimson, colors.black)
+            extend_descr += [' ', f'Blocking its attacks will be %c{game.player.fighter.average_chance_to_block(self)}%c.'
+                             %(tcod.COLCTRL_1, tcod.COLCTRL_STOP)]
+
+        if self.fighter and self.fighter.presence[Presence.DAZED]:
+            tcod.console_set_color_control(tcod.COLCTRL_1, colors.dark_crimson, colors.black)
+            extend_descr += [' ',f'{self.pronoun.title()} {self.state_verb} %cdazed%c and not fully present.'
+                             % (tcod.COLCTRL_1, tcod.COLCTRL_STOP)]
+
+        if self.fighter and self.fighter.presence[Presence.STUNNED]:
+            tcod.console_set_color_control(tcod.COLCTRL_1, colors.dark_crimson, colors.black)
+            extend_descr += [' ',f'{self.pronoun.title()} {self.state_verb} %cstunned%c and unable to attack.'
+                             % (tcod.COLCTRL_1, tcod.COLCTRL_STOP)]
+
+        if game.debug['ent_info']:
+            if self.fighter:
+                extend_descr += [' ', f'hp:{self.fighter.hp}/{self.fighter.max_hp}',
+                                f'av:{self.fighter.defense} (modded:{self.fighter.modded_defense})',
+                                f'dmg:{self.fighter.base_dmg_range} (modded:{self.fighter.modded_dmg_range})',
+                                f'Your ctb:{game.player.fighter.average_chance_to_block(self, debug=True)}']
+            if self.architecture:
+                ext1 = self.architecture.on_interaction.__name__ if self.architecture.on_interaction else None
+                ext2 = self.architecture.on_collision.__name__ if self.architecture.on_collision else None
+                extend_descr += [' ', f'interact:{ext1}', f'collision:{ext2}']
+
+        return extend_descr
+
+    def available_skills(self, game):
+        available_skills = [skill for skill in self.skills.values() if skill.is_available(game)]
+        return available_skills
+
+    def cooldown_skills(self, reset=False):
+        for skill in self.skills.values():
+            skill.cooldown_skill(reset=reset)
+
+    def is_visible(self, fov_map):
+        return tcod.map_is_in_fov(fov_map, self.x, self.y)
+
+    def in_combat(self, game): # NOTE: Only relevant for player at the moment.
+        enemies = game.npc_ents
+        visible_enemies = self.visible_enemies(enemies, game.fov_map)
+        if len(visible_enemies) > 0:
+            return True
+        else:
+            return False
+
+    ####################
+    # ACTION FUNCTIONS #
+    ####################
 
     def move(self, dx, dy):
         # Move the entity by a given amount
@@ -131,6 +222,10 @@ class Entity:
         #     dx = int(round(dx / distance))
         #     dy = int(round(dy / distance))
 
+    #####################
+    # UTILITY FUNCTIONS #
+    #####################
+
     def distance_to_pos(self, x, y):
         return math.sqrt((x - self.x) ** 2 + (y - self.y) ** 2)
 
@@ -171,50 +266,21 @@ class Entity:
 
         return dx, dy
 
-    def same_pos(self, other):
-        return self.pos == other.pos
-
-    def is_visible(self, fov_map):
-        return tcod.map_is_in_fov(fov_map, self.x, self.y)
-
-    def available_skills(self, game):
-        available_skills = [skill for skill in self.skills.values() if skill.is_available(game)]
-        return available_skills
-
-    def cooldown_skills(self, reset=False):
-        for skill in self.skills.values():
-            skill.cooldown_skill(reset=reset)
+    def same_pos_as(self, other_ent):
+        return self.pos == other_ent.pos
 
     def get_nearby_entities(self, game, ai_only=False, dist=2, filter_player = True):
         """ returns nearby entitis in given distance """
-        # TODO bugfix & check perfomance
+        # TODO check perfomance, double check if works as expected
         entities_in_range = [ent for ent in game.entities if ent.distance_to_ent(self) <= dist and ent != self and (ai_only and ent.ai is not None) and (filter_player and ent.is_player == False)]
-        #entities_in_range.sort(key=self.distance_to_ent)
         return entities_in_range
 
-    def set_ownership(self):
-        if self.fighter:
-            self.fighter.owner = self
+    def enemies_in_distance(self, hostile_entities, dist=2): # NOTE: Only relevant for player at the moment.
+        """ returns nearby monsters in given distance. Note: dist=2 covers all tiles right next to the player. """
+        enemies_in_distance = [ent for ent in hostile_entities if self.distance_to_ent(ent) <= dist and ent != self and ent.fighter is not None and not ent.is_corpse]
+        return enemies_in_distance
 
-        if self.ai:
-            self.ai.owner = self
-
-        if self.item:
-            self.item.owner = self
-
-        if self.inventory:
-            self.inventory.owner = self
-            self.paperdoll.owner = self
-            self.qu_inventory.owner = self
-
-        if self.architecture:
-            self.architecture.owner = self
-
-        if self.skills is not None:
-            for skill in self.skills.values():
-                skill.owner = self
-
-        self.actionplan.owner = self
-
-
-
+    def visible_enemies(self, hostile_entities, fov_map): # NOTE: Only relevant for player at the moment.
+        enemies_in_distance = self.enemies_in_distance(hostile_entities, dist=self.fighter.vision)
+        visible_enemies = [ent for ent in enemies_in_distance if ent.is_visible(fov_map) and ent != self and ent.fighter is not None and not ent.is_corpse]
+        return visible_enemies

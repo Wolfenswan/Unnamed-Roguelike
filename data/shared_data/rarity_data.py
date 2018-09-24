@@ -1,4 +1,4 @@
-from data.shared_data.types_data import MonsterType, ContainerType, ItemType, GenericType, Material, Condition, \
+from data.data_types import MonsterType, ContainerType, ItemType, GenericType, Material, Condition, \
     RarityType, Craftsmanship, BodyType
 
 rarity_values = {

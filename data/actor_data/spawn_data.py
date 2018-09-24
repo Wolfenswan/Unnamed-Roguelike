@@ -34,7 +34,7 @@
 from components.AI.behavior.simple import Simple
 from components.AI.behavior.swarm import Swarm
 from config_files import colors
-from data.shared_data.types_data import RarityType
+from data.data_types import RarityType
 
 spawn_data = {
     'roachling': {
@@ -43,7 +43,7 @@ spawn_data = {
         'color': colors.light_amber,
         'descr': 'Waddling upright like a clumsy child, the twitching antennae and multitude of freely jittering legs make an quick end to any passing resemblance.',
         'max_hp': (2,6),
-        'max_stamina': (20,20),
+        'max_stamina': (80,80),
         'base_armor': (0,0),
         'base_dmg_potential': (2,5),
         #'nat_vision': 6,
@@ -58,9 +58,9 @@ spawn_data = {
         'name': 'Dung Beetle',
         'char': 'd',
         'color': colors.beige,
-        'descr': "There is something uniquely unsettling about a giant beetle behaving like a agitated bull.",
+        'descr': "There is something uniquely unsettling about a giant beetle acting like an agitated bull. It's also the size of one, if you were wondering.",
         'max_hp': (12,16),
-        'max_stamina': (20,20),
+        'max_stamina': (100,100),
         'base_armor': (2,4),
         'base_dmg_potential': (4,6),
         #'nat_vision': 6,

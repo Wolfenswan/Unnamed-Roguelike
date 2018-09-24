@@ -12,19 +12,19 @@ class Moveset():
         return len(self.movelist.keys())
 
     @property
-    def dmg_mod(self):
-        return self.movelist[self.current_move].get('dmg_mod', 1)
+    def dmg_multipl(self):
+        return self.movelist[self.current_move].get('dmg_multipl', 1)
 
     @property
     def targets_gui(self):
         l_1 = [' ',' ',' ']
-        l_2 = [' ','@','%cX%c'  % (tcod.COLCTRL_1, tcod.COLCTRL_STOP)]#f' @%cX%c' % (tcod.COLCTRL_1, tcod.COLCTRL_STOP)
+        l_2 = [' ','@','%red%X%']
         l_3 = [' ',' ',' ']
         extra_hits = self.movelist[self.current_move].get('extra_hits', {})
         if extra_hits.get('target_behind'):
-            l_2 += '%cX%c' % (tcod.COLCTRL_1, tcod.COLCTRL_STOP)
+            l_2 += '%red%X%'
         if extra_hits.get('target_left'):
-            l_1[2] = '%cX%c' % (tcod.COLCTRL_1, tcod.COLCTRL_STOP)
+            l_1[2] = '%red%X%'
         if extra_hits.get('target_right'):
             l_3[2] = 'X'
 

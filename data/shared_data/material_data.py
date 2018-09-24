@@ -1,5 +1,5 @@
 from config_files import colors
-from data.shared_data.types_data import Material
+from data.data_types import Material
 
 item_material_data = {
     'wood_1': {

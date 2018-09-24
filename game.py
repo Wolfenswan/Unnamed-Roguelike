@@ -92,8 +92,3 @@ class Game:
     def floor_blocking_ents(self):
         blocking_ents = [v for v in self.entities if v.blocks.get(BlockLevel.FLOOR, False)]
         return blocking_ents
-
-    def interactable_entity_at_pos(self, x, y):
-        entity = next((entity for entity in self.entities if entity.pos == (x, y)
-                   and entity.architecture and entity.architecture.on_interaction), None)
-        return entity

@@ -6,7 +6,6 @@ import tcod
 
 from gameobjects.block_level import BlockLevel
 from gameobjects.entity import Entity
-from gameobjects.util_functions import blocking_entity_at_pos
 from gui.messages import Message, MessageType, MessageCategory
 from rendering.render_order import RenderOrder
 
