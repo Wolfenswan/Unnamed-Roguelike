@@ -1,3 +1,4 @@
+import textwrap
 from random import uniform
 
 import tcod
@@ -76,6 +77,21 @@ def randomize_rgb_color(color, factor_range = (0, 0.25), darken=False):
         color = (int(v + (255 - v) * factor) for v in color)
     color = tcod.Color(*color)
     return color
+
+
+def wrap_body(body, max_width=None):
+
+    filtered_body = re.findall('(%{1}\w+%{1})', body)
+    print('filtered:', filtered_body)
+
+    if filtered_body:
+        for e in filtered_body:
+            body = body.replace(e, '')
+        body = body.replace('%','')
+
+    body_wrapped = textwrap.wrap(body, max_width, replace_whitespace=False, break_long_words=False)
+
+    return body_wrapped
 
 
 def print_string(con, x, y, string, color=None, bgcolor=colors.black, alignment=tcod.LEFT, background=tcod.BKGND_DEFAULT):

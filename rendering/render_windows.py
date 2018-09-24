@@ -5,7 +5,7 @@ import tcod
 
 from config_files import cfg, colors
 from gameobjects.util_functions import entities_at_pos, entity_at_pos
-from rendering.util_functions import center_x_for_text, draw_console_borders, pos_on_screen, print_string
+from rendering.util_functions import center_x_for_text, draw_console_borders, pos_on_screen, print_string, wrap_body
 
 
 def set_window_on_screen(window_x, window_y, width, height):
@@ -41,12 +41,16 @@ def draw_window(title, body, options = None, window_x = None, window_y = None, p
             width = max(len(title), len(body)) + padding_x * 2
 
     #width = min(width, cfg.SCREEN_WIDTH//2)
-    body_wrapped = textwrap.wrap(body, width - padding_x * 2, replace_whitespace=False)
-    if extend_body:
-        body_wrapped.extend(extend_body)
+    # body_wrapped = textwrap.wrap(body, width - padding_x * 2, replace_whitespace=False, break_long_words=False)
+    # if extend_body:
+    #     body_wrapped.extend(extend_body)
 
     # Calculate window height #
     height = padding_y * 2
+    body_wrapped = wrap_body(body, max_width=(width - padding_x * 2))
+    if extend_body:
+        body_wrapped += extend_body
+
     body_height = len(body_wrapped) if len(body_wrapped) else 0
     if body_height:
         height += body_height
@@ -56,8 +60,8 @@ def draw_window(title, body, options = None, window_x = None, window_y = None, p
     # Create the window #
     window = tcod.console_new(width, height)
 
-    # Print the body to the window #
     y = padding_y
+
     for i, line in enumerate(body_wrapped):
         #print_string(window, padding_x, y, line)
         print_string(window, padding_x, y, line)
