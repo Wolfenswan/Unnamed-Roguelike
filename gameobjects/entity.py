@@ -131,18 +131,13 @@ class Entity:
         # TODO All colors are WIP
         if self.fighter and game.player.fighter.shield:
             tcod.console_set_color_control(tcod.COLCTRL_1, colors.dark_crimson, colors.black)
-            extend_descr += [' ', f'Blocking its attacks will be %c{game.player.fighter.average_chance_to_block(self)}%c.'
-                             %(tcod.COLCTRL_1, tcod.COLCTRL_STOP)]
+            extend_descr += [' ', f'Blocking its attacks will be %dark_crimson%{game.player.fighter.average_chance_to_block(self)}%.']
 
         if self.fighter and self.fighter.presence[Presence.DAZED]:
-            tcod.console_set_color_control(tcod.COLCTRL_1, colors.dark_crimson, colors.black)
-            extend_descr += [' ',f'{self.pronoun.title()} {self.state_verb} %cdazed%c and not fully present.'
-                             % (tcod.COLCTRL_1, tcod.COLCTRL_STOP)]
+            extend_descr += [' ',f'{self.pronoun.title()} {self.state_verb} %yellow%dazed% and slightly confused.']
 
         if self.fighter and self.fighter.presence[Presence.STUNNED]:
-            tcod.console_set_color_control(tcod.COLCTRL_1, colors.dark_crimson, colors.black)
-            extend_descr += [' ',f'{self.pronoun.title()} {self.state_verb} %cstunned%c and unable to attack.'
-                             % (tcod.COLCTRL_1, tcod.COLCTRL_STOP)]
+            extend_descr += [' ',f'{self.pronoun.title()} {self.state_verb} %yellow%stunned% and unable to attack.']
 
         if game.debug['ent_info']:
             if self.fighter:
@@ -214,13 +209,6 @@ class Entity:
                 if distance > 1.5:
                     self.try_move(dx, dy, game)
                     break
-
-        # TODO commented part can probably be deleted
-        # normalize it to length 1 (preserving direction), then round it and
-        # convert to integer so the movement is restricted to the map grid
-        # if distance > 2:
-        #     dx = int(round(dx / distance))
-        #     dy = int(round(dy / distance))
 
     #####################
     # UTILITY FUNCTIONS #

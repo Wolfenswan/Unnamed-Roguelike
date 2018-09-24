@@ -58,7 +58,7 @@ spawn_data = {
         'name': 'Dung Beetle',
         'char': 'd',
         'color': colors.beige,
-        'descr': "There is something uniquely unsettling about a giant beetle acting like an agitated bull. It's also the size of one, if you were wondering.",
+        'descr': "There is %blue%something% uniquely %green%unsettling% %blue%about% a giant beetle acting like an agitated bull. It's also the size of one, if you were wondering.",
         'max_hp': (12,16),
         'max_stamina': (100,100),
         'base_armor': (2,4),

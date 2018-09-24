@@ -31,8 +31,7 @@ def render_player_panel(game, con, panel_x, panel_y, width, height):
 
     # Health & Stamina #
     y += 2
-    #print_string(con, 1, y, f'Health : {player.fighter.hp}/{player.fighter.max_hp}', color = game.player.fighter.hp_color)
-    print_string(con, 1, y, f'Health : %red%{player.fighter.hp}%/{player.fighter.max_hp}')
+    print_string(con, 1, y, f'Health : %c{player.fighter.hp}/{player.fighter.max_hp}%c', color = game.player.fighter.hp_color)
     print_string(con, 1, y+1,  f'Stamina : %c{player.fighter.stamina}/{player.fighter.max_stamina}%c', color = game.player.fighter.stamina_color)
 
     # Equipment-derived stats #
