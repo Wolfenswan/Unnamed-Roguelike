@@ -80,7 +80,7 @@ def randomize_rgb_color(color, factor_range = (0, 0.25), darken=False):
 
 def print_string(con, x, y, string, color=None, bgcolor=colors.black, alignment=tcod.LEFT, background=tcod.BKGND_DEFAULT):
 
-    color_coded_words = re.findall('(%{1}\w+%{1}[+\s\w-]+%{1})+', string) # Catches any string of %color%string%
+    color_coded_words = re.findall('(%{1}\w+%{1}[+\s\w-]+%{1})', string) # Catches any string of %color%string%
     if color_coded_words:
         col_ctrls = ()
         for i, word in enumerate(color_coded_words):

@@ -145,12 +145,10 @@ def render_enemy_panel(game, con, panel_x, panel_y, width, height, color):
             tcod.console_set_color_control(tcod.COLCTRL_3, ent.fighter.stamina_color, tcod.black)
             status_line = f'%c{ent.fighter.hp_string.title()}%c|%c{ent.fighter.stamina_string.title()}%c'\
                           % (tcod.COLCTRL_2, tcod.COLCTRL_STOP, tcod.COLCTRL_3, tcod.COLCTRL_STOP)
-            x = 4
-
             for status, active in ent.fighter.presence.items():
                 if active:
-                    tcod.console_set_default_foreground(con, colors.white)
-                    status_line += f' %c{status.name[0]}%c' % (tcod.COLCTRL_1, tcod.COLCTRL_STOP)
+                    status_line += f' %white%{status.name[0]}%'
+
             print_string(con, 4, y, f'{status_line}')
 
             y += 1

@@ -174,9 +174,10 @@ class Entity:
             return False
 
     def proc_every_turn(self, last_player_action, game):
+        """
+        Things that should every proper turn (after player has done an action that prompts an enemy turn.)
+        """
         if self.is_player:
-            self.fighter.surrounded = self.fighter.check_surrounded(game)
-
             # TODO Placeholder for proper stamina managment
             if not self.in_combat(game) and not last_player_action.get('dodge'):
                 self.fighter.recover(self.fighter.max_stamina / 100)
