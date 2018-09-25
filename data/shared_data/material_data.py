@@ -6,6 +6,10 @@ item_material_data = {
         'type': Material.OAK,
         'color': colors.oak
     },
+    'creature_1': {
+        'type': Material.CHITIN,
+        'color': colors.dark_gray
+    },
     'cloth_1': {
         'type': Material.LINEN,
         'color': colors.linen

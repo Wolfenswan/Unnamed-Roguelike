@@ -41,6 +41,7 @@ def draw_window(title, body, options = None, window_x = None, window_y = None, p
             width = max(len(title), len(body)) + padding_x * 2
 
     #width = min(width, cfg.SCREEN_WIDTH//2)
+    # TODO: Wrapping is sometimes odd, as it does consider the (later removed) %colorcoding%-strings when wrapping
     body_wrapped = textwrap.wrap(body, width - padding_x * 2, replace_whitespace=False)
     if extend_body:
         body_wrapped.extend(extend_body)

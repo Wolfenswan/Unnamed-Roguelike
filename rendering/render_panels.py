@@ -3,7 +3,7 @@ import textwrap
 
 import tcod
 
-from components.actors.status_modifiers import Presence
+from components.actors.status_modifiers import Presence, Surrounded
 from config_files import colors, cfg as cfg
 from rendering.util_functions import center_x_for_text, setup_console, print_string
 
@@ -37,24 +37,26 @@ def render_player_panel(game, con, panel_x, panel_y, width, height):
     # Equipment-derived stats #
     y += 3
     # Defensive Stats #
-    surrounded = player.fighter.surrounded_value(game)
-    if surrounded == 1:
+    surrounded = player.fighter.surrounded(game)
+    if surrounded == Surrounded.THREATENED:
         print_string(con, 6, y, '*THREATENED*', color=colors.orange)
-    if surrounded == 2:
-        print_string(con, 6, y, '*SURROUNDED*', color=colors.red)
-    print_string(con, 1, y+1, f'Defense: {game.player.fighter.defense}') # TODO implement fighter.modded_defense
+    if surrounded == Surrounded.OVERWHELMED:
+        print_string(con, 6, y, '*OVERWHELMED*', color=colors.red)
+
+    print_string(con, 1, y +1, f'STR: {game.player.fighter.strength}')  # TODO implement fighter.modded_defense
+    print_string(con, 1, y+2, f'DEF: {game.player.fighter.defense}') # TODO implement fighter.modded_defense
 
     if player.fighter.shield:
         color = colors.dark_gray if not player.fighter.is_blocking else colors.white
-        print_string(con, 12, y+1, '*BLOCKING*', color = color)
+        print_string(con, 12, y+2, '*BLOCKING*', color = color)
 
     # Weapon #
-    y += 1
+    y += 2
     if player.fighter.weapon and player.fighter.weapon.moveset:
         print_string(con, 1, y+2, f'%c{game.player.fighter.weapon.name}%c:', color=game.player.fighter.weapon.color)
         print_string(con, 2, y+3,
                            f'Attack: {game.player.fighter.weapon.moveset.current_move}/{game.player.fighter.weapon.moveset.moves}')
-        print_string(con, 2, y+4, f'Damage: {game.player.fighter.modded_dmg_range[0]}-{game.player.fighter.modded_dmg_range[-1]}')
+        print_string(con, 2, y+4, f'Damage: {game.player.fighter.modded_dmg_potential[0]}-{game.player.fighter.modded_dmg_potential[-1]}')
 
         print_string(con, 2, y+6, f'Targets:')
         for i, line in enumerate(player.fighter.weapon.moveset.targets_gui):

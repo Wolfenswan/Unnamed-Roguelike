@@ -107,9 +107,9 @@ class Paperdoll:
 
 
 class Head:
-    def __init__(self, armor=None, amulet=None):
+    def __init__(self, armor=None, weapon=None):
         self.armor = armor
-        self.amulet = amulet
+        self.weapon = weapon
 
 
 class Torso:

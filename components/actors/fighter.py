@@ -2,7 +2,7 @@ from random import randint, choice, randrange
 
 import logging
 
-from components.actors.status_modifiers import Presence
+from components.actors.status_modifiers import Presence, Surrounded
 from config_files import colors
 from data.actor_data.status_mod_data import status_modifiers_data
 from data.string_data.combat_strings import atkdmg_string_data, stadmg_string_data
@@ -15,7 +15,7 @@ from rendering.render_order import RenderOrder
 
 
 class Fighter:
-    def __init__(self, hp, stamina, base_av, base_dmg_range, base_vision):
+    def __init__(self, hp, stamina, base_av, base_strength, base_vision):
         """
 
         :param hp:
@@ -35,7 +35,7 @@ class Fighter:
         self.__stamina = stamina
         self.max_stamina = stamina
         self.__base_av = base_av
-        self.__base_dmg_potential = base_dmg_range
+        self.__base_strength = base_strength
         self.__base_vision = base_vision
 
         self.is_blocking = False
@@ -129,19 +129,23 @@ class Fighter:
             self.__stamina = value
 
     @property
-    def base_dmg_range(self):
-        """
-        Attribute returns the entity's current damage potential (base + weapon)
-        as *inclusive* range with the fighter's base power added.
-        :return: inclusive range of min/max damage
-        :rtype: range
-        """
-        if self.weapon:
-            return range(self.__base_dmg_potential[0] + self.weapon.dmg_potential[0], self.__base_dmg_potential[1]+1 + self.weapon.dmg_potential[1]+1)
-        return range(self.__base_dmg_potential[0], self.__base_dmg_potential[1]+1)
+    def strength(self):
+        return self.__base_strength
 
     @property
-    def modded_dmg_range(self):
+    def base_dmg_potential(self):
+        """
+        Attribute returns the entity's current damage potential (base + weapon)
+        as tuple with the fighter's base str added.
+        :return: tuple of min/max damage
+        :rtype: tuple
+        """
+        if self.weapon:
+            return (self.strength+self.weapon.dmg_potential[0], self.strength + (self.weapon.dmg_potential[1]))
+        return (self.strength, self.strength)
+
+    @property
+    def modded_dmg_potential(self):
         w_mod = 1
         p_mod = 1
 
@@ -153,8 +157,12 @@ class Fighter:
 
         if self.presence[Presence.STUNNED]:
             p_mod = status_modifiers_data[Presence.STUNNED]['dmg_multipl']
-            
-        return range(round(self.base_dmg_range[0] * w_mod * p_mod), round(self.base_dmg_range[-1] * w_mod * p_mod))
+
+        return (round(self.base_dmg_potential[0] * w_mod * p_mod), round(self.base_dmg_potential[-1] * w_mod * p_mod))
+
+    @property
+    def dmg_roll(self):
+        return randint(*self.modded_dmg_potential)
 
     @property
     def defense(self):
@@ -245,14 +253,14 @@ class Fighter:
         else:
             return 'no'
 
-    def surrounded_value(self, game):
-        nearby_enemies = len(self.owner.enemies_in_distance(game.npc_ents))
-        if nearby_enemies <= 3:
-            return 0
-        elif nearby_enemies <= 5:
-            return 1
+    def surrounded(self, game):
+        nearby_enemies = len(self.owner.enemies_in_distance(game.npc_ents, dist=1.5))
+        if nearby_enemies < 3:
+            return Surrounded.FREE
+        elif nearby_enemies < 5:
+            return Surrounded.THREATENED
         else:
-            return 2
+            return Surrounded.OVERWHELMED
 
     def set_presence(self, presence, value, duration=0):
         self.presence[presence] = value
@@ -306,15 +314,17 @@ class Fighter:
         attack_string = 'hits'
         extra_targets = []
 
+        print(self.weapon)
+
         if self.weapon:
             move_results = self.weapon.moveset.execute(self.owner, target)
             attack_string = move_results.get('string', 'hits')
             extra_targets = move_results.get('extra_targets', [])
 
-        attack_power = choice(self.modded_dmg_range) * mod
+        attack_power = self.dmg_roll * mod
 
-        logging.debug(f'{self.owner.name} prepares to attack {target.name} with base damage {self.base_dmg_range},'
-                      f' (modded {self.modded_dmg_range}) for a power of {attack_power}')
+        logging.debug(f'{self.owner.name} prepares to attack {target.name} with base damage {self.base_dmg_potential},'
+                      f' (modded {self.modded_dmg_potential}) for a power of {attack_power}')
 
         if self.stamina < attack_power/3:
             message = Message(f'PLACEHOLDER: Attacking without enough Stamina!', category=MessageCategory.COMBAT,
@@ -410,7 +420,7 @@ class Fighter:
         Utility function for debug information and an entities description window.
         """
         average = 0
-        dmg_range = attacker.fighter.base_dmg_range
+        dmg_range = attacker.fighter.base_dmg_potential
         for dmg in dmg_range:
             average += self.block_chance(dmg)
         average /= len(dmg_range)
@@ -433,9 +443,13 @@ class Fighter:
 
     def dodge(self, dx, dy, game):
         results = []
-        if self.stamina >= self.defense:
-            animate_move_line(self.owner, dx, dy, 2, game, anim_delay=0.001)
-            results.append(self.exert('dodge', self.defense))
+        exertion = self.defense * 2
+        if self.stamina >= exertion:
+            animate_move_line(self.owner, dx, dy, 2, game, anim_delay=0.05)
+            results.append(self.exert('dodge', exertion))
+        else:
+
+            results.append({'message':Message('PLACEHOLDER: Stamina too low to dodge!')})
         return results
 
     def death(self, game):

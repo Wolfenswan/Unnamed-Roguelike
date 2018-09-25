@@ -81,9 +81,6 @@ class NPC(Entity):
             logging.debug(f'{self.name} could not find a* path. falling back to regular movement')
             self.move_towards(target, game)
 
-            # Delete the path to free memory
-        tcod.path_delete(my_path)
-
     def bark(self,type):
         """ make some noise """
         results = []

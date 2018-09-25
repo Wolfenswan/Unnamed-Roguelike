@@ -38,6 +38,12 @@ cond_descr_data = {
             ),
             Condition.LEGENDARY: default_descr['legend']
         },
+        Material.CHITIN: {
+            Condition.POOR: default_descr['poor'],
+            Condition.NORMAL: default_descr['normal'],
+            Condition.GOOD: default_descr['good'],
+            Condition.LEGENDARY: default_descr['legend']
+        },
         Material.IRON: {
             Condition.POOR:(
                 'If you are lucky, all that rust might poison the enemy.',

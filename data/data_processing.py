@@ -8,6 +8,7 @@ from components.architecture import Architecture
 from components.inventory.inventory import Inventory
 from components.items.equipment import Equipment
 from components.items.item import Item
+from components.items.moveset import Moveset
 from components.items.useable import Useable
 from components.skill import Skill
 from config_files import colors
@@ -15,6 +16,7 @@ from data.actor_data.skills_data import skills_data
 from data.actor_data.spawn_data import spawn_data
 from data.architecture_data.arch_static import arch_static_data
 from data.architecture_data.arch_containers import arch_containers_data
+from data.item_data.wp_creature import wp_creature_data
 from data.string_data.craft_strings import craft_descr_data
 from data.actor_data.bodytype_data import bodytype_data
 from data.shared_data.quality_data import qual_cond_data, qual_craft_data
@@ -41,7 +43,7 @@ def merge_dictionaries(dicts):
     return merged_dict
 
 
-item_data = [use_scrolls_data, use_potions_data, test_equipment_data]
+item_data = [use_scrolls_data, use_potions_data, test_equipment_data, wp_creature_data]
 ITEM_DATA_MERGED = merge_dictionaries(item_data)
 
 actor_data = [spawn_data]
@@ -90,7 +92,7 @@ def get_generic_data(data, material=None, condition=None, craftsmanship=None, bo
     Retrieves basic attributes from the data dictionary and if necessary modifies them as per material, condition and
     craftsmanship values.
     """
-    char = data['char']
+    char = data.get('char','?')
     color = data.get('color', colors.white)
     name = data['name'].title()
     descr = data.get('descr', 'No description')
@@ -216,7 +218,7 @@ def gen_npc_from_dict(data, x, y, game):
     hp = randint(*data['max_hp'])
     stamina = randint(*data['max_stamina'])
     base_av = randint(*data['base_armor'])
-    base_dmg_potential = data['base_dmg_potential']
+    base_strength = randint(*data['base_strength'])
     loadouts = data.get('loadouts')
     vision = data.get('nat_vision', 8)
     ai_movement = data.get('ai_movement', Simple)
@@ -225,13 +227,14 @@ def gen_npc_from_dict(data, x, y, game):
 
     # Modify values according to bodytype #
     hp_mod_multipl = bodytype.get('hp_mod_multipl', 1)
-    dmg_mod_multipl = bodytype.get('dmg_mod_multipl',1)
+    str_multipl = bodytype.get('str_multipl',1)
     av_mod_multipl = bodytype.get('av_mod_multipl', 1)
     hp = round(hp * hp_mod_multipl)
-    base_dmg_potential = (round(base_dmg_potential[0] * dmg_mod_multipl), round(base_dmg_potential[1] * dmg_mod_multipl))
+    #base_dmg_potential = (round(base_dmg_potential[0] * str_multipl), round(base_dmg_potential[1] * str_multipl))
     base_av = round(base_av * av_mod_multipl)
+    base_strength = round(base_strength * bodytype.get('str_multipl',1))
 
-    fighter_component = Fighter(hp, stamina, base_av, base_dmg_potential, vision)
+    fighter_component = Fighter(hp, stamina, base_av, base_strength, vision)
     ai_component = BaseAI(movement=ai_movement(), attack=ai_attack())
     inventory_component = Inventory(12) # Todo Placeholder #
     skills_component = None
@@ -244,6 +247,7 @@ def gen_npc_from_dict(data, x, y, game):
 
     npc = NPC(*arguments, bodytype=bodytype.get('type'), fighter=fighter_component, ai=ai_component, skills=skills_component, inventory=inventory_component)
 
+    print(loadouts)
     if loadouts is not None:
         loadout = pick_from_data_dict_by_rarity(loadouts, game.dlvl)
         gen_loadout(npc, loadouts[loadout], game)
@@ -296,8 +300,12 @@ def gen_item_from_data(data, x, y, materials=False, conditions=False, craftsmans
         l_radius = data.get('l_radius')
         two_handed = data.get('two_handed')
         moveset = data.get('moveset')
+        if moveset:
+            moveset_component = Moveset(moveset.copy())
+        else:
+            moveset_component = None
 
-        equipment_component = Equipment(equip_to, dmg_potential = dmg_potential, av = av, block_def=block_def, qu_slots = qu_slots, l_radius = l_radius, moveset = moveset, two_handed = two_handed)
+        equipment_component = Equipment(equip_to, dmg_potential = dmg_potential, av = av, block_def=block_def, qu_slots = qu_slots, l_radius = l_radius, moveset = moveset_component, two_handed = two_handed)
 
     item_component = Item(condition=condition.get('type'), craftsmanship=craftsmanship.get('type'), useable=useable_component, equipment=equipment_component)
 
@@ -330,10 +338,11 @@ def gen_loadout(actor, loadout, game):
     logging.debug(f'Generating loadout from {loadout} for {actor.name}({actor}).')
     equipment = loadout.get('equipment',{})
     backpack = loadout.get('backpack',{})
+
     for k in equipment.keys():
         item = gen_item_from_data(ITEM_DATA_MERGED.get(k), 0, 0, **equipment[k])
         actor.paperdoll.equip(item, game)
 
-    for i in loadout.get('backpack',()):
+    for i in backpack:
         item = gen_item_from_data(ITEM_DATA_MERGED.get(i), 0, 0)
         actor.inventory.add(item)

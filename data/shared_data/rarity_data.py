@@ -11,6 +11,7 @@ rarity_values = {
     RarityType.EXOTIC: 30,
     RarityType.LEGENDARY: 10,
     RarityType.UNIQUE: -1,
+    RarityType.FORBIDDEN: -1,
 
     ItemType.USEABLE: 100,
     ItemType.MISC: 80,
@@ -27,6 +28,7 @@ rarity_values = {
     MonsterType.LEADER: 10,
 
     Material.OAK: 100,
+    Material.CHITIN: 100,
     Material.LINEN: 100,
     Material.LEATHER: 90,
     Material.IRON: 80,

@@ -12,8 +12,6 @@ class Equipment():
         self.l_radius = l_radius
         self.two_handed = two_handed
         self.moveset = moveset
-        if self.moveset:
-            self.moveset = Moveset(self.moveset)
 
     @property
     def name(self):

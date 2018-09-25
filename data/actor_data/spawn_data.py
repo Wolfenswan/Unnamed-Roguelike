@@ -45,8 +45,15 @@ spawn_data = {
         'max_hp': (2,6),
         'max_stamina': (80,80),
         'base_armor': (0,0),
-        'base_dmg_potential': (2,5),
+        'base_strength': (2,2),
         #'nat_vision': 6,
+        'loadouts': {
+            'loadout1': {
+                'equipment':{
+                    'ins_mandibles':{}
+                }
+            }
+        },
         'ai_movement': Swarm,
         'ai_attack': Swarm,
         'barks': ('insect'),
@@ -58,11 +65,11 @@ spawn_data = {
         'name': 'Dung Beetle',
         'char': 'd',
         'color': colors.beige,
-        'descr': "There is %blue%something% uniquely %green%unsettling% %blue%about% a giant beetle acting like an agitated bull. It's also the size of one, if you were wondering.",
+        'descr': "There is something uniquely unsettling about a giant beetle acting like an agitated bull. It's also the size of one, if you were wondering.",
         'max_hp': (12,16),
         'max_stamina': (100,100),
         'base_armor': (2,4),
-        'base_dmg_potential': (4,6),
+        'base_strength': (3,6),
         #'nat_vision': 6,
         'ai_movement': Simple,
         'ai_attack': Simple,

@@ -47,28 +47,36 @@ def game_loop(game):
         action = handle_keys(key, game.state)
         #mouse_action = handle_mouse(mouse)
 
-        # Process player input into turn results #
-        player_turn_results = process_player_input(action, game, fov_map, targeting_item = targeting_item)
-        logging.debug(f'Turn {game.turn} player results: {player_turn_results}')
+        if action:
 
-        # The game exits if player turn results returns False #
-        if player_turn_results == False:
-            return True
+            # Process player input into turn results #
+            player_turn_results = process_player_input(action, game, fov_map, targeting_item = targeting_item)
+            logging.debug(f'Turn {game.turn} player results: {player_turn_results}')
 
-        # Process turn results #
-        processed_turn_results = process_turn_results(player_turn_results, game, fov_map)
-        logging.debug(f'Turn {game.turn}. State: {game.state}. Processed results: {player_turn_results}')
+            # The game exits if player turn results returns False #
+            if player_turn_results == False:
+                return True
 
-        # Enemies take turns #
-        if game.state == GameStates.ENEMY_TURN:
-            process_npc_actions(game)
+            # Process turn results #
+            processed_turn_results = process_turn_results(player_turn_results, game, fov_map)
+            logging.debug(f'Turn {game.turn}. State: {game.state}. Processed results: {player_turn_results}')
 
-        # Prepare for next turn #
-        for turn_result in processed_turn_results:
-            fov_recompute = turn_result.get('fov_recompute', False)
-            targeting_item = turn_result.get('targeting_item')
+            # Enemies take turns #
+            if game.state == GameStates.ENEMY_TURN:
 
-        game.turn += 1
+                process_npc_actions(game)
+
+                # TODO Placeholder for proper stamina managment
+                if not player.in_combat(game) and not action.get('dodge'):
+                    player.fighter.recover(
+                        player.fighter.max_stamina / 100)
+
+                game.turn += 1
+
+            # Prepare for next turn #
+            for turn_result in processed_turn_results:
+                fov_recompute = turn_result.get('fov_recompute', False)
+                targeting_item = turn_result.get('targeting_item')
         
 if __name__ == '__main__':
     initialize_logging(debugging=True)

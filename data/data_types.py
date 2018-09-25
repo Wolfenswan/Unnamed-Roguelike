@@ -33,11 +33,13 @@ class RarityType(Enum):
     EXOTIC = auto()
     LEGENDARY = auto()
     UNIQUE = auto()
+    FORBIDDEN = auto()
 
 
 # Entity Quality #
 class Material(Enum):
     OAK = auto()
+    CHITIN = auto()
     LINEN = auto()
     COTTON = auto()
     LEATHER = auto()

@@ -1,11 +1,18 @@
 import logging
+from random import choice, randint
+
 import tcod
 
 
 class Moveset():
     def __init__(self, movelist):
+        self.random = False
         self.movelist = movelist
         self.current_move = 1
+
+        if self.movelist.get('random'):
+            self.random = True
+            del self.movelist['random']
 
     @property
     def moves(self):
@@ -34,11 +41,17 @@ class Moveset():
         move = self.movelist[self.current_move]
         if move.get('extra_hits'):
             move['extra_targets'] = self.get_extra_targets(attacker, target, move['extra_hits'])
+        if not isinstance(move['string'], str):
+            move['string'] = choice(move['string'])
         self.cycle_moves()
         return move
 
     def cycle_moves(self, reset=False):
-        self.current_move += 1
+        if self.random:
+            self.current_move = randint(1, self.moves)
+        else:
+            self.current_move += 1
+
         if self.current_move > self.moves or reset:
             self.current_move = 1
 

@@ -32,3 +32,17 @@ moveset_spear = {
         'extra_hits': {'target_behind': True}
     }
 }
+
+moveset_mandibles = {
+    'random' : True,
+    1: {
+        'string': 'bites'
+    },
+    2: {
+        'string': 'gnaws at'
+    },
+    3: {
+        'string': 'nibbles from',
+        'dmg_multipl': 0.75
+    }
+}

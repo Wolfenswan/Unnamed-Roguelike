@@ -65,6 +65,6 @@ class Item:
                 list.append('')
                 list.extend(textwrap.wrap(f' This weapon cycles through {self.equipment.moveset.moves} attacks:', max_width))
                 for k, v in self.equipment.moveset.movelist.items():
-                    list.extend(textwrap.wrap(f'{k}: {v["descr"]}', max_width))
+                    list.extend(textwrap.wrap(f'{k}: {v.get("descr")}', max_width))
 
         return list

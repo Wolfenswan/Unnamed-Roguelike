@@ -143,8 +143,10 @@ class Entity:
             if self.fighter:
                 extend_descr += [' ', f'hp:{self.fighter.hp}/{self.fighter.max_hp}',
                                 f'av:{self.fighter.defense} (modded:{self.fighter.modded_defense})',
-                                f'dmg:{self.fighter.base_dmg_range} (modded:{self.fighter.modded_dmg_range})',
+                                f'dmg:{self.fighter.base_dmg_potential} (modded:{self.fighter.modded_dmg_potential})',
                                 f'Your ctb:{game.player.fighter.average_chance_to_block(self, debug=True)}']
+            if self.fighter.weapon:
+                extend_descr += [' ', f'wp:{self.fighter.weapon.full_name}']
             if self.architecture:
                 ext1 = self.architecture.on_interaction.__name__ if self.architecture.on_interaction else None
                 ext2 = self.architecture.on_collision.__name__ if self.architecture.on_collision else None
@@ -257,14 +259,14 @@ class Entity:
     def same_pos_as(self, other_ent):
         return self.pos == other_ent.pos
 
-    def get_nearby_entities(self, game, ai_only=False, dist=2, filter_player = True):
+    def get_nearby_entities(self, game, ai_only=False, dist=1.5, filter_player = True):
         """ returns nearby entitis in given distance """
         # TODO check perfomance, double check if works as expected
         entities_in_range = [ent for ent in game.entities if ent.distance_to_ent(self) <= dist and ent != self and (ai_only and ent.ai is not None) and (filter_player and ent.is_player == False)]
         return entities_in_range
 
-    def enemies_in_distance(self, hostile_entities, dist=2): # NOTE: Only relevant for player at the moment.
-        """ returns nearby monsters in given distance. Note: dist=2 covers all tiles right next to the player. """
+    def enemies_in_distance(self, hostile_entities, dist=1.5): # NOTE: Only relevant for player at the moment.
+        """ returns nearby monsters in given distance. Note: dist=1.5 covers all tiles right next to the player. """
         enemies_in_distance = [ent for ent in hostile_entities if self.distance_to_ent(ent) <= dist and ent != self and ent.fighter is not None and not ent.is_corpse]
         return enemies_in_distance
 

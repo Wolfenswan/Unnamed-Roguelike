@@ -37,9 +37,6 @@ def process_player_input(action, game, fov_map, targeting_item = None):
 
     turn_results = []
 
-    # if player.fighter.is_blocking:
-    #     player.fighter.toggle_blocking()
-
     active_player_states = [GameStates.PLAYERS_TURN, GameStates.PLAYER_RESTING]
     if game.state in active_player_states:
 
@@ -90,6 +87,8 @@ def process_player_input(action, game, fov_map, targeting_item = None):
                     dodge_results = player.fighter.dodge(dx, dy, game)
                     turn_results.extend(dodge_results)
                     turn_results.append({'fov_recompute': True})
+                    if player.fighter.is_blocking:
+                        player.fighter.toggle_blocking()
 
                 if not target or not target.fighter:
                     # Movement other than fighting resets the current moveset
