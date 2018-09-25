@@ -38,6 +38,7 @@ class Fighter:
         self.__base_strength = base_strength
         self.__base_vision = base_vision
 
+        self.surrounded = Surrounded.FREE
         self.is_blocking = False
         self.presence = {
             Presence.DAZED: False,
@@ -183,6 +184,10 @@ class Fighter:
 
         if self.presence[Presence.STUNNED]:
             modded_def *= status_modifiers_data[Presence.STUNNED]['av_multipl']
+
+        if self.surrounded != Surrounded.FREE:
+            modded_def *= status_modifiers_data[self.surrounded]['av_multipl']
+
         return round(modded_def)
     
     @property
@@ -253,7 +258,7 @@ class Fighter:
         else:
             return 'no'
 
-    def surrounded(self, game):
+    def check_surrounded(self, game):
         nearby_enemies = len(self.owner.enemies_in_distance(game.npc_ents, dist=1.5))
         if nearby_enemies < 3:
             return Surrounded.FREE

@@ -35,27 +35,28 @@ def render_player_panel(game, player_stats_change, con, panel_x, panel_y, width,
     print_string(con, 1, y, hp_string, color=game.player.fighter.hp_color)
     hp_diff = player_stats_change[0]
     if hp_diff != 0:
-        col = 'darker_green' if hp_diff > 0 else 'darker_red'
-        print_string(con, len(hp_string)-2, y, f'(%{col}%{hp_diff}%)')
+        col = '%darker_green%+' if hp_diff > 0 else '%darker_red%'
+        print_string(con, len(hp_string)-2, y, f'({col}{hp_diff}%)')
 
     sta_string = f'STAMINA : %c{player.fighter.stamina}/{player.fighter.max_stamina}%c'
     print_string(con, 1, y+1,  sta_string, color = game.player.fighter.stamina_color)
     sta_diff = player_stats_change[1]
     if sta_diff != 0:
-        col = 'lighter_sea' if sta_diff > 0 else 'darker_sea'
-        print_string(con, len(sta_string)-2, y+1,  f'(%{col}%{sta_diff}%)')
+        col = '%lighter_sea%+' if sta_diff > 0 else '%darker_sea%'
+        print_string(con, len(sta_string)-2, y+1,  f'({col}{sta_diff}%)')
 
     # Equipment-derived stats #
     y += 3
     # Defensive Stats #
-    surrounded = player.fighter.surrounded(game)
+    surrounded = player.fighter.surrounded
     if surrounded == Surrounded.THREATENED:
         print_string(con, 6, y, '*THREATENED*', color=colors.orange)
     if surrounded == Surrounded.OVERWHELMED:
         print_string(con, 6, y, '*OVERWHELMED*', color=colors.red)
 
-    print_string(con, 1, y +1, f'STR: {game.player.fighter.strength}')  # TODO implement fighter.modded_defense
-    print_string(con, 1, y+2, f'DEF: {game.player.fighter.defense}') # TODO implement fighter.modded_defense
+    print_string(con, 1, y +1, f'STR: {player.fighter.strength}')
+    color = colors.white if player.fighter.modded_defense >= player.fighter.defense else colors.dark_red
+    print_string(con, 1, y+2, f'DEF: {player.fighter.modded_defense}', color=color) # TODO implement fighter.modded_defense
 
     if player.fighter.shield:
         color = colors.dark_gray if not player.fighter.is_blocking else colors.white

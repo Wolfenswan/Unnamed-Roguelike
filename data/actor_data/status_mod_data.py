@@ -1,4 +1,4 @@
-from components.actors.status_modifiers import Presence
+from components.actors.status_modifiers import Presence, Surrounded
 
 status_modifiers_data = {
     Presence.DAZED: {
@@ -11,5 +11,12 @@ status_modifiers_data = {
         'dmg_multipl' : 0,
         'skip_turn_chance': 100,
         'can_attack': False
+    },
+
+    Surrounded.THREATENED: {
+        'av_multipl': 0.8
+    },
+    Surrounded.OVERWHELMED: {
+        'av_multipl': 0.1
     }
 }

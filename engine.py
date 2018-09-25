@@ -68,11 +68,7 @@ def game_loop(game):
 
                 process_npc_actions(game)
 
-                # TODO Placeholder for proper stamina managment
-                if not player.in_combat(game) and not action.get('dodge'):
-                    player.fighter.recover(
-                        player.fighter.max_stamina / 100)
-
+                player.proc_every_turn(action, game)
                 game.turn += 1
 
             # Prepare for next turn #
