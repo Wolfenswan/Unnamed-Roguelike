@@ -6,7 +6,7 @@ from random import randint, choice
 
 from data.data_processing import gen_npc_from_dict, pick_from_data_dict_by_rarity
 from config_files import cfg
-from data.actor_data.spawn_data import spawn_data
+from data.actor_data.test_spawns import spawn_data
 from debug.timer import debug_timer
 from gameobjects.block_level import BlockLevel
 from map.entity_placement.util_functions import create_ent_position

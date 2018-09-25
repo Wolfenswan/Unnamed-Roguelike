@@ -4,7 +4,7 @@ import logging
 
 from components.actors.status_modifiers import Presence, Surrounded
 from config_files import colors
-from data.actor_data.status_mod_data import status_modifiers_data
+from data.actor_data.act_status_mods import status_modifiers_data
 from data.string_data.combat_strings import atkdmg_string_data, stadmg_string_data
 from gameobjects.block_level import BlockLevel
 from gameobjects.entity import Entity
@@ -189,6 +189,15 @@ class Fighter:
             modded_def *= status_modifiers_data[self.surrounded]['av_multipl']
 
         return round(modded_def)
+
+    @property
+    def modded_block_def(self):
+        block_def = self.shield.block_def
+        if self.surrounded == Surrounded.THREATENED:
+            block_def = round(block_def * 0.75)
+        if self.surrounded == Surrounded.OVERWHELMED:
+            block_def = 0
+        return block_def
     
     @property
     def vision(self):
@@ -319,8 +328,6 @@ class Fighter:
         attack_string = 'hits'
         extra_targets = []
 
-        print(self.weapon)
-
         if self.weapon:
             move_results = self.weapon.moveset.execute(self.owner, target)
             attack_string = move_results.get('string', 'hits')
@@ -340,7 +347,7 @@ class Fighter:
         if target.fighter.stamina <= 0: # If the target is out of stamina, attack power is doubled
             attack_power *= 2
 
-        if target.fighter.is_blocking:
+        if target.fighter.is_blocking: # TODO and attack is not 'quick'
             blocked = target.fighter.attempt_block(attack_power)
 
         if blocked: # TODO daze attacker
@@ -402,7 +409,8 @@ class Fighter:
         self.is_blocking = not self.is_blocking
 
     def attempt_block(self, damage):
-        block_def = self.shield.block_def
+        block_def = self.modded_block_def
+
         if damage <= block_def:
             return True
         elif damage <= block_def * 2:

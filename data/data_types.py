@@ -32,7 +32,7 @@ class RarityType(Enum):
     RARE = auto()
     EXOTIC = auto()
     LEGENDARY = auto()
-    UNIQUE = auto()
+    UNIQUE = auto() # Unique & Forbidden function identically, and only exist to provide distinction in readability
     FORBIDDEN = auto()
 
 
@@ -60,6 +60,12 @@ class Craftsmanship(Enum):
     NORMAL = auto()
     GOOD = auto()
     LEGENDARY = auto()
+
+
+class AttackType(Enum): # AttackType can either be an attribute of a specific weapon, or a move within a moveset
+    NORMAL = auto() # No special rules apply
+    HEAVY = auto() # increased stress when blocking
+    QUICK = auto() # ignores blocks
 
 
 class BodyType(Enum):

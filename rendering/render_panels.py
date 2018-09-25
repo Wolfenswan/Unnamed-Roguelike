@@ -46,7 +46,7 @@ def render_player_panel(game, player_stats_change, con, panel_x, panel_y, width,
         print_string(con, len(sta_string)-2, y+1,  f'({col}{sta_diff}%)')
 
     # Equipment-derived stats #
-    y += 3
+    y += 2
     # Defensive Stats #
     surrounded = player.fighter.surrounded
     if surrounded == Surrounded.THREATENED:
@@ -54,13 +54,14 @@ def render_player_panel(game, player_stats_change, con, panel_x, panel_y, width,
     if surrounded == Surrounded.OVERWHELMED:
         print_string(con, 6, y, '*OVERWHELMED*', color=colors.red)
 
-    print_string(con, 1, y +1, f'STR: {player.fighter.strength}')
+    print_string(con, 2, y +1, f'STR: {player.fighter.strength}')
     color = colors.white if player.fighter.modded_defense >= player.fighter.defense else colors.dark_red
-    print_string(con, 1, y+2, f'DEF: {player.fighter.modded_defense}', color=color) # TODO implement fighter.modded_defense
+    print_string(con, 2, y+2, f'DEF: %c{player.fighter.modded_defense}%c', color=color) # TODO implement fighter.modded_defense
 
     if player.fighter.shield:
-        color = colors.dark_gray if not player.fighter.is_blocking else colors.white
-        print_string(con, 12, y+2, '*BLOCKING*', color = color)
+        col1 = 'dark_gray' if not player.fighter.is_blocking else 'white'
+        col2 = 'dark_red' if player.fighter.shield.block_def > player.fighter.modded_block_def else f'{col1}'
+        print_string(con, 10, y+2, f'%{col1}%BLOCK:% %{col2}%{player.fighter.modded_block_def}%')
 
     # Weapon #
     y += 2

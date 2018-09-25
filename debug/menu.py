@@ -1,4 +1,4 @@
-from data.actor_data.spawn_data import spawn_data
+from data.actor_data.test_spawns import spawn_data
 from data.data_processing import gen_npc_from_dict
 from gui.menus import options_menu
 from gui.messages import Message, MessageType, MessageCategory

@@ -4,7 +4,7 @@ from random import randint, choice
 import tcod
 
 from components.actors.status_modifiers import Presence
-from data.actor_data.status_mod_data import status_modifiers_data
+from data.actor_data.act_status_mods import status_modifiers_data
 from gui.messages import Message
 
 

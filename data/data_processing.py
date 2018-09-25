@@ -12,13 +12,13 @@ from components.items.moveset import Moveset
 from components.items.useable import Useable
 from components.skill import Skill
 from config_files import colors
-from data.actor_data.skills_data import skills_data
-from data.actor_data.spawn_data import spawn_data
+from data.actor_data.act_skills import skills_data
+from data.actor_data.test_spawns import spawn_data
 from data.architecture_data.arch_static import arch_static_data
 from data.architecture_data.arch_containers import arch_containers_data
-from data.item_data.wp_creature import wp_creature_data
+from data.item_data.wp_creatures import wp_creature_data
 from data.string_data.craft_strings import craft_descr_data
-from data.actor_data.bodytype_data import bodytype_data
+from data.actor_data.act_bodytypes import bodytype_data
 from data.shared_data.quality_data import qual_cond_data, qual_craft_data
 from data.data_types import GenericType, Condition, RarityType, BodyType
 from data.shared_data.material_data import item_material_data
