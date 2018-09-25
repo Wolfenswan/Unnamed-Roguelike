@@ -80,20 +80,20 @@ def randomize_rgb_color(color, factor_range = (0, 0.25), darken=False):
 
 def print_string(con, x, y, string, color=None, bgcolor=colors.black, alignment=tcod.LEFT, background=tcod.BKGND_DEFAULT):
 
-    color_coded_words = re.findall('(%{1}\w+%{1}\w+%{1})+', string)
+    color_coded_words = re.findall('(%{1}\w+%{1}[\w-]+%{1})+', string)
     if color_coded_words:
         col_ctrls = ()
         for i, word in enumerate(color_coded_words):
             color_code = re.match('%{1}(\w*)%{1}', word)
-            color = eval(f'colors.{color_code.group(1)}') # Resolve the color-code as a config.colors.py entry: %red%->colors.red
+            color_str = eval(f'colors.{color_code.group(1)}') # Resolve the color-code as a config.colors.py entry: %red%->colors.red
             new_word = word.replace(color_code.group(), '%c') + 'c' # Replace the custom color-code with tcod's color-wrappers: %red%word% -> %cword%c
             string = string.replace(word, new_word) # Update the original string
             col_ctrl = eval(f'tcod.COLCTRL_{i+1}')
-            tcod.console_set_color_control(col_ctrl, color, bgcolor)
+            tcod.console_set_color_control(col_ctrl, color_str, bgcolor)
             col_ctrls += (col_ctrl, tcod.COLCTRL_STOP)
         string = string % col_ctrls
 
-    elif color:
+    if color:
         if not '%c' in string: # If no tcod wrappers are present, wrap the entire string
             string = f'%c{string}%c'
         tcod.console_set_color_control(tcod.COLCTRL_1, color, bgcolor)
