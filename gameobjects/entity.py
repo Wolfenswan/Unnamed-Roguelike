@@ -129,8 +129,10 @@ class Entity:
     def extended_descr(self, game):
         extend_descr = []
         # TODO All colors are WIP
+        if self.fighter and self.fighter.weapon:
+            extend_descr += [' ', f'It attacks with %dark_crimson%{self.fighter.weapon.attack_type.name.lower()}% strikes.']
+
         if self.fighter and game.player.fighter.shield:
-            tcod.console_set_color_control(tcod.COLCTRL_1, colors.dark_crimson, colors.black)
             extend_descr += [' ', f'Blocking its attacks will be %dark_crimson%{game.player.fighter.average_chance_to_block(self)}%.']
 
         if self.fighter and self.fighter.presence[Presence.DAZED]:

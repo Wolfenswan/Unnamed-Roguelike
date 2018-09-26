@@ -19,14 +19,14 @@ from data.architecture_data.arch_containers import arch_containers_data
 from data.item_data.wp_creatures import wp_creature_data
 from data.string_data.craft_strings import craft_descr_data
 from data.actor_data.act_bodytypes import bodytype_data
-from data.shared_data.quality_data import qual_cond_data, qual_craft_data
+from data.shared_data.quality_mod import qual_cond_data, qual_craft_data
 from data.data_types import GenericType, Condition, RarityType, BodyType, AttackType
-from data.shared_data.material_data import item_material_data
+from data.shared_data.material_mod import item_material_data
 from data.item_data.test_equipment import test_equipment_data
 from data.item_data.use_potions import use_potions_data
 from data.item_data.use_scrolls import use_scrolls_data
 from data.string_data.cond_strings import cond_descr_data
-from data.shared_data.rarity_data import rarity_values
+from data.shared_data.rarity_mod import rarity_values
 from debug.timer import debug_timer
 from gameobjects.entity import Entity
 from gameobjects.npc import NPC
@@ -219,7 +219,6 @@ def gen_npc_from_dict(data, x, y, game):
     stamina = randint(*data['max_stamina'])
     base_av = randint(*data['base_armor'])
     base_strength = randint(*data['base_strength'])
-    loadouts = data.get('loadouts')
     vision = data.get('nat_vision', 8)
     ai_movement = data.get('ai_movement', Simple)
     ai_attack = data.get('ai_attack', Simple)
@@ -230,9 +229,9 @@ def gen_npc_from_dict(data, x, y, game):
     str_multipl = bodytype.get('str_multipl',1)
     av_mod_multipl = bodytype.get('av_mod_multipl', 1)
     hp = round(hp * hp_mod_multipl)
-    #base_dmg_potential = (round(base_dmg_potential[0] * str_multipl), round(base_dmg_potential[1] * str_multipl))
+
     base_av = round(base_av * av_mod_multipl)
-    base_strength = round(base_strength * bodytype.get('str_multipl',1))
+    base_strength = round(base_strength * str_multipl)
 
     fighter_component = Fighter(hp, stamina, base_av, base_strength, vision)
     ai_component = BaseAI(movement=ai_movement(), attack=ai_attack())
@@ -247,15 +246,18 @@ def gen_npc_from_dict(data, x, y, game):
 
     npc = NPC(*arguments, bodytype=bodytype.get('type'), fighter=fighter_component, ai=ai_component, skills=skills_component, inventory=inventory_component)
 
-    print(loadouts)
+    loadout = data.get('loadout')
+    loadouts = data.get('loadouts')
     if loadouts is not None:
         loadout = pick_from_data_dict_by_rarity(loadouts, game.dlvl)
         gen_loadout(npc, loadouts[loadout], game)
+    else:
+        gen_loadout(npc, loadout, game)
 
     return npc
 
 
-def gen_item_from_data(data, x, y, materials=False, conditions=False, craftsmanships=False):
+def gen_item_from_data(data, x, y, materials=False, conditions=False, craftsmanships=False, forced_attacktype=None):
 
     material = get_material_data(data, forced=materials)
     condition = get_condition_data(forced=conditions) if material else {}
@@ -299,7 +301,7 @@ def gen_item_from_data(data, x, y, materials=False, conditions=False, craftsmans
         qu_slots = data.get('qu_slots')
         l_radius = data.get('l_radius')
         two_handed = data.get('two_handed')
-        attack_type = data.get('attack', AttackType.NORMAL)
+        attack_type = forced_attacktype if forced_attacktype else data.get('attack')
         moveset = data.get('moveset')
 
         if moveset:

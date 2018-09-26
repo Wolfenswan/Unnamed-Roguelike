@@ -203,7 +203,7 @@ def draw_bar(panel, x, y, total_width, name, value, maximum, bar_color, back_col
     if bar_width > 0:
         tcod.console_rect(panel, x, y, bar_width, 1, False, tcod.BKGND_SCREEN)
 
-    print_string(panel, int(x + total_width / 2), y, f'%white%{name.title()}%', alignment = tcod.CENTER, background=tcod.BKGND_NONE)
+    print_string(panel, int(x + total_width / 2), y, f'%dark_gray%{name.title()}%', alignment = tcod.CENTER, background=tcod.BKGND_NONE)
 
 
 def draw_quickslots(con, y, game):

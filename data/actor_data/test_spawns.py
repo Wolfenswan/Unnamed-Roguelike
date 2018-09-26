@@ -34,7 +34,7 @@
 from components.AI.behavior.simple import Simple
 from components.AI.behavior.swarm import Swarm
 from config_files import colors
-from data.data_types import RarityType
+from data.data_types import RarityType, AttackType
 
 spawn_data = {
     'roachling': {
@@ -47,11 +47,9 @@ spawn_data = {
         'base_armor': (0,0),
         'base_strength': (2,2),
         #'nat_vision': 6,
-        'loadouts': {
-            'loadout1': {
-                'equipment':{
-                    'ins_mandibles':{}
-                }
+        'loadout': {
+            'equipment':{
+                'ins_mandibles':{}
             }
         },
         'ai_movement': Swarm,
@@ -70,6 +68,13 @@ spawn_data = {
         'max_stamina': (100,100),
         'base_armor': (2,4),
         'base_strength': (3,6),
+        'loadout': {
+            'equipment':{
+                'ins_mandibles':{
+                    'forced_attacktype': AttackType.HEAVY
+                }
+            }
+        },
         #'nat_vision': 6,
         'ai_movement': Simple,
         'ai_attack': Simple,

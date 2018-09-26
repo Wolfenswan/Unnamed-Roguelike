@@ -32,6 +32,7 @@ test_equipment_data = {
         'type': WP_TYPE,
         'e_to': WP_EQUIP,
         'dmg_potential': (4, 6),
+        'attack': AttackType.NORMAL,
         'moveset': moveset_sword,
         'rarity': RarityType.COMMON,
         'dlvls': (1,99)
@@ -58,6 +59,7 @@ test_equipment_data = {
         'e_to': WP_EQUIP,
         'dmg_potential': (2,8),
         'two_handed': True,
+        'attack': AttackType.NORMAL,
         'moveset': moveset_spear,
         'rarity': RarityType.COMMON,
         'dlvls': (1,99)
@@ -127,7 +129,7 @@ test_equipment_data = {
         'dlvls': (1,99),
         "char": ')',
         'e_to': OH_EQUIP,
-        'block_def': 2
+        'block_def': 4
     },
     'tower_shield': {
         'name': 'tower_shield',
@@ -138,6 +140,6 @@ test_equipment_data = {
         'dlvls': (1,99),
         "char": ')',
         'e_to': OH_EQUIP,
-        'block_def': 6
+        'block_def': 8
     }
 }

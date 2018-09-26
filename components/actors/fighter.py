@@ -1,10 +1,12 @@
-from random import randint, choice, randrange
+from random import randint, choice
 
 import logging
 
 from components.actors.status_modifiers import Presence, Surrounded
 from config_files import colors
-from data.actor_data.act_status_mods import status_modifiers_data
+from data.actor_data.act_status_mod import status_modifiers_data
+from data.data_types import AttackType
+from data.item_data.wp_attacktypes import wp_attacktypes_data
 from data.string_data.combat_strings import atkdmg_string_data, stadmg_string_data
 from gameobjects.block_level import BlockLevel
 from gameobjects.entity import Entity
@@ -276,13 +278,6 @@ class Fighter:
         else:
             return Surrounded.OVERWHELMED
 
-    def set_presence(self, presence, value, duration=0):
-        self.presence[presence] = value
-        if duration > 0:
-            self.owner.actionplan.add_to_queue(execute_in=duration,
-                                               planned_function=self.set_presence,
-                                               planned_function_args=(presence, False))
-
     #################################
     # ATTRIBUTE MODIFYING FUNCTIONS #
     #################################
@@ -310,6 +305,7 @@ class Fighter:
 
     def exert(self, string, amount):
         self.stamina -= amount
+        logging.debug(f'{self.owner.name} exerted by {string} for {amount}')
         #pronoun = 'Your' if self.owner.isplayer else 'The'
         if self.owner.is_player:
             sta_dmg_string = self.sta_dmg_string(amount, self.max_stamina)
@@ -317,6 +313,14 @@ class Fighter:
                               type=MessageType.COMBAT_INFO)
             return {'message': message}
         return {}
+
+    def set_presence(self, presence, value, duration=0):
+        self.presence[presence] = value
+        if duration > 0:
+            self.owner.actionplan.add_to_queue(execute_in=duration,
+                                               planned_function=self.set_presence,
+                                               planned_function_args=(presence, False))
+
 
     ############################
     # ATTACK RELATED FUNCTIONS #
@@ -347,20 +351,25 @@ class Fighter:
         if target.fighter.stamina <= 0: # If the target is out of stamina, attack power is doubled
             attack_power *= 2
 
-        if target.fighter.is_blocking: # TODO and attack is not 'quick'
-            blocked = target.fighter.attempt_block(attack_power)
+        if target.fighter.is_blocking:
+            blocked = target.fighter.attempt_block(self, attack_power)
 
-        if blocked: # TODO daze attacker
+        if blocked: # Block exertion
             sta_dmg = round(attack_power / 2)
-            results.extend(self.exert('block', sta_dmg))
+            mod = wp_attacktypes_data[self.weapon.attack_type].get('block_sta_dmg_multipl', 1)
+            sta_dmg = round(sta_dmg * mod)
+            logging.debug(f'{target.name} block exert multiplied by {mod} due to {self.owner.name} attack type {self.weapon.attack_type}')
+            results.append(target.fighter.exert('block', sta_dmg))
+
             if target.is_player:
                 message = Message(f'You block the attack, dazing the {self.owner.name.title()}!',
                                   category=MessageCategory.COMBAT, type=MessageType.COMBAT_GOOD)
             else:
                 message = Message(f'The {self.owner.name.title()} blocks your attack, dazing you!',
                                   category=MessageCategory.COMBAT, type=MessageType.COMBAT_BAD)
+
             self.set_presence(Presence.DAZED, True, 1)
-            results.extend([{'message': message}])
+            results.append({'message': message})
         else:
             results.extend(self.attack_execute(target, attack_power, attack_string))
 
@@ -408,25 +417,32 @@ class Fighter:
     def toggle_blocking(self):
         self.is_blocking = not self.is_blocking
 
-    def attempt_block(self, damage):
+    def attempt_block(self, attacker, damage):
         block_def = self.modded_block_def
 
         if damage <= block_def:
             return True
         elif damage <= block_def * 2:
-            chance = self.block_chance(damage)
+            chance = self.block_chance(attacker.weapon.attack_type, damage)
             print(chance)
             if chance > 0 and chance >= randint(0,100):
                 return True
         return False
 
-    def block_chance(self, damage):
+    def block_chance(self, attack_type, damage):
         """
         Returns the chance to block a strike that surpasses an entitiess's block defense.
         It is possible to block up to the double of maximum block defense.
         """
         block_def = self.shield.block_def
-        return 101 - ((damage - block_def) / block_def * 100)
+        mod = wp_attacktypes_data[attack_type].get('block_def_multipl',1)
+        block_def = round(block_def * mod)
+        logging.debug(f'{self.owner.name} block def. multiplied by {mod} due to attack type {attack_type}')
+
+        if block_def > 0:
+            return 101 - ((damage - block_def) / block_def * 100)
+        else:
+            return 0
 
     def average_chance_to_block(self, attacker, debug=False):
         """
@@ -435,7 +451,7 @@ class Fighter:
         average = 0
         dmg_range = attacker.fighter.base_dmg_potential
         for dmg in dmg_range:
-            average += self.block_chance(dmg)
+            average += self.block_chance(attacker.fighter.weapon.attack_type, dmg)
         average /= len(dmg_range)
 
         if debug:

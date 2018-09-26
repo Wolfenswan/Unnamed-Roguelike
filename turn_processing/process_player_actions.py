@@ -220,11 +220,14 @@ def process_player_input(action, game, fov_map, targeting_item = None):
         if game.state in (GameStates.SHOW_INVENTORY, GameStates.CURSOR_ACTIVE):
             game.state = game.previous_state
         else:
-            choice = options_menu('Quit Game', 'Do you want to quit the game?', ['Save & Quit', 'Just Quit'], sort_by=1, cancel_with_escape=True)
-            if choice == 0:
-                save_game(game)
-                return False
-            elif choice == 1:
+            if player.fighter.hp > 0:
+                choice = options_menu('Quit Game', 'Do you want to quit the game?', ['Save & Quit', 'Just Quit'], sort_by=1, cancel_with_escape=True)
+                if choice == 0:
+                    save_game(game)
+                    return False
+                elif choice == 1:
+                    return False
+            else:
                 return False
 
     if manual:
