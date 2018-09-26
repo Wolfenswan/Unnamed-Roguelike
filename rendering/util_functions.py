@@ -1,3 +1,4 @@
+import textwrap
 from random import uniform
 
 import tcod
@@ -78,9 +79,35 @@ def randomize_rgb_color(color, factor_range = (0, 0.25), darken=False):
     return color
 
 
+def dynamic_wrap(string, max_width, replace_whitespace=False):
+    """
+    This function makes sure that textwrap.wrap() does ignore formatting strings
+    such as %c and %color% when wrapping words.
+    """
+    codes ={}
+    color_coded_words = re.findall('(%{1}\w+%{1}[()+:\s\w-]+%{1})', string)
+    for coded_string in color_coded_words:
+        color_code = re.search('(%{1}\w+%{1})', coded_string)
+        stripped_code = coded_string.replace(color_code.group(),'')
+        stripped_code = stripped_code.replace('%','')
+        string = string.replace(coded_string,stripped_code)
+        codes[stripped_code] = coded_string
+
+    wrapped = textwrap.wrap(string, max_width, replace_whitespace=replace_whitespace)
+
+    # Re-add the formatting strings
+    for i, line in enumerate(wrapped):
+        for k in codes.keys():
+            if k in line:
+                line = line.replace(k, codes[k])
+                wrapped[i] = line
+
+    return wrapped
+
+
 def print_string(con, x, y, string, color=None, bgcolor=colors.black, alignment=tcod.LEFT, background=tcod.BKGND_DEFAULT):
 
-    color_coded_words = re.findall('(%{1}\w+%{1}[+:\s\w-]+%{1})', string) # Catches any string of %color%string%
+    color_coded_words = re.findall('(%{1}\w+%{1}[()+:\s\w-]+%{1})', string) # Catches any string of %color%string%
     if color_coded_words:
         col_ctrls = ()
         for i, word in enumerate(color_coded_words):

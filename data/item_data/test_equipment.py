@@ -1,5 +1,5 @@
 from config_files import colors
-from data.data_types import ItemType, Material
+from data.data_types import ItemType, Material, AttackType
 from data.data_types import RarityType
 from data.item_data.wp_movesets import moveset_sword, moveset_spear
 
@@ -31,7 +31,20 @@ test_equipment_data = {
         "char": WP_CHAR,
         'type': WP_TYPE,
         'e_to': WP_EQUIP,
-        'dmg_potential': (4, 7),
+        'dmg_potential': (4, 6),
+        'moveset': moveset_sword,
+        'rarity': RarityType.COMMON,
+        'dlvls': (1,99)
+    },
+    'dagger': {
+        'name': 'dagger',
+        'materials': (Material.IRON, Material.STEEL),
+        'descr': 'A short and nimble blade.',
+        "char": WP_CHAR,
+        'type': WP_TYPE,
+        'e_to': WP_EQUIP,
+        'dmg_potential': (2, 4),
+        'attack': AttackType.QUICK,
         'moveset': moveset_sword,
         'rarity': RarityType.COMMON,
         'dlvls': (1,99)
@@ -43,7 +56,7 @@ test_equipment_data = {
         'char': '|',
         'type': WP_TYPE,
         'e_to': WP_EQUIP,
-        'dmg_potential': (2,11),
+        'dmg_potential': (2,8),
         'two_handed': True,
         'moveset': moveset_spear,
         'rarity': RarityType.COMMON,

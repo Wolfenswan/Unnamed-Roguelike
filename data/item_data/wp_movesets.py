@@ -1,15 +1,17 @@
+col = '%dark_orange%'
+
 moveset_sword = {
     1: {
-        'descr': 'A swing from right to left, doing full damage.',
+        'descr': f'A {col}swing% from right to left, doing full damage.',
         'string': 'swings at',
     },
     2: {
-        'descr': 'A slightly weaker slash from the down left.',
+        'descr': f'A slightly {col}weaker slash% from the down left.',
         'string': 'slashes',
         'dmg_multipl': 0.8
     },
     3: {
-        'descr': 'A forceful stab towards the enemies center.',
+        'descr': f'A {col}forceful stab% towards the enemies center.',
         'string': 'stabs',
         'dmg_multipl': 1.25
     }
@@ -17,16 +19,16 @@ moveset_sword = {
 
 moveset_spear = {
     1: {
-        'descr': 'A weak stab to prepare for further attacks.',
+        'descr': f'A {col}weak stab% to prepare for further attacks.',
         'string': 'pokes',
         'dmg_multipl': 0.75
     },
     2: {
-        'descr': 'An accurate thrust, using the weapon\'s full potential.',
+        'descr': f'An {col}accurate thrust%, using the weapon\'s full potential.',
         'string': 'accurately thrusts at'
     },
     3: {
-        'descr': 'A powerful thrust, piercing the target and potentially hitting someone behind it.',
+        'descr': f'A {col}powerful thrust%, piercing the target and hitting something behind it.',
         'string': 'forcefully thrusts through',
         'dmg_multipl': 1.25,
         'extra_hits': {'target_behind': True}
@@ -42,7 +44,7 @@ moveset_mandibles = {
         'string': 'gnaws at'
     },
     3: {
-        'string': 'nibbles from',
+        'string': 'nibbles at',
         'dmg_multipl': 0.75
     }
 }

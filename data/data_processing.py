@@ -20,7 +20,7 @@ from data.item_data.wp_creatures import wp_creature_data
 from data.string_data.craft_strings import craft_descr_data
 from data.actor_data.act_bodytypes import bodytype_data
 from data.shared_data.quality_data import qual_cond_data, qual_craft_data
-from data.data_types import GenericType, Condition, RarityType, BodyType
+from data.data_types import GenericType, Condition, RarityType, BodyType, AttackType
 from data.shared_data.material_data import item_material_data
 from data.item_data.test_equipment import test_equipment_data
 from data.item_data.use_potions import use_potions_data
@@ -299,13 +299,15 @@ def gen_item_from_data(data, x, y, materials=False, conditions=False, craftsmans
         qu_slots = data.get('qu_slots')
         l_radius = data.get('l_radius')
         two_handed = data.get('two_handed')
+        attack_type = data.get('attack', AttackType.NORMAL)
         moveset = data.get('moveset')
+
         if moveset:
             moveset_component = Moveset(moveset.copy())
         else:
             moveset_component = None
 
-        equipment_component = Equipment(equip_to, dmg_potential = dmg_potential, av = av, block_def=block_def, qu_slots = qu_slots, l_radius = l_radius, moveset = moveset_component, two_handed = two_handed)
+        equipment_component = Equipment(equip_to, dmg_potential = dmg_potential, av = av, block_def=block_def, qu_slots = qu_slots, l_radius = l_radius, moveset = moveset_component, two_handed = two_handed, attack_type=attack_type)
 
     item_component = Item(condition=condition.get('type'), craftsmanship=craftsmanship.get('type'), useable=useable_component, equipment=equipment_component)
 

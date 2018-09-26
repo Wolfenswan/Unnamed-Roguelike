@@ -3,7 +3,7 @@ from components.items.moveset import Moveset
 
 class Equipment():
 
-    def __init__(self, e_to, dmg_potential = None, av = None, block_def = None, qu_slots = None, l_radius = None, two_handed = False, moveset = None):
+    def __init__(self, e_to, dmg_potential = None, av = None, block_def = None, qu_slots = None, l_radius = None, two_handed = False, attack_type = None, moveset = None):
         self.e_to = e_to
         self.dmg_potential = dmg_potential
         self.av = av
@@ -11,6 +11,7 @@ class Equipment():
         self.qu_slots = qu_slots
         self.l_radius = l_radius
         self.two_handed = two_handed
+        self.attack_type = attack_type
         self.moveset = moveset
 
     @property

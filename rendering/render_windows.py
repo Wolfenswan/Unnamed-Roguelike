@@ -5,7 +5,7 @@ import tcod
 
 from config_files import cfg, colors
 from gameobjects.util_functions import entities_at_pos, entity_at_pos
-from rendering.util_functions import center_x_for_text, draw_console_borders, pos_on_screen, print_string
+from rendering.util_functions import center_x_for_text, draw_console_borders, pos_on_screen, print_string, dynamic_wrap
 
 
 def set_window_on_screen(window_x, window_y, width, height):
@@ -42,7 +42,7 @@ def draw_window(title, body, options = None, window_x = None, window_y = None, p
 
     #width = min(width, cfg.SCREEN_WIDTH//2)
     # TODO: Wrapping is sometimes odd, as it does consider the (later removed) %colorcoding%-strings when wrapping
-    body_wrapped = textwrap.wrap(body, width - padding_x * 2, replace_whitespace=False)
+    body_wrapped = dynamic_wrap(body, width - padding_x * 2, replace_whitespace=False)
     if extend_body:
         body_wrapped.extend(extend_body)
 

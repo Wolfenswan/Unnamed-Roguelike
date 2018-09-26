@@ -4,6 +4,9 @@ from config_files import cfg as cfg, colors
 
 import textwrap
 
+from rendering.util_functions import dynamic_wrap
+
+
 class MessageCategory(Enum):
     COMBAT = auto()
     OBSERVATION = auto()
@@ -72,7 +75,7 @@ class MessageLog:
     def add_message(self, message, turn):
 
         # Split the message if necessary, among multiple lines
-        new_msg_lines = textwrap.wrap(message.text, self.width)
+        new_msg_lines = dynamic_wrap(message.text, self.width)
 
         for line in reversed(new_msg_lines):
             # If the buffer is full, remove the first line to make room for the new one

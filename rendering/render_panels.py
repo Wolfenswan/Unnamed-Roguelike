@@ -5,7 +5,7 @@ import tcod
 
 from components.actors.status_modifiers import Presence, Surrounded
 from config_files import colors, cfg as cfg
-from rendering.util_functions import center_x_for_text, setup_console, print_string
+from rendering.util_functions import center_x_for_text, setup_console, print_string, dynamic_wrap
 
 
 def render_panels(game, player_stats_change):
@@ -106,7 +106,8 @@ def render_object_panel(game, con, panel_x, panel_y, width, height):
             # Some symbols don't print properly with console_print, that's why it's split into put_char_ex and print
             symbol = '*' if (ent.x, ent.y) == (game.player.x, game.player.y) else f'{ent.char}'
             tcod.console_put_char_ex(con, 1, y, symbol, ent.color, tcod.black)
-            wrapped_name = textwrap.wrap(f'{ent.full_name}', width - 3)
+            #wrapped_name = textwrap.wrap(f'{ent.full_name}', width - 3)
+            wrapped_name = dynamic_wrap(f'{ent.full_name}', width - 3)
 
             for i, line in enumerate(wrapped_name):
                 print_string(con, 3+i, y, '*BLOCKING*', color=ent.color)
