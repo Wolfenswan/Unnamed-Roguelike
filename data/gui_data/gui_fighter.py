@@ -18,17 +18,17 @@ hp_color_data = {
 }
 
 hpdmg_string_data = {
-    'verbs': ('inflicting', 'causing', 'resulting in'),
+    'verbs': ('inflicting', 'causing', 'doing'),
     90: ('brutal', 'devastating'),
     65: ('severe', 'incredible'),
     45: ('heavy', 'strong'),
     25: ('moderate', 'average'),
     5: ('light', 'weak'),
-    1: ('barely any', 'hardly any', 'trivial')
+    1: ('minimal', 'miniscule', 'trivial')
 }
 
 hpdmg_color_data = {
-    90: hp_color_data[0],
+    90: colors.red,
     65: hp_color_data[1],
     45: hp_color_data[30],
     25: hp_color_data[30],
@@ -62,7 +62,7 @@ stadmg_string_data = {
     45: ('significant', 'unusual'),
     25: ('moderate', 'average'),
     5: ('light', 'low'),
-    1: ('barely any', 'hardly any')
+    1: ('minimal', 'miniscule', 'trivial')
 }
 
 stadmg_color_data = {

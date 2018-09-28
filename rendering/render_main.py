@@ -11,9 +11,9 @@ from rendering.render_panels import render_panels
 from rendering.render_order import RenderOrder
 
 
-def render_all(game, fov_map, player_stats_change, debug=False):
+def render_all(game, fov_map, debug=False):
     render_map_screen(game, fov_map, debug=debug)
-    render_panels(game, player_stats_change)
+    render_panels(game)
 
     if game.state == GameStates.CURSOR_ACTIVE:
         render_description_window(game)  # Description window is drawn under the cursor if active

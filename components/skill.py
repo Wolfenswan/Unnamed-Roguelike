@@ -2,7 +2,6 @@ import logging
 from random import choice
 
 from config_files import colors
-from gameobjects.entity import EntityStates
 from gui.messages import Message
 
 class Skill:

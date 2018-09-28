@@ -7,19 +7,13 @@ from components.actionplan import Actionplan
 from components.actors.status_modifiers import Presence
 from components.inventory.inventory import Inventory
 from components.inventory.paperdoll import Paperdoll
+from components.statistics import Statistics
 from config_files import colors
 from data.data_types import BodyType
 from data.gui_data.gui_entity import bodytype_name_data
 from data.gui_data.material_strings import material_name_data
 from gameobjects.util_functions import entity_at_pos
 from rendering.render_order import RenderOrder
-
-
-class EntityStates(Enum):
-    ENTITY_ACTIVE = auto()
-    ENTITY_STUNNED = auto()
-    ENTITY_WAITING = auto()
-
 
 class Entity:
     """
@@ -29,7 +23,7 @@ class Entity:
                  material=None, bodytype=None,
                  is_player=False, is_corpse=False, blocks=None, render_order=RenderOrder.CORPSE,
                  fighter=None, ai=None, skills=None, item=None, inventory=None, architecture=None):
-        self.state = EntityStates.ENTITY_ACTIVE
+
         self.x = x
         self.y = y
         self.char = char
@@ -58,6 +52,7 @@ class Entity:
             self.qu_inventory = Inventory(capacity = 0)
         self.skills = skills  # dictionary
         self.architecture = architecture
+        self.statistics = Statistics()
         self.set_ownership() # Sets ownership for all components
     
     def set_ownership(self):
@@ -83,6 +78,7 @@ class Entity:
                 skill.owner = self
 
         self.actionplan.owner = self
+        self.statistics.owner = self
 
     ###############################
     # ATTRIBUTE RELATED FUNCTIONS #
@@ -176,14 +172,19 @@ class Entity:
         else:
             return False
 
-    def proc_every_turn(self, last_player_action, game):
+    def proc_every_turn(self, last_player_action, game, start=True):
         """
         Things that should every proper turn (after player has done an action that prompts an enemy turn.)
         """
-        if self.is_player:
-            # TODO Placeholder for proper stamina managment
-            if not self.in_combat(game) and not last_player_action.get('dodge'):
-                self.fighter.recover(self.fighter.max_stamina / 100)
+        if start:
+            # for dic in self.statistics.turn, self.statistics.level, self.statistics.game:
+            #     print(dic)
+            self.statistics.reset_turn()
+        else:
+            if self.is_player:
+                # TODO Placeholder for proper stamina managment
+                if not self.in_combat(game) and not last_player_action.get('dodge'):
+                    self.fighter.recover(self.fighter.max_stamina / 100)
 
     ####################
     # ACTION FUNCTIONS #

@@ -3,6 +3,7 @@ from random import randint, choice
 import logging
 
 from components.actors.status_modifiers import Presence, Surrounded
+from components.statistics import statistics_updater
 from config_files import colors
 from data.actor_data.act_status_mod import status_modifiers_data
 from data.item_data.wp_attacktypes import wp_attacktypes_data
@@ -310,6 +311,7 @@ class Fighter:
     # ATTRIBUTE MODIFYING FUNCTIONS #
     #################################
 
+    @statistics_updater('hp_change', substract=True)
     def take_damage(self, amount):
         results = []
         self.hp -= amount
@@ -317,21 +319,25 @@ class Fighter:
             results.append({'dead': self.owner})
         return results
 
+    @statistics_updater('hp_change')
     def heal(self, amount):
         self.hp += amount
 
         if self.hp > self.max_hp:
             self.hp = self.max_hp
-
         logging.debug(f'({self} was healed for {amount}.')
 
+    @statistics_updater('sta_change', substract=True)
     def recover(self, amount):
         self.stamina += amount
+        self.owner.statistics.sta_change += amount
+
         if self.stamina > self.max_stamina:
             self.stamina = self.max_stamina
         logging.debug(f'({self} recovered stamina for {amount}.')
 
-    def exert(self, string, amount):
+    @statistics_updater('sta_change', substract=True)
+    def exert(self, amount, string='action'):
         self.stamina -= amount
         logging.debug(f'{self.owner.name} exerted by {string} for {amount}')
         #pronoun = 'Your' if self.owner.isplayer else 'The'
@@ -388,7 +394,7 @@ class Fighter:
             mod = wp_attacktypes_data[self.weapon.attack_type].get('block_sta_dmg_multipl', 1)
             sta_dmg = round(sta_dmg * mod)
             logging.debug(f'{target.name} block exert multiplied by {mod} due to {self.owner.name} attack type {self.weapon.attack_type}')
-            results.append(target.fighter.exert('block', sta_dmg))
+            results.append(target.fighter.exert(sta_dmg, 'block'))
 
             if target.is_player:
                 message = Message(f'You block the attack, dazing the {self.owner.name.title()}!',
@@ -407,7 +413,7 @@ class Fighter:
                 extra_target = entity_at_pos(game.npc_ents, *target_pos) # TODO Currently ignores blocking
                 results.extend(self.attack_execute(extra_target, attack_power//2, 'further hits'))
 
-        self.exert('attack',attack_power/3)
+        self.exert(attack_power/3, 'attack')
         return results
 
     def attack_execute(self, target, power, attack_string):
@@ -424,18 +430,22 @@ class Fighter:
 
         if damage > 0:
             msg_type = MessageType.COMBAT_BAD if target.is_player else MessageType.COMBAT_INFO
-
             atk_dmg_string = target.fighter.hpdmg_string(damage)
             col = target.fighter.hpdmg_color(damage)
-            print('col', col)
             results.append({'message': Message(
                 f'{self.owner.name} {attack_string} {target_string}, {choice(hpdmg_string_data["verbs"])} %{col}%{atk_dmg_string}%% damage.', category=MessageCategory.COMBAT, type=msg_type)})
             results.extend(target.fighter.take_damage(damage))
+
+            # STATISTICS
+            self.owner.statistics.dmg_done += damage
+            if target.fighter.hp <= 0:
+                self.owner.statistics.killed += [target.name]
+
         else:
             msg_type = MessageType.COMBAT_BAD if not target.is_player else MessageType.COMBAT_GOOD
             results.append(
                 {'message': Message(f'{self.owner.name.title()} {attack_string} {target_string} but can not pierce armor.', category=MessageCategory.COMBAT, type=msg_type)})
-            results.append(target.fighter.exert('armor deflection', power))
+            results.append(target.fighter.exert(power, 'armor deflection'))
 
         logging.debug(
             f'{self.owner.name.title()} attacks {target.name.title()} with {power} power against {target.fighter.defense} defense for {damage} damage. Target has {target.fighter.stamina} stamina left.)')
@@ -506,7 +516,7 @@ class Fighter:
         exertion = self.defense * 2
         if self.stamina >= exertion:
             animate_move_line(self.owner, dx, dy, 2, game, anim_delay=0.05)
-            results.append(self.exert('dodge', exertion))
+            results.append(self.exert(exertion, 'dodge'))
         else:
 
             results.append({'message':Message('PLACEHOLDER: Stamina too low to dodge!')})

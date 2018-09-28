@@ -19,7 +19,6 @@ from turn_processing.process_turn_results import process_turn_results
 
 def game_loop(game):
     player = game.player
-    entities = game.entities
     fov_map = game.fov_map
 
     game.state = GameStates.PLAYERS_TURN
@@ -27,7 +26,6 @@ def game_loop(game):
 
     targeting_item = None
     fov_recompute = True
-    player_stats_change = (0,0,0) # TODO Lazy way, proper way would be to use results dictionary
 
     key = tcod.Key()
     # mouse = tcod.Mouse()
@@ -41,14 +39,14 @@ def game_loop(game):
         if fov_recompute:
             recompute_fov(game, player.x, player.y)
             fov_recompute = False
-        render_all(game, fov_map, player_stats_change, debug=game.debug['map'])
+        render_all(game, fov_map, debug=game.debug['map'])
 
         tcod.sys_wait_for_event(tcod.EVENT_KEY_PRESS, key, None, True)
         action = handle_keys(key, game.state)
         #mouse_action = handle_mouse(mouse)
 
         if action:
-
+            player.proc_every_turn(action, game, start=True)
             player_stats_turnstart = (player.fighter.hp, player.fighter.stamina, player.fighter.defense)
 
             # Process player input into turn results #
@@ -68,16 +66,13 @@ def game_loop(game):
 
                 process_npc_actions(game)
 
-                player.proc_every_turn(action, game)
+                player.proc_every_turn(action, game, start=False)
                 game.turn += 1
 
             # Prepare for next turn #
             for turn_result in processed_turn_results:
                 fov_recompute = turn_result.get('fov_recompute', False)
                 targeting_item = turn_result.get('targeting_item')
-            player_stats_change = (player.fighter.hp-player_stats_turnstart[0],
-                                    player.fighter.stamina-player_stats_turnstart[1],
-                                    player.fighter.defense-player_stats_turnstart[2])
         
 if __name__ == '__main__':
     initialize_logging(debugging=True)
