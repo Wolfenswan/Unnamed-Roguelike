@@ -172,8 +172,7 @@ def render_message_panel(message_log, title, con, panel_x, panel_y, width, heigh
         else:
             color_coefficient = 0.2
 
-        color = tuple(int(color_coefficient * x) for x in message.color)
-        print_string(con, message_log.x, y, message.text, fgcolor=color)
+        print_string(con, message_log.x, y, message.text, fgcolor=message.color, color_coefficient=color_coefficient)
         y += 1
 
     tcod.console_blit(con, 0, 0, width, height, 0, panel_x, panel_y)
@@ -203,7 +202,7 @@ def draw_bar(panel, x, y, total_width, name, value, maximum, bar_color, back_col
     if bar_width > 0:
         tcod.console_rect(panel, x, y, bar_width, 1, False, tcod.BKGND_SCREEN)
 
-    print_string(panel, int(x + total_width / 2), y, f'{name.title()}', color=colors.dark_gray, alignment = tcod.CENTER, background=tcod.BKGND_NONE)
+    print_string(panel, int(x + total_width / 2), y, f'{name.title()}', alignment = tcod.CENTER, background=tcod.BKGND_NONE)
 
 
 def draw_quickslots(con, y, game):

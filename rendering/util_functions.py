@@ -120,7 +120,7 @@ def dynamic_wrap(string, max_width, replace_whitespace=False):
     return wrapped
 
 
-def print_string(con, x, y, string, color=None, fgcolor=colors.white, bgcolor=colors.black, alignment=tcod.LEFT, background=tcod.BKGND_DEFAULT):
+def print_string(con, x, y, string, color=None, fgcolor=colors.white, bgcolor=colors.black, color_coefficient=None, alignment=tcod.LEFT, background=tcod.BKGND_DEFAULT):
     """
     Prints a string to tcods console, supporting custom color-code wrappers.
 
@@ -152,23 +152,29 @@ def print_string(con, x, y, string, color=None, fgcolor=colors.white, bgcolor=co
         for i, word in enumerate(color_coded_words):
             color_code = color_code_pattern.match(word)
             if color_code.group(1)[0:5] == 'Color':
-                color_str = color_code.group(1)
+                color_str = eval(color_code.group(1))
             else:
-                color_str = f'colors.{color_code.group(1)}' # Resolve the color-code as a config.colors.py entry: %red%->colors.red
+                color_str = eval(f'colors.{color_code.group(1)}') # Resolve the color-code as a config.colors.py entry: %red%->colors.red
+            if color_coefficient:
+                color_str = tuple(int(color_coefficient * x) for x in color_str)
             new_word = word.replace(color_code.group(), '%c') # Replace the custom color-code with tcod's color-wrappers: %red%word% -> %cword%c
             new_word = new_word.replace('%%', '%c')
             string = string.replace(word, new_word) # Update the original string
             col_ctrl = eval(f'tcod.COLCTRL_{i+1}')
-            tcod.console_set_color_control(col_ctrl, eval(color_str), bgcolor)
+            tcod.console_set_color_control(col_ctrl, color_str, bgcolor)
             col_ctrls += (col_ctrl, tcod.COLCTRL_STOP)
         string = string % col_ctrls
 
     if color:
         if not '%c' in string: # If no tcod wrappers are present, wrap the entire string
             string = f'%c{string}%c'
-
+        if color_coefficient:
+            color = tuple(int(color_coefficient * x) for x in color)
         tcod.console_set_color_control(tcod.COLCTRL_1, color, bgcolor)
         string = string % (tcod.COLCTRL_1, tcod.COLCTRL_STOP)
+
+    if fgcolor and color_coefficient:
+        fgcolor = tuple(int(color_coefficient * x) for x in fgcolor)
 
     tcod.console_set_default_foreground(con, fgcolor)
     tcod.console_print_ex(con, x, y, background, alignment, string)

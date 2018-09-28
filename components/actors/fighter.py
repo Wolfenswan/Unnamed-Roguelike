@@ -5,9 +5,9 @@ import logging
 from components.actors.status_modifiers import Presence, Surrounded
 from config_files import colors
 from data.actor_data.act_status_mod import status_modifiers_data
-from data.data_types import AttackType
 from data.item_data.wp_attacktypes import wp_attacktypes_data
-from data.gui_data.gui_fighter import atkdmg_string_data, stadmg_string_data, sta_color_data, stadmg_color_data
+from data.gui_data.gui_fighter import hpdmg_string_data, stadmg_string_data, sta_color_data, stadmg_color_data, \
+    sta_string_data, hpdmg_color_data, hp_string_data, hp_color_data
 from gameobjects.block_level import BlockLevel
 from gameobjects.entity import Entity
 from gameobjects.util_functions import entity_at_pos
@@ -54,30 +54,30 @@ class Fighter:
     @property
     def hp_string(self):
         percentage = (self.__hp / self.max_hp * 100)
-        if 86.0 <= percentage:
-            return 'healthy'
-        elif 71.0 <= percentage:
-            return 'scratched'
-        elif 15.0 <= percentage:
-            return 'wounded'
-        elif 1.0 <= percentage:
-            return 'near death'
+        if 90 <= percentage:
+            return hp_string_data[90]
+        elif 60.0 <= percentage:
+            return hp_string_data[60]
+        elif 30.0 <= percentage:
+            return hp_string_data[30]
+        elif 1 <= percentage:
+            return hp_string_data[1]
         else:
-            return 'dead'
+            return hp_string_data[0]
 
     @property
     def hp_color(self):
         percentage = (self.__hp / self.max_hp * 100)
-        if 86.0 <= percentage:
-            return colors.dark_green
-        elif 71.0 <= percentage:
-            return colors.darkest_green
-        elif 15.0 <= percentage:
-            return colors.dark_red
-        elif 1.0 <= percentage:
-            return colors.darker_red
+        if 90 <= percentage:
+            return hp_color_data[90]
+        elif 60.0 <= percentage:
+            return hp_color_data[60]
+        elif 30.0 <= percentage:
+            return hp_color_data[30]
+        elif 1 <= percentage:
+            return hp_color_data[1]
         else:
-            return colors.darkest_red
+            return hp_color_data[0]
 
     @hp.setter
     def hp(self, value):
@@ -97,15 +97,15 @@ class Fighter:
     def stamina_string(self):
         percentage = (self.__stamina / self.max_stamina * 100)
         if 90.0 <= percentage:
-            return 'fit'
+            return sta_string_data[90]
         elif 60.0 <= percentage:
-            return 'active'
+            return sta_string_data[60]
         elif 30.0 <= percentage:
-            return 'strained'
+            return sta_string_data[40]
         elif 15.0 <= percentage:
-            return 'spent'
+            return sta_string_data[20]
         else:
-            return 'exhausted'
+            return sta_string_data[0]
 
     @property
     def stamina_color(self):
@@ -115,11 +115,11 @@ class Fighter:
         elif 60.0 <= percentage:
             return sta_color_data[60]
         elif 30.0 <= percentage:
-            return sta_color_data[30]
+            return sta_color_data[40]
         elif 15.0 <= percentage:
-            return sta_color_data[15]
+            return sta_color_data[20]
         else:
-            return sta_color_data[1]
+            return sta_color_data[0]
 
     @stamina.setter
     def stamina(self, value):
@@ -232,28 +232,41 @@ class Fighter:
             return shield_ent.item.equipment
         else:
             return None
-        
-    @staticmethod
-    def atk_dmg_string(damage, target_max_hp):
-        percentage = (damage / target_max_hp * 100)
+
+    def hpdmg_string(self, damage):
+        percentage = (damage / self.max_hp * 100)
         if 90 <= percentage:
-            return choice(atkdmg_string_data[90])
+            return choice(hpdmg_string_data[90])
         elif 65.0 <= percentage:
-            return choice(atkdmg_string_data[65])
+            return choice(hpdmg_string_data[65])
         elif 45.0 <= percentage:
-            return choice(atkdmg_string_data[45])
+            return choice(hpdmg_string_data[45])
         elif 25.0 <= percentage:
-            return choice(atkdmg_string_data[25])
+            return choice(hpdmg_string_data[25])
         elif 5.0 <= percentage:
-            return choice(atkdmg_string_data[5])
+            return choice(hpdmg_string_data[5])
         elif 1.0 <= percentage:
-            return choice(atkdmg_string_data[1])
+            return choice(hpdmg_string_data[1])
         else:
             return 'no'
-        
-    @staticmethod
-    def sta_dmg_string(damage, target_max_stamina):
-        percentage = (damage / target_max_stamina * 100)
+
+    def hpdmg_color(self, damage):
+        percentage = (damage / self.max_hp * 100)
+        if 90 <= percentage:
+            return hpdmg_color_data[90]
+        elif 65.0 <= percentage:
+            return hpdmg_color_data[65]
+        elif 45.0 <= percentage:
+            return hpdmg_color_data[45]
+        elif 25.0 <= percentage:
+            return hpdmg_color_data[25]
+        elif 5.0 <= percentage:
+            return hpdmg_color_data[5]
+        else:
+            return hpdmg_color_data[1]
+
+    def stadmg_string(self, damage):
+        percentage = (damage / self.max_stamina * 100)
         if 90 <= percentage:
             return choice(stadmg_string_data[90])
         elif 65.0 <= percentage:
@@ -268,10 +281,9 @@ class Fighter:
             return choice(stadmg_string_data[1])
         else:
             return 'no'
-        
-    @staticmethod
-    def stadmg_color(damage, target_max_stamina):
-        percentage = (damage / target_max_stamina * 100)
+
+    def stadmg_color(self, damage):
+        percentage = (damage / self.max_stamina * 100)
         if 90 <= percentage:
             return stadmg_color_data[90]
         elif 65.0 <= percentage:
@@ -282,7 +294,7 @@ class Fighter:
             return stadmg_color_data[25]
         elif 5.0 <= percentage:
             return stadmg_color_data[5]
-        elif 1.0 <= percentage:
+        else:
             return stadmg_color_data[1]
 
     def check_surrounded(self, game):
@@ -324,8 +336,8 @@ class Fighter:
         logging.debug(f'{self.owner.name} exerted by {string} for {amount}')
         #pronoun = 'Your' if self.owner.isplayer else 'The'
         if self.owner.is_player:
-            sta_dmg_string = self.sta_dmg_string(amount, self.max_stamina)
-            col = self.stadmg_color(amount, self.max_stamina)
+            sta_dmg_string = self.stadmg_string(amount)
+            col = self.stadmg_color(amount)
             message = Message(f'You {string} for %{col}%{sta_dmg_string}%% exertion.',
                               category=MessageCategory.OBSERVATION, type=MessageType.COMBAT_INFO)
             return {'message': message}
@@ -413,9 +425,11 @@ class Fighter:
         if damage > 0:
             msg_type = MessageType.COMBAT_BAD if target.is_player else MessageType.COMBAT_INFO
 
-            atk_dmg_string = self.atk_dmg_string(damage, target.fighter.max_hp)
+            atk_dmg_string = target.fighter.hpdmg_string(damage)
+            col = target.fighter.hpdmg_color(damage)
+            print('col', col)
             results.append({'message': Message(
-                f'{self.owner.name} {attack_string} {target_string}, {choice(atkdmg_string_data["verbs"])} {atk_dmg_string} damage.', category=MessageCategory.COMBAT, type=msg_type)})
+                f'{self.owner.name} {attack_string} {target_string}, {choice(hpdmg_string_data["verbs"])} %{col}%{atk_dmg_string}%% damage.', category=MessageCategory.COMBAT, type=msg_type)})
             results.extend(target.fighter.take_damage(damage))
         else:
             msg_type = MessageType.COMBAT_BAD if not target.is_player else MessageType.COMBAT_GOOD
