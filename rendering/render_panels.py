@@ -36,14 +36,14 @@ def render_player_panel(game, player_stats_change, con, panel_x, panel_y, width,
     hp_diff = player_stats_change[0]
     if hp_diff != 0:
         col = '%darker_green%+' if hp_diff > 0 else '%darker_red%'
-        print_string(con, len(hp_string)-2, y, f'({col}{hp_diff}%)')
+        print_string(con, len(hp_string)-2, y, f'({col}{hp_diff}%c)')
 
     sta_string = f'STAMINA : %c{player.fighter.stamina}/{player.fighter.max_stamina}%c'
     print_string(con, 1, y+1,  sta_string, color = game.player.fighter.stamina_color)
     sta_diff = player_stats_change[1]
     if sta_diff != 0:
         col = '%lighter_sea%+' if sta_diff > 0 else '%darker_sea%'
-        print_string(con, len(sta_string)-2, y+1,  f'({col}{sta_diff}%)')
+        print_string(con, len(sta_string)-2, y+1,  f'({col}{sta_diff}%c)')
 
     # Equipment-derived stats #
     y += 2
@@ -61,7 +61,7 @@ def render_player_panel(game, player_stats_change, con, panel_x, panel_y, width,
     if player.fighter.shield:
         col1 = 'dark_gray' if not player.fighter.is_blocking else 'white'
         col2 = 'dark_red' if player.fighter.shield.block_def > player.fighter.modded_block_def else f'{col1}'
-        print_string(con, 10, y+2, f'%{col1}%BLOCK:% %{col2}%{player.fighter.modded_block_def}%')
+        print_string(con, 10, y+2, f'%{col1}%BLOCK:%c %{col2}%{player.fighter.modded_block_def}%c')
 
     # Weapon #
     y += 2
@@ -149,7 +149,7 @@ def render_enemy_panel(game, con, panel_x, panel_y, width, height, color):
                           % (tcod.COLCTRL_2, tcod.COLCTRL_STOP, tcod.COLCTRL_3, tcod.COLCTRL_STOP)
             for status, active in ent.fighter.presence.items():
                 if active:
-                    status_line += f' %white%{status.name[0]}%'
+                    status_line += f' %white%{status.name[0]}%c'
 
             print_string(con, 4, y, f'{status_line}')
 
@@ -173,7 +173,7 @@ def render_message_panel(message_log, title, con, panel_x, panel_y, width, heigh
             color_coefficient = 0.2
 
         color = tuple(int(color_coefficient * x) for x in message.color)
-        print_string(con, message_log.x, y, message.text, color=color)
+        print_string(con, message_log.x, y, message.text)
         y += 1
 
     tcod.console_blit(con, 0, 0, width, height, 0, panel_x, panel_y)
@@ -203,7 +203,7 @@ def draw_bar(panel, x, y, total_width, name, value, maximum, bar_color, back_col
     if bar_width > 0:
         tcod.console_rect(panel, x, y, bar_width, 1, False, tcod.BKGND_SCREEN)
 
-    print_string(panel, int(x + total_width / 2), y, f'%dark_gray%{name.title()}%', alignment = tcod.CENTER, background=tcod.BKGND_NONE)
+    print_string(panel, int(x + total_width / 2), y, f'%dark_gray%{name.title()}%c', alignment = tcod.CENTER, background=tcod.BKGND_NONE)
 
 
 def draw_quickslots(con, y, game):

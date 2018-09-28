@@ -1,6 +1,6 @@
 
-from data.string_data.cond_strings import cond_name_data
-from data.string_data.craft_strings import craft_name_data
+from data.gui_data.cond_strings import cond_name_data
+from data.gui_data.craft_strings import craft_name_data
 from rendering.util_functions import dynamic_wrap
 
 
@@ -37,38 +37,38 @@ class Item:
         :rtype: list
         """
         list = ['']
-        col = '%desaturated_lime%'
+        col = 'desaturated_lime'
 
         if self.owner.type:
             type_str = self.owner.type.name.title()
             if self.equipment and self.equipment.two_handed:
                 type_str += ' (Two-Handed)'
-            list.extend(dynamic_wrap(f' Type: {col}{type_str}%', max_width))
+            list.extend(dynamic_wrap(f' Type: %{col}%{type_str}%c', max_width))
 
         if self.equipment:
 
             if self.equipment.e_to:
                 e_str = self.equipment.e_to.replace('_',' ')
-                list.extend(dynamic_wrap(f' Equips To: {col}{e_str.title()}%', max_width))
+                list.extend(dynamic_wrap(f' Equips To: %{col}%{e_str.title()}%c', max_width))
 
             if self.equipment.av:
-                list.extend(dynamic_wrap(f' Armor: {col}{self.equipment.av}%', max_width))
+                list.extend(dynamic_wrap(f' Armor: %{col}%{self.equipment.av}%c', max_width))
 
             if self.equipment.block_def:
-                list.extend(dynamic_wrap(f' Armor (Blocking): {col}{self.equipment.block_def}%', max_width))
+                list.extend(dynamic_wrap(f' Armor (Blocking): %{col}%{self.equipment.block_def}%c', max_width))
 
             if self.equipment.dmg_potential:
-                list.extend(dynamic_wrap(f' Damage Potential: {col}{self.equipment.dmg_potential[0]}-{self.equipment.dmg_potential[1]}%', max_width))
+                list.extend(dynamic_wrap(f' Damage Potential: %{col}%{self.equipment.dmg_potential[0]}-{self.equipment.dmg_potential[1]}%c', max_width))
 
             if self.equipment.attack_type:
-                list.extend(dynamic_wrap(f' Attack: {col}{self.equipment.attack_type.name.title()}%', max_width))
+                list.extend(dynamic_wrap(f' Attack: %{col}%{self.equipment.attack_type.name.title()}%c', max_width))
 
             if self.equipment.l_radius:
-                list.extend(dynamic_wrap(f' Light Radius: {col}{self.equipment.l_radius}%', max_width))
+                list.extend(dynamic_wrap(f' Light Radius: %{col}%{self.equipment.l_radius}%c', max_width))
 
             if self.equipment.moveset:
                 list.append('')
-                str = f'This weapon utilizes %orange%{self.equipment.moveset.moves}% attacks:'
+                str = f'This weapon utilizes %orange%{self.equipment.moveset.moves}%c attacks:'
                 list.extend(dynamic_wrap(str, max_width))
                 for k, v in self.equipment.moveset.movelist.items():
                     if v.get('descr'):

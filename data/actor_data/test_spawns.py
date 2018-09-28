@@ -8,22 +8,11 @@
         'descr': 'Enemy descprition'
         'max_hp': Tuple of min/max values
         'max_stamina': Tuple of min/max values
-        'nat_armor': Tuple of min/max values
-        'nat_power': Tuple of min/max values
-        'vision': Integer
+        'base_armor': Tuple of min/max values
+        'base_strength': Tuple of min/max values
         'ai_behavior':
         'barks': Tuple of strings, referring to barks as defined in barks_data
         'skills': Tuple of strings, referring to skills as defined in skills_data
-        'loadouts': { # Dictionary defining loadout and backpack
-                'melee1': {
-                    'chance': 50,
-                    'equipment': ('sword_orc', 'helmet_rusty', 'leather_orc')
-                },
-                'melee2': {
-                    'chance': 50,
-                    'equipment': ('sword_orc', 'leather_orc')
-                }
-        },
         'dlvls': Tuple of dungeon level range
         'chance': Chance in 100 to appear
         'group_size': Tuple of min/max group size
@@ -41,7 +30,7 @@ spawn_data = {
         'name': 'Roachling',
         'char': 'r',
         'color': colors.light_amber,
-        'descr': 'Waddling upright like a clumsy child, the twitching antennae and multitude of freely jittering legs make an quick end to any passing resemblance.',
+        'descr': 'Waddling upright like a clumsy child, the twitching antennae and multitude of jittering legs quickly dispell any passing resemblance.',
         'max_hp': (2,6),
         'max_stamina': (80,80),
         'base_armor': (0,0),
@@ -54,7 +43,7 @@ spawn_data = {
         },
         'ai_movement': Swarm,
         'ai_attack': Swarm,
-        'barks': ('insect'),
+        'barks': ('insect',),
         'dlvls': (1,100),
         'rarity': RarityType.COMMON,
         'group_size': (3,7)
@@ -78,7 +67,7 @@ spawn_data = {
         #'nat_vision': 6,
         'ai_movement': Simple,
         'ai_attack': Simple,
-        'barks': ('insect'),
+        'barks': ('insect',),
         'skills': ('skill_charge',  ),
         'dlvls': (1,100),
         'rarity': RarityType.UNCOMMON,

@@ -7,7 +7,7 @@ from config_files import colors
 from data.actor_data.act_status_mod import status_modifiers_data
 from data.data_types import AttackType
 from data.item_data.wp_attacktypes import wp_attacktypes_data
-from data.string_data.combat_strings import atkdmg_string_data, stadmg_string_data
+from data.gui_data.gui_fighter import atkdmg_string_data, stadmg_string_data, sta_color_data, stadmg_color_data
 from gameobjects.block_level import BlockLevel
 from gameobjects.entity import Entity
 from gameobjects.util_functions import entity_at_pos
@@ -111,15 +111,15 @@ class Fighter:
     def stamina_color(self):
         percentage = (self.__stamina / self.max_stamina * 100)
         if 90.0 <= percentage:
-            return colors.light_sea
+            return sta_color_data[90]
         elif 60.0 <= percentage:
-            return  colors.sea
+            return sta_color_data[60]
         elif 30.0 <= percentage:
-            return  colors.dark_sea
+            return sta_color_data[30]
         elif 15.0 <= percentage:
-            return  colors.darker_sea
+            return sta_color_data[15]
         else:
-            return  colors.darkest_sea
+            return sta_color_data[1]
 
     @stamina.setter
     def stamina(self, value):
@@ -268,6 +268,22 @@ class Fighter:
             return choice(stadmg_string_data[1])
         else:
             return 'no'
+        
+    @staticmethod
+    def stadmg_color(damage, target_max_stamina):
+        percentage = (damage / target_max_stamina * 100)
+        if 90 <= percentage:
+            return stadmg_color_data[90]
+        elif 65.0 <= percentage:
+            return stadmg_color_data[65]
+        elif 45.0 <= percentage:
+            return stadmg_color_data[45]
+        elif 25.0 <= percentage:
+            return stadmg_color_data[25]
+        elif 5.0 <= percentage:
+            return stadmg_color_data[5]
+        elif 1.0 <= percentage:
+            return stadmg_color_data[1]
 
     def check_surrounded(self, game):
         nearby_enemies = len(self.owner.enemies_in_distance(game.npc_ents, dist=1.5))
@@ -309,7 +325,8 @@ class Fighter:
         #pronoun = 'Your' if self.owner.isplayer else 'The'
         if self.owner.is_player:
             sta_dmg_string = self.sta_dmg_string(amount, self.max_stamina)
-            message = Message(f'Your {string} causes {sta_dmg_string} exertion.', category=MessageCategory.OBSERVATION,
+            col = self.stadmg_color(amount, self.max_stamina)
+            message = Message(f'You {string} for %{col}%{sta_dmg_string}%c exertion.', category=MessageCategory.OBSERVATION,
                               type=MessageType.COMBAT_INFO)
             return {'message': message}
         return {}

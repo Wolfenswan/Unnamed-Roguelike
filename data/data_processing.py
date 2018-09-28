@@ -17,7 +17,7 @@ from data.actor_data.test_spawns import spawn_data
 from data.architecture_data.arch_static import arch_static_data
 from data.architecture_data.arch_containers import arch_containers_data
 from data.item_data.wp_creatures import wp_creature_data
-from data.string_data.craft_strings import craft_descr_data
+from data.gui_data.craft_strings import craft_descr_data
 from data.actor_data.act_bodytypes import bodytype_data
 from data.shared_data.quality_mod import qual_cond_data, qual_craft_data
 from data.data_types import GenericType, Condition, RarityType, BodyType, AttackType
@@ -25,7 +25,7 @@ from data.shared_data.material_mod import item_material_data
 from data.item_data.test_equipment import test_equipment_data
 from data.item_data.use_potions import use_potions_data
 from data.item_data.use_scrolls import use_scrolls_data
-from data.string_data.cond_strings import cond_descr_data
+from data.gui_data.cond_strings import cond_descr_data
 from data.shared_data.rarity_mod import rarity_values
 from debug.timer import debug_timer
 from gameobjects.entity import Entity

@@ -9,8 +9,8 @@ from components.inventory.inventory import Inventory
 from components.inventory.paperdoll import Paperdoll
 from config_files import colors
 from data.data_types import BodyType
-from data.string_data.bodytype_strings import bodytype_name_data
-from data.string_data.material_strings import material_name_data
+from data.gui_data.bodytype_strings import bodytype_name_data
+from data.gui_data.material_strings import material_name_data
 from gameobjects.util_functions import entity_at_pos
 from rendering.render_order import RenderOrder
 
@@ -130,16 +130,16 @@ class Entity:
         extend_descr = []
         # TODO All colors are WIP
         if self.fighter and self.fighter.weapon:
-            extend_descr += [' ', f'It attacks with %dark_crimson%{self.fighter.weapon.attack_type.name.lower()}% strikes.']
+            extend_descr += [' ', f'It attacks with %dark_crimson%{self.fighter.weapon.attack_type.name.lower()}%c strikes.']
 
         if self.fighter and game.player.fighter.shield:
-            extend_descr += [' ', f'Blocking its attacks will be %dark_crimson%{game.player.fighter.average_chance_to_block(self)}%.']
+            extend_descr += [' ', f'Blocking its attacks will be %dark_crimson%{game.player.fighter.average_chance_to_block(self)}%c.']
 
         if self.fighter and self.fighter.presence[Presence.DAZED]:
-            extend_descr += [' ',f'{self.pronoun.title()} {self.state_verb} %yellow%dazed% and slightly confused.']
+            extend_descr += [' ',f'{self.pronoun.title()} {self.state_verb} %yellow%dazed%c and slightly confused.']
 
         if self.fighter and self.fighter.presence[Presence.STUNNED]:
-            extend_descr += [' ',f'{self.pronoun.title()} {self.state_verb} %yellow%stunned% and unable to attack.']
+            extend_descr += [' ',f'{self.pronoun.title()} {self.state_verb} %yellow%stunned%c and unable to attack.']
 
         if game.debug['ent_info']:
             if self.fighter:

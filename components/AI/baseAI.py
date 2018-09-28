@@ -50,7 +50,7 @@ class BaseAI:
         if self.owner.fighter.stamina < self.owner.fighter.max_stamina / 10:
           # Switch to resting AI mode
           self.owner.fighter.recover(self.owner.fighter.max_stamina / 2)  # TODO Placeholder Stamina Management
-          message = Message(f'PLACEHOLDER: {npc.name} is exhausted and skipping move to rest.')
+          message = Message(f'PLACEHOLDER: {npc.name} is exhausted and skipping turn to rest.')
           results.append({'message': message})
           return results
 

@@ -85,11 +85,11 @@ def dynamic_wrap(string, max_width, replace_whitespace=False):
     such as %c and %color% when wrapping words.
     """
     codes ={}
-    color_coded_words = re.findall('(%{1}\w+%{1}[()+:\s\w-]+%{1})', string)
+    color_coded_words = re.findall('(%{1}[.\w]+%{1}[()+:\s\w-]+%{1}c{1})', string)
     for coded_string in color_coded_words:
-        color_code = re.search('(%{1}\w+%{1})', coded_string)
+        color_code = re.search('(%{1}([.\w]+)%{1})', coded_string)
         stripped_code = coded_string.replace(color_code.group(),'')
-        stripped_code = stripped_code.replace('%','')
+        stripped_code = stripped_code.replace('%c','')
         string = string.replace(coded_string,stripped_code)
         codes[stripped_code] = coded_string
 
@@ -107,13 +107,19 @@ def dynamic_wrap(string, max_width, replace_whitespace=False):
 
 def print_string(con, x, y, string, color=None, bgcolor=colors.black, alignment=tcod.LEFT, background=tcod.BKGND_DEFAULT):
 
-    color_coded_words = re.findall('(%{1}\w+%{1}[()+:\s\w-]+%{1})', string) # Catches any string of %color%string%
+    color_coded_words = re.findall('(%{1}[.\w\d]+%{1}[()+:\s\w-]+%{1}c{1})+', string) # Catches any string of %color%string%
     if color_coded_words:
+        print(color_coded_words)
         col_ctrls = ()
         for i, word in enumerate(color_coded_words):
-            color_code = re.match('%{1}(\w*)%{1}', word)
-            color_str = eval(f'colors.{color_code.group(1)}') # Resolve the color-code as a config.colors.py entry: %red%->colors.red
-            new_word = word.replace(color_code.group(), '%c') + 'c' # Replace the custom color-code with tcod's color-wrappers: %red%word% -> %cword%c
+            print(word)
+            color_code = re.match('%{1}(\w+)%{1}', word)
+            print(color_code)
+            if color_code.group()[1:8] != 'colors.':
+                color_str = eval(f'colors.{color_code.group(1)}') # Resolve the color-code as a config.colors.py entry: %red%->colors.red
+            else:
+                color_str = eval(color_code.group(1))
+            new_word = word.replace(color_code.group(), '%c') # Replace the custom color-code with tcod's color-wrappers: %red%word% -> %cword%c
             string = string.replace(word, new_word) # Update the original string
             col_ctrl = eval(f'tcod.COLCTRL_{i+1}')
             tcod.console_set_color_control(col_ctrl, color_str, bgcolor)

@@ -25,13 +25,13 @@ class Moveset():
     @property
     def targets_gui(self):
         l_1 = [' ',' ',' ']
-        l_2 = [' ','@','%red%X%']
+        l_2 = [' ','@','%red%X%c']
         l_3 = [' ',' ',' ']
         extra_hits = self.movelist[self.current_move].get('extra_hits', {})
         if extra_hits.get('target_behind'):
-            l_2 += '%red%X%'
+            l_2 += '%red%X%c'
         if extra_hits.get('target_left'):
-            l_1[2] = '%red%X%'
+            l_1[2] = '%red%X%c'
         if extra_hits.get('target_right'):
             l_3[2] = 'X'
 
