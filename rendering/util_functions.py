@@ -2,6 +2,7 @@ import textwrap
 from random import uniform
 
 import tcod
+from tcod import Color
 import re
 
 from config_files import colors, cfg as cfg
@@ -79,23 +80,37 @@ def randomize_rgb_color(color, factor_range = (0, 0.25), darken=False):
     return color
 
 
+color_wrap_pattern = re.compile(
+r"""
+%{1}            # % indicating beginning of color-code
+\w+[.,\d()]*    # the color
+%{1}            # % indicating end of color-code
+[()+:\s\w-]+    # the word or string to color
+%{2}        # %c indicating end of color-wrapping
+""", re.X)
+
+color_code_pattern = re.compile('%{1}(\w+[.,\d()]*)%{1}')
+
+
 def dynamic_wrap(string, max_width, replace_whitespace=False):
     """
     This function makes sure that textwrap.wrap() does ignore formatting strings
     such as %c and %color% when wrapping words.
     """
     codes ={}
-    color_coded_words = re.findall('(%{1}[.\w]+%{1}[()+:\s\w-]+%{1}c{1})', string)
+    color_coded_words = color_wrap_pattern.findall(string)
     for coded_string in color_coded_words:
-        color_code = re.search('(%{1}([.\w]+)%{1})', coded_string)
+        color_code = color_code_pattern.match(coded_string)
         stripped_code = coded_string.replace(color_code.group(),'')
-        stripped_code = stripped_code.replace('%c','')
-        string = string.replace(coded_string,stripped_code)
+        stripped_code = stripped_code.replace('%%','')
+        string = string.replace(coded_string,stripped_code) # Remove all color code wrappers from the string
+        print(string)
         codes[stripped_code] = coded_string
 
+    # Create a textwrap-list, using the new string without color-wrappers
     wrapped = textwrap.wrap(string, max_width, replace_whitespace=replace_whitespace)
 
-    # Re-add the formatting strings
+    # Re-add the color-wrapper strings
     for i, line in enumerate(wrapped):
         for k in codes.keys():
             if k in line:
@@ -105,31 +120,56 @@ def dynamic_wrap(string, max_width, replace_whitespace=False):
     return wrapped
 
 
-def print_string(con, x, y, string, color=None, bgcolor=colors.black, alignment=tcod.LEFT, background=tcod.BKGND_DEFAULT):
+def print_string(con, x, y, string, color=None, fgcolor=colors.white, bgcolor=colors.black, alignment=tcod.LEFT, background=tcod.BKGND_DEFAULT):
+    """
+    Prints a string to tcods console, supporting custom color-code wrappers.
 
-    color_coded_words = re.findall('(%{1}[.\w\d]+%{1}[()+:\s\w-]+%{1}c{1})+', string) # Catches any string of %color%string%
+    :param con:
+    :type con:
+    :param x:
+    :type x:
+    :param y:
+    :type y:
+    :param string:
+    :type string:
+    :param color:   The color to use for strings inside a %c wrapper.
+    :type color:
+    :param fgcolor: The default foreground color for the string.
+    :type fgcolor:
+    :param bgcolor: The default background color for the string.
+    :type bgcolor:
+    :param alignment:
+    :type alignment:
+    :param background:
+    :type background:
+    """
+
+
+    color_coded_words = color_wrap_pattern.findall(string)
+    col_ctrls = ()
+
     if color_coded_words:
-        print(color_coded_words)
-        col_ctrls = ()
         for i, word in enumerate(color_coded_words):
-            print(word)
-            color_code = re.match('%{1}(\w+)%{1}', word)
-            print(color_code)
-            if color_code.group()[1:8] != 'colors.':
-                color_str = eval(f'colors.{color_code.group(1)}') # Resolve the color-code as a config.colors.py entry: %red%->colors.red
+            color_code = color_code_pattern.match(word)
+            if color_code.group(1)[0:5] == 'Color':
+                color_str = color_code.group(1)
             else:
-                color_str = eval(color_code.group(1))
+                color_str = f'colors.{color_code.group(1)}' # Resolve the color-code as a config.colors.py entry: %red%->colors.red
             new_word = word.replace(color_code.group(), '%c') # Replace the custom color-code with tcod's color-wrappers: %red%word% -> %cword%c
+            new_word = new_word.replace('%%', '%c')
             string = string.replace(word, new_word) # Update the original string
             col_ctrl = eval(f'tcod.COLCTRL_{i+1}')
-            tcod.console_set_color_control(col_ctrl, color_str, bgcolor)
+            tcod.console_set_color_control(col_ctrl, eval(color_str), bgcolor)
             col_ctrls += (col_ctrl, tcod.COLCTRL_STOP)
         string = string % col_ctrls
 
     if color:
         if not '%c' in string: # If no tcod wrappers are present, wrap the entire string
             string = f'%c{string}%c'
+
         tcod.console_set_color_control(tcod.COLCTRL_1, color, bgcolor)
         string = string % (tcod.COLCTRL_1, tcod.COLCTRL_STOP)
 
+    tcod.console_set_default_foreground(con, fgcolor)
     tcod.console_print_ex(con, x, y, background, alignment, string)
+    tcod.console_set_default_foreground(con, tcod.white)

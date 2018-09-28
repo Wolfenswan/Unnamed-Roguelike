@@ -326,8 +326,8 @@ class Fighter:
         if self.owner.is_player:
             sta_dmg_string = self.sta_dmg_string(amount, self.max_stamina)
             col = self.stadmg_color(amount, self.max_stamina)
-            message = Message(f'You {string} for %{col}%{sta_dmg_string}%c exertion.', category=MessageCategory.OBSERVATION,
-                              type=MessageType.COMBAT_INFO)
+            message = Message(f'You {string} for %{col}%{sta_dmg_string}%% exertion.',
+                              category=MessageCategory.OBSERVATION, type=MessageType.COMBAT_INFO)
             return {'message': message}
         return {}
 

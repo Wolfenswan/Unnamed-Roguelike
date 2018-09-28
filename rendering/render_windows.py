@@ -22,7 +22,7 @@ def set_window_on_screen(window_x, window_y, width, height):
 
 
 def draw_window(title, body, options = None, window_x = None, window_y = None, padding_x = 2, padding_y = 2,
-                sort_by = 'str', show_cancel_option=True, forced_width=None, extend_body = None,
+                sort_by = 'str', show_cancel_option=True, forced_width=None, extend_body=None,
                 title_color=colors.white, options_colors=None):
     if not options:
         options  = []
@@ -44,7 +44,8 @@ def draw_window(title, body, options = None, window_x = None, window_y = None, p
     # TODO: Wrapping is sometimes odd, as it does consider the (later removed) %colorcoding%-strings when wrapping
     body_wrapped = dynamic_wrap(body, width - padding_x * 2, replace_whitespace=False)
     if extend_body:
-        body_wrapped.extend(extend_body)
+        for line in extend_body:
+            body_wrapped.extend([' ', line])
 
     # Calculate window height #
     height = padding_y * 2

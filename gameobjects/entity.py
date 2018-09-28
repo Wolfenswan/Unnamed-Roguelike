@@ -9,7 +9,7 @@ from components.inventory.inventory import Inventory
 from components.inventory.paperdoll import Paperdoll
 from config_files import colors
 from data.data_types import BodyType
-from data.gui_data.bodytype_strings import bodytype_name_data
+from data.gui_data.gui_entity import bodytype_name_data
 from data.gui_data.material_strings import material_name_data
 from gameobjects.util_functions import entity_at_pos
 from rendering.render_order import RenderOrder
@@ -130,31 +130,32 @@ class Entity:
         extend_descr = []
         # TODO All colors are WIP
         if self.fighter and self.fighter.weapon:
-            extend_descr += [' ', f'It attacks with %dark_crimson%{self.fighter.weapon.attack_type.name.lower()}%c strikes.']
+            extend_descr += [f'It attacks with %dark_crimson%{self.fighter.weapon.attack_type.name.lower()}%% strikes.']
 
         if self.fighter and game.player.fighter.shield:
-            extend_descr += [' ', f'Blocking its attacks will be %dark_crimson%{game.player.fighter.average_chance_to_block(self)}%c.']
+            extend_descr += [f'Blocking its attacks will be %dark_crimson%{game.player.fighter.average_chance_to_block(self)}%%.']
 
         if self.fighter and self.fighter.presence[Presence.DAZED]:
-            extend_descr += [' ',f'{self.pronoun.title()} {self.state_verb} %yellow%dazed%c and slightly confused.']
+            extend_descr += [f'{self.pronoun.title()} {self.state_verb} %yellow%dazed%% and slightly confused.']
 
         if self.fighter and self.fighter.presence[Presence.STUNNED]:
-            extend_descr += [' ',f'{self.pronoun.title()} {self.state_verb} %yellow%stunned%c and unable to attack.']
+            extend_descr += [f'{self.pronoun.title()} {self.state_verb} %yellow%stunned%% and unable to attack.']
 
         if game.debug['ent_info']:
             if self.fighter:
-                extend_descr += [' ', f'hp:{self.fighter.hp}/{self.fighter.max_hp}',
+                extend_descr += [f'hp:{self.fighter.hp}/{self.fighter.max_hp}',
                                 f'av:{self.fighter.defense} (modded:{self.fighter.modded_defense})',
                                 f'dmg:{self.fighter.base_dmg_potential} (modded:{self.fighter.modded_dmg_potential})',
                                 f'Your ctb:{game.player.fighter.average_chance_to_block(self, debug=True)}']
             if self.fighter.weapon:
-                extend_descr += [' ', f'wp:{self.fighter.weapon.full_name}']
+                extend_descr += [f'wp:{self.fighter.weapon.full_name}']
             if self.architecture:
                 ext1 = self.architecture.on_interaction.__name__ if self.architecture.on_interaction else None
                 ext2 = self.architecture.on_collision.__name__ if self.architecture.on_collision else None
-                extend_descr += [' ', f'interact:{ext1}', f'collision:{ext2}']
+                extend_descr += [f'interact:{ext1}', f'collision:{ext2}']
 
         return extend_descr
+
 
     def available_skills(self, game):
         available_skills = [skill for skill in self.skills.values() if skill.is_available(game)]
