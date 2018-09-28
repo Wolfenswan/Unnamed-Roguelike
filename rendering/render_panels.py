@@ -42,8 +42,8 @@ def render_player_panel(game, con, panel_x, panel_y, width, height):
     print_string(con, 1, y+1,  sta_string, color = game.player.fighter.stamina_color)
     sta_diff = player.statistics.sta_change
     if sta_diff != 0:
-        col = '%lighter_sea%+' if sta_diff > 0 else '%darker_sea%'
-        print_string(con, len(sta_string)-2, y+1,  f'({col}{sta_diff}%%)')
+        col = colors.lighter_sea if sta_diff > 0 else colors.darker_sea
+        print_string(con, len(sta_string)-2, y+1,  f'(%{col}%{sta_diff}%%)')
 
     # Equipment-derived stats #
     y += 2

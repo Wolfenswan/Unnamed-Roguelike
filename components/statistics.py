@@ -1,6 +1,22 @@
 from functools import wraps
 
 
+def statistics_updater(entry, value_idx=1, substract=False):
+    """
+    This decorator allows to track statistic changes on functions manipulating a single value (e.g. Fighter.take_damage())
+    """
+    def decorator(function):
+        @wraps(function)
+        def wrapper(*args, **kwargs):
+            result = function(*args, **kwargs)
+            ent = args[0].owner
+            value = args[value_idx] if not substract else -args[value_idx]
+            ent.statistics.update_all(entry, value)
+            return result
+        return wrapper
+    return decorator
+
+
 class Statistics:
     def __init__(self):
         self.int_values = ['hp_change', 'sta_change', 'dmg_done']
@@ -9,6 +25,7 @@ class Statistics:
         for dic in [self.turn, self.level, self.game]:
             self.reset(dic)
 
+    # Note: All @properties are just convenient ways to directly get and set the current turn statistics
     @property
     def hp_change(self):
         return self.turn['hp_change']
@@ -45,7 +62,7 @@ class Statistics:
 
     def update_all(self, key, value):
         for dic in [self.turn, self.level, self.game]:
-            if isinstance(value, int):
+            if isinstance(value, float):
                 value = round(value)
             dic[key] += value
 
@@ -57,17 +74,3 @@ class Statistics:
 
     def reset_turn(self):
         self.reset(self.turn)
-
-
-def statistics_updater(entry, value_idx=1, substract=False):
-    def decorator(function):
-        @wraps(function)
-        def wrapper(*args, **kwargs):
-            ent = args[0].owner
-            value = args[value_idx] if not substract else -args[value_idx]
-            ent.statistics.update_all(entry,value)
-            result = function(*args, **kwargs)
-            return result
-
-        return wrapper
-    return decorator

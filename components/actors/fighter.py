@@ -19,20 +19,6 @@ from rendering.render_order import RenderOrder
 
 class Fighter:
     def __init__(self, hp, stamina, base_av, base_strength, base_vision):
-        """
-
-        :param hp:
-        :type hp: int
-        :param stamina:
-        :type stamina: int
-        :param defense:
-        :type defense: int
-        :param power:
-        :type power: int
-        :param vision:
-        :type vision: int
-
-        """
         self.__hp = hp
         self.max_hp = hp
         self.__stamina = stamina
@@ -48,9 +34,17 @@ class Fighter:
             Presence.STUNNED: False
         }
 
+    ##############
+    # ATTRIBUTES #
+    ##############
+
     @property
     def hp(self):
         return self.__hp
+
+    @property
+    def hp_full(self):
+        return self.hp == self.max_hp
 
     @property
     def hp_string(self):
@@ -93,6 +87,10 @@ class Fighter:
     @property
     def stamina(self):
         return self.__stamina
+
+    @property
+    def sta_full(self):
+        return self.stamina == self.max_stamina
 
     @property
     def stamina_string(self):
@@ -327,13 +325,9 @@ class Fighter:
             self.hp = self.max_hp
         logging.debug(f'({self} was healed for {amount}.')
 
-    @statistics_updater('sta_change', substract=True)
+    @statistics_updater('sta_change')
     def recover(self, amount):
         self.stamina += amount
-        self.owner.statistics.sta_change += amount
-
-        if self.stamina > self.max_stamina:
-            self.stamina = self.max_stamina
         logging.debug(f'({self} recovered stamina for {amount}.')
 
     @statistics_updater('sta_change', substract=True)

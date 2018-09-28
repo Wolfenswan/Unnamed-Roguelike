@@ -92,7 +92,7 @@ r"""
 color_code_pattern = re.compile('%{1}(\w+[.,\d()]*)%{1}')
 
 
-def dynamic_wrap(string, max_width, replace_whitespace=False):
+def dynamic_wrap(string, max_width):
     """
     This function makes sure that textwrap.wrap() does ignore formatting strings
     such as %c and %color% when wrapping words.
@@ -108,7 +108,7 @@ def dynamic_wrap(string, max_width, replace_whitespace=False):
         codes[stripped_code] = coded_string
 
     # Create a textwrap-list, using the new string without color-wrappers
-    wrapped = textwrap.wrap(string, max_width, replace_whitespace=replace_whitespace)
+    wrapped = textwrap.wrap(string, max_width)
 
     # Re-add the color-wrapper strings
     for i, line in enumerate(wrapped):
