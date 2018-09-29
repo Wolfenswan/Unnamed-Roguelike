@@ -41,7 +41,7 @@ class Swarm:
         results = []
 
         # TODO should the ability to squeeze past be a skill?
-        tiles = game_map.empty_tiles_near_ent(target, game)
+        tiles = game_map.empty_pos_near_ent(target, game)
         if tiles:
             tile = next((t for t in tiles if npc.distance_to_pos(*t) <= 2), None)
             if tile:

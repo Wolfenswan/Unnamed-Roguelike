@@ -31,7 +31,7 @@ from debug.timer import debug_timer
 from gameobjects.entity import Entity
 from gameobjects.npc import NPC
 from rendering.render_order import RenderOrder
-from rendering.util_functions import randomize_rgb_color
+from rendering.util_functions import multiply_rgb_color
 
 
 def merge_dictionaries(dicts):
@@ -100,7 +100,7 @@ def get_generic_data(data, material=None, condition=None, craftsmanship=None, bo
 
     if randomize_color:
         darken = True if randint(0, 1) else False
-        color = randomize_rgb_color(color, darken = darken) # Slight color randomization for each entity
+        color = multiply_rgb_color(color, darken = darken) # Slight color randomization for each entity
 
     if material:
         color = material['color']  # Update the entity's color
@@ -118,11 +118,11 @@ def get_generic_data(data, material=None, condition=None, craftsmanship=None, bo
             # Tweak the color slightly to indicate quality level #
             # TODO Tweak as necessary
             if condition['type'] == Condition.POOR:
-                color = randomize_rgb_color(color, factor_range=(0.2, 0.2), darken=True)
+                color = multiply_rgb_color(color, factor_range=(0.2, 0.2), darken=True)
             elif condition['type'] == Condition.GOOD:
-                color = randomize_rgb_color(color, factor_range=(0.25, 0.25), darken=False)
+                color = multiply_rgb_color(color, factor_range=(0.25, 0.25), darken=False)
             elif condition['type'] == Condition.LEGENDARY:
-                color = randomize_rgb_color(color, factor_range=(0.6, 0.6), darken=False)
+                color = multiply_rgb_color(color, factor_range=(0.6, 0.6), darken=False)
 
         if craftsmanship:
             # Append randomized condition description to the main description #
@@ -149,9 +149,9 @@ def get_generic_data(data, material=None, condition=None, craftsmanship=None, bo
         # elif bodytype['type'] == BodyType.SMALL:
         #     color = randomize_rgb_color(color, factor_range=(0.2, 0.2), darken=True)
         if bodytype['type'] == BodyType.LARGE:
-            color = randomize_rgb_color(color, factor_range=(0.2, 0.2), darken=False)
+            color = multiply_rgb_color(color, factor_range=(0.2, 0.2), darken=False)
         elif bodytype['type'] == BodyType.GARGANTUAN:
-            color = randomize_rgb_color(color, factor_range=(0.6, 0.6), darken=False)
+            color = multiply_rgb_color(color, factor_range=(0.6, 0.6), darken=False)
 
     return (char, color, name, descr, type)
 

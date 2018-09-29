@@ -50,6 +50,8 @@ class Tunneling:
                     dest_r = rooms[idx]
                 else:
                     dest_r = choice(all_rooms)
+                    while r ==dest_r:
+                        dest_r = choice(all_rooms)
 
                 dest_x, dest_y = dest_r.center
 
@@ -94,8 +96,8 @@ class DrunkWalk:
 
         self._filled = 0
         self._previousDirection = None
-        self.drunkardX = randint(2, map_width - 2)
-        self.drunkardY = randint(2, map_height - 2)
+        self.drunkardX = randint(round(map_width/4), round(map_width/4*3))
+        self.drunkardY = randint(round(map_height/4), round(map_height/4*3))
         self.filledGoal = map_width * map_height * self._percentGoal
 
         for i in xrange(self.walkIterations):

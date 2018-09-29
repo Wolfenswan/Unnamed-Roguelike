@@ -67,48 +67,32 @@ def draw_tile(game, con, fov_map, tile_x, tile_y, screen_x, screen_y, debug=Fals
     tile = game.map.tiles[(tile_x, tile_y)]
     visible = tcod.map_is_in_fov(fov_map, tile_x, tile_y) or debug
 
-    wall = tile.block_sight and not tile.walkable
-
     if visible:
-        char = chr(178) if wall else '.'
-
-        fg_color = darken_color_by_fov_distance(game.player, colors.light_fov, tile_x, tile_y, randomness=0)
-        if tile.gibbed:
-            fg_color =  darken_color_by_fov_distance(game.player, colors.corpse, tile_x, tile_y, randomness = 0)
-        if debug:
-            fg_color = colors.light_fov
-
-        #tcod.console_put_char(con, screen_x, screen_y, char, tcod.BKGND_NONE)
-        tcod.console_put_char_ex(con, screen_x, screen_y, char, fg_color, colors.black)
+        tcod.console_put_char_ex(con, screen_x, screen_y, tile.char, tile.fg_color, colors.black)
         tile.explored = 50
 
     # Automap is only displayed outside of combat when actively pausing #
     elif tile.explored > 0: #and not game.player.in_combat(game):
         tile.explored -= randint(0, 1)
-        if game.state == GameStates.PLAYER_RESTING:
-            if wall:
-                tcod.console_put_char_ex(con, screen_x, screen_y, chr(178), colors.dark_wall_fg, colors.dark_bg)
-            else:
-                tcod.console_put_char_ex(con, screen_x, screen_y, '.', colors.dark_ground_fg, colors.dark_bg)
-
+        #if game.state == GameStates.PLAYER_RESTING:
+        tcod.console_put_char_ex(con, screen_x, screen_y, tile.char, tile.dark_color, colors.dark_bg)
 
 def draw_entity(game, con, entity, fov_map, debug=False):
     if entity.render_order == RenderOrder.ALWAYS or tcod.map_is_in_fov(fov_map, *entity.pos) or debug:
-        x, y = pos_on_screen(*entity.pos, game.player)
+        if entity.render_order != RenderOrder.NONE or debug:
+            x, y = pos_on_screen(*entity.pos, game.player)
 
-        tcod.console_put_char(con, x, y, entity.char)
-        # print(entity.char, entity.blocks)
-        # Set the entity colors #
-        color = entity.color
-        if entity is not game.cursor:
-            color = darken_color_by_fov_distance(game.player, entity.color, entity.x, entity.y)
-
-        if debug:
+            tcod.console_put_char(con, x, y, entity.char)
             color = entity.color
+            if entity is not game.cursor:
+                color = darken_color_by_fov_distance(game.player, entity.color, entity.x, entity.y)
 
-        tcod.console_set_char_foreground(con, x, y, color)
-        if entity.color_bg is not None:
-            tcod.console_set_char_background(con, x, y, entity.color_bg)
+            if debug:
+                color = entity.color
+
+            tcod.console_set_char_foreground(con, x, y, color)
+            if entity.color_bg is not None:
+                tcod.console_set_char_background(con, x, y, entity.color_bg)
 
 
 def clear_entity(con, entity):

@@ -70,7 +70,7 @@ def pos_on_screen(x, y, player):
     return x, y
 
 
-def randomize_rgb_color(color, factor_range = (0, 0.25), darken=False):
+def multiply_rgb_color(color, factor_range = (0, 0.25), darken=False):
     factor = uniform(*factor_range)
     if darken:
         color = (int(v * (1 - factor)) for v in color)
