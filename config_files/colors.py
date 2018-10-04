@@ -15,7 +15,7 @@ floor_default = tcod.Color(245, 245, 200)
 wall_default = tcod.Color(95, 95, 95)
 
 # Dungeon #
-stone = tcod.Color(114, 123, 132)
+stone = tcod.Color(104, 113, 112)
 granite = tcod.Color(148, 146, 123)
 clay = tcod.Color(153, 102, 51)
 

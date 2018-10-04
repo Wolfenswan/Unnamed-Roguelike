@@ -21,7 +21,7 @@ class Entity:
     """
     def __init__(self, x, y, char, color, name, descr=None, type=None,
                  material=None, bodytype=None,
-                 is_player=False, is_corpse=False, blocks=None, render_order=RenderOrder.CORPSE,
+                 is_player=False, blocks=None, render_order=RenderOrder.CORPSE,
                  fighter=None, ai=None, skills=None, item=None, inventory=None, architecture=None):
 
         self.x = x
@@ -35,7 +35,6 @@ class Entity:
         self.material = material
         self.bodytype = bodytype
         self.is_player = is_player
-        self.is_corpse = is_corpse
         self.blocks = blocks
         if not self.blocks:
             self.blocks = {}
@@ -44,14 +43,14 @@ class Entity:
         # Components #
         self.fighter = fighter
         self.ai = ai
-        self.actionplan = Actionplan()
         self.item = item
         self.inventory = inventory
+        self.skills = skills  # dictionary # TODO Refactor into a proper class
+        self.architecture = architecture
         if self.inventory:
             self.paperdoll = Paperdoll()
             self.qu_inventory = Inventory(capacity = 0)
-        self.skills = skills  # dictionary
-        self.architecture = architecture
+        self.actionplan = Actionplan()
         self.statistics = Statistics()
         self.set_ownership() # Sets ownership for all components
     
@@ -74,7 +73,8 @@ class Entity:
             self.architecture.owner = self
 
         if self.skills is not None:
-            for skill in self.skills.values():
+            self.skills.owner = self
+            for skill in self.skills:
                 skill.owner = self
 
         self.actionplan.owner = self
@@ -152,17 +152,12 @@ class Entity:
 
         return extend_descr
 
-
-    def available_skills(self, game):
-        available_skills = [skill for skill in self.skills.values() if skill.is_available(game)]
-        return available_skills
-
-    def cooldown_skills(self, reset=False):
-        for skill in self.skills.values():
-            skill.cooldown_skill(reset=reset)
-
     def is_visible(self, fov_map):
         return tcod.map_is_in_fov(fov_map, self.x, self.y)
+
+    @property
+    def is_corpse(self):
+        return self.fighter.hp <= 0 if self.fighter else False
 
     def in_combat(self, game): # NOTE: Only relevant for player at the moment.
         enemies = game.npc_ents
@@ -171,20 +166,6 @@ class Entity:
             return True
         else:
             return False
-
-    def proc_every_turn(self, last_player_action, game, start=True):
-        """
-        Things that should every proper turn (after player has done an action that prompts an enemy turn.)
-        """
-        if start:
-            # for dic in self.statistics.turn, self.statistics.level, self.statistics.game:
-            #     print(dic)
-            self.statistics.reset_turn()
-        else:
-            if self.is_player:
-                # TODO Placeholder for proper stamina managment
-                if not self.in_combat(game) and not self.fighter.sta_full and not last_player_action.get('dodge'):
-                    self.fighter.recover(self.fighter.max_stamina / 100)
 
     ####################
     # ACTION FUNCTIONS #
@@ -224,6 +205,20 @@ class Entity:
                 if distance > 1.5:
                     self.try_move(dx, dy, game)
                     break
+
+    def proc_every_turn(self, last_player_action, game, start=True):
+        """
+        Things that should every proper turn (after player has done an action that prompts an enemy turn.)
+        """
+        if start:
+            # for dic in self.statistics.turn, self.statistics.level, self.statistics.game:
+            #     print(dic)
+            self.statistics.reset_turn()
+        else:
+            if self.is_player:
+                # TODO Placeholder for proper stamina managment
+                if not self.in_combat(game) and not self.fighter.sta_full and not last_player_action.get('dodge'):
+                    self.fighter.recover(self.fighter.max_stamina / 100)
 
     #####################
     # UTILITY FUNCTIONS #

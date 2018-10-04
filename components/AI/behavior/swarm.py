@@ -41,18 +41,18 @@ class Swarm:
         results = []
 
         # TODO should the ability to squeeze past be a skill?
-        tiles = game_map.empty_pos_near_ent(target, game)
-        if tiles:
-            tile = next((t for t in tiles if npc.distance_to_pos(*t) <= 2), None)
-            if tile:
-                npc.move_towards(*tile, game)
+        pos_list = game_map.empty_pos_near_ent(target, game)
+        if pos_list:
+            pos = next((pos for pos in pos_list if npc.distance_to_pos(*p) <= 2), None)
+            if pos:
+                npc.move_towards(target, game)
 
-            elif tile is None:
+            elif pos is None:
                 if randint(0, 100) <= 65: # TODO proper skill check later
-                    tile = choice(tiles)
-                    npc.x, npc.y = tile
+                    pos = choice(pos_list)
+                    npc.x, npc.y = pos
 
-        # Swarmer will attack after moving around the target #
+        # Swarmer may attack after moving around the target #
         attack_results = npc.fighter.attack_setup(target, game)
         results.extend(attack_results)
 

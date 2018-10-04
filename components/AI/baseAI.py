@@ -61,13 +61,14 @@ class BaseAI:
             # Consider using a skill #
             # TODO might be moved into behavior components later #
             if npc.skills:
-                npc.cooldown_skills()
-                available_skills = npc.available_skills(game)
-                if available_skills:
-                    skill = choice(available_skills)
-                    skill_results = skill.execute(game)
-                    results.extend(skill_results)
-                    return results
+                npc.skills.cooldown()
+                if npc.skills.available:
+                    possible_skills = npc.skills.possible(target, game)
+                    if possible_skills:
+                        skill = choice(possible_skills)
+                        skill_results = skill.execute(target, game)
+                        results.extend(skill_results)
+                        return results
 
             # If no skill is available, consider moving #
             if npc.distance_to_ent(target) >= 2:

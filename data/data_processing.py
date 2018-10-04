@@ -4,6 +4,7 @@ from random import choice, randint
 from components.AI.baseAI import BaseAI
 from components.AI.behavior.simple import Simple
 from components.actors.fighter import Fighter
+from components.actors.skills import Skills
 from components.architecture import Architecture
 from components.inventory.inventory import Inventory
 from components.items.equipment import Equipment
@@ -239,10 +240,10 @@ def gen_npc_from_dict(data, x, y, game):
     skills_component = None
 
     if skills is not None:
-        skills_component = {}
+        skills_component = Skills()
         for k in skills:
             skill = Skill(**skills_data[k])
-            skills_component[k] = (skill)
+            skills_component.add_skill(skill)
 
     npc = NPC(*arguments, bodytype=bodytype.get('type'), fighter=fighter_component, ai=ai_component, skills=skills_component, inventory=inventory_component)
 

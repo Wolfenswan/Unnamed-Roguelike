@@ -1,4 +1,4 @@
-from abilities.skills import SkillUsage, SkillCondition
+from abilities.skills import SkillCondition, SkillUsage
 
 skills_data = {
     'skill_charge' : {

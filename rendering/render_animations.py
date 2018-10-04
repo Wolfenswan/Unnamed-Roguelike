@@ -82,3 +82,7 @@ def animate_explosion(center_x, center_y, spread, game, ignore_walls=False, anim
     for p in projectiles:
         if p in game.entities:
             game.entities.remove(p)
+
+
+def animate_cone():
+    pass

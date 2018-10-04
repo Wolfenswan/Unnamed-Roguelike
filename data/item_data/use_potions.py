@@ -1,5 +1,5 @@
-from config_files import colors
 from abilities.spells import heal_entity
+from config_files import colors
 from data.data_types import ItemType
 from data.data_types import RarityType
 from gui.messages import Message

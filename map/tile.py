@@ -27,6 +27,14 @@ class Tile:
         return (self.x, self.y)
 
     @property
+    def wall(self):
+        return self.walkable
+
+    @property
+    def floor(self):
+        return self.walkable
+
+    @property
     def dark_color(self):
         color = multiply_rgb_color(self.fg_color, factor_range=(0.8, 0.8), darken=True)
         return color
@@ -44,7 +52,7 @@ class Tile:
     def gib(self, char=None):
         if char and self.walkable:
             self.char = char
-        self.fov_color = colors.corpse
+        self.fg_color = colors.corpse
 
     def toggle_attributes(self):
         self.blocked = not self.blocked

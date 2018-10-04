@@ -355,18 +355,20 @@ class Fighter:
     # ATTACK RELATED FUNCTIONS #
     ############################
 
-    def attack_setup(self, target, game, mod=1):
+    def attack_setup(self, target, game, mod=1, attack_string='hits', ignore_moveset = False):
         results = []
         blocked = False
-        attack_string = 'hits'
         extra_targets = []
 
-        if self.weapon:
-            move_results = self.weapon.moveset.execute(self.owner, target)
-            attack_string = move_results.get('string', 'hits')
-            extra_targets = move_results.get('extra_targets', [])
+        if ignore_moveset:
+            attack_power = choice(self.base_dmg_potential) * mod
+        else:
+            if self.weapon:
+                move_results = self.weapon.moveset.execute(self.owner, target)
+                attack_string = move_results.get('string', 'hits')
+                extra_targets = move_results.get('extra_targets', [])
 
-        attack_power = self.dmg_roll * mod
+            attack_power = self.dmg_roll * mod
 
         logging.debug(f'{self.owner.name} prepares to attack {target.name} with base damage {self.base_dmg_potential},'
                       f' (modded {self.modded_dmg_potential}) for a power of {attack_power}')
@@ -543,7 +545,6 @@ class Fighter:
             #ent.render_order = RenderOrder.CORPSE
             ent.blocks[BlockLevel.WALK] = False
             ent.ai = None
-            ent.is_corpse = True
             #ent.name = f'{ent.name.title()} remains'
 
         return message

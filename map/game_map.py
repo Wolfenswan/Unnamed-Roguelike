@@ -55,7 +55,6 @@ class GameMap:
         rand_y = randint(2, self.height - 2)
         tile = self.tiles[rand_x, rand_y]
         tiles = [tile] + self.surrounding_tiles(tile, dist = randint(3,15))
-        # TODO RANDOMIZATION
         for i, t in enumerate(tiles):
             chance = 100*i/len(tiles)
             if (150-chance) >= randint(0, 100):
@@ -66,36 +65,10 @@ class GameMap:
 
 
     def is_floor(self, x, y):
-        """
-        Returns True if position is a floor.
-
-        :param x: x-coord
-        :type x: int
-        :param y: y-coord
-        :type y: int
-        :return: floor?
-        :rtype: bool
-        """
-        if self.tiles[(x, y)].walkable:
-            return True
-
-        return False
+        return self.tiles[(x, y)].walkable
 
     def is_wall(self, x, y):
-        """
-        Returns True if position is a wall.
-
-        :param x: x-coord
-        :type x: int
-        :param y: y-coord
-        :type y: int
-        :return: wall?
-        :rtype: bool
-        """
-        if self.tiles[(x,y)].blocked:
-            return True
-
-        return False
+        return self.tiles[(x,y)].blocked
 
     def is_blocked(self, x, y, blocking_ents, filter = (BlockLevel.WALK,)):
         """
