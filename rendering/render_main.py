@@ -68,14 +68,15 @@ def draw_tile(game, con, fov_map, tile_x, tile_y, screen_x, screen_y, debug=Fals
     visible = tcod.map_is_in_fov(fov_map, tile_x, tile_y) or debug
 
     if visible:
-        tcod.console_put_char_ex(con, screen_x, screen_y, tile.char, tile.fg_color, colors.black)
+        color = darken_color_by_fov_distance(game.player, tile.fg_color, tile_x, tile_y, min = 0.3)
+        tcod.console_put_char_ex(con, screen_x, screen_y, tile.char, color, colors.black)
         tile.explored = 50
 
     # Automap is only displayed outside of combat when actively pausing #
     elif tile.explored > 0: #and not game.player.in_combat(game):
         tile.explored -= randint(0, 1)
         #if game.state == GameStates.PLAYER_RESTING:
-        tcod.console_put_char_ex(con, screen_x, screen_y, tile.char, tile.dark_color, colors.dark_bg)
+        tcod.console_put_char_ex(con, screen_x, screen_y, tile.char, tile.dark_color, colors.black)
 
 def draw_entity(game, con, entity, fov_map, debug=False):
     if entity.render_order == RenderOrder.ALWAYS or tcod.map_is_in_fov(fov_map, *entity.pos) or debug:

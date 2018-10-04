@@ -1,7 +1,7 @@
 from config_files import colors
 from rendering.util_functions import multiply_rgb_color
 
-
+# TODO dataclass
 class Tile:
     """
     A tile on a map. It may or may not be blocked, and may or may not block sight.
@@ -36,7 +36,7 @@ class Tile:
 
     @property
     def dark_color(self):
-        color = multiply_rgb_color(self.fg_color, factor_range=(0.8, 0.8), darken=True)
+        color = multiply_rgb_color(self.fg_color, factor_range=(0.85, 0.85), darken=True)
         return color
 
     def set_char(self, force=None):

@@ -31,7 +31,7 @@ def recompute_fov(game, x, y):
     tcod.map_compute_fov(game.fov_map, x, y, radius, light_walls, algorithm)
 
 
-def darken_color_by_fov_distance(ent, color, x, y, randomness = 0):
+def darken_color_by_fov_distance(ent, color, x, y, randomness = 0, min=0.1):
     """
     Darkens the given color by distance between given entity and x,y coordinates
 
@@ -54,8 +54,8 @@ def darken_color_by_fov_distance(ent, color, x, y, randomness = 0):
     if color_coefficient > 1:
         color_coefficient = 1
 
-    if color_coefficient < 0:
-        color_coefficient = 0.1
+    if color_coefficient < min:
+        color_coefficient = min
 
     new_color = (int(color_coefficient * x) for x in color)
     return tcod.Color(*new_color)
