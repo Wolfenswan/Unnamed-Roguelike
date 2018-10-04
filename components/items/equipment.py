@@ -1,18 +1,19 @@
+from dataclasses import dataclass
+
 from components.items.moveset import Moveset
 
 
+@dataclass
 class Equipment():
-
-    def __init__(self, e_to, dmg_potential = None, av = None, block_def = None, qu_slots = None, l_radius = None, two_handed = False, attack_type = None, moveset = None):
-        self.e_to = e_to
-        self.dmg_potential = dmg_potential
-        self.av = av
-        self.block_def = block_def
-        self.qu_slots = qu_slots
-        self.l_radius = l_radius
-        self.two_handed = two_handed
-        self.attack_type = attack_type
-        self.moveset = moveset
+    e_to: str
+    dmg_potential: tuple = None
+    av: int = None
+    block_def: int = None
+    qu_slots: int = None
+    l_radius: int = None
+    two_handed: bool = None
+    attack_type: str = None
+    moveset: Moveset = None
 
     @property
     def name(self):

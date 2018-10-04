@@ -14,6 +14,9 @@ class Player(Entity):
     def __init__(self, name):
 
         fighter_component = Fighter(60, 120, 0, 2, cfg.FOV_RADIUS)
-        inventory_component = Inventory(26)
+        inventory_component = Inventory(capacity=26)
+        print(inventory_component)
 
-        super().__init__(0, 0, '@', tcod.white, name, descr='This is you.', is_player=True, blocks={BlockLevel.WALK:True}, render_order=RenderOrder.PLAYER, fighter=fighter_component, inventory=inventory_component)
+        super().__init__(0, 0, '@', tcod.white, name, descr='This is you.', is_player=True,
+                         blocks={BlockLevel.WALK:True}, render_order=RenderOrder.PLAYER,
+                         fighter=fighter_component, inventory=inventory_component)

@@ -1,20 +1,31 @@
-import tcod
+from dataclasses import dataclass, field
 
 from gui.messages import Message, MessageCategory
 
-
+@dataclass
 class Inventory:
-    def __init__(self, capacity):
-        self.capacity = capacity
-        self.items = []
+    capacity: int = 0
+    items: list = field(default_factory=list)
+
+    def __iter__(self):
+        yield from self.items
+
+    def __len__(self):
+        return len(self.items)
+
+    def __getitem__(self, item):
+        return self.items[item]
+
+    def __contains__(self, item):
+        return item in self.items
 
     @property
     def is_empty(self):
-        return len(self.items) == 0
+        return len(self) == 0
 
     @property
     def is_full(self):
-        return len(self.items) >= self.capacity
+        return len(self) >= self.capacity
 
     def add(self, item):
         results = []
@@ -49,7 +60,7 @@ class Inventory:
 
                 for item_use_result in item_use_results:
                     if item_use_result.get('consumed'):
-                        self.remove_from_inv(item_entity)
+                        self.remove(item_entity)
 
                 results.extend(item_use_results)
 
@@ -63,7 +74,7 @@ class Inventory:
         if item in self.owner.paperdoll.equipped_items:
             self.owner.paperdoll.dequip(item)
 
-        self.remove_from_inv(item)
+        self.remove(item)
         results.append({'item_dropped': item, 'message': Message(f'You dropped the {item.name}.')})
 
         return results
@@ -72,20 +83,20 @@ class Inventory:
         results = []
         qu_inventory = self.owner.qu_inventory
 
-        if len(qu_inventory.items) >= qu_inventory.capacity:
+        if len(qu_inventory) >= qu_inventory.capacity:
             results.append({
                 'message': Message('You cannot prepare any more items.', category=MessageCategory.OBSERVATION)
             })
         else:
-            qu_inventory.items.append(item)
-            self.remove_from_inv(item)
+            qu_inventory.add(item)
+            self.remove(item)
             results.append({
                 'item_prepared': item,
                 'message': Message(f'You prepare the {item.name}.')})
 
         return results
 
-    def remove_from_inv(self, item):
+    def remove(self, item):
         """ removes an item from the player main inventory """
         if item in self.items:
             self.items.remove(item)

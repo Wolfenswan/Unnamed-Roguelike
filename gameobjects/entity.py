@@ -1,60 +1,57 @@
 import math
-from enum import Enum, auto
+from enum import Enum
 
 import tcod
+from dataclasses import dataclass, field
 
+from components.AI.baseAI import BaseAI
 from components.actionplan import Actionplan
+from components.actors.fighter import Fighter
+from components.actors.skills import Skills
 from components.actors.status_modifiers import Presence
+from components.architecture import Architecture
 from components.inventory.inventory import Inventory
 from components.inventory.paperdoll import Paperdoll
+from components.items.item import Item
 from components.statistics import Statistics
-from config_files import colors
-from data.data_types import BodyType
+from data.data_types import BodyType, Material, GenericType
 from data.gui_data.gui_entity import bodytype_name_data
 from data.gui_data.material_strings import material_name_data
 from gameobjects.util_functions import entity_at_pos
 from rendering.render_order import RenderOrder
 
+@dataclass
 class Entity:
     """
     A generic object to represent players, enemies, items, etc.
     """
-    def __init__(self, x, y, char, color, name, descr=None, type=None,
-                 material=None, bodytype=None,
-                 is_player=False, blocks=None, render_order=RenderOrder.CORPSE,
-                 fighter=None, ai=None, skills=None, item=None, inventory=None, architecture=None):
+    x : int
+    y : int
+    char : str
+    color : tuple
+    name : str
+    descr : str = None
+    type : Enum = GenericType.DEFAULT
+    material : Material = None
+    bodytype : BodyType = None
 
-        self.x = x
-        self.y = y
-        self.char = char
-        self.color = color
-        self.color_bg = None
-        self.name = name
-        self.descr = descr
-        self.type = type
-        self.material = material
-        self.bodytype = bodytype
-        self.is_player = is_player
-        self.blocks = blocks
-        if not self.blocks:
-            self.blocks = {}
-        self.render_order = render_order
+    blocks : dict = field(default_factory=dict)
+    render_order : RenderOrder = RenderOrder.NONE
 
-        # Components #
-        self.fighter = fighter
-        self.ai = ai
-        self.item = item
-        self.inventory = inventory
-        self.skills = skills  # dictionary # TODO Refactor into a proper class
-        self.architecture = architecture
-        if self.inventory:
-            self.paperdoll = Paperdoll()
-            self.qu_inventory = Inventory(capacity = 0)
+    fighter : Fighter = None
+    ai: BaseAI = None
+    skills: Skills = None
+    item: Item = None
+    inventory: Inventory = None
+    architecture: Architecture = None
+
+    is_player : bool = False
+    color_bg = None
+
+    def __post_init__(self):
         self.actionplan = Actionplan()
         self.statistics = Statistics()
-        self.set_ownership() # Sets ownership for all components
-    
-    def set_ownership(self):
+
         if self.fighter:
             self.fighter.owner = self
 
@@ -64,7 +61,9 @@ class Entity:
         if self.item:
             self.item.owner = self
 
-        if self.inventory:
+        if self.inventory is not None:
+            self.paperdoll = Paperdoll()
+            self.qu_inventory = Inventory(capacity=0)
             self.inventory.owner = self
             self.paperdoll.owner = self
             self.qu_inventory.owner = self

@@ -110,8 +110,7 @@ def render_object_panel(game, con, panel_x, panel_y, width, height):
             wrapped_name = dynamic_wrap(f'{ent.full_name}', width - 3)
 
             for i, line in enumerate(wrapped_name):
-                print_string(con, 3+i, y, '*BLOCKING*', color=ent.color)
-                #print_string(con, 3+i, y, f'%c{line}%c' % (tcod.COLCTRL_1, tcod.COLCTRL_STOP))
+                print_string(con, 3+i, y, line, color=ent.color)
                 y += 2
 
     tcod.console_blit(con, 0, 0, width, height, 0, panel_x, panel_y)
@@ -237,7 +236,7 @@ def draw_quickslots(con, y, game):
         tcod.console_put_char_ex(con, o_x, o_y+2, 217, colors.dark_gray, colors.black)
 
         o_x = start_x + 1
-        for i, item in enumerate(player.qu_inventory.items):
+        for i, item in enumerate(player.qu_inventory):
             tcod.console_put_char_ex(con, o_x, y, f'{i+1}', colors.white, colors.black)
             print_string(con, o_x, y+1, f'{item.char}', color = item.color)
             o_x += 2

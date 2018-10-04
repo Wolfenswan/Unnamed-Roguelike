@@ -1,7 +1,6 @@
 """ Processes the actions from handle_keys into game-events """
 import tcod
 
-from components.architecture import Architecture
 from game import GameStates
 from gameobjects.util_functions import entity_at_pos
 from gui.manual import display_manual
@@ -9,6 +8,8 @@ from gui.menus import item_menu,  options_menu, item_list_menu
 from debug.menu import debug_menu
 from gui.messages import Message, MessageType, MessageCategory
 from loader_functions.data_loader import save_game
+from rendering.render_animations import animate_move_line
+
 
 def process_player_input(action, game, fov_map, targeting_item = None):
     player = game.player
@@ -84,9 +85,12 @@ def process_player_input(action, game, fov_map, targeting_item = None):
                     player.move(dx, dy)
                     turn_results.append({'fov_recompute':True})
                 elif dodge:
-                    dodge_results = player.fighter.dodge(dx, dy, game)
-                    turn_results.extend(dodge_results)
-                    turn_results.append({'fov_recompute': True})
+                    if player.fighter.can_dodge:
+                        animate_move_line(player, dx, dy, 2, game, anim_delay=0.05)
+                        turn_results.append(player.fighter.exert(player.fighter.defense*2, 'dodge'))
+                        turn_results.append({'fov_recompute': True})
+                    else:
+                        turn_results.append({'message': Message('PLACEHOLDER: Stamina too low to dodge!')})
                     if player.fighter.is_blocking:
                         player.fighter.toggle_blocking()
 
@@ -145,7 +149,7 @@ def process_player_input(action, game, fov_map, targeting_item = None):
         if confirm and targeting_item:
             target_x, target_y = cursor.x, cursor.y
             # check whether the item is being used from the regular inventory or the quick use inventory
-            if targeting_item in player.inventory.items:
+            if targeting_item in player.inventory:
                 inv = player.inventory
             else:
                 inv = player.qu_inventory
@@ -158,7 +162,7 @@ def process_player_input(action, game, fov_map, targeting_item = None):
 
     # Inventory display #
     if show_inventory:
-        if len(player.inventory.items) > 0:
+        if len(player.inventory) > 0:
             game.previous_state = game.state
             game.state = GameStates.SHOW_INVENTORY
         else:
@@ -175,7 +179,7 @@ def process_player_input(action, game, fov_map, targeting_item = None):
     selected_item_ent = None
 
     if game.state == GameStates.SHOW_INVENTORY:
-        selected_item_ent = item_list_menu(player, player.inventory.items)
+        selected_item_ent = item_list_menu(player, player.inventory)
 
     elif game.state == GameStates.SHOW_EQUIPMENT:
         #render_equipment_window(player.paperdoll.equipped_items, game)
@@ -211,8 +215,8 @@ def process_player_input(action, game, fov_map, targeting_item = None):
             game.state = game.previous_state
 
     # Quick use handling #
-    if quick_use_idx and quick_use_idx <= len(player.qu_inventory.items):
-        quick_use_item = player.qu_inventory.items[quick_use_idx-1] # -1 as the idx is passed as a number key
+    if quick_use_idx and quick_use_idx <= len(player.qu_inventory):
+        quick_use_item = player.qu_inventory[quick_use_idx-1] # -1 as the idx is passed as a number key
         qu_results = player.qu_inventory.use(quick_use_item, game, entities=entities, fov_map=fov_map)
         turn_results.extend(qu_results)
 

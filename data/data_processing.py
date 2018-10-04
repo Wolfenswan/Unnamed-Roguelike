@@ -236,7 +236,7 @@ def gen_npc_from_dict(data, x, y, game):
 
     fighter_component = Fighter(hp, stamina, base_av, base_strength, vision)
     ai_component = BaseAI(movement=ai_movement(), attack=ai_attack())
-    inventory_component = Inventory(12) # Todo Placeholder #
+    inventory_component = Inventory(capacity=12) # Todo Placeholder #
     skills_component = None
 
     if skills is not None:
@@ -329,7 +329,7 @@ def gen_architecture(data, x, y):
     on_collision = data.get('on_collision')
     on_interaction = data.get('on_interaction')
 
-    inventory_component = Inventory(randint(*container_room))
+    inventory_component = Inventory(capacity=randint(*container_room))
     architecture_component = Architecture(on_collision = on_collision, on_interaction = on_interaction)
 
     # create the static object using the arguments tuple

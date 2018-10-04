@@ -54,11 +54,11 @@ class Architecture:
             results.append({'message':Message(f'The {container_ent.name} is empty.', category=MessageCategory.OBSERVATION)})
             # TODO ability to put things into container
         else:
-            selection = item_list_menu(container_ent, container_ent.inventory.items, title=f'{container_ent.name}')
+            selection = item_list_menu(container_ent, container_ent.inventory, title=f'{container_ent.name}')
             if selection:
                 if not interacting_ent.inventory.is_full:
                     results.append({'message':Message(f'You take the {selection.name} from the {container_ent.name}.', category=MessageCategory.OBSERVATION)})
-                    container_ent.inventory.remove_from_inv(selection)
+                    container_ent.inventory.remove(selection)
                     interacting_ent.inventory.add(selection)
                 else:
                     results.append({'message':Message(f'Your inventory is full.', category=MessageCategory.OBSERVATION)})
@@ -74,7 +74,7 @@ class Architecture:
         object_ent.architecture = None # TODO not a very elegant solution to prevent rendering in the objects panel
         
         if object_ent.inventory:
-            for i in object_ent.inventory.items:
+            for i in object_ent.inventory:
                 i.x, i.y = object_ent.x, object_ent.y
                 game.entities.append(i)
         

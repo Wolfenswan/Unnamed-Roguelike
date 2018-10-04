@@ -1,8 +1,4 @@
 import logging
-from random import choice
-
-from config_files import colors
-from gui.messages import Message
 
 class Skill:
     def __init__(self, name = 'Skill', on_activate=None, on_activate_kwargs = None, activate_condition=None, activate_condition_kwargs = None, cooldown_length=None, messages=None):

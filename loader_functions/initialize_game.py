@@ -6,6 +6,10 @@ from data.data_types import Material, Condition, Craftsmanship
 from debug.timer import debug_timer
 from gameobjects.entity import Entity
 from gameobjects.player import Player
+from map.entity_placement.place_actors import place_monsters
+from map.entity_placement.place_architecture import place_staticobjects, place_doors
+from map.entity_placement.place_containers import place_containers
+from map.entity_placement.place_items import place_items
 from map.game_map import GameMap
 from rendering.render_order import RenderOrder
 
@@ -31,6 +35,7 @@ def initialize_game(game):
             'backpack': ('pot_heal', 'scr_fireball','torch', 'spear')
         }
     }
+
     gen_loadout(player, player_loadouts['loadout1'], game)
     for item_ent in player.inventory.items + player.paperdoll.equipped_items:
         item_ent.item.identify()
@@ -44,11 +49,11 @@ def initialize_game(game):
     game.map.make_map(game, cfg.ROOM_MIN_SIZE, cfg.ROOM_MAX_SIZE, dwidth, dheight)
 
     # Add the good stuff #
-    # place_staticobjects(game)
-    # place_containers(game)
-    # place_doors(game)
-    # place_items(game)
-    # place_monsters(game)
+    place_staticobjects(game)
+    place_containers(game)
+    place_doors(game)
+    place_items(game)
+    place_monsters(game)
 
     player.x, player.y = game.map.rooms[0].center
 

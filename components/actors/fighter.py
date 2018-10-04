@@ -4,16 +4,13 @@ import logging
 
 from components.actors.status_modifiers import Presence, Surrounded
 from components.statistics import statistics_updater
-from config_files import colors
 from data.actor_data.act_status_mod import status_modifiers_data
 from data.item_data.wp_attacktypes import wp_attacktypes_data
 from data.gui_data.gui_fighter import hpdmg_string_data, stadmg_string_data, sta_color_data, stadmg_color_data, \
     sta_string_data, hpdmg_color_data, hp_string_data, hp_color_data
 from gameobjects.block_level import BlockLevel
-from gameobjects.entity import Entity
 from gameobjects.util_functions import entity_at_pos
 from gui.messages import Message, MessageType, MessageCategory
-from rendering.render_animations import animate_move_line
 from rendering.render_order import RenderOrder
 
 
@@ -199,6 +196,11 @@ class Fighter:
         if self.surrounded == Surrounded.OVERWHELMED:
             block_def = 0
         return block_def
+
+    @property
+    def can_dodge(self):
+        exertion = self.defense * 2
+        return self.stamina >= exertion
     
     @property
     def vision(self):
@@ -507,16 +509,15 @@ class Fighter:
             else:
                 return 'impossible'
 
-    def dodge(self, dx, dy, game):
-        results = []
-        exertion = self.defense * 2
-        if self.stamina >= exertion:
-            animate_move_line(self.owner, dx, dy, 2, game, anim_delay=0.05)
-            results.append(self.exert(exertion, 'dodge'))
-        else:
-
-            results.append({'message':Message('PLACEHOLDER: Stamina too low to dodge!')})
-        return results
+    # def attempt_dodge(self):
+    #     results = []
+    #     exertion = self.defense * 2
+    #     if self.stamina >= exertion:
+    #         #results.append({'dodge_direction':(dx,dy)})
+    #         results.append(self.exert(exertion, 'dodge'))
+    #     else:
+    #         results.append({'message':Message('PLACEHOLDER: Stamina too low to dodge!')})
+    #     return results
 
     def death(self, game):
 

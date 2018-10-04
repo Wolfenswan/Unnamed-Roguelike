@@ -1,22 +1,25 @@
+from dataclasses import dataclass
 
+from components.items.equipment import Equipment
+from components.items.useable import Useable
+from data.data_types import Craftsmanship, Condition
 from data.gui_data.cond_strings import cond_name_data
 from data.gui_data.craft_strings import craft_name_data
 from rendering.util_functions import dynamic_wrap
 
-
+@dataclass
 class Item:
-    def __init__(self, condition=None, craftsmanship=None, identified=False, useable=None, equipment=None):
-        self.condition = condition
-        self.craftsmanship = craftsmanship
-        self.identified = identified
-        self.useable = useable
-        self.equipment = equipment
+    condition: Condition = None
+    craftsmanship: Craftsmanship = None
+    identified: bool = False
+    useable: Useable = None
+    equipment: Equipment = None
 
+    def __post_init__(self):
         if self.useable:
-            useable.owner = self
-
+            self.useable.owner = self
         if self.equipment:
-            equipment.owner = self
+             self.equipment.owner = self
 
     def identify(self):
         self.identified = True

@@ -9,7 +9,6 @@ class Paperdoll:
 
     def __init__(self):
         # TODO allow various combination of Heads, Arms etc.
-        #self.equipped_items = [] # TODO make @property
         self.weapon_arm = Arm()
         self.shield_arm = Arm()
         self.head = Head()
@@ -72,7 +71,7 @@ class Paperdoll:
 
         else:
             setattr(extremity, e_type, item_ent)
-            self.owner.inventory.remove_from_inv(item_ent)
+            self.owner.inventory.remove(item_ent)
             if qu_slots:
                 self.owner.qu_inventory.capacity += qu_slots
 
