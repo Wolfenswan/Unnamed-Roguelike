@@ -13,7 +13,7 @@ class Player(Entity):
 
     def __init__(self, name):
 
-        fighter_component = Fighter(60, 120, 0, 2, cfg.FOV_RADIUS)
+        fighter_component = Fighter(60, 120, 0, 4, cfg.FOV_RADIUS)
         inventory_component = Inventory(capacity=26)
         print(inventory_component)
 

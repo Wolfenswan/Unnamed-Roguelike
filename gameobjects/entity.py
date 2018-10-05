@@ -1,5 +1,6 @@
 import math
-from enum import Enum
+from random import choice
+from typing import Optional, Union
 
 import tcod
 from dataclasses import dataclass, field
@@ -7,14 +8,15 @@ from dataclasses import dataclass, field
 from components.AI.baseAI import BaseAI
 from components.actionplan import Actionplan
 from components.actors.fighter import Fighter
-from components.actors.skills import Skills
+from components.abilities.skills import Skills
 from components.actors.status_modifiers import Presence
 from components.architecture import Architecture
 from components.inventory.inventory import Inventory
 from components.inventory.paperdoll import Paperdoll
 from components.items.item import Item
 from components.statistics import Statistics
-from data.data_types import BodyType, Material, GenericType
+from config_files import colors
+from data.data_types import BodyType, Material, GenericType, MonsterType, ItemType
 from data.gui_data.gui_entity import bodytype_name_data
 from data.gui_data.material_strings import material_name_data
 from gameobjects.util_functions import entity_at_pos
@@ -30,35 +32,39 @@ class Entity:
     char : str
     color : tuple
     name : str
-    descr : str = None
-    type : Enum = GenericType.DEFAULT
-    material : Material = None
-    bodytype : BodyType = None
-
+    descr : str = ''
+    type : Union[GenericType, ItemType, MonsterType] = field(default=GenericType.DEFAULT)
     blocks : dict = field(default_factory=dict)
-    render_order : RenderOrder = RenderOrder.NONE
+    render_order : RenderOrder = field(default=RenderOrder.NONE)
 
-    fighter : Fighter = None
-    ai: BaseAI = None
-    skills: Skills = None
-    item: Item = None
-    inventory: Inventory = None
-    architecture: Architecture = None
+    material: Optional[Material] = None
+    bodytype: Optional[BodyType] = None
 
-    is_player : bool = False
-    color_bg = None
+    fighter : Optional[Fighter] = None
+    ai: Optional[BaseAI] = None
+    skills: Optional[Skills] = None
+    item: Optional[Item] = None
+    inventory: Optional[Inventory] = None
+    paperdoll : Optional[Paperdoll] = field(default=None, init=False) # default = None so __repr__ works correctly
+    qu_inventory : Optional[Inventory] = field(default=None, init=False)
+    architecture: Optional[Architecture] = None
+
+    is_player: bool = False
+    color_bg : Optional[tuple] = field(default=None)
+    every_turn_start : Optional[list] = field(default_factory=list)
+    every_turn_end : Optional[list] = field(default_factory=list)
+
+    actionplan : Actionplan = Actionplan()
+    statistics : Statistics = Statistics()
 
     def __post_init__(self):
-        self.actionplan = Actionplan()
-        self.statistics = Statistics()
-
-        if self.fighter:
+        if self.fighter is not None:
             self.fighter.owner = self
 
-        if self.ai:
+        if self.ai is not None:
             self.ai.owner = self
 
-        if self.item:
+        if self.item is not None:
             self.item.owner = self
 
         if self.inventory is not None:
@@ -68,7 +74,7 @@ class Entity:
             self.paperdoll.owner = self
             self.qu_inventory.owner = self
 
-        if self.architecture:
+        if self.architecture is not None:
             self.architecture.owner = self
 
         if self.skills is not None:
@@ -210,18 +216,24 @@ class Entity:
         Things that should every proper turn (after player has done an action that prompts an enemy turn.)
         """
         if start:
-            # for dic in self.statistics.turn, self.statistics.level, self.statistics.game:
-            #     print(dic)
             self.statistics.reset_turn()
+            for event in self.every_turn_start:
+                eval(event)
         else:
             if self.is_player:
                 # TODO Placeholder for proper stamina managment
                 if not self.in_combat(game) and not self.fighter.sta_full and not last_player_action.get('dodge'):
                     self.fighter.recover(self.fighter.max_stamina / 100)
+            for event in self.every_turn_end:
+                print(event)
+                eval(event)
 
     #####################
     # UTILITY FUNCTIONS #
     #####################
+
+    def set_random_color(self, colors):
+        self.color = choice(colors)
 
     def distance_to_pos(self, x, y):
         return math.sqrt((x - self.x) ** 2 + (y - self.y) ** 2)

@@ -1,7 +1,6 @@
 from config_files import colors
-from gui.messages import Message, MessageType, MessageCategory
-from rendering.render_animations import animate_move_line, animate_move_to
-from rendering.render_main import render_map_screen
+from gui.messages import Message, MessageCategory, MessageType
+from rendering.render_animations import animate_move_to
 
 
 class SkillUsage:
@@ -37,29 +36,3 @@ class SkillUsage:
         elif hit is False:   # If a wall is hit during the charge, damage the charging entity
             results.extend(ent.fighter.attack_setup(ent, game, mod=0.5, attack_string='rams', ignore_moveset=True))
         return results
-
-class SkillCondition:
-    """
-    TODO Add:
-    Clear line to target
-    """
-
-    @staticmethod
-    def can_see_target(actor, target, game, **kwargs):
-        return actor.distance_to_ent(target) <= actor.fighter.vision
-
-    @staticmethod
-    def free_line_to_target(actor, target, game, **kwargs):
-        game.map.free_line_between_tiles(actor.x, actor.y, target.x, target.y)
-
-    @staticmethod
-    def distance_to(actor, target, game, **kwargs):
-        min, max = kwargs['min_dist'], kwargs['max_dist']
-        if min < actor.distance_to_ent(target) < max:
-            return True
-        else:
-            return False
-
-    @staticmethod
-    def always_available():
-        return True

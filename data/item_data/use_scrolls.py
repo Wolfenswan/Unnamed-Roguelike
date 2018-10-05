@@ -1,5 +1,5 @@
 from config_files import colors
-from abilities.spells import cast_fireball_on
+from game_effects.spells import cast_fireball_on
 from data.data_types import ItemType
 from data.data_types import RarityType
 

@@ -238,12 +238,12 @@ class Fighter:
         percentage = (damage / self.max_hp * 100)
         if 90 <= percentage:
             return choice(hpdmg_string_data[90])
-        elif 65.0 <= percentage:
-            return choice(hpdmg_string_data[65])
-        elif 45.0 <= percentage:
-            return choice(hpdmg_string_data[45])
-        elif 25.0 <= percentage:
-            return choice(hpdmg_string_data[25])
+        elif 60.0 <= percentage:
+            return choice(hpdmg_string_data[60])
+        elif 40.0 <= percentage:
+            return choice(hpdmg_string_data[40])
+        elif 20.0 <= percentage:
+            return choice(hpdmg_string_data[20])
         elif 5.0 <= percentage:
             return choice(hpdmg_string_data[5])
         elif 1.0 <= percentage:
@@ -255,12 +255,12 @@ class Fighter:
         percentage = (damage / self.max_hp * 100)
         if 90 <= percentage:
             return hpdmg_color_data[90]
-        elif 65.0 <= percentage:
-            return hpdmg_color_data[65]
-        elif 45.0 <= percentage:
-            return hpdmg_color_data[45]
-        elif 25.0 <= percentage:
-            return hpdmg_color_data[25]
+        elif 60.0 <= percentage:
+            return hpdmg_color_data[60]
+        elif 40.0 <= percentage:
+            return hpdmg_color_data[40]
+        elif 20.0 <= percentage:
+            return hpdmg_color_data[20]
         elif 5.0 <= percentage:
             return hpdmg_color_data[5]
         else:
@@ -270,15 +270,15 @@ class Fighter:
         percentage = (damage / self.max_stamina * 100)
         if 90 <= percentage:
             return choice(stadmg_string_data[90])
-        elif 65.0 <= percentage:
-            return choice(stadmg_string_data[65])
-        elif 45.0 <= percentage:
-            return choice(stadmg_string_data[45])
-        elif 25.0 <= percentage:
-            return choice(stadmg_string_data[25])
-        elif 5.0 <= percentage:
+        elif 60 <= percentage:
+            return choice(stadmg_string_data[60])
+        elif 40 <= percentage:
+            return choice(stadmg_string_data[40])
+        elif 20 <= percentage:
+            return choice(stadmg_string_data[20])
+        elif 5 <= percentage:
             return choice(stadmg_string_data[5])
-        elif 1.0 <= percentage:
+        elif 1 <= percentage:
             return choice(stadmg_string_data[1])
         else:
             return 'no'
@@ -287,12 +287,12 @@ class Fighter:
         percentage = (damage / self.max_stamina * 100)
         if 90 <= percentage:
             return stadmg_color_data[90]
-        elif 65.0 <= percentage:
-            return stadmg_color_data[65]
-        elif 45.0 <= percentage:
-            return stadmg_color_data[45]
-        elif 25.0 <= percentage:
-            return stadmg_color_data[25]
+        elif 60.0 <= percentage:
+            return stadmg_color_data[60]
+        elif 40.0 <= percentage:
+            return stadmg_color_data[40]
+        elif 20.0 <= percentage:
+            return stadmg_color_data[20]
         elif 5.0 <= percentage:
             return stadmg_color_data[5]
         else:

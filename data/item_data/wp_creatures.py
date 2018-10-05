@@ -7,7 +7,7 @@ wp_creature_data = {
         'materials': (Material.CHITIN,),
         'type': ItemType.WEAPON,
         'e_to': 'weapon_arm',
-        'dmg_potential': (2, 6),
+        'dmg_potential': (4, 8),
         'moveset': moveset_mandibles,
         'attack': AttackType.NORMAL,
         'rarity': RarityType.FORBIDDEN,

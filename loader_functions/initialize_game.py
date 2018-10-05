@@ -1,7 +1,7 @@
 from random import randint
 
 from config_files import cfg, colors
-from data.data_processing import gen_loadout
+from data.data_processing import gen_loadout, gen_architecture, ARCHITECTURE_DATA_MERGED
 from data.data_types import Material, Condition, Craftsmanship
 from debug.timer import debug_timer
 from gameobjects.entity import Entity
@@ -50,11 +50,13 @@ def initialize_game(game):
 
     # Add the good stuff #
     place_staticobjects(game)
-    place_containers(game)
+    # place_containers(game)
     place_doors(game)
-    place_items(game)
-    place_monsters(game)
+    # place_items(game)
+    # place_monsters(game)
 
     player.x, player.y = game.map.rooms[0].center
+    p = gen_architecture(ARCHITECTURE_DATA_MERGED['portal'],player.x, player.y)
+    game.entities.append(p)
 
     return game

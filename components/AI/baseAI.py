@@ -1,23 +1,23 @@
 from random import randint, choice
+from typing import Union
 
 import tcod
+from dataclasses import dataclass, field
 
+from components.AI.behavior.simple import Simple
+from components.AI.behavior.swarm import Swarm
 from components.actors.status_modifiers import Presence
 from data.actor_data.act_status_mod import status_modifiers_data
 from gui.messages import Message
 
-
+@dataclass
 class BaseAI:
-    def __init__(self, movement = None, attack=None):
-        self.movement = movement
+    movement : Union[Simple, Swarm] = field(default=Simple)
+    attack : Union[Simple, Swarm] = field(default=Simple)
 
-        if movement:
-            self.movement.owner = self
-
-        self.attack = attack
-
-        if attack:
-            self.attack.owner = self
+    def __post_init__(self):
+        self.movement.owner = self
+        self.attack.owner = self
 
     def take_turn(self, game, fov_map):
 
@@ -63,7 +63,7 @@ class BaseAI:
             if npc.skills:
                 npc.skills.cooldown()
                 if npc.skills.available:
-                    possible_skills = npc.skills.possible(target, game)
+                    possible_skills = npc.skills.active(target, game)
                     if possible_skills:
                         skill = choice(possible_skills)
                         skill_results = skill.execute(target, game)

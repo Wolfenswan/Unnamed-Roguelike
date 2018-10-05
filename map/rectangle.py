@@ -1,7 +1,7 @@
 import logging
 from random import randint, choice
 
-
+# Todo @dataclass
 class Rect:
     def __init__(self, x, y, w, h):
         self.x1 = x

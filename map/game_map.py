@@ -7,6 +7,7 @@ from gameobjects.block_level import BlockLevel
 from map.map_algo import Tunneling, DrunkWalk
 from map.tile import Tile
 
+# Todo @dataclass
 class GameMap:
     def __init__(self, width, height):
         self.width = width

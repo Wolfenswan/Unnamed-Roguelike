@@ -46,8 +46,8 @@ def game_loop(game):
         #mouse_action = handle_mouse(mouse)
 
         if action:
-            player.proc_every_turn(action, game, start=True)
-            player_stats_turnstart = (player.fighter.hp, player.fighter.stamina, player.fighter.defense)
+            for ent in game.entities:
+                ent.proc_every_turn(action, game, start=False)
 
             # Process player input into turn results #
             player_turn_results = process_player_input(action, game, fov_map, targeting_item = targeting_item)
@@ -66,7 +66,8 @@ def game_loop(game):
 
                 process_npc_actions(game)
 
-                player.proc_every_turn(action, game, start=False)
+                for ent in game.entities:
+                    ent.proc_every_turn(action, game, start=False)
                 game.turn += 1
 
             # Prepare for next turn #

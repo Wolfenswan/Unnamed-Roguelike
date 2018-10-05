@@ -34,7 +34,7 @@ spawn_data = {
         'max_hp': (2,6),
         'max_stamina': (80,80),
         'base_armor': (0,0),
-        'base_strength': (2,2),
+        'base_strength': (4,4),
         #'nat_vision': 6,
         'loadout': {
             'equipment':{
@@ -56,7 +56,7 @@ spawn_data = {
         'max_hp': (12,16),
         'max_stamina': (100,100),
         'base_armor': (2,4),
-        'base_strength': (3,6),
+        'base_strength': (6,10),
         'loadout': {
             'equipment':{
                 'ins_mandibles':{

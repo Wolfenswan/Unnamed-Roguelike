@@ -4,14 +4,14 @@ from random import choice, randint
 from components.AI.baseAI import BaseAI
 from components.AI.behavior.simple import Simple
 from components.actors.fighter import Fighter
-from components.actors.skills import Skills
+from components.abilities.skills import Skills
 from components.architecture import Architecture
 from components.inventory.inventory import Inventory
 from components.items.equipment import Equipment
 from components.items.item import Item
 from components.items.moveset import Moveset
 from components.items.useable import Useable
-from components.skill import Skill
+from components.abilities.skill import Skill
 from config_files import colors
 from data.actor_data.act_skills import skills_data
 from data.actor_data.test_spawns import spawn_data
@@ -21,7 +21,7 @@ from data.item_data.wp_creatures import wp_creature_data
 from data.gui_data.craft_strings import craft_descr_data
 from data.actor_data.act_bodytypes import bodytype_data
 from data.shared_data.quality_mod import qual_cond_data, qual_craft_data
-from data.data_types import GenericType, Condition, RarityType, BodyType, AttackType
+from data.data_types import GenericType, Condition, RarityType, BodyType
 from data.shared_data.material_mod import item_material_data
 from data.item_data.test_equipment import test_equipment_data
 from data.item_data.use_potions import use_potions_data
@@ -57,7 +57,7 @@ container_data = [arch_containers_data]
 CONTAINER_DATA_MERGED = merge_dictionaries(container_data)
 
 
-def pick_from_data_dict_by_rarity(dict, dlvl=0):
+def pick_from_data_dict_by_rarity(dic, dlvl=0):
     """
     picks a random key from the given dictionary items, using the 'rarity' and (optionally) 'type' values
 
@@ -69,16 +69,16 @@ def pick_from_data_dict_by_rarity(dict, dlvl=0):
     :rtype: dict
     """
 
-    if dlvl > 0: # Filter possible entries by dungeon levels first
-        dict = {k: v for k, v in dict.items() if dlvl in range(*v.get('dlvls', (1, 99)))}
+    if dlvl > 0:  # Filter possible entries by dungeon levels first
+        dic = {k: v for k, v in dic.items() if dlvl in range(*v.get('dlvls', (1, 99)))}
 
     while True:
         random = randint(0, 100)
         possible_items = {
-            k:v for k,v in dict.items()
-              if rarity_values[v.get('rarity', RarityType.COMMON)] + v.get('rarity_mod', 0) >= random
-              and rarity_values[v.get('type', RarityType.COMMON)] >= random
-            }
+            k: v for k, v in dic.items()
+            if rarity_values[v.get('rarity', RarityType.COMMON)] + v.get('rarity_mod', 0) >= random
+            and rarity_values[v.get('type', RarityType.COMMON)] >= random
+        }
         candidates = list(possible_items.keys())
         logging.debug(f'Randomly choosing from possible candidates: {candidates}, random value was {random}')
         if len(candidates) > 0:
@@ -88,20 +88,19 @@ def pick_from_data_dict_by_rarity(dict, dlvl=0):
 
 
 # Data retrieving functions #
-def get_generic_data(data, material=None, condition=None, craftsmanship=None, bodytype=None, randomize_color = False):
+def get_generic_args(data, material=None, condition=None, craftsmanship=None, bodytype=None, randomize_color=False):
     """
     Retrieves basic attributes from the data dictionary and if necessary modifies them as per material, condition and
     craftsmanship values.
     """
-    char = data.get('char','?')
+    char = data.get('char', '?')
     color = data.get('color', colors.white)
     name = data['name'].title()
     descr = data.get('descr', 'No description')
-    type = data.get('type', GenericType.DEFAULT)
 
     if randomize_color:
         darken = True if randint(0, 1) else False
-        color = multiply_rgb_color(color, darken = darken) # Slight color randomization for each entity
+        color = multiply_rgb_color(color, darken=darken)  # Slight color randomization for each entity
 
     if material:
         color = material['color']  # Update the entity's color
@@ -136,7 +135,7 @@ def get_generic_data(data, material=None, condition=None, craftsmanship=None, bo
                     descr += f" (Description missing for {material['type']}/{craftsmanship['type']})"
 
     if bodytype and bodytype['type'].name != 'NORMAL':
-        #name = (f'{bodytype["type"].name} ' + name).title()
+        # name = (f'{bodytype["type"].name} ' + name).title()
         # TODO extra description
 
         # Tweak the color slightly to indicate enemy type #
@@ -154,7 +153,18 @@ def get_generic_data(data, material=None, condition=None, craftsmanship=None, bo
         elif bodytype['type'] == BodyType.GARGANTUAN:
             color = multiply_rgb_color(color, factor_range=(0.6, 0.6), darken=False)
 
-    return (char, color, name, descr, type)
+    return (char, color, name, descr)
+
+def get_generic_kwargs(data, default_render=RenderOrder.BOTTOM):
+    type = data.get('type', GenericType.DEFAULT)
+    blocks = data.get('blocks', {})
+    if blocks:
+        blocks = blocks.copy()
+    rendering = data.get('rendering', default_render)
+    every_turn_start = data.get('every_turn_start', [])
+    every_turn_end = data.get('every_turn_end', [])
+
+    return {'type':type, 'blocks':blocks, 'render_order':rendering, 'every_turn_start':every_turn_start, 'every_turn_end':every_turn_end}
 
 
 def get_material_data(data, forced=False):
@@ -163,7 +173,7 @@ def get_material_data(data, forced=False):
     Forced can be set to a MaterialType Enum member to return the respective material.
     """
     if not forced:
-        materials = {k:v for k, v in item_material_data.items() if v['type'] in data.get('materials',{})}
+        materials = {k: v for k, v in item_material_data.items() if v['type'] in data.get('materials', {})}
     else:
         materials = {k: v for k, v in item_material_data.items() if v['type'] in forced}
     material = {}
@@ -178,8 +188,8 @@ def get_condition_data(forced=False):
     Retrieves condition data as defined in the qual_cond_data dict.
     Forced can be set to a Condition Enum member to return the respective material.
     """
-    dict = qual_cond_data if not forced else {k: v for k, v in qual_cond_data.items() if v['type'] in forced}
-    key = pick_from_data_dict_by_rarity(dict)
+    dic = qual_cond_data if not forced else {k: v for k, v in qual_cond_data.items() if v['type'] in forced}
+    key = pick_from_data_dict_by_rarity(dic)
     condition = qual_cond_data[key]
     return condition
 
@@ -189,22 +199,22 @@ def get_craftsmanship_data(forced=False):
     Retrieves craftsmanship data as defined in the qual_craft_data dict.
     Forced can be set to a Craftsmanship Enum member to return the respective material.
     """
-    dict = qual_craft_data if not forced else {k: v for k, v in qual_craft_data.items() if v['type'] in forced}
-    key = pick_from_data_dict_by_rarity(dict)
+    dic = qual_craft_data if not forced else {k: v for k, v in qual_craft_data.items() if v['type'] in forced}
+    key = pick_from_data_dict_by_rarity(dic)
     craftsmanship = qual_craft_data[key]
     return craftsmanship
 
 
 def get_bodytype_data(data, forced=False):
     if forced:
-        dict = {k: v for k, v in bodytype_data.items() if v['type'] in forced}
+        dic = {k: v for k, v in bodytype_data.items() if v['type'] in forced}
     elif data.get('bodytypes'):
-        dict = {k:v for k, v in bodytype_data.items() if v['type'] in data.get('bodytypes',{})}
+        dic = {k: v for k, v in bodytype_data.items() if v['type'] in data.get('bodytypes', {})}
     else:
-        dict = bodytype_data
+        dic = bodytype_data
 
-    key = pick_from_data_dict_by_rarity(dict)
-    bodytype = dict[key]
+    key = pick_from_data_dict_by_rarity(dic)
+    bodytype = dic[key]
 
     return bodytype
 
@@ -214,7 +224,8 @@ def get_bodytype_data(data, forced=False):
 def gen_npc_from_dict(data, x, y, game):
     bodytype = get_bodytype_data(data, forced=False)
 
-    arguments = (x, y, *get_generic_data(data, randomize_color=True, bodytype=bodytype))
+    arguments = (x, y, *get_generic_args(data, randomize_color=True, bodytype=bodytype))
+    kwargs = get_generic_kwargs(data, default_render=RenderOrder.ACTOR)
 
     hp = randint(*data['max_hp'])
     stamina = randint(*data['max_stamina'])
@@ -227,7 +238,7 @@ def gen_npc_from_dict(data, x, y, game):
 
     # Modify values according to bodytype #
     hp_mod_multipl = bodytype.get('hp_mod_multipl', 1)
-    str_multipl = bodytype.get('str_multipl',1)
+    str_multipl = bodytype.get('str_multipl', 1)
     av_mod_multipl = bodytype.get('av_mod_multipl', 1)
     hp = round(hp * hp_mod_multipl)
 
@@ -236,7 +247,7 @@ def gen_npc_from_dict(data, x, y, game):
 
     fighter_component = Fighter(hp, stamina, base_av, base_strength, vision)
     ai_component = BaseAI(movement=ai_movement(), attack=ai_attack())
-    inventory_component = Inventory(capacity=12) # Todo Placeholder #
+    inventory_component = Inventory(capacity=12)  # Todo Placeholder #
     skills_component = None
 
     if skills is not None:
@@ -245,7 +256,8 @@ def gen_npc_from_dict(data, x, y, game):
             skill = Skill(**skills_data[k])
             skills_component.add_skill(skill)
 
-    npc = NPC(*arguments, bodytype=bodytype.get('type'), fighter=fighter_component, ai=ai_component, skills=skills_component, inventory=inventory_component)
+    npc = NPC(*arguments, **kwargs, bodytype=bodytype.get('type'), fighter=fighter_component, ai=ai_component,
+              skills=skills_component, inventory=inventory_component)
 
     loadout = data.get('loadout')
     loadouts = data.get('loadouts')
@@ -259,12 +271,12 @@ def gen_npc_from_dict(data, x, y, game):
 
 
 def gen_item_from_data(data, x, y, materials=False, conditions=False, craftsmanships=False, forced_attacktype=None):
-
     material = get_material_data(data, forced=materials)
     condition = get_condition_data(forced=conditions) if material else {}
     craftsmanship = get_craftsmanship_data(forced=craftsmanships) if material else {}
 
-    arguments = [x, y, *get_generic_data(data, material=material, condition=condition, craftsmanship=craftsmanship)]
+    arguments = [x, y, *get_generic_args(data, material=material, condition=condition, craftsmanship=craftsmanship)]
+    kwargs = get_generic_kwargs(data, default_render=RenderOrder.ITEM)
 
     on_use = data.get('on_use', None)
     equip_to = data.get('e_to', None)
@@ -274,23 +286,24 @@ def gen_item_from_data(data, x, y, materials=False, conditions=False, craftsmans
         targeting = data['targeting']
         on_use_msg = data['on_use_msg']
         on_use_params = data['on_use_params']
-        useable_component = Useable(use_function = on_use, targeting = targeting, on_use_msg = on_use_msg, **on_use_params)
+        useable_component = Useable(use_function=on_use, targeting=targeting, on_use_msg=on_use_msg, **on_use_params)
 
     equipment_component = None
     if equip_to is not None:
         dmg_potential = data.get('dmg_potential')
         if dmg_potential:
-            mat_mod = material.get('dmg_mod',0)
+            mat_mod = material.get('dmg_mod', 0)
             craft_mod = craftsmanship.get('dmg_mod', 0)
             cond_mod = condition.get('mod_multipl', 1)
-            dmg_potential = (round(max((dmg_potential[0] + mat_mod + craft_mod)*cond_mod,1)), round(max((dmg_potential[1] + mat_mod + craft_mod)*cond_mod,1)))
+            dmg_potential = (round(max((dmg_potential[0] + mat_mod + craft_mod) * cond_mod, 1)),
+                             round(max((dmg_potential[1] + mat_mod + craft_mod) * cond_mod, 1)))
 
         av = data.get('av')
         if av:
             mat_mod = material.get('av_mod', 0)
             craft_mod = craftsmanship.get('av_mod', 0)
             cond_mod = condition.get('mod_multipl', 1)
-            av += round((max(mat_mod + craft_mod,1))*cond_mod)
+            av += round((max(mat_mod + craft_mod, 1)) * cond_mod)
 
         block_def = data.get('block_def')
         if block_def:
@@ -310,30 +323,34 @@ def gen_item_from_data(data, x, y, materials=False, conditions=False, craftsmans
         else:
             moveset_component = None
 
-        equipment_component = Equipment(equip_to, dmg_potential = dmg_potential, av = av, block_def=block_def, qu_slots = qu_slots, l_radius = l_radius, moveset = moveset_component, two_handed = two_handed, attack_type=attack_type)
+        equipment_component = Equipment(equip_to, dmg_potential=dmg_potential, av=av, block_def=block_def,
+                                        qu_slots=qu_slots, l_radius=l_radius, moveset=moveset_component,
+                                        two_handed=two_handed, attack_type=attack_type)
 
-    item_component = Item(condition=condition.get('type'), craftsmanship=craftsmanship.get('type'), useable=useable_component, equipment=equipment_component)
+    item_component = Item(condition=condition.get('type'), craftsmanship=craftsmanship.get('type'),
+                          useable=useable_component, equipment=equipment_component)
 
     # create the item using item_class and the arguments tuple
-    i = Entity(*arguments, material=material.get('type'), render_order=RenderOrder.ITEM, item = item_component)
+    i = Entity(*arguments, **kwargs, material=material.get('type'), item=item_component)
 
     return i
 
 
 def gen_architecture(data, x, y):
     material = get_material_data(data)  # atm material only affects architecture's name and color
-    arguments = [x, y, *get_generic_data(data, material=material)]
+    arguments = [x, y, *get_generic_args(data, material=material)]
+    kwargs = get_generic_kwargs(data, default_render=RenderOrder.BOTTOM)
 
-    blocks = data.get('blocks', {}).copy()
-    container_room = data.get('container_room', (0,0))
+    container_room = data.get('container_room', (0, 0))
     on_collision = data.get('on_collision')
     on_interaction = data.get('on_interaction')
 
     inventory_component = Inventory(capacity=randint(*container_room))
-    architecture_component = Architecture(on_collision = on_collision, on_interaction = on_interaction)
+    architecture_component = Architecture(on_collision=on_collision, on_interaction=on_interaction)
 
     # create the static object using the arguments tuple
-    arch = Entity(*arguments, material=material.get('type'), blocks=blocks, inventory=inventory_component, architecture=architecture_component, render_order=RenderOrder.BOTTOM)
+    arch = Entity(*arguments, **kwargs, material=material.get('type'), inventory=inventory_component,
+                  architecture=architecture_component)
 
     return arch
 
@@ -341,8 +358,8 @@ def gen_architecture(data, x, y):
 def gen_loadout(actor, loadout, game):
     """ creates inventory and equipment for the given actor """
     logging.debug(f'Generating loadout from {loadout} for {actor.name}({actor}).')
-    equipment = loadout.get('equipment',{})
-    backpack = loadout.get('backpack',{})
+    equipment = loadout.get('equipment', {})
+    backpack = loadout.get('backpack', {})
 
     for k in equipment.keys():
         item = gen_item_from_data(ITEM_DATA_MERGED.get(k), 0, 0, **equipment[k])

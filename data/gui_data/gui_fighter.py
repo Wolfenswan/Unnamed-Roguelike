@@ -20,18 +20,18 @@ hp_color_data = {
 hpdmg_string_data = {
     'verbs': ('inflicting', 'causing', 'doing'),
     90: ('brutal', 'devastating'),
-    65: ('severe', 'incredible'),
-    45: ('heavy', 'strong'),
-    25: ('moderate', 'average'),
+    60: ('severe', 'incredible'),
+    40: ('heavy', 'strong'),
+    20: ('moderate', 'average'),
     5: ('light', 'weak'),
     1: ('minimal', 'miniscule', 'trivial')
 }
 
 hpdmg_color_data = {
     90: colors.red,
-    65: hp_color_data[1],
-    45: hp_color_data[30],
-    25: hp_color_data[30],
+    60: hp_color_data[1],
+    40: hp_color_data[30],
+    20: hp_color_data[30],
     5: hp_color_data[60],
     1: hp_color_data[90]
 }
@@ -58,18 +58,18 @@ sta_color_data = {
 stadmg_string_data = {
     #'verbs': ('taking', 'exhausting', 'sapping'),
     90: ('extreme', 'giant'),
-    65: ('crass', 'heavy'),
-    45: ('significant', 'unusual'),
-    25: ('moderate', 'average'),
+    60: ('crass', 'heavy'),
+    40: ('significant', 'unusual'),
+    20: ('moderate', 'average'),
     5: ('light', 'low'),
     1: ('minimal', 'miniscule', 'trivial')
 }
 
 stadmg_color_data = {
     90: sta_color_data[0],
-    65: sta_color_data[20],
-    30: sta_color_data[40],
-    25: sta_color_data[60],
+    60: sta_color_data[20],
+    40: sta_color_data[40],
+    20: sta_color_data[60],
     5: colors.light_sea,
     1: sta_color_data[90]
 }

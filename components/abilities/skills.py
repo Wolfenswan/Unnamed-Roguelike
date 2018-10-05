@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 
-from components.skill import Skill
+from components.abilities.skill import Skill
 
 
 @dataclass
@@ -24,11 +24,11 @@ class Skills:
         available_skills = [skill for skill in self if skill.is_available]
         return available_skills
 
-    def possible(self, target, game):
+    def active(self, target, game):
         """
-        Possible skills are skills which are not on cooldown and all conditions (e.g. distance to target) are fulfilled.
+        Active skills are skills which are not on cooldown and all conditions (e.g. distance to target) are fulfilled.
         """
-        possible_skills = [skill for skill in self.available if skill.is_possible(target, game)]
+        possible_skills = [skill for skill in self.available if skill.is_active(target, game)]
         return possible_skills
 
     def cooldown(self, reset=False):

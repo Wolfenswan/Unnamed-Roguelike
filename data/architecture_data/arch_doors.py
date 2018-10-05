@@ -2,6 +2,7 @@ from components.architecture import Architecture
 from data.data_types import Material
 from data.data_types import RarityType
 from gameobjects.block_level import BlockLevel
+from rendering.render_order import RenderOrder
 
 arch_doors_data = {
     'door': {
@@ -12,6 +13,7 @@ arch_doors_data = {
         'blocks': {BlockLevel.FLOOR: True, BlockLevel.WALK: False},
         'dlvls': (1, 99),
         "char": '-',
+        'rendering': RenderOrder.ALWAYS,
         'on_collision': Architecture.toggle_door,
         'on_interaction': Architecture.toggle_door
     }

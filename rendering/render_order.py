@@ -8,6 +8,6 @@ class RenderOrder(Enum):
     BOTTOM = auto()
     ITEM = auto()
     ACTOR = auto()
+    ALWAYS = auto()
     PLAYER = auto()
     CURSOR = auto()
-    ALWAYS = auto()

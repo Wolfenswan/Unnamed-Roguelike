@@ -26,14 +26,13 @@ class Skill:
         available = self.cooldown_length >= 0 and self.cooldown == 0
         return available
 
-    def is_possible(self, target, game):
-        return self.activate_condition(self.owner, target, game, **self.activate_condition_kwargs)
+    def is_active(self, target, game):
+        return self.activate_condition(actor = self.owner, target = target, game = game, **self.activate_condition_kwargs)
 
     def cooldown_skill(self, reset=False):
         if reset:
             self.cooldown = self.cooldown_length
         elif self.cooldown > 0:
             self.cooldown -= 1
-
         logging.debug(
             f'Cooled down {self.name} on {self.owner.name}: {self.cooldown} of {self.cooldown_length}.')
