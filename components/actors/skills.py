@@ -2,7 +2,7 @@ from typing import List
 
 from dataclasses import dataclass, field
 
-from components.abilities.skill import Skill
+from components.actors.skill import Skill
 
 
 @dataclass

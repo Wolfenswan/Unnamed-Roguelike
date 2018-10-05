@@ -59,7 +59,7 @@ def animate_projectile(start_x, start_y, target_x, target_y, distance, game, hom
     game.entities.remove(projectile)
 
 
-def animate_explosion(center_x, center_y, spread, game, ignore_walls=False, anim_delay = 0.02):
+def animate_explosion(center_x, center_y, spread, game, ignore_walls=False, anim_delay = 0.05):
     """
     Creates a projectiles moving outward from the center position.
 
@@ -67,7 +67,7 @@ def animate_explosion(center_x, center_y, spread, game, ignore_walls=False, anim
     TODO doesn't return anything atm. Add return as needed
     """
     projectiles = []
-    directions = [(0,1),(0,-1),(1,0),(-1,0),(1,1),(1,-1),(-1,1),(-1,-1)]
+    directions = [(0,1),(0,-1),(1,0),(-1,0),(1,1),(1,-1),(-1,1),(-1,-1)] # Todo use neighboring tiles function
     for dir in directions:
         projectile = Entity(center_x, center_y, '*', colors.flame, 'Projectile', render_order=RenderOrder.ALWAYS)
         projectiles.append(projectile)
@@ -85,4 +85,8 @@ def animate_explosion(center_x, center_y, spread, game, ignore_walls=False, anim
 
 
 def animate_cone():
+    pass
+
+
+def animate_ray():
     pass

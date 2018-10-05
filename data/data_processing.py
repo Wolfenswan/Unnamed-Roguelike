@@ -4,14 +4,14 @@ from random import choice, randint
 from components.AI.baseAI import BaseAI
 from components.AI.behavior.simple import Simple
 from components.actors.fighter import Fighter
-from components.abilities.skills import Skills
+from components.actors.skills import Skills
 from components.architecture import Architecture
 from components.inventory.inventory import Inventory
 from components.items.equipment import Equipment
 from components.items.item import Item
 from components.items.moveset import Moveset
 from components.items.useable import Useable
-from components.abilities.skill import Skill
+from components.actors.skill import Skill
 from config_files import colors
 from data.actor_data.act_skills import skills_data
 from data.actor_data.test_spawns import spawn_data
@@ -26,7 +26,6 @@ from data.data_types import GenericType, Condition, RarityType, BodyType
 from data.shared_data.material_mod import item_material_data
 from data.item_data.test_equipment import test_equipment_data
 from data.item_data.use_potions import use_potions_data
-from data.item_data.use_scrolls import use_scrolls_data
 from data.gui_data.cond_strings import cond_descr_data
 from data.shared_data.rarity_mod import rarity_values
 from debug.timer import debug_timer
@@ -46,7 +45,7 @@ def merge_dictionaries(dicts):
     return merged_dict
 
 
-item_data = [use_scrolls_data, use_potions_data, use_bombs_data, test_equipment_data, wp_creature_data]
+item_data = [use_potions_data, use_bombs_data, test_equipment_data, wp_creature_data]
 ITEM_DATA_MERGED = merge_dictionaries(item_data)
 
 actor_data = [spawn_data]
@@ -284,10 +283,11 @@ def gen_item_from_data(data, x, y, materials=False, conditions=False, craftsmans
 
     useable_component = None
     if on_use is not None:
-        targeting = data['targeting']
-        on_use_msg = data['on_use_msg']
-        on_use_params = data['on_use_params']
-        useable_component = Useable(use_function=on_use, targeting=targeting, on_use_msg=on_use_msg, **on_use_params)
+        #targeted = data.get('targeted', False)
+        on_use_msg = data.get('on_use_msg', '')
+        params = data['on_use_params']
+        charges = data.get('charges', 1)
+        useable_component = Useable(on_use_effect=on_use, on_use_msg=on_use_msg, on_use_kwargs = params, charges = charges)
 
     equipment_component = None
     if equip_to is not None:

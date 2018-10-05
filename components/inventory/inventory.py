@@ -48,21 +48,14 @@ class Inventory:
     def use(self, item_entity, game, **kwargs):
         results = []
 
-        useable_component = item_entity.item.useable
+        useable = item_entity.item.useable
+        item_use_results = useable.use(self.owner, game, **kwargs)
 
-        if useable_component.use_function is None:
-            results.append({'message': Message(f'The {item_entity.name} cannot be used like this.', category=MessageCategory.OBSERVATION)})
-        else:
-            if useable_component.targeting and not game.state == GameState.CURSOR_ACTIVE: #(kwargs.get('target_pos')):
-                results.append({'targeting': item_entity,'message': useable_component.on_use_msg})
-            else:
-                item_use_results = useable_component.use_function(game = game, user = self.owner, used_item=item_entity, **kwargs, **useable_component.function_kwargs)
+        for item_use_result in item_use_results:
+            if item_use_result.get('consumed'):
+                self.remove(item_entity)
 
-                for item_use_result in item_use_results:
-                    if item_use_result.get('consumed'):
-                        self.remove(item_entity)
-
-                results.extend(item_use_results)
+        results.extend(item_use_results)
 
         return results
 

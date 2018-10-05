@@ -3,7 +3,7 @@ from gui.messages import Message, MessageCategory, MessageType
 from rendering.render_animations import animate_move_to
 
 
-class SkillUsage:
+class AbilityUse:
 
     @staticmethod
     def charge_prepare(ent, target, game, **kwargs):
@@ -14,9 +14,8 @@ class SkillUsage:
         tx, ty = target.x + d_x, target.y + d_y
 
         ent.color_bg = colors.dark_red
-        ent.actionplan.add_to_queue(execute_in=delay, planned_function=SkillUsage.charge_execute,
+        ent.actionplan.add_to_queue(execute_in=delay, planned_function=AbilityUse.charge_execute,
                                     planned_function_args=(ent, tx, ty, game), fixed=True)
-        #ent.actionplan.add_to_queue(delay, {'planned_function': SkillUsage.charge_execute,'planned_function_args': (ent, tx, ty, game)})
         results.append({'message':Message(f'The {ent.name} prepares to charge.', category=MessageCategory.OBSERVATION, type=MessageType.ALERT)})
         return results
 

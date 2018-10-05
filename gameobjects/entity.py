@@ -4,10 +4,9 @@ from typing import Optional, Union
 
 import tcod
 from dataclasses import dataclass, field
-from config_files import colors
 
 from components.AI.baseAI import BaseAI
-from components.abilities.skills import Skills
+from components.actors.skills import Skills
 from components.actionplan import Actionplan
 from components.actors.fighter import Fighter
 from components.actors.status_modifiers import Presence
@@ -16,12 +15,12 @@ from components.inventory.inventory import Inventory
 from components.inventory.paperdoll import Paperdoll
 from components.items.item import Item
 from components.statistics import Statistics
+from config_files import colors
 from data.data_types import BodyType, Material, GenericType, MonsterType, ItemType
 from data.gui_data.gui_entity import bodytype_name_data
 from data.gui_data.material_strings import material_name_data
 from gameobjects.util_functions import entity_at_pos
 from rendering.render_order import RenderOrder
-
 
 @dataclass
 class Entity:

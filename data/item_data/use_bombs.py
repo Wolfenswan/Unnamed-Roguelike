@@ -1,8 +1,6 @@
-import tcod
-
-from components.effects import Effects
 from config_files import colors
 from data.data_types import ItemType, RarityType
+from data.shared_data.effects import explosion_targeted
 
 BOMB_CHAR = chr(162)
 
@@ -13,10 +11,9 @@ use_bombs_data = {
         'type': ItemType.USEABLE,
         "char": BOMB_CHAR,
         "color": colors.dark_gray,
-        'on_use': Effects.explosion,
-        'on_use_msg': 'Move the cursor over the intended target, press Enter to confirm.',
-        'targeting': True,
-        "on_use_params": {'dmg': 12, 'radius': 3, 'range': 5},
+        'targeted': True,
+        'on_use': explosion_targeted,
+        "on_use_params": {'pwr': (12,12), 'radius': 3, 'range': 5},
         'rarity': RarityType.UNCOMMON,
         'rarity_mod': -5,
         'dlvls': (1, 99)

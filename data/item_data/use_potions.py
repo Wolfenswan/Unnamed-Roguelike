@@ -1,8 +1,7 @@
-from game_effects.spells import heal_entity
 from config_files import colors
 from data.data_types import ItemType
 from data.data_types import RarityType
-from gui.messages import Message
+from data.shared_data.effects import heal
 
 POTION_CHAR = '!'
 
@@ -13,9 +12,8 @@ use_potions_data = {
         'type': ItemType.USEABLE,
         "char": POTION_CHAR,
         "color": colors.violet,
-        'on_use': heal_entity,
-        'on_use_msg': Message('You drink down the potion.'),
-        'targeting': False,
+        'on_use': heal,
+        'on_use_msg': 'You gulp the potion.',
         "on_use_params": {'pwr': (6, 10)},
         'rarity': RarityType.COMMON,
         'dlvls': (1, 99)

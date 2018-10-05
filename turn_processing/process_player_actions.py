@@ -143,7 +143,7 @@ def process_player_input(action, game, fov_map, targeting_item = None):
                 if targeting_item is None:
                     cursor.move(dx, dy)
                 elif player.distance_to_pos(destination_x, destination_y) \
-                        < targeting_item.item.useable.function_kwargs['range']:
+                        < targeting_item.item.useable.on_use_kwargs.get('range',1):
                     cursor.move(dx, dy)
 
         if confirm and targeting_item:
