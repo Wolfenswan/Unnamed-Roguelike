@@ -1,9 +1,8 @@
 """ Panels are permanently displayed consoles containing information relevant to the game """
-import textwrap
 
 import tcod
 
-from components.actors.status_modifiers import Presence, Surrounded
+from components.actors.status_modifiers import Surrounded
 from config_files import colors, cfg as cfg
 from rendering.util_functions import center_x_for_text, setup_console, print_string, dynamic_wrap
 
@@ -238,5 +237,5 @@ def draw_quickslots(con, y, game):
         o_x = start_x + 1
         for i, item in enumerate(player.qu_inventory):
             tcod.console_put_char_ex(con, o_x, y, f'{i+1}', colors.white, colors.black)
-            print_string(con, o_x, y+1, f'{item.char}', color = item.color)
+            tcod.console_put_char_ex(con, o_x, y+1, f'{item.char}', item.color, colors.black)
             o_x += 2

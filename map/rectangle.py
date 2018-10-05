@@ -1,5 +1,4 @@
-import logging
-from random import randint, choice
+from random import choice
 
 # Todo @dataclass
 class Rect:

@@ -1,7 +1,7 @@
 """ Processes the actions from handle_keys into game-events """
 import tcod
 
-from game import GameStates
+from game import GameState
 from gameobjects.util_functions import entity_at_pos
 from gui.manual import display_manual
 from gui.menus import item_menu,  options_menu, item_list_menu
@@ -38,7 +38,7 @@ def process_player_input(action, game, fov_map, targeting_item = None):
 
     turn_results = []
 
-    active_player_states = [GameStates.PLAYERS_TURN, GameStates.PLAYER_RESTING]
+    active_player_states = [GameState.PLAYERS_TURN, GameState.PLAYER_RESTING]
     if game.state in active_player_states:
 
         # Movement and Interaction #
@@ -99,7 +99,7 @@ def process_player_input(action, game, fov_map, targeting_item = None):
                     if player.fighter.weapon:
                         player.fighter.weapon.moveset.cycle_moves(reset=True)
 
-                game.state = GameStates.ENEMY_TURN
+                game.state = GameState.ENEMY_TURN
 
         # Passing a turn #
         elif wait:
@@ -127,14 +127,14 @@ def process_player_input(action, game, fov_map, targeting_item = None):
 
     # Cursor Movement & Targeting #
     if toggle_look:
-        if game.state == GameStates.CURSOR_ACTIVE:
-            game.state = GameStates.PLAYERS_TURN
+        if game.state == GameState.CURSOR_ACTIVE:
+            game.state = GameState.PLAYERS_TURN
         else:
             game.previous_state = game.state
-            game.state = GameStates.CURSOR_ACTIVE
+            game.state = GameState.CURSOR_ACTIVE
             cursor.x, cursor.y = game.player.x, game.player.y
 
-    if game.state == GameStates.CURSOR_ACTIVE:
+    if game.state == GameState.CURSOR_ACTIVE:
         if move:
             dx, dy = direction
             destination_x = cursor.x + dx
@@ -147,14 +147,12 @@ def process_player_input(action, game, fov_map, targeting_item = None):
                     cursor.move(dx, dy)
 
         if confirm and targeting_item:
-            target_x, target_y = cursor.x, cursor.y
             # check whether the item is being used from the regular inventory or the quick use inventory
             if targeting_item in player.inventory:
                 inv = player.inventory
             else:
                 inv = player.qu_inventory
-            item_use_results = inv.use(targeting_item, game, entities=entities, fov_map=fov_map,
-                                                    target_x=target_x, target_y=target_y)
+            item_use_results = inv.use(targeting_item, game, target_pos=cursor.pos)
             turn_results.extend(item_use_results)
 
         if exit and targeting_item:
@@ -164,28 +162,28 @@ def process_player_input(action, game, fov_map, targeting_item = None):
     if show_inventory:
         if len(player.inventory) > 0:
             game.previous_state = game.state
-            game.state = GameStates.SHOW_INVENTORY
+            game.state = GameState.SHOW_INVENTORY
         else:
             Message('Your inventory is empty.', category=MessageCategory.OBSERVATION).add_to_log(game)
 
     if show_equipment:
         if len(player.paperdoll.equipped_items) > 0:
             game.previous_state = game.state
-            game.state = GameStates.SHOW_EQUIPMENT
+            game.state = GameState.SHOW_EQUIPMENT
         else:
             Message('You have no items equipped.', category=MessageCategory.OBSERVATION).add_to_log(game)
 
     # Inventory Interaction #
     selected_item_ent = None
 
-    if game.state == GameStates.SHOW_INVENTORY:
+    if game.state == GameState.SHOW_INVENTORY:
         selected_item_ent = item_list_menu(player, player.inventory)
 
-    elif game.state == GameStates.SHOW_EQUIPMENT:
+    elif game.state == GameState.SHOW_EQUIPMENT:
         #render_equipment_window(player.paperdoll.equipped_items, game)
         selected_item_ent = item_list_menu(player, player.paperdoll.equipped_items, title='Equipment')
 
-    if game.state in [GameStates.SHOW_INVENTORY, GameStates.SHOW_EQUIPMENT]:
+    if game.state in [GameState.SHOW_INVENTORY, GameState.SHOW_EQUIPMENT]:
         if selected_item_ent:
             # Identify unknown items #
             if not selected_item_ent.item.identified:
@@ -194,7 +192,7 @@ def process_player_input(action, game, fov_map, targeting_item = None):
             item_use_choice = item_menu(selected_item_ent, game)
             if item_use_choice:
                 if item_use_choice == 'u':
-                    item_interaction_result = player.inventory.use(selected_item_ent, game, entities=entities, fov_map=fov_map)
+                    item_interaction_result = player.inventory.use(selected_item_ent, game)
                     turn_results.extend(item_interaction_result)
                 if item_use_choice == 'e':
                     item_interaction_result = player.paperdoll.equip(selected_item_ent, game)
@@ -221,7 +219,7 @@ def process_player_input(action, game, fov_map, targeting_item = None):
         turn_results.extend(qu_results)
 
     if exit:
-        if game.state in (GameStates.SHOW_INVENTORY, GameStates.CURSOR_ACTIVE):
+        if game.state in (GameState.SHOW_INVENTORY, GameState.CURSOR_ACTIVE):
             game.state = game.previous_state
         else:
             if player.fighter.hp > 0:

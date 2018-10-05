@@ -1,3 +1,5 @@
+from typing import List
+
 from dataclasses import dataclass, field
 
 from components.abilities.skill import Skill
@@ -5,7 +7,7 @@ from components.abilities.skill import Skill
 
 @dataclass
 class Skills:
-    listing : list = field(default_factory=list)
+    listing : List[Skill] = field(default_factory=list)
 
     def __len__(self):
         return len(self.listing)

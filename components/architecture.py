@@ -1,5 +1,3 @@
-import tcod
-
 from gameobjects.block_level import BlockLevel
 from gui.menus import item_list_menu
 from gui.messages import Message, MessageCategory

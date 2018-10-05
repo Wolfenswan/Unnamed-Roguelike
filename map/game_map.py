@@ -98,7 +98,8 @@ class GameMap:
         return tiles
 
 
-    def empty_pos_near_ent(self, ent, game):
+    @staticmethod
+    def empty_pos_near_ent(ent, game):
         """ returns list of nearby empty (= walkable and not occupied by blocking object) coordinates """
         near_empty_tiles = []
         # TODO list comprehension candidate

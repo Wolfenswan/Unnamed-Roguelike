@@ -17,6 +17,7 @@ from data.actor_data.act_skills import skills_data
 from data.actor_data.test_spawns import spawn_data
 from data.architecture_data.arch_static import arch_static_data
 from data.architecture_data.arch_containers import arch_containers_data
+from data.item_data.use_bombs import use_bombs_data
 from data.item_data.wp_creatures import wp_creature_data
 from data.gui_data.craft_strings import craft_descr_data
 from data.actor_data.act_bodytypes import bodytype_data
@@ -29,6 +30,7 @@ from data.item_data.use_scrolls import use_scrolls_data
 from data.gui_data.cond_strings import cond_descr_data
 from data.shared_data.rarity_mod import rarity_values
 from debug.timer import debug_timer
+from gameobjects.block_level import BlockLevel
 from gameobjects.entity import Entity
 from gameobjects.npc import NPC
 from rendering.render_order import RenderOrder
@@ -44,7 +46,7 @@ def merge_dictionaries(dicts):
     return merged_dict
 
 
-item_data = [use_scrolls_data, use_potions_data, test_equipment_data, wp_creature_data]
+item_data = [use_scrolls_data, use_potions_data, use_bombs_data, test_equipment_data, wp_creature_data]
 ITEM_DATA_MERGED = merge_dictionaries(item_data)
 
 actor_data = [spawn_data]
@@ -155,11 +157,10 @@ def get_generic_args(data, material=None, condition=None, craftsmanship=None, bo
 
     return (char, color, name, descr)
 
-def get_generic_kwargs(data, default_render=RenderOrder.BOTTOM):
+def get_generic_kwargs(data, default_render=RenderOrder.BOTTOM, default_blocks=None):
     type = data.get('type', GenericType.DEFAULT)
-    blocks = data.get('blocks', {})
-    if blocks:
-        blocks = blocks.copy()
+    blocks = data.get('blocks', default_blocks)
+    blocks = blocks.copy() if blocks else {}
     rendering = data.get('rendering', default_render)
     every_turn_start = data.get('every_turn_start', [])
     every_turn_end = data.get('every_turn_end', [])
@@ -225,7 +226,7 @@ def gen_npc_from_dict(data, x, y, game):
     bodytype = get_bodytype_data(data, forced=False)
 
     arguments = (x, y, *get_generic_args(data, randomize_color=True, bodytype=bodytype))
-    kwargs = get_generic_kwargs(data, default_render=RenderOrder.ACTOR)
+    kwargs = get_generic_kwargs(data, default_render=RenderOrder.ACTOR, default_blocks={BlockLevel.WALK:True})
 
     hp = randint(*data['max_hp'])
     stamina = randint(*data['max_stamina'])

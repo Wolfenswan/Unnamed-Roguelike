@@ -1,6 +1,6 @@
 import tcod
 
-from game import GameStates
+from game import GameState
 from gameobjects.block_level import BlockLevel
 from gui.messages import Message
 
@@ -34,7 +34,7 @@ def process_turn_results(player_turn_results, game, fov_map):
         if dead_entity:
             message = dead_entity.fighter.death(game)
             if dead_entity.is_player:
-                game.state = GameStates.PLAYER_DEAD
+                game.state = GameState.PLAYER_DEAD
             message.add_to_log(game)
 
         if item_added:
@@ -44,8 +44,8 @@ def process_turn_results(player_turn_results, game, fov_map):
             entities.append(item_dropped)
 
         if targeting_item:
-            game.previous_state = GameStates.PLAYERS_TURN
-            game.state = GameStates.CURSOR_ACTIVE
+            game.previous_state = GameState.PLAYERS_TURN
+            game.state = GameState.CURSOR_ACTIVE
             game.cursor.x, game.cursor.y = game.player.x, game.player.y
             results.append({'targeting_item': targeting_item})
 
@@ -57,12 +57,12 @@ def process_turn_results(player_turn_results, game, fov_map):
             if player.in_combat(game):
                 if player.fighter.weapon:
                     player.fighter.weapon.moveset.cycle_moves(reset=True) # Waiting resets weapon moves
-                game.state = GameStates.ENEMY_TURN
+                game.state = GameState.ENEMY_TURN
             else:
                 # TODO placeholder for regeneration/resting
                 player.fighter.hp += player.fighter.max_hp/10
                 player.fighter.recover(player.fighter.max_stamina / 10) # TODO Placeholder Stamina Managment
-                game.state = GameStates.PLAYER_RESTING
+                game.state = GameState.PLAYER_RESTING
 
         if fov_recompute:
             results.append({'fov_recompute': fov_recompute})
@@ -74,6 +74,6 @@ def process_turn_results(player_turn_results, game, fov_map):
         # Enable enemy turn if at least one of the results is valid
         filtered_enemy_turn_conditions = list(filter(lambda x: x is not None, enemy_turn_on))
         if len(filtered_enemy_turn_conditions) > 0:
-            game.state = GameStates.ENEMY_TURN
+            game.state = GameState.ENEMY_TURN
 
     return results

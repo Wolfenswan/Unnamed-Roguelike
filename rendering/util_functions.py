@@ -1,9 +1,9 @@
+import re
 import textwrap
 from random import uniform
 
 import tcod
 from tcod import Color
-import re
 
 from config_files import colors, cfg as cfg
 
@@ -86,7 +86,7 @@ r"""
 \w+[.,\d()]*    # the color
 %{1}            # % indicating end of color-code
 [()+:\s\w-]+    # the word or string to color
-%{2}        # %c indicating end of color-wrapping
+%{2}            # %% indicating end of color-wrapping
 """, re.X)
 
 color_code_pattern = re.compile('%{1}(\w+[.,\d()]*)%{1}')

@@ -1,6 +1,3 @@
-from random import choice
-
-
 class Simple:
     """
     Simple behavior moves the npc straight towards the player, attack if next to them and use a skill if available.

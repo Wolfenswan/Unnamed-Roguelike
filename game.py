@@ -5,7 +5,7 @@ from gameobjects.block_level import BlockLevel
 from gui.messages import MessageLog
 
 
-class GameStates(Enum):
+class GameState(Enum):
     GAME_PAUSED = auto()
     PLAYERS_TURN = auto()
     PLAYER_RESTING = auto()
@@ -15,7 +15,6 @@ class GameStates(Enum):
     SHOW_EQUIPMENT = auto()
     SHOW_ITEM = auto()
     ENEMY_TURN = auto()
-    TARGETING = auto()
     PLAYER_DEAD = auto()
 
 class Game:
@@ -49,8 +48,17 @@ class Game:
         return player
 
     @property
+    def fighter_ents(self):
+        ents = [v for v in self.entities if v.fighter is not None]
+        return ents
+
+    @property
+    def alive_ents(self):
+        return [v for v in self.fighter_ents if v.fighter.hp > 0]
+
+    @property
     def npc_ents(self):
-        npc_ents = [v for v in self.entities if v.ai is not None and v.fighter is not None]
+        npc_ents = [v for v in self.fighter_ents if v.ai is not None]
         return npc_ents
 
     @property

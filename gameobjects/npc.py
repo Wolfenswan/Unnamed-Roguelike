@@ -1,5 +1,4 @@
 import logging
-import math
 from random import choice
 
 import tcod
@@ -11,16 +10,13 @@ from gui.messages import Message, MessageType, MessageCategory
 from rendering.render_order import RenderOrder
 
 
-
-
-
 class NPC(Entity):
     """ Class for the all active non-player objects """
 
-    def __init__(self, x, y, char, color, name, descr, type=GenericType.DEFAULT, render_order=RenderOrder.ACTOR, bodytype=None, barks=None, fighter=None, ai=None, inventory=None, skills=None):
-        super().__init__(x, y, char, color, name, descr, type=type, blocks={BlockLevel.WALK:True}, render_order=render_order, bodytype=bodytype, fighter=fighter, ai=ai, skills=skills, inventory=inventory)
+    def __init__(self, x, y, char, color, name, descr, **kwargs):
+        super().__init__(x, y, char, color, name, descr, **kwargs)
 
-        self.barks = barks
+        #self.barks = kwargs.get('barks')
 
     def move_towards(self, target, game):
         game_map = game.map

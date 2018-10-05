@@ -39,6 +39,16 @@ class Fighter:
     def hp(self):
         return self.__hp
 
+    @hp.setter
+    def hp(self, value):
+        value = round(value)
+        if value < 0:
+            self.__hp = 0
+        elif value > self.max_hp:
+            self.__hp = self.max_hp
+        else:
+            self.__hp = value
+
     @property
     def hp_full(self):
         return self.hp == self.max_hp
@@ -71,19 +81,19 @@ class Fighter:
         else:
             return hp_color_data[0]
 
-    @hp.setter
-    def hp(self, value):
-        value = round(value)
-        if value < 0:
-            self.__hp = 0
-        elif value > self.max_hp:
-            self.__hp = self.max_hp
-        else:
-            self.__hp = value
-
     @property
     def stamina(self):
         return self.__stamina
+
+    @stamina.setter
+    def stamina(self, value):
+        value = round(value)
+        if value < 0:
+            self.__stamina = 0
+        elif value > self.max_stamina:
+            self.__stamina = self.max_stamina
+        else:
+            self.__stamina = value
 
     @property
     def sta_full(self):
@@ -116,16 +126,6 @@ class Fighter:
             return sta_color_data[20]
         else:
             return sta_color_data[0]
-
-    @stamina.setter
-    def stamina(self, value):
-        value = round(value)
-        if value < 0:
-            self.__stamina = 0
-        elif value > self.max_stamina:
-            self.__stamina = self.max_stamina
-        else:
-            self.__stamina = value
 
     @property
     def strength(self):

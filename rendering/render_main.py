@@ -1,21 +1,21 @@
-from random import randint, choice
+from random import randint
 
 import tcod
 
 from config_files import cfg as cfg, colors
-from game import GameStates
+from game import GameState
+from rendering.fov_functions import darken_color_by_fov_distance
+from rendering.render_order import RenderOrder
+from rendering.render_panels import render_panels
 from rendering.render_windows import render_description_window
 from rendering.util_functions import draw_console_borders, pos_on_screen
-from rendering.fov_functions import darken_color_by_fov_distance
-from rendering.render_panels import render_panels
-from rendering.render_order import RenderOrder
 
 
 def render_all(game, fov_map, debug=False):
     render_map_screen(game, fov_map, debug=debug)
     render_panels(game)
 
-    if game.state == GameStates.CURSOR_ACTIVE:
+    if game.state == GameState.CURSOR_ACTIVE:
         render_description_window(game)  # Description window is drawn under the cursor if active
 
     tcod.console_flush()
@@ -36,7 +36,7 @@ def render_map_screen(game, fov_map, debug=False):
     for entity in entities_in_render_order:
         draw_entity(game, con, entity, fov_map, debug=debug)
 
-    if game.state == GameStates.CURSOR_ACTIVE:
+    if game.state == GameState.CURSOR_ACTIVE:
         draw_entity(game, con, game.cursor, fov_map, debug=debug)
 
     draw_console_borders(con ,color=colors.white)
@@ -68,7 +68,7 @@ def draw_tile(game, con, fov_map, tile_x, tile_y, screen_x, screen_y, debug=Fals
     visible = tcod.map_is_in_fov(fov_map, tile_x, tile_y) or debug
 
     if visible:
-        color = darken_color_by_fov_distance(game.player, tile.fg_color, tile_x, tile_y, min = 0.3)
+        color = darken_color_by_fov_distance(game.player, tile.fg_color, tile_x, tile_y, min = 0.3) if not debug else tile.fg_color
         tcod.console_put_char_ex(con, screen_x, screen_y, tile.char, color, colors.black)
         tile.explored = 50
 

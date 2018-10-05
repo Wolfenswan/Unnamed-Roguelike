@@ -3,7 +3,7 @@ import logging
 import tcod
 
 from config_files import cfg
-from game import GameStates, Game
+from game import GameState, Game
 from gui.menus import options_menu
 from loader_functions.data_loader import load_game
 from turn_processing.handle_input import handle_keys
@@ -21,7 +21,7 @@ def game_loop(game):
     player = game.player
     fov_map = game.fov_map
 
-    game.state = GameStates.PLAYERS_TURN
+    game.state = GameState.PLAYERS_TURN
     game.previous_state = game.state
 
     targeting_item = None
@@ -43,26 +43,26 @@ def game_loop(game):
 
         tcod.sys_wait_for_event(tcod.EVENT_KEY_PRESS, key, None, True)
         action = handle_keys(key, game.state)
-        #mouse_action = handle_mouse(mouse)
+        # mouse_action = handle_mouse(mouse)
 
         if action:
             for ent in game.entities:
-                ent.proc_every_turn(action, game, start=False)
+                ent.proc_every_turn(action, game, start=True)
 
             # Process player input into turn results #
-            player_turn_results = process_player_input(action, game, fov_map, targeting_item = targeting_item)
+            player_turn_results = process_player_input(action, game, fov_map, targeting_item=targeting_item)
             logging.debug(f'Turn {game.turn} player results: {player_turn_results}')
 
             # The game exits if player turn results returns False #
-            if player_turn_results == False:
-                return True
+            if player_turn_results is False:
+                break
 
             # Process turn results #
             processed_turn_results = process_turn_results(player_turn_results, game, fov_map)
             logging.debug(f'Turn {game.turn}. State: {game.state}. Processed results: {player_turn_results}')
 
             # Enemies take turns #
-            if game.state == GameStates.ENEMY_TURN:
+            if game.state == GameState.ENEMY_TURN:
 
                 process_npc_actions(game)
 
@@ -74,13 +74,16 @@ def game_loop(game):
             for turn_result in processed_turn_results:
                 fov_recompute = turn_result.get('fov_recompute', False)
                 targeting_item = turn_result.get('targeting_item')
-        
+
+
 if __name__ == '__main__':
     initialize_logging(debugging=True)
     game = Game(debug=False)
     initialize_window(game)
 
-    choice = options_menu(cfg.GAME_NAME, 'Welcome to the Dungeon', options=['Play a new game', 'Continue last game', 'Quit'], cancel_with_escape=False, sort_by=1)
+    choice = options_menu(cfg.GAME_NAME, 'Welcome to the Dungeon',
+                          options=['Play a new game', 'Continue last game', 'Quit'], cancel_with_escape=False,
+                          sort_by=1)
     if choice == 0:
         game = initialize_game(game)
     elif choice == 1:
@@ -95,4 +98,3 @@ if __name__ == '__main__':
     game.fov_map = initialize_fov(game)
 
     game_loop(game)
-

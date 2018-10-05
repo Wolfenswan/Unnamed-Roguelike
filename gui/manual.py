@@ -2,7 +2,7 @@ import tcod
 
 from config_files import cfg, colors
 from gui.menus import menu_loop
-from rendering.util_functions import setup_console
+from rendering.util_functions import setup_console, print_string
 
 
 def display_manual():

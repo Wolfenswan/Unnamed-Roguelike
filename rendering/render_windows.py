@@ -1,5 +1,4 @@
 """ Windows are temporary panels """
-import textwrap
 
 import tcod
 

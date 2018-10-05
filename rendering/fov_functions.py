@@ -1,6 +1,5 @@
-import random
-
 import tcod
+
 import config_files.cfg as cfg
 from gameobjects.block_level import BlockLevel
 from gameobjects.util_functions import entity_at_pos

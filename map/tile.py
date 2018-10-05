@@ -43,12 +43,6 @@ class Tile:
         if not force:
             self.char = '.' if self.walkable else chr(178)
 
-    def set_fov_color(self, color=False):
-        if color:
-            self.fov_color = color
-        else:
-            self.fov_color = colors.floor_default if self.walkable else colors.wall_default
-
     def gib(self, char=None):
         if char and self.walkable:
             self.char = char

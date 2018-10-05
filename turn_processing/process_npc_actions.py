@@ -1,5 +1,5 @@
 from debug.timer import debug_timer
-from game import GameStates
+from game import GameState
 
 @debug_timer
 def process_npc_actions(game):
@@ -20,14 +20,14 @@ def process_npc_actions(game):
                 if dead_entity:
                     message = dead_entity.fighter.death(game)
                     if dead_entity.is_player:
-                        game.state = GameStates.PLAYER_DEAD
+                        game.state = GameState.PLAYER_DEAD
 
                     message.add_to_log(game)
 
-                    if game.state == GameStates.PLAYER_DEAD:
+                    if game.state == GameState.PLAYER_DEAD:
                         break
 
-            if game.state == GameStates.PLAYER_DEAD:
+            if game.state == GameState.PLAYER_DEAD:
                 break
     else:
-        game.state = GameStates.PLAYERS_TURN
+        game.state = GameState.PLAYERS_TURN

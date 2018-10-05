@@ -32,7 +32,7 @@ def initialize_game(game):
                 'belt_generic':{},
                 'round_shield':{}
             },
-            'backpack': ('pot_heal', 'scr_fireball','torch', 'spear')
+            'backpack': ('pot_heal', 'bomb_1','torch', 'spear')
         }
     }
 
@@ -49,11 +49,11 @@ def initialize_game(game):
     game.map.make_map(game, cfg.ROOM_MIN_SIZE, cfg.ROOM_MAX_SIZE, dwidth, dheight)
 
     # Add the good stuff #
-    place_staticobjects(game)
+    # place_staticobjects(game)
     # place_containers(game)
-    place_doors(game)
+    # place_doors(game)
     # place_items(game)
-    # place_monsters(game)
+    #place_monsters(game)
 
     player.x, player.y = game.map.rooms[0].center
     p = gen_architecture(ARCHITECTURE_DATA_MERGED['portal'],player.x, player.y)

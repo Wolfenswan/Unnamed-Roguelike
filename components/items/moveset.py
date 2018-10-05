@@ -1,7 +1,4 @@
-import logging
 from random import choice, randint
-
-import tcod
 
 
 class Moveset():

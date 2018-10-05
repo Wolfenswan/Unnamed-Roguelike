@@ -1,5 +1,6 @@
 from random import randint
 
+import game
 from gui.messages import Message, MessageType
 
 # OLD #

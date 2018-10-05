@@ -2,8 +2,6 @@
 """ Constant variables """
 import tcod
 
-from config_files import colors
-
 GAME_NAME = 'RoguelikeTutReloaded'
 
 # Console

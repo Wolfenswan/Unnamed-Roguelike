@@ -1,11 +1,10 @@
 """ Translates key events into game-related actions """
 
 # TODO Consider using tdl for event handling instead? Might allow using a large dictionary instead of if/elif snake
-import logging
 
 import tcod
 
-from game import GameStates
+from game import GameState
 
 
 def handle_keys(key, game_state):
@@ -25,9 +24,9 @@ def handle_keys(key, game_state):
 
 
     # Game state specific inputs #
-    if game_state in [GameStates.PLAYERS_TURN, GameStates.PLAYER_RESTING, GameStates.CURSOR_ACTIVE]:
+    if game_state in [GameState.PLAYERS_TURN, GameState.PLAYER_RESTING, GameState.CURSOR_ACTIVE]:
         return handle_player_turn_keys(key)
-    elif game_state == GameStates.PLAYER_DEAD:
+    elif game_state == GameState.PLAYER_DEAD:
         return handle_player_dead_keys(key)
     # elif game_state in (GameStates.SHOW_INVENTORY, GameStates.DROP_INVENTORY, GameStates.SHOW_ITEM):
     #     return handle_menu_keys(key)

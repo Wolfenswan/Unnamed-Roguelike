@@ -6,6 +6,9 @@ from components.AI.confusedAI import ConfusedAI
 from gui.messages import Message, MessageType, MessageCategory
 from rendering.render_animations import animate_projectile, animate_explosion
 
+####
+# OBSOLETE FILE #
+###
 
 def heal_entity(*args, **kwargs):
     game = args[0]

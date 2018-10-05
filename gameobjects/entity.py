@@ -4,23 +4,24 @@ from typing import Optional, Union
 
 import tcod
 from dataclasses import dataclass, field
+from config_files import colors
 
 from components.AI.baseAI import BaseAI
+from components.abilities.skills import Skills
 from components.actionplan import Actionplan
 from components.actors.fighter import Fighter
-from components.abilities.skills import Skills
 from components.actors.status_modifiers import Presence
 from components.architecture import Architecture
 from components.inventory.inventory import Inventory
 from components.inventory.paperdoll import Paperdoll
 from components.items.item import Item
 from components.statistics import Statistics
-from config_files import colors
 from data.data_types import BodyType, Material, GenericType, MonsterType, ItemType
 from data.gui_data.gui_entity import bodytype_name_data
 from data.gui_data.material_strings import material_name_data
 from gameobjects.util_functions import entity_at_pos
 from rendering.render_order import RenderOrder
+
 
 @dataclass
 class Entity:
@@ -45,19 +46,19 @@ class Entity:
     skills: Optional[Skills] = None
     item: Optional[Item] = None
     inventory: Optional[Inventory] = None
-    paperdoll : Optional[Paperdoll] = field(default=None, init=False) # default = None so __repr__ works correctly
-    qu_inventory : Optional[Inventory] = field(default=None, init=False)
+    paperdoll = None
+    qu_inventory = None
     architecture: Optional[Architecture] = None
 
     is_player: bool = False
-    color_bg : Optional[tuple] = field(default=None)
+    color_bg : Optional[tuple] = None
     every_turn_start : Optional[list] = field(default_factory=list)
     every_turn_end : Optional[list] = field(default_factory=list)
 
-    actionplan : Actionplan = Actionplan()
-    statistics : Statistics = Statistics()
-
     def __post_init__(self):
+        self.actionplan = Actionplan()
+        self.statistics = Statistics()
+
         if self.fighter is not None:
             self.fighter.owner = self
 
@@ -225,7 +226,6 @@ class Entity:
                 if not self.in_combat(game) and not self.fighter.sta_full and not last_player_action.get('dodge'):
                     self.fighter.recover(self.fighter.max_stamina / 100)
             for event in self.every_turn_end:
-                print(event)
                 eval(event)
 
     #####################

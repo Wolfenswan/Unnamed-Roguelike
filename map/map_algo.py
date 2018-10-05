@@ -1,4 +1,3 @@
-import logging
 from random import randint, random, choice
 
 from cffi.backend_ctypes import xrange

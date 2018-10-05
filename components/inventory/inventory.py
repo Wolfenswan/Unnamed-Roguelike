@@ -1,5 +1,6 @@
 from dataclasses import dataclass, field
 
+from game import GameState
 from gui.messages import Message, MessageCategory
 
 @dataclass
@@ -52,11 +53,10 @@ class Inventory:
         if useable_component.use_function is None:
             results.append({'message': Message(f'The {item_entity.name} cannot be used like this.', category=MessageCategory.OBSERVATION)})
         else:
-            if useable_component.targeting and not (kwargs.get('target_x') or kwargs.get('target_y')):
+            if useable_component.targeting and not game.state == GameState.CURSOR_ACTIVE: #(kwargs.get('target_pos')):
                 results.append({'targeting': item_entity,'message': useable_component.on_use_msg})
             else:
-                kwargs = {**useable_component.function_kwargs, **kwargs}
-                item_use_results = useable_component.use_function(game, caster = self.owner, **kwargs)
+                item_use_results = useable_component.use_function(game = game, user = self.owner, used_item=item_entity, **kwargs, **useable_component.function_kwargs)
 
                 for item_use_result in item_use_results:
                     if item_use_result.get('consumed'):
