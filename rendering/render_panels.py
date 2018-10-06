@@ -72,7 +72,6 @@ def render_player_panel(game, con, panel_x, panel_y, width, height):
 
         print_string(con, 2, y+6, f'Targets:')
         for i, line in enumerate(player.fighter.weapon.moveset.targets_gui):
-            #print_string(con, 10, y+5+i, ''.join(line))
             print_string(con, 10, y+5+i, ''.join(line))
 
     # Quick Slots #

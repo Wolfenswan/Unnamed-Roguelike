@@ -32,7 +32,7 @@ def initialize_game(game):
                 'belt_generic':{},
                 'round_shield':{}
             },
-            'backpack': ('pot_heal', 'bomb_1','bomb_1','bomb_1','torch', 'spear')
+            'backpack': ('pot_heal', 'bomb_1','bomb_1','bomb_1','torch', 'spear', 'flail')
         }
     }
 

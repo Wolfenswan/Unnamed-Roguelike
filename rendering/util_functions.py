@@ -104,7 +104,6 @@ def dynamic_wrap(string, max_width):
         stripped_code = coded_string.replace(color_code.group(),'')
         stripped_code = stripped_code.replace('%%','')
         string = string.replace(coded_string,stripped_code) # Remove all color code wrappers from the string
-        print(string)
         codes[stripped_code] = coded_string
 
     # Create a textwrap-list, using the new string without color-wrappers

@@ -97,6 +97,7 @@ def get_generic_args(data, material=None, condition=None, craftsmanship=None, bo
     color = data.get('color', colors.white)
     name = data['name'].title()
     descr = data.get('descr', 'No description')
+    ent_type = data.get('type', GenericType.DEFAULT)
 
     if randomize_color:
         darken = True if randint(0, 1) else False
@@ -107,13 +108,13 @@ def get_generic_args(data, material=None, condition=None, craftsmanship=None, bo
 
         if condition:
             # Append randomized condition description to the main description #
-            if cond_descr_data.get(type):
-                descr_options = cond_descr_data[type][material['type']][condition['type']]
+            if cond_descr_data.get(ent_type):
+                descr_options = cond_descr_data[ent_type][material['type']][condition['type']]
                 if descr_options:
                     cond_descr = choice(descr_options)
                     descr += f' {cond_descr}'
                 else:
-                    descr += f" (Description missing for {type}/{material['type']}/{condition['type']})"
+                    descr += f" (Description missing for {ent_type}/{material['type']}/{condition['type']})"
 
             # Tweak the color slightly to indicate quality level #
             # TODO Tweak as necessary
@@ -153,17 +154,16 @@ def get_generic_args(data, material=None, condition=None, craftsmanship=None, bo
         elif bodytype['type'] == BodyType.GARGANTUAN:
             color = multiply_rgb_color(color, factor_range=(0.6, 0.6), darken=False)
 
-    return (char, color, name, descr)
+    return (char, color, name, descr, ent_type)
 
 def get_generic_kwargs(data, default_render=RenderOrder.BOTTOM, default_blocks=None):
-    type = data.get('type', GenericType.DEFAULT)
     blocks = data.get('blocks', default_blocks)
     blocks = blocks.copy() if blocks else {}
     rendering = data.get('rendering', default_render)
     every_turn_start = data.get('every_turn_start', [])
     every_turn_end = data.get('every_turn_end', [])
 
-    return {'type':type, 'blocks':blocks, 'render_order':rendering, 'every_turn_start':every_turn_start, 'every_turn_end':every_turn_end}
+    return {'blocks':blocks, 'render_order':rendering, 'every_turn_start':every_turn_start, 'every_turn_end':every_turn_end}
 
 
 def get_material_data(data, forced=False):

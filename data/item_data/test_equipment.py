@@ -1,7 +1,7 @@
 from config_files import colors
 from data.data_types import ItemType, Material, AttackType
 from data.data_types import RarityType
-from data.item_data.wp_movesets import moveset_sword, moveset_spear
+from data.item_data.wp_movesets import moveset_sword, moveset_spear, moveset_flail
 
 WP_CHAR = '\\'
 WP_EQUIP = 'weapon_arm'  # which extremity the item is equipped to
@@ -61,6 +61,19 @@ test_equipment_data = {
         'two_handed': True,
         'attack': AttackType.NORMAL,
         'moveset': moveset_spear,
+        'rarity': RarityType.COMMON,
+        'dlvls': (1,99)
+    },
+    'flail': {
+        'name': 'flail',
+        'materials': (Material.IRON, Material.STEEL),
+        'descr': 'Swing it round, round like the murder tool it is.',
+        'char': '?',
+        'type': WP_TYPE,
+        'e_to': WP_EQUIP,
+        'dmg_potential': (4,8),
+        'attack': AttackType.NORMAL,
+        'moveset': moveset_flail,
         'rarity': RarityType.COMMON,
         'dlvls': (1,99)
     },

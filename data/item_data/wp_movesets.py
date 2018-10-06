@@ -1,3 +1,5 @@
+from data.data_types import AttackType
+
 col1 = '%dark_orange%'
 
 moveset_sword = {
@@ -31,7 +33,34 @@ moveset_spear = {
         'descr': f'A {col1}powerful thrust%%, piercing the target and hitting something behind it.',
         'string': 'forcefully thrusts through',
         'dmg_multipl': 1.25,
-        'extra_hits': {'target_behind': True}
+        'extra_hits': ['target_behind']
+    }
+}
+
+moveset_flail = {
+    1: {
+        'descr': f'A {col1}weaker over-head swing%%, to get momentum.',
+        'string': 'flails',
+        'dmg_multipl': 0.5,
+        'extra_hits': ['target_left', 'player_above']
+    },
+    2: {
+        'descr': f'A {col1}slightly stronger swing%%, speeding up the weapon.',
+        'string': 'flails',
+        'dmg_multipl': 0.85,
+        'extra_hits': ['target_left', 'player_above', 'target_right']
+    },
+    3: {
+        'descr': f"A {col1}standard swing%%, using the weapon's full potential.",
+        'string': 'flails',
+        'dmg_multipl': 1,
+        'extra_hits': ['target_left', 'player_above', 'target_right']
+    },
+    4: {
+        'descr': f"A final {col1}overhead crush%% on a single head, ignoring shields.",
+        'string': 'crushes',
+        'dmg_multipl': 1.25,
+        'attack': AttackType.QUICK,
     }
 }
 

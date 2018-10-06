@@ -21,16 +21,21 @@ class Moveset():
 
     @property
     def targets_gui(self):
+        t = '%red%X%%'
         l_1 = [' ',' ',' ']
-        l_2 = [' ','@','%red%X%%']
+        l_2 = [' ','@',t]
         l_3 = [' ',' ',' ']
-        extra_hits = self.movelist[self.current_move].get('extra_hits', {})
-        if extra_hits.get('target_behind'):
-            l_2 += '%red%X%%'
-        if extra_hits.get('target_left'):
-            l_1[2] = '%red%X%%'
-        if extra_hits.get('target_right'):
-            l_3[2] = 'X'
+        for extra_hit in self.movelist[self.current_move].get('extra_hits', []):
+            if extra_hit == 'target_behind':
+                l_2[2] = t
+            if extra_hit == 'target_left':
+                l_1[2] = t
+            if extra_hit == 'target_right':
+                l_3[2] = t
+            if extra_hit == 'player_above':
+                l_1[1] = t
+            if extra_hit == 'player_below':
+                l_1[3] = t
 
         return (l_1,l_2,l_3)
 

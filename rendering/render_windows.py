@@ -44,7 +44,7 @@ def draw_window(title, body, options = None, window_x = None, window_y = None, p
     body_wrapped = dynamic_wrap(body, width - padding_x * 2)
     if extend_body:
         for line in extend_body:
-            body_wrapped.extend([' ', line])
+            body_wrapped.extend([line])
 
     # Calculate window height #
     height = padding_y * 2

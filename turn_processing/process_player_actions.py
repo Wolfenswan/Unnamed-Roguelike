@@ -196,7 +196,7 @@ def process_player_input(action, game, fov_map, targeting_item = None):
         selected_item_ent = item_list_menu(player, player.paperdoll.equipped_items, title='Equipment')
 
     elif game.state == GameState.SHOW_QU_INVENTORY:
-        selected_item_ent = item_list_menu(player, player.qu_inventory)
+        selected_item_ent = item_list_menu(player, player.qu_inventory, title='Prepared Items')
 
     if game.state in [GameState.SHOW_INVENTORY, GameState.SHOW_QU_INVENTORY, GameState.SHOW_EQUIPMENT]:
         if selected_item_ent:

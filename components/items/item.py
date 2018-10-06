@@ -77,6 +77,6 @@ class Item:
                 list.extend(dynamic_wrap(str, max_width))
                 for k, v in self.equipment.moveset.movelist.items():
                     if v.get('descr'):
-                        list.extend(dynamic_wrap(f'{k}: {v.get("descr")}', max_width))
+                        list.extend(dynamic_wrap(f'%orange%{k}%%: {v.get("descr")}', max_width))
 
         return list
