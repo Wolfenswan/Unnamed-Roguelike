@@ -73,6 +73,10 @@ def handle_player_turn_keys(key):
         return {'show_inventory': True}
     elif key_char == 'e' and key.shift:
         return {'show_equipment': True}
+    elif key_char == 'p' and key.shift:
+        return {'show_prepared': True}
+    elif key_char == 'p' and not key.shift:
+        return {'prepare': True}
     elif key_char == 's':
         return {'toggle_look': True}
     elif key_char == 'r':

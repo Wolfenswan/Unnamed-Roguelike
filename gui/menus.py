@@ -141,7 +141,15 @@ def item_menu(item_ent, game):
     options = []
     wait_for = []
 
-    if item_ent.item.useable is not None and not player.in_combat(game):
+    if item_ent.item.useable is not None:
+        if item_ent in player.qu_inventory:
+            if not player.in_combat(game):
+                options.append('Un-(p)repare')
+                wait_for.append('p')
+            options.append('(U)se')
+            wait_for.append('u')
+
+        elif item_ent in player.inventory and not player.in_combat(game):
             options.append('(P)repare')
             wait_for.append('p')
             options.append('(U)se')

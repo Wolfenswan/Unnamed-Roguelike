@@ -124,8 +124,16 @@ class Entity:
         return 'it' if not self.is_player else 'you'
 
     @property
-    def state_verb(self):
+    def address(self):
+        return f'the {self.name}' if not self.is_player else 'you'
+
+    @property
+    def state_verb_present(self):
         return 'is' if not self.is_player else 'are'
+
+    @property
+    def state_verb_past(self):
+        return 'was' if not self.is_player else 'were'
 
     def extended_descr(self, game):
         extend_descr = []
@@ -137,10 +145,10 @@ class Entity:
             extend_descr += [f'Blocking its attacks will be %dark_crimson%{game.player.fighter.average_chance_to_block(self)}%%.']
 
         if self.fighter and self.fighter.presence[Presence.DAZED]:
-            extend_descr += [f'{self.pronoun.title()} {self.state_verb} %yellow%dazed%% and slightly confused.']
+            extend_descr += [f'{self.pronoun.title()} {self.state_verb_present} %yellow%dazed%% and slightly confused.']
 
         if self.fighter and self.fighter.presence[Presence.STUNNED]:
-            extend_descr += [f'{self.pronoun.title()} {self.state_verb} %yellow%stunned%% and unable to attack.']
+            extend_descr += [f'{self.pronoun.title()} {self.state_verb_present} %yellow%stunned%% and unable to attack.']
 
         if game.debug['ent_info']:
             if self.fighter:
@@ -190,7 +198,7 @@ class Entity:
         """
         dest_x, dest_y = self.x + dx, self.y + dy
         if not game.map.is_wall(dest_x, dest_y) or ignore_walls:
-            blocked = entity_at_pos(game.blocking_ents, dest_x, dest_y)
+            blocked = entity_at_pos(game.walk_blocking_ents, dest_x, dest_y)
             if blocked and not ignore_entities:
                 return blocked
             else:

@@ -27,9 +27,11 @@ def process_player_input(action, game, fov_map, targeting_item = None):
     direction = action.get('dir')
     wait = action.get('wait')
     pickup = action.get('pickup')
+    prepare = action.get('prepare')
     quick_use_idx = action.get('quick_use')
     show_inventory = action.get('show_inventory')
     show_equipment = action.get('show_equipment')
+    show_prepared = action.get('show_prepared')
     # drop_inventory = action.get('drop_inventory')
     # menu_selection = action.get('menu_selection')
     toggle_look = action.get('toggle_look')
@@ -143,7 +145,7 @@ def process_player_input(action, game, fov_map, targeting_item = None):
                 if targeting_item is None:
                     cursor.move(dx, dy)
                 elif player.distance_to_pos(destination_x, destination_y) \
-                        < targeting_item.item.useable.on_use_kwargs.get('range',1):
+                        < targeting_item.item.useable.on_use_params.get('range',1):
                     cursor.move(dx, dy)
 
         if confirm and targeting_item:
@@ -159,12 +161,19 @@ def process_player_input(action, game, fov_map, targeting_item = None):
             turn_results.append({'targeting_cancelled': True})
 
     # Inventory display #
-    if show_inventory:
+    if show_inventory or prepare:
         if len(player.inventory) > 0:
             game.previous_state = game.state
             game.state = GameState.SHOW_INVENTORY
         else:
             Message('Your inventory is empty.', category=MessageCategory.OBSERVATION).add_to_log(game)
+
+    if show_prepared:
+        if len(player.qu_inventory) > 0:
+            game.previous_state = game.state
+            game.state = GameState.SHOW_QU_INVENTORY
+        else:
+            Message('You have no items prepared.', category=MessageCategory.OBSERVATION).add_to_log(game)
 
     if show_equipment:
         if len(player.paperdoll.equipped_items) > 0:
@@ -177,22 +186,36 @@ def process_player_input(action, game, fov_map, targeting_item = None):
     selected_item_ent = None
 
     if game.state == GameState.SHOW_INVENTORY:
-        selected_item_ent = item_list_menu(player, player.inventory)
+        if not prepare:
+            selected_item_ent = item_list_menu(player, player.inventory)
+        else:
+            selected_item_ent = item_list_menu(player, player.inventory.useable_items, body='Prepare which item?')
 
     elif game.state == GameState.SHOW_EQUIPMENT:
         #render_equipment_window(player.paperdoll.equipped_items, game)
         selected_item_ent = item_list_menu(player, player.paperdoll.equipped_items, title='Equipment')
 
-    if game.state in [GameState.SHOW_INVENTORY, GameState.SHOW_EQUIPMENT]:
+    elif game.state == GameState.SHOW_QU_INVENTORY:
+        selected_item_ent = item_list_menu(player, player.qu_inventory)
+
+    if game.state in [GameState.SHOW_INVENTORY, GameState.SHOW_QU_INVENTORY, GameState.SHOW_EQUIPMENT]:
         if selected_item_ent:
             # Identify unknown items #
             if not selected_item_ent.item.identified:
                 selected_item_ent.item.identify()
 
-            item_use_choice = item_menu(selected_item_ent, game)
+            inventory = player.inventory
+            if game.state == GameState.SHOW_QU_INVENTORY:
+                inventory = player.qu_inventory
+
+            if not prepare:
+                item_use_choice = item_menu(selected_item_ent, game)
+            else:
+                item_use_choice = 'p'
+
             if item_use_choice:
                 if item_use_choice == 'u':
-                    item_interaction_result = player.inventory.use(selected_item_ent, game)
+                    item_interaction_result = inventory.use(selected_item_ent, game)
                     turn_results.extend(item_interaction_result)
                 if item_use_choice == 'e':
                     item_interaction_result = player.paperdoll.equip(selected_item_ent, game)
@@ -201,10 +224,10 @@ def process_player_input(action, game, fov_map, targeting_item = None):
                     item_interaction_result = player.paperdoll.dequip(selected_item_ent)
                     turn_results.extend(item_interaction_result)
                 if item_use_choice == 'p':
-                    item_interaction_result = player.inventory.prepare(selected_item_ent)
+                    item_interaction_result = inventory.prepare(selected_item_ent)
                     turn_results.extend(item_interaction_result)
                 if item_use_choice == 'd':
-                    item_interaction_result = player.inventory.drop(selected_item_ent)
+                    item_interaction_result = inventory.drop(selected_item_ent)
                     turn_results.extend(item_interaction_result)
 
             else:

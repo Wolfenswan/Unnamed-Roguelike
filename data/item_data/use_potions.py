@@ -1,7 +1,7 @@
 from config_files import colors
 from data.data_types import ItemType
 from data.data_types import RarityType
-from data.shared_data.effects import heal
+from data.shared_data.effect_combinations import heal
 
 POTION_CHAR = '!'
 

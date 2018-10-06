@@ -13,7 +13,6 @@ from components.items.moveset import Moveset
 from components.items.useable import Useable
 from components.actors.skill import Skill
 from config_files import colors
-from data.actor_data.act_skills import skills_data
 from data.actor_data.test_spawns import spawn_data
 from data.architecture_data.arch_static import arch_static_data
 from data.architecture_data.arch_containers import arch_containers_data
@@ -252,8 +251,8 @@ def gen_npc_from_dict(data, x, y, game):
 
     if skills is not None:
         skills_component = Skills()
-        for k in skills:
-            skill = Skill(**skills_data[k])
+        for skill_data in skills:
+            skill = Skill(**skill_data)
             skills_component.add_skill(skill)
 
     npc = NPC(*arguments, **kwargs, bodytype=bodytype.get('type'), fighter=fighter_component, ai=ai_component,
@@ -278,16 +277,16 @@ def gen_item_from_data(data, x, y, materials=False, conditions=False, craftsmans
     arguments = [x, y, *get_generic_args(data, material=material, condition=condition, craftsmanship=craftsmanship)]
     kwargs = get_generic_kwargs(data, default_render=RenderOrder.ITEM)
 
-    on_use = data.get('on_use', None)
-    equip_to = data.get('e_to', None)
+    on_use = data.get('on_use')
+    equip_to = data.get('e_to')
 
     useable_component = None
     if on_use is not None:
         #targeted = data.get('targeted', False)
         on_use_msg = data.get('on_use_msg', '')
-        params = data['on_use_params']
         charges = data.get('charges', 1)
-        useable_component = Useable(on_use_effect=on_use, on_use_msg=on_use_msg, on_use_kwargs = params, charges = charges)
+        params = data['on_use_params']
+        useable_component = Useable(on_use_effect = on_use, on_use_msg=on_use_msg, charges=charges, on_use_params=params)
 
     equipment_component = None
     if equip_to is not None:

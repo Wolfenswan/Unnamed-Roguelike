@@ -322,9 +322,6 @@ class Fighter:
     @statistics_updater('hp_change')
     def heal(self, amount):
         self.hp += amount
-
-        if self.hp > self.max_hp:
-            self.hp = self.max_hp
         logging.debug(f'({self} was healed for {amount}.')
 
     @statistics_updater('sta_change')

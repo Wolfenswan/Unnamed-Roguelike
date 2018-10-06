@@ -1,6 +1,6 @@
 from config_files import colors
 from data.data_types import ItemType, RarityType
-from data.shared_data.effects import explosion_targeted
+from data.shared_data.effect_combinations import explosion_targeted
 
 BOMB_CHAR = chr(162)
 
@@ -11,9 +11,8 @@ use_bombs_data = {
         'type': ItemType.USEABLE,
         "char": BOMB_CHAR,
         "color": colors.dark_gray,
-        'targeted': True,
         'on_use': explosion_targeted,
-        "on_use_params": {'pwr': (12,12), 'radius': 3, 'range': 5},
+        "on_use_params": {'pwr': (8,15), 'radius': 3, 'range': 5},
         'rarity': RarityType.UNCOMMON,
         'rarity_mod': -5,
         'dlvls': (1, 99)

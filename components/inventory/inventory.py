@@ -28,6 +28,10 @@ class Inventory:
     def is_full(self):
         return len(self) >= self.capacity
 
+    @property
+    def useable_items(self):
+        return [item_e for item_e in self.items if item_e.item.useable is not None]
+
     def add(self, item):
         results = []
 
@@ -74,15 +78,23 @@ class Inventory:
 
     def prepare(self, item):
         results = []
+        inventory = self.owner.inventory
         qu_inventory = self.owner.qu_inventory
 
-        if len(qu_inventory) >= qu_inventory.capacity:
+        if item in qu_inventory and not inventory.is_full:
+            qu_inventory.remove(item)
+            inventory.add(item)
+            results.append({
+            'item_prepared': item,
+            'message': Message(f'You de-prepare the {item.name}.')})
+
+        elif len(qu_inventory) >= qu_inventory.capacity:
             results.append({
                 'message': Message('You cannot prepare any more items.', category=MessageCategory.OBSERVATION)
             })
         else:
             qu_inventory.add(item)
-            self.remove(item)
+            inventory.remove(item)
             results.append({
                 'item_prepared': item,
                 'message': Message(f'You prepare the {item.name}.')})

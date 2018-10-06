@@ -40,6 +40,12 @@ def process_turn_results(player_turn_results, game, fov_map):
         if item_added:
             entities.remove(item_added)
 
+        if item_consumed:
+            if item_consumed in player.inventory:
+                player.inventory.remove(item_consumed)
+            if item_consumed in player.qu_inventory:
+                player.qu_inventory.remove(item_consumed)
+
         if item_dropped:
             entities.append(item_dropped)
 

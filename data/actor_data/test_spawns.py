@@ -23,6 +23,7 @@
 from components.AI.behavior.simple import Simple
 from components.AI.behavior.swarm import Swarm
 from config_files import colors
+from data.actor_data.act_skills import skill_charge_prep
 from data.data_types import RarityType, AttackType
 
 spawn_data = {
@@ -68,7 +69,7 @@ spawn_data = {
         'ai_movement': Simple,
         'ai_attack': Simple,
         'barks': ('insect',),
-        'skills': ('skill_charge',  ),
+        'skills': (skill_charge_prep,  ),
         'dlvls': (1,100),
         'rarity': RarityType.UNCOMMON,
         'rarity_mod': +5,
