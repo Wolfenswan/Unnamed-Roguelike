@@ -2,19 +2,29 @@ import logging
 from cmath import sqrt
 from random import choice, randint
 
+from dataclasses import dataclass
+
 from config_files import colors
 from gameobjects.block_level import BlockLevel
+from gameobjects.util_functions import distance_between_pos
+from map.directions_util import DIRECTIONS_CIRCLE
 from map.map_algo import Tunneling, DrunkWalk
 from map.tile import Tile
 
-# Todo @dataclass
+@dataclass
 class GameMap:
-    def __init__(self, width, height):
-        self.width = width
-        self.height = height
+    width : int
+    height : int
+
+    def __post_init__(self):
         self.rooms = []
         self.tiles = {}
-        self.initialize_tiles()
+
+        positions = [[y for y in range(self.height)] for x in range(self.width)]
+        for x, y_list in enumerate(positions):
+            for y in y_list:
+                self.tiles.setdefault((x, y), Tile(True, x, y))
+                self.tiles[x, y].owner = self
 
     @property
     def floor_tiles(self):
@@ -23,13 +33,6 @@ class GameMap:
     @property
     def wall_tiles(self):
         return [tile for tile in self.tiles.values() if tile.blocked]
-
-    def initialize_tiles(self):
-        positions = [[y for y in range(self.height)] for x in range(self.width)]
-        for x, y_list in enumerate(positions):
-            for y in y_list:
-                self.tiles.setdefault((x, y), Tile(True, x, y))
-                self.tiles[x, y].owner = self
 
     def make_map(self, game, room_min_size, room_max_size, map_width, map_height):
 
@@ -88,7 +91,6 @@ class GameMap:
 
         return False
 
-
     def surrounding_tiles(self, tile, dist = 1):
         tiles = []
         for dx in range(-dist, dist):
@@ -97,28 +99,23 @@ class GameMap:
                     tiles += [self.tiles[tile.x + dx, tile.y + dy]]
         return tiles
 
-
-    @staticmethod
-    def empty_pos_near_ent(ent, game):
+    def empty_pos_near_ent(self, ent, game):
         """ returns list of nearby empty (= walkable and not occupied by blocking object) coordinates """
         near_empty_tiles = []
         # TODO list comprehension candidate
-        for dx in [-1, 0, 1]:
-            for dy in [-1, 0, 1]:
-                if not (dx == 0 and dy == 0):
-                    to_x, to_y = ent.x + dx, ent.y + dy
-                    if not game.map.is_blocked(to_x, to_y, game.blocking_ents):
-                        near_empty_tiles.append((to_x, to_y))
+        # for dx in [-1, 0, 1]:
+        #     for dy in [-1, 0, 1]:
+        #         if not (dx == 0 and dy == 0):
+        for dir in DIRECTIONS_CIRCLE:
+            dx, dy = dir
+            to_x, to_y = ent.x + dx, ent.y + dy
+            if not self.is_blocked(to_x, to_y, game.blocking_ents):
+                near_empty_tiles.append((to_x, to_y))
 
         return near_empty_tiles
 
-    @staticmethod
-    def distance_between_pos(x1, y1, x2, y2):
-        distance = sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
-        return round(distance.real)
-
     def free_line_between_pos(self, x1, y1, x2, y2, game):
-        dist = self.distance_between_pos(x1, y1, x2, y2)
+        dist = distance_between_pos(x1, y1, x2, y2)
         for s in range(dist):
             x = round(x1 + s/dist * (x2-x1))
             y = round(x1 + s/dist * (x2-x1))

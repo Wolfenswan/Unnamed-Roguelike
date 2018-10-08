@@ -1,3 +1,4 @@
+import logging
 from random import randint, choice
 from typing import Union
 
@@ -27,6 +28,8 @@ class BaseAI:
         presence = npc.fighter.presence
         target = game.player
         game_map = game.map
+
+        logging.debug(f'{npc} is taking turn')
 
         # free_line = game.map.free_line_between_pos(target.x, target.y, npc.x, npc.y, game)
         # print(free_line)

@@ -2,10 +2,12 @@ import logging
 
 import tcod
 
-from config_files import cfg
+from config_files import cfg, colors
 from game import GameState, Game
 from gui.menus import options_menu
 from loader_functions.data_loader import load_game
+from rendering.render_animations import animate_explosion
+from rendering.render_order import RenderOrder
 from turn_processing.handle_input import handle_keys
 from turn_processing.process_npc_actions import process_npc_actions
 from turn_processing.process_player_actions import process_player_input
@@ -29,6 +31,15 @@ def game_loop(game):
 
     key = tcod.Key()
     # mouse = tcod.Mouse()
+
+    recompute_fov(game, player.x, player.y)
+    render_all(game, game.fov_map, debug=game.debug['map'])
+
+    # Proof of Concept intro #
+    # player.render_order = RenderOrder.BOTTOM
+    # for i in range(5):
+    #     animate_explosion(*game.player.pos, 3, game, color=colors.turquoise)
+    # player.render_order = RenderOrder.PLAYER
 
     while not tcod.console_is_window_closed():
         # tcod.sys_set_fps(30)

@@ -3,17 +3,19 @@ import time
 import tcod
 
 from config_files import colors
+from game import Game
 from gameobjects.entity import Entity
+from map.directions_util import DIRECTIONS_CIRCLE
 from rendering.render_main import render_map_screen
 from rendering.render_order import RenderOrder
 
-def render_animation(game, anim_delay):
+def render_animation(game:Game, anim_delay:float):
     render_map_screen(game, game.fov_map, debug=game.debug['map'])
     time.sleep(anim_delay)
     tcod.console_flush()
 
 
-def animate_move_line(ent, dx, dy, steps, game, ignore_entities=False, anim_delay = 0.05):
+def animate_move_line(ent:Entity, dx:int, dy:int, steps:int, game:Game, ignore_entities=False, anim_delay = 0.05):
     """
     The entity will attempt to move the number of steps into the give direction.
     """
@@ -27,7 +29,7 @@ def animate_move_line(ent, dx, dy, steps, game, ignore_entities=False, anim_dela
             return blocked
 
 
-def animate_move_to(ent, tx, ty, game, ignore_entities=False, anim_delay = 0.05):
+def animate_move_to(ent:Entity, tx:int, ty:int, game:Game, ignore_entities=False, anim_delay = 0.05):
     """
     The entity will attempt to move to the given target position.
     """
@@ -42,14 +44,14 @@ def animate_move_to(ent, tx, ty, game, ignore_entities=False, anim_delay = 0.05)
             return blocked
 
 
-def animate_projectile(start_x, start_y, target_x, target_y, distance, game, homing=True, ignore_entities=True, anim_delay = 0.05):
+def animate_projectile(start_x:int, start_y:int, target_x:int, target_y:int, distance:int, game:Game, homing=True, ignore_entities=True, anim_delay = 0.05, color=colors.flame):
     """
     Creates a temporary projectile and animates its movement from start position to target position.
 
-    TODO additonal switches: color, character
+    TODO additonal switches: character
     TODO doesn't return anything atm. Add return as needed
     """
-    projectile = Entity(start_x, start_y, '*', colors.flame, 'Projectile', render_order=RenderOrder.ALWAYS)
+    projectile = Entity(start_x, start_y, '*', color, 'Projectile', render_order=RenderOrder.ALWAYS)
     game.entities.append(projectile)
     if homing:
         animate_move_to(projectile, target_x, target_y, game, anim_delay = anim_delay, ignore_entities=ignore_entities)
@@ -59,17 +61,17 @@ def animate_projectile(start_x, start_y, target_x, target_y, distance, game, hom
     game.entities.remove(projectile)
 
 
-def animate_explosion(center_x, center_y, spread, game, ignore_walls=False, anim_delay = 0.05):
+def animate_explosion(center_x:int, center_y:int, spread:int, game:Game, ignore_walls=False, anim_delay = 0.05, color=colors.flame):
     """
     Creates a projectiles moving outward from the center position.
 
-    TODO additonal switches: color, character
+    TODO additonal switches: character
     TODO doesn't return anything atm. Add return as needed
     """
     projectiles = []
-    directions = [(0,1),(0,-1),(1,0),(-1,0),(1,1),(1,-1),(-1,1),(-1,-1)] # Todo use neighboring tiles function
-    for dir in directions:
-        projectile = Entity(center_x, center_y, '*', colors.flame, 'Projectile', render_order=RenderOrder.ALWAYS)
+    directions = DIRECTIONS_CIRCLE
+    for _x in directions:
+        projectile = Entity(center_x, center_y, '*', color, 'Projectile', render_order=RenderOrder.ALWAYS)
         projectiles.append(projectile)
         game.entities.append(projectile)
 

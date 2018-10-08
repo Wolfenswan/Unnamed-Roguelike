@@ -13,8 +13,8 @@ from rendering.render_order import RenderOrder
 class NPC(Entity):
     """ Class for the all active non-player objects """
 
-    def __init__(self, x, y, char, color, name, descr, **kwargs):
-        super().__init__(x, y, char, color, name, descr, **kwargs)
+    def __init__(self, x, y, char, color, name, descr, type, **kwargs):
+        super().__init__(x, y, char, color, name, descr, type, **kwargs)
 
         #self.barks = kwargs.get('barks')
 
@@ -52,7 +52,7 @@ class NPC(Entity):
         # Check also that the object isn't self or the target (so that the start and the end points are free)
         # The AI class handles the situation if self is next to the target so it will not use this A* function anyway
         for entity in blocking_ents:
-            if entity.blocks.get(BlockLevel.WALK, False) and entity != self and entity != target:
+            if entity != self and entity != target:
                 # Set the tile as a wall so it must be navigated around
                 tcod.map_set_properties(fov, entity.x, entity.y, True, False)
 
@@ -71,12 +71,17 @@ class NPC(Entity):
             x, y = tcod.path_walk(my_path, True)
             if x or y:
                 # Set self's coordinates to the next path tile
-                self.x = x
-                self.y = y
+                logging.debug(f'{self} is A*-moving.')
+                if target.pos == (x,y): # At some edge-cases NPCs might attempt a* movement when they are adjacent to the target
+                    self.fighter.attack_setup(target, game)
+                else:
+                    self.x, self.y = x, y
+                logging.debug(f'{self} finished A*-moving.')
+
         else:
             # Keep the old move function as a backup so that if there are no paths (for example another monster blocks a corridor)
             # it will still try to move towards the player (closer to the corridor opening)
-            logging.debug(f'{self.name} could not find a* path. falling back to regular movement')
+            logging.debug(f'{self} could not find a* path. falling back to regular movement')
             self.move_towards(target, game)
 
     def bark(self,type):

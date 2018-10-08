@@ -11,6 +11,7 @@ from map.entity_placement.place_architecture import place_staticobjects, place_d
 from map.entity_placement.place_containers import place_containers
 from map.entity_placement.place_items import place_items
 from map.game_map import GameMap
+from rendering.render_animations import animate_explosion
 from rendering.render_order import RenderOrder
 
 @debug_timer

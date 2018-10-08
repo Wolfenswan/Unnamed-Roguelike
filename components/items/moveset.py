@@ -1,4 +1,7 @@
 from random import choice, randint
+from typing import List
+
+from map.directions_util import relative_dir, RelativeDirection
 
 
 class Moveset():
@@ -21,30 +24,30 @@ class Moveset():
 
     @property
     def targets_gui(self):
-        t = '%red%X%%'
+        t = '%orange%X%%'
         l_1 = [' ',' ',' ']
-        l_2 = [' ','@',t]
+        l_2 = [' ','@','%red%X%%']
         l_3 = [' ',' ',' ']
-        for extra_hit in self.movelist[self.current_move].get('extra_hits', []):
-            if extra_hit == 'target_behind':
+        for extra_attack in self.movelist[self.current_move].get('extend_attack', []):
+            if extra_attack == RelativeDirection.BEHIND:
                 l_2[2] = t
-            if extra_hit == 'target_left':
+            if extra_attack == RelativeDirection.LEFT:
                 l_1[2] = t
-            if extra_hit == 'target_right':
+            if extra_attack == RelativeDirection.RIGHT:
                 l_3[2] = t
-            if extra_hit == 'player_above':
+            if extra_attack == RelativeDirection.LEFT_BACK:
                 l_1[1] = t
-            if extra_hit == 'player_below':
+            if extra_attack == RelativeDirection.RIGHT_BACK:
                 l_1[3] = t
 
         return (l_1,l_2,l_3)
 
     def execute(self, attacker, target):
         move = self.movelist[self.current_move]
-        if move.get('extra_hits'):
-            move['extra_targets'] = self.get_extra_targets(attacker, target, move['extra_hits'])
-        if not isinstance(move['string'], str):
-            move['string'] = choice(move['string'])
+        if move.get('extend_attack'):
+            move['extra_attacks'] = self.get_extra_attack_positions(attacker, target, move['extend_attack'])
+        if not isinstance(move['verb'], str): # If verb is a tuple or list, randomly pick a verb
+            move['verb'] = choice(move['verb'])
         self.cycle_moves()
         return move
 
@@ -58,14 +61,15 @@ class Moveset():
             self.current_move = 1
 
     @staticmethod
-    def get_extra_targets(attacker, target, extra_hits):
-        extra_targets = []
+    def get_extra_attack_positions(attacker, target, extra_hits:List):
+        extra_attacks = []
         x, y = target.pos
-        dir_x, dir_y = attacker.direction_to_ent(target)
+        dir = attacker.direction_to_ent(target)
 
-        if extra_hits.get('target_behind'):
-            target_x = x - dir_x if dir_x > 0 else x + dir_x
-            target_y = y - dir_y if dir_y > 0 else y + dir_y
-            extra_targets.append((target_x, target_y))
+        for extra_hit in extra_hits:
+            rel_dir = relative_dir(dir, extra_hit)
+            print(rel_dir)
+            pos = (attacker.x + rel_dir[0], attacker.y + rel_dir[1])
+            extra_attacks.append(pos)
 
-        return extra_targets
+        return extra_attacks

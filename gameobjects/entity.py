@@ -1,6 +1,7 @@
+import logging
 import math
 from random import choice
-from typing import Optional, Union
+from typing import Optional, Union, List
 
 import tcod
 from dataclasses import dataclass, field
@@ -19,7 +20,10 @@ from config_files import colors
 from data.data_types import BodyType, Material, GenericType, MonsterType, ItemType
 from data.gui_data.gui_entity import bodytype_name_data
 from data.gui_data.material_strings import material_name_data
+from debug.timer import debug_timer
+from game import Game
 from gameobjects.util_functions import entity_at_pos
+from map.directions_util import direction_between_pos
 from rendering.render_order import RenderOrder
 
 @dataclass
@@ -84,6 +88,9 @@ class Entity:
 
         self.actionplan.owner = self
         self.statistics.owner = self
+
+    def __repr__(self):
+        return f'{self.name} ({id(self)}) at {self.pos}'
 
     ###############################
     # ATTRIBUTE RELATED FUNCTIONS #
@@ -186,8 +193,10 @@ class Entity:
 
     def move(self, dx, dy):
         # Move the entity by a given amount
+        logging.debug(f'{self} is moving.')
         self.x += dx
         self.y += dy
+        logging.debug(f'{self} has moved.')
 
     def try_move(self, dx, dy, game, ignore_entities=False, ignore_walls = False):
         """
@@ -217,7 +226,7 @@ class Entity:
                 distance = target.distance_to_pos(*flee_pos)
                 if distance > 1.5:
                     self.try_move(dx, dy, game)
-                    break
+                    return
 
     def proc_every_turn(self, last_player_action, game, start=True):
         """
@@ -249,54 +258,31 @@ class Entity:
         return self.distance_to_pos(other.x, other.y)
 
     def direction_to_pos(self, x, y):
-        dx, dy = 0, 0
-        x_plane = x - self.x
-        y_plane = y - self.y
-
-        if x_plane > 0:
-            dx = 1
-        elif x_plane < 0:
-            dx = -1
-
-        if y_plane > 0:
-            dy = 1
-        elif y_plane < 0:
-            dy = -1
-
-        return dx, dy
+        return direction_between_pos(*self.pos, x, y)
 
     def direction_to_ent(self, other):
-        dx, dy = 0, 0
-        x_plane = other.x - self.x
-        y_plane = other.y - self.y
-
-        if x_plane > 0:
-            dx = 1
-        elif x_plane < 0:
-            dx = -1
-
-        if y_plane > 0:
-            dy = 1
-        elif y_plane < 0:
-            dy = -1
-
-        return dx, dy
+       return self.direction_to_pos(*other.pos)
 
     def same_pos_as(self, other_ent):
         return self.pos == other_ent.pos
 
-    def get_nearby_entities(self, game, ai_only=False, dist=1.5, filter_player = True):
-        """ returns nearby entitis in given distance """
-        # TODO check perfomance, double check if works as expected
-        entities_in_range = [ent for ent in game.entities if ent.distance_to_ent(self) <= dist and ent != self and (ai_only and ent.ai is not None) and (filter_player and ent.is_player == False)]
+    def entities_in_distance(self, entities:[List], dist:float=1.5):
+        """ returns nearby entities in given distance """
+        entities_in_range = [ent for ent in entities if ent != self and self.distance_to_ent(ent) <= dist]
+        logging.debug(f'Nearby : {entities_in_range}')
         return entities_in_range
 
-    def enemies_in_distance(self, hostile_entities, dist=1.5): # NOTE: Only relevant for player at the moment.
+    def enemies_in_distance(self, hostile_entities:List, dist:float=1.5): # NOTE: Only relevant for player at the moment.
         """ returns nearby monsters in given distance. Note: dist=1.5 covers all tiles right next to the player. """
-        enemies_in_distance = [ent for ent in hostile_entities if self.distance_to_ent(ent) <= dist and ent != self and ent.fighter is not None and not ent.is_corpse]
-        return enemies_in_distance
+        ents = self.entities_in_distance(hostile_entities, dist=dist)
+        ents = [ent for ent in ents if not ent.is_corpse]
+        return ents
+
+    def surrounding_enemies(self, hostile_entities:List):
+        ents = self.entities_in_distance(hostile_entities, dist=1.5)
+        return ents
 
     def visible_enemies(self, hostile_entities, fov_map): # NOTE: Only relevant for player at the moment.
         enemies_in_distance = self.enemies_in_distance(hostile_entities, dist=self.fighter.vision)
-        visible_enemies = [ent for ent in enemies_in_distance if ent.is_visible(fov_map) and ent != self and ent.fighter is not None and not ent.is_corpse]
+        visible_enemies = [ent for ent in enemies_in_distance if ent.is_visible(fov_map)]
         return visible_enemies

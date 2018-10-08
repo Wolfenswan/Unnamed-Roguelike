@@ -299,7 +299,7 @@ class Fighter:
             return stadmg_color_data[1]
 
     def check_surrounded(self, game):
-        nearby_enemies = len(self.owner.enemies_in_distance(game.npc_ents, dist=1.5))
+        nearby_enemies = len(self.owner.surrounding_enemies(game.npc_ents))
         if nearby_enemies < 3:
             return Surrounded.FREE
         elif nearby_enemies < 5:
@@ -357,7 +357,7 @@ class Fighter:
     def attack_setup(self, target, game, mod=1, attack_string='hits', ignore_moveset = False):
         results = []
         blocked = False
-        extra_targets = []
+        extra_attacks = []
 
         if ignore_moveset:
             attack_power = choice(self.base_dmg_potential) * mod
@@ -365,7 +365,7 @@ class Fighter:
             if self.weapon:
                 move_results = self.weapon.moveset.execute(self.owner, target)
                 attack_string = move_results.get('string', 'hits')
-                extra_targets = move_results.get('extra_targets', [])
+                extra_attacks = move_results.get('extra_attacks', [])
 
             attack_power = self.dmg_roll * mod
 
@@ -403,9 +403,9 @@ class Fighter:
         else:
             results.extend(self.attack_execute(target, attack_power, attack_string))
 
-        for target_pos in extra_targets:
-            if entity_at_pos(game.npc_ents, *target_pos):
-                extra_target = entity_at_pos(game.npc_ents, *target_pos) # TODO Currently ignores blocking
+        for attack_pos in extra_attacks:
+            extra_target = entity_at_pos(game.npc_ents, *attack_pos)
+            if extra_target:
                 results.extend(self.attack_execute(extra_target, attack_power//2, 'further hits'))
 
         self.exert(attack_power/3, 'attack')
