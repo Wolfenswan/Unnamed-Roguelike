@@ -63,7 +63,7 @@ class Item:
                 list.extend(dynamic_wrap(f' Armor (Blocking): %{col}%{self.equipment.block_def}%%', max_width))
 
             if self.equipment.dmg_potential:
-                list.extend(dynamic_wrap(f' Damage Potential: %{col}%{self.equipment.dmg_potential[0]}-{self.equipment.dmg_potential[1]}%%', max_width))
+                list.extend(dynamic_wrap(f' Base Damage: %{col}%{self.equipment.dmg_potential[0]}-{self.equipment.dmg_potential[1]}%%', max_width))
 
             if self.equipment.attack_type:
                 list.extend(dynamic_wrap(f' Attack: %{col}%{self.equipment.attack_type.name.title()}%%', max_width))

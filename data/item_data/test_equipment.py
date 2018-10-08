@@ -71,7 +71,7 @@ test_equipment_data = {
         'char': '?',
         'type': WP_TYPE,
         'e_to': WP_EQUIP,
-        'dmg_potential': (4,8),
+        'dmg_potential': (2,4),
         'attack': AttackType.NORMAL,
         'moveset': moveset_flail,
         'rarity': RarityType.COMMON,
