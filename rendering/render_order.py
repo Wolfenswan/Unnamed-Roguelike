@@ -7,7 +7,7 @@ class RenderOrder(Enum):
     CORPSE = auto()
     BOTTOM = auto()
     ITEM = auto()
-    ACTOR = auto()
     ALWAYS = auto()
+    ACTOR = auto()
     PLAYER = auto()
     CURSOR = auto()

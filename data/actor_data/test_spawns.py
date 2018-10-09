@@ -73,8 +73,32 @@ spawn_data = {
         'dlvls': (1,100),
         'rarity': RarityType.UNCOMMON,
         'rarity_mod': +5,
-        'group_size': (1,2)
+        'group_size': (1,3)
     },
+    'Mantis_Ogre' : {
+        'name': 'Mantis Ogre',
+        'char': 'M',
+        'color': colors.light_green,
+        'descr': 'TODO: Mantis Ogre. Wingless.',
+        'max_hp': (20,25),
+        'max_stamina': (100,100),
+        'base_armor': (4,5),
+        'base_strength': (12,12),
+        'loadout': {
+            'equipment': {
+                'ins_claws': {
+                    'forced_attacktype': AttackType.HEAVY
+                }
+            }
+        },
+        'ai_movement': Simple,
+        'ai_attack': Simple,
+        'barks': ('insect',),
+        'skills': (), # TODO Slam
+        'dlvls': (1,100),
+        'rarity': RarityType.RARE,
+        'group_size': (1,1)
+    }
 
     # 'Bomb_Beetle': {
     #     'name': 'Bombardier Beetle',

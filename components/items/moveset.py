@@ -10,6 +10,10 @@ class Moveset():
         self.movelist = movelist
         self.current_move = 1
 
+        if self.movelist.get('verbs'):
+            self.general_verbs = self.movelist['verbs']
+            del self.movelist['verbs']
+
         if self.movelist.get('random'):
             self.random = True
             del self.movelist['random']
@@ -46,8 +50,10 @@ class Moveset():
         move = self.movelist[self.current_move]
         if move.get('extend_attack'):
             move['extra_attacks'] = self.get_extra_attack_positions(attacker, target, move['extend_attack'])
-        if not isinstance(move['verb'], str): # If verb is a tuple or list, randomly pick a verb
-            move['verb'] = choice(move['verb'])
+        if move.get('verb') is None:
+            move['attack_verb'] = choice(self.general_verbs)
+        else:
+            move['attack_verb'] = move['verb']
         self.cycle_moves()
         return move
 

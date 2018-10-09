@@ -3,8 +3,6 @@ from map.directions_util import RelativeDirection
 
 col1 = '%dark_orange%'
 
-# TODO: Change extra-hits to dictionary {'behind':2, 'left':2}
-
 moveset_sword = {
     1: {
         'descr': f'A {col1}swing%% from right to left, doing full damage.',
@@ -41,21 +39,19 @@ moveset_spear = {
 }
 
 moveset_flail = {
+    'verbs': ('flails',),
     1: {
         'descr': f'A {col1}weaker over-head swing%%, to get momentum.',
-        'verb': 'flails',
         'dmg_multipl': 0.5,
         'extend_attack': [RelativeDirection.LEFT, RelativeDirection.LEFT_BACK]
     },
     2: {
         'descr': f'A {col1}slightly stronger swing%%, speeding up the weapon.',
-        'verb': 'flails',
         'dmg_multipl': 0.85,
         'extend_attack': [RelativeDirection.RIGHT, RelativeDirection.LEFT, RelativeDirection.LEFT_BACK]
     },
     3: {
         'descr': f"A {col1}standard swing%%, using the weapon's full potential.",
-        'verb': 'flails',
         'dmg_multipl': 1,
         'extend_attack': [RelativeDirection.RIGHT, RelativeDirection.LEFT, RelativeDirection.LEFT_BACK]
     },
@@ -69,14 +65,17 @@ moveset_flail = {
 
 moveset_mandibles = {
     'random' : True,
-    1: {
-        'verb': 'bites'
-    },
-    2: {
-        'verb': 'gnaws at'
-    },
+    'verbs': ('bites', 'gnaws at'),
+    1: {},
+    2: {},
     3: {
         'verb': 'nibbles at',
         'dmg_multipl': 0.75
     }
+}
+
+
+moveset_claws = {
+    'verbs': ('lashes', 'claws', 'rips'),
+    1: {}
 }

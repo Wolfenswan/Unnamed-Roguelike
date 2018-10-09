@@ -1,3 +1,4 @@
+import logging
 import re
 import textwrap
 from random import uniform
@@ -143,6 +144,7 @@ def print_string(con, x, y, string, color=None, fgcolor=colors.white, bgcolor=co
     :type background:
     """
 
+    logging.debug(f'Printing {string}')
 
     color_coded_words = color_wrap_pattern.findall(string)
     col_ctrls = ()

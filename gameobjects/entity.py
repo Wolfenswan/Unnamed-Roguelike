@@ -127,12 +127,20 @@ class Entity:
         return full_name.title()
 
     @property
+    def name_with_color(self):
+        return f'%{self.color}%{self.name}%%'
+
+    @property
     def pronoun(self):
         return 'it' if not self.is_player else 'you'
 
     @property
     def address(self):
         return f'the {self.name}' if not self.is_player else 'you'
+
+    @property
+    def address_with_color(self):
+        return f'%{self.color}%{self.address}%%'
 
     @property
     def state_verb_present(self):
