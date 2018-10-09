@@ -1,21 +1,36 @@
-from abilities.conditions import AbilityCondition
-from abilities.effects import AbilityEffect
-from abilities.usage import AbilityUse
+from components.skills.skillConditions import SkillCondition
+from components.effects import Effect
+from components.skills.skill_classes import SkillCharge
 
-skill_charge_prep = {
-        'name': 'Charge Activation',
-        'activate_condition': AbilityCondition.distance_to,
+"""
+Each dictionary refers to a skill class and contains the parameters to customize the instance of each skill accordingly.
+"""
+
+skill_generic_charge = {
+        'skill' : SkillCharge,
+        'name': 'Charge',
         'activate_condition_kwargs': {'min_dist': 2, 'max_dist': 6},
-        'on_activate': AbilityUse.charge_prepare,
         'on_activate_kwargs': {'delay':1},
         'cooldown_length': 6
     }
 
-skill_prime_expl = {
+skill_quick_charge = {
+        **skill_generic_charge,
+        'cooldown_length': 3
+    }
+
+skill_generic_slam = {
+    'name': 'Slam',
+    'activate_condition_kwargs': {'min_dist': 1, 'max_dist': 1.5},
+    'on_activate_kwargs': {'delay':1},
+    'cooldown_length': 4
+}
+
+skill_prime = {
         'name': 'Prime Detonation',
-        'activate_condition': AbilityCondition.distance_to,
+        'activate_condition': SkillCondition.distance_to,
         'activate_condition_kwargs': {'min': 2, 'max': 6},
-        'on_activate': AbilityEffect.explosion,
+        'on_activate': Effect.explosion,
         'on_activate_kwargs': {'delay':1},
         'cooldown_length': 6
 }

@@ -1,4 +1,4 @@
-class AbilityCondition:
+class SkillCondition:
     """
     TODO Add:
     Clear line to target

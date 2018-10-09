@@ -70,7 +70,7 @@ class BaseAI:
                     possible_skills = npc.skills.active(target, game)
                     if possible_skills:
                         skill = choice(possible_skills)
-                        skill_results = skill.execute(target, game)
+                        skill_results = skill.use(target, game)
                         results.extend(skill_results)
                         return results
 

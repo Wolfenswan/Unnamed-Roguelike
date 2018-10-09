@@ -1,17 +1,18 @@
 import logging
 from random import choice, randint
+from typing import Dict
 
 from components.AI.baseAI import BaseAI
 from components.AI.behavior.simple import Simple
 from components.actors.fighter import Fighter
-from components.actors.skills import Skills
+from components.skills.skillList import SkillList
 from components.architecture import Architecture
 from components.inventory.inventory import Inventory
 from components.items.equipment import Equipment
 from components.items.item import Item
 from components.items.moveset import Moveset
 from components.items.useable import Useable
-from components.actors.skill import Skill
+from components.skills.baseSkill import BaseSkill
 from config_files import colors
 from data.actor_data.test_spawns import spawn_data
 from data.architecture_data.arch_static import arch_static_data
@@ -21,13 +22,14 @@ from data.item_data.wp_creatures import wp_creature_data
 from data.gui_data.craft_strings import craft_descr_data
 from data.actor_data.act_bodytypes import bodytype_data
 from data.shared_data.quality_mod import qual_cond_data, qual_craft_data
-from data.data_types import GenericType, Condition, RarityType, BodyType
+from data.data_types import GenericType, Condition, RarityType, BodyType, Material, Craftsmanship
 from data.shared_data.material_mod import item_material_data
 from data.item_data.test_equipment import test_equipment_data
 from data.item_data.use_potions import use_potions_data
 from data.gui_data.cond_strings import cond_descr_data
 from data.shared_data.rarity_mod import rarity_values
 from debug.timer import debug_timer
+from game import Game
 from gameobjects.block_level import BlockLevel
 from gameobjects.entity import Entity
 from gameobjects.npc import NPC
@@ -57,7 +59,7 @@ container_data = [arch_containers_data]
 CONTAINER_DATA_MERGED = merge_dictionaries(container_data)
 
 
-def pick_from_data_dict_by_rarity(dic, dlvl=0):
+def pick_from_data_dict_by_rarity(dic:Dict, dlvl:int=0):
     """
     picks a random key from the given dictionary items, using the 'rarity' and (optionally) 'type' values
 
@@ -88,7 +90,7 @@ def pick_from_data_dict_by_rarity(dic, dlvl=0):
 
 
 # Data retrieving functions #
-def get_generic_args(data, material=None, condition=None, craftsmanship=None, bodytype=None, randomize_color=False):
+def get_generic_args(data:Dict, material:Material=None, condition:Condition=None, craftsmanship:Craftsmanship=None, bodytype:BodyType=None, randomize_color:bool=False):
     """
     Retrieves basic attributes from the data dictionary and if necessary modifies them as per material, condition and
     craftsmanship values.
@@ -156,7 +158,7 @@ def get_generic_args(data, material=None, condition=None, craftsmanship=None, bo
 
     return (char, color, name, descr, ent_type)
 
-def get_generic_kwargs(data, default_render=RenderOrder.BOTTOM, default_blocks=None):
+def get_generic_kwargs(data:Dict, default_render:RenderOrder=RenderOrder.BOTTOM, default_blocks:Dict=None):
     blocks = data.get('blocks', default_blocks)
     blocks = blocks.copy() if blocks else {}
     rendering = data.get('rendering', default_render)
@@ -166,7 +168,7 @@ def get_generic_kwargs(data, default_render=RenderOrder.BOTTOM, default_blocks=N
     return {'blocks':blocks, 'render_order':rendering, 'every_turn_start':every_turn_start, 'every_turn_end':every_turn_end}
 
 
-def get_material_data(data, forced=False):
+def get_material_data(data:Dict, forced:bool=False):
     """
     Retrieves material data as defined in the item_material_data dict.
     Forced can be set to a MaterialType Enum member to return the respective material.
@@ -182,7 +184,7 @@ def get_material_data(data, forced=False):
     return material
 
 
-def get_condition_data(forced=False):
+def get_condition_data(forced:bool=False):
     """
     Retrieves condition data as defined in the qual_cond_data dict.
     Forced can be set to a Condition Enum member to return the respective material.
@@ -193,7 +195,7 @@ def get_condition_data(forced=False):
     return condition
 
 
-def get_craftsmanship_data(forced=False):
+def get_craftsmanship_data(forced:bool=False):
     """
     Retrieves craftsmanship data as defined in the qual_craft_data dict.
     Forced can be set to a Craftsmanship Enum member to return the respective material.
@@ -204,7 +206,7 @@ def get_craftsmanship_data(forced=False):
     return craftsmanship
 
 
-def get_bodytype_data(data, forced=False):
+def get_bodytype_data(data:Dict, forced:bool=False):
     if forced:
         dic = {k: v for k, v in bodytype_data.items() if v['type'] in forced}
     elif data.get('bodytypes'):
@@ -220,7 +222,7 @@ def get_bodytype_data(data, forced=False):
 
 # Generating Functions #
 @debug_timer
-def gen_npc_from_dict(data, x, y, game):
+def gen_npc_from_dict(data:Dict, x:int, y:int, game:Game):
     bodytype = get_bodytype_data(data, forced=False)
 
     arguments = (x, y, *get_generic_args(data, randomize_color=True, bodytype=bodytype))
@@ -250,9 +252,10 @@ def gen_npc_from_dict(data, x, y, game):
     skills_component = None
 
     if skills is not None:
-        skills_component = Skills()
-        for skill_data in skills:
-            skill = Skill(**skill_data)
+        skills_component = SkillList()
+        for _data in skills:
+            params = {key:val for key, val in _data.items() if key != 'skill'}
+            skill = _data['skill'](**params)
             skills_component.add_skill(skill)
 
     npc = NPC(*arguments, **kwargs, bodytype=bodytype.get('type'), fighter=fighter_component, ai=ai_component,
@@ -260,6 +263,7 @@ def gen_npc_from_dict(data, x, y, game):
 
     loadout = data.get('loadout')
     loadouts = data.get('loadouts')
+    print(loadout)
     if loadouts is not None:
         loadout = pick_from_data_dict_by_rarity(loadouts, game.dlvl)
         gen_loadout(npc, loadouts[loadout], game)
@@ -269,7 +273,7 @@ def gen_npc_from_dict(data, x, y, game):
     return npc
 
 
-def gen_item_from_data(data, x, y, materials=False, conditions=False, craftsmanships=False, forced_attacktype=None):
+def gen_item_from_data(data:Dict, x:int, y:int, materials=False, conditions=False, craftsmanships=False, forced_attacktype=None):
     material = get_material_data(data, forced=materials)
     condition = get_condition_data(forced=conditions) if material else {}
     craftsmanship = get_craftsmanship_data(forced=craftsmanships) if material else {}
@@ -336,7 +340,7 @@ def gen_item_from_data(data, x, y, materials=False, conditions=False, craftsmans
     return i
 
 
-def gen_architecture(data, x, y):
+def gen_architecture(data:Dict, x:int, y:int):
     material = get_material_data(data)  # atm material only affects architecture's name and color
     arguments = [x, y, *get_generic_args(data, material=material)]
     kwargs = get_generic_kwargs(data, default_render=RenderOrder.BOTTOM)
@@ -355,7 +359,7 @@ def gen_architecture(data, x, y):
     return arch
 
 
-def gen_loadout(actor, loadout, game):
+def gen_loadout(actor:Entity, loadout:Dict, game:Game):
     """ creates inventory and equipment for the given actor """
     logging.debug(f'Generating loadout from {loadout} for {actor.name}({actor}).')
     equipment = loadout.get('equipment', {})

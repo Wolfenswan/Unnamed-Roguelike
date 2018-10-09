@@ -2,21 +2,21 @@ from typing import List
 
 from dataclasses import dataclass, field
 
-from components.actors.skill import Skill
+from components.skills.baseSkill import BaseSkill
 
 
 @dataclass
-class Skills:
-    listing : List[Skill] = field(default_factory=list)
+class SkillList:
+    all : List[BaseSkill] = field(default_factory=list)
 
     def __len__(self):
-        return len(self.listing)
+        return len(self.all)
 
     def __iter__(self):
-        yield from self.listing
+        yield from self.all
 
-    def add_skill(self, skill: Skill):
-        self.listing.append(skill)
+    def add_skill(self, skill: BaseSkill):
+        self.all.append(skill)
 
     @property
     def available(self):

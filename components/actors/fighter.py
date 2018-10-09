@@ -15,7 +15,7 @@ from gameobjects.util_functions import entity_at_pos
 from gui.messages import Message, MessageType, MessageCategory
 from rendering.render_order import RenderOrder
 
-
+# TODO Dataclass
 class Fighter:
     def __init__(self, hp, stamina, base_av, base_strength, base_vision):
         self.__hp = hp
@@ -263,9 +263,9 @@ class Fighter:
             return {'message': message}
         return {}
 
-    def set_presence(self, presence, value, duration=0):
+    def set_presence(self, presence:Presence, value:int, duration:int=0):
         self.presence[presence] = value
-        if duration > 0:
+        if duration > 0: # If duration > 0, set a plan to disable the current presence in n turns
             self.owner.actionplan.add_to_queue(execute_in=duration,
                                                planned_function=self.set_presence,
                                                planned_function_args=(presence, False))

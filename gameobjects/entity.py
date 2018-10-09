@@ -6,8 +6,10 @@ from typing import Optional, Union, List
 import tcod
 from dataclasses import dataclass, field
 
+from config_files import colors
+
 from components.AI.baseAI import BaseAI
-from components.actors.skills import Skills
+from components.skills.skillList import SkillList
 from components.actionplan import Actionplan
 from components.actors.fighter import Fighter
 from components.actors.status_modifiers import Presence
@@ -16,12 +18,9 @@ from components.inventory.inventory import Inventory
 from components.inventory.paperdoll import Paperdoll
 from components.items.item import Item
 from components.statistics import Statistics
-from config_files import colors
 from data.data_types import BodyType, Material, GenericType, MonsterType, ItemType
 from data.gui_data.gui_entity import bodytype_name_data
 from data.gui_data.material_strings import material_name_data
-from debug.timer import debug_timer
-from game import Game
 from gameobjects.util_functions import entity_at_pos
 from map.directions_util import direction_between_pos
 from rendering.render_order import RenderOrder
@@ -46,7 +45,7 @@ class Entity:
 
     fighter : Optional[Fighter] = None
     ai: Optional[BaseAI] = None
-    skills: Optional[Skills] = None
+    skills: Optional[SkillList] = None
     item: Optional[Item] = None
     inventory: Optional[Inventory] = None
     paperdoll = None
@@ -90,7 +89,7 @@ class Entity:
         self.statistics.owner = self
 
     def __repr__(self):
-        return f'{self.name} ({id(self)}) at {self.pos}'
+        return f'{self.name}:{id(self)} at {self.pos}'
 
     ###############################
     # ATTRIBUTE RELATED FUNCTIONS #

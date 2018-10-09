@@ -30,6 +30,7 @@ class Message:
         self.color = color if color is not None else self.set_color()
         
     def set_color(self):
+        #return colors.dark_gray
         if self.type == MessageType.GENERIC:
             return colors.light_amber
         elif self.type == MessageType.GAME:
@@ -43,13 +44,13 @@ class Message:
         elif self.type == MessageType.ALERT:
             return colors.red
         elif self.type == MessageType.COMBAT:
-            return colors.dark_azure
+            return colors.desaturated_azure
         elif self.type == MessageType.COMBAT_INFO:
-            return colors.dark_azure
+            return colors.desaturated_azure
         elif self.type == MessageType.COMBAT_GOOD:
-            return colors.dark_cyan
+            return colors.desaturated_cyan
         elif self.type == MessageType.COMBAT_BAD:
-            return colors.dark_orange
+            return colors.desaturated_blue
         elif self.type == MessageType.SYSTEM:
             return colors.pink
 

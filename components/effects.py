@@ -1,11 +1,10 @@
-from pprint import pprint
 from random import randint
 
 from gui.messages import Message, MessageCategory, MessageType
 from rendering.render_animations import animate_projectile, animate_explosion
 
 
-class AbilityEffect:
+class Effect:
 
     @staticmethod
     def direct_damage(affected_ent = None, string='hit', **kwargs):
@@ -99,6 +98,6 @@ class AbilityEffect:
         results = []
 
         for i in range(chain):
-            results.extend(AbilityEffect.explosion(**kwargs))
+            results.extend(Effect.explosion(**kwargs))
 
         return results
