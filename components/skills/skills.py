@@ -3,6 +3,7 @@ from components.skills.skillConditions import SkillCondition
 from config_files import colors
 from game import Game
 from gameobjects.entity import Entity
+from gameobjects.util_functions import entity_at_pos
 from gui.messages import Message, MessageType, MessageCategory
 from rendering.render_animations import animate_move_to
 
@@ -63,7 +64,26 @@ class SkillSlam(BaseSkill):
         super().__init__(**self.params)
 
     def activate(self, target:Entity, game:Game, **kwargs):
-        pass
+        user = self.owner
+        delay = kwargs['delay']
+        results = []
+
+        user.color_bg = colors.dark_red
+        user.actionplan.add_to_queue(execute_in=delay, planned_function=self.execute,
+                                     planned_function_args=(*target.pos, game), fixed=True)
+        results.append({'message': Message(f'The {user.name} raises its {user.fighter.weapon.name} high above its head.', category=MessageCategory.OBSERVATION,
+                                           type=MessageType.ALERT)})
+        return results
 
     def execute(self, tx: int, ty: int, game: Game):
-        pass
+        user = self.owner
+        user.color_bg = None  # Reset the entities bg-color, which the skill preparation had changed
+
+        results = []
+        results.append({'message': Message(f'The {user.name} slams down!', category=MessageCategory.OBSERVATION,
+                                           type=MessageType.COMBAT)})
+        hit = entity_at_pos(game.fighter_ents,tx, ty)
+        if hit:
+            if hit.fighter:
+                results.extend(user.fighter.attack_setup(hit, game, mod=2, attack_string='slams', ignore_moveset=True))
+        return results

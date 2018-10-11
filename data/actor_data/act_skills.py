@@ -1,6 +1,6 @@
 from components.skills.skillConditions import SkillCondition
 from components.effects import Effect
-from components.skills.skill_classes import SkillCharge
+from components.skills.skills import SkillCharge, SkillSlam
 
 """
 Each dictionary refers to a skill class and contains the parameters to customize the instance of each skill accordingly.
@@ -20,6 +20,7 @@ skill_quick_charge = {
     }
 
 skill_generic_slam = {
+    'skill' : SkillSlam,
     'name': 'Slam',
     'activate_condition_kwargs': {'min_dist': 1, 'max_dist': 1.5},
     'on_activate_kwargs': {'delay':1},

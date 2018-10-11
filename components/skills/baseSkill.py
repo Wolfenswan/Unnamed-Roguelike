@@ -4,6 +4,8 @@ from typing import Callable, Dict, Set
 
 from dataclasses import field, dataclass
 
+from game import Game
+
 
 @dataclass
 class BaseSkill:
@@ -13,6 +15,9 @@ class BaseSkill:
     activate_condition_kwargs:Dict = field(default_factory=dict)
     cooldown_length : int = 0
     cooldown:int = field(init=False, default=0)
+
+    def __str__(self):
+        return f'{self.name}:{id(self)} on {self.owner}'
 
     def __repr__(self):
         return f'{self.name}:{id(self)}(Owner: {self.owner})'
@@ -36,9 +41,10 @@ class BaseSkill:
         available = self.cooldown_length >= 0 and self.cooldown == 0
         return available
 
-    def is_active(self, target, game):
+    def is_active(self, target, game:Game):
         for cond in self.activate_conditions:
             check = cond(actor = self.owner, target = target, game = game, **self.activate_condition_kwargs)
+            logging.debug(f'Condition {cond.__name__}: {check}')
             if not check:
                 return False
         return True

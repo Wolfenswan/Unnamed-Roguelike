@@ -88,8 +88,12 @@ class Entity:
         self.actionplan.owner = self
         self.statistics.owner = self
 
+    def __str__(self):
+        return f'{self.name}:{id(self)}'
+
     def __repr__(self):
-        return f'{self.name}:{id(self)} at {self.pos}'
+        return f'{self.name}:{id(self)}\n' \
+               f'Pos: {self.pos}'
 
     ###############################
     # ATTRIBUTE RELATED FUNCTIONS #

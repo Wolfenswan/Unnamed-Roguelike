@@ -22,7 +22,7 @@ class SkillCondition:
         actor = kwargs.get('actor')
         target = kwargs.get('target')
         min, max = kwargs['min_dist'], kwargs['max_dist']
-        if min < actor.distance_to_ent(target) < max:
+        if min <= actor.distance_to_ent(target) <= max:
             return True
         else:
             return False

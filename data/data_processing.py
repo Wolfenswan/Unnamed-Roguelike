@@ -12,7 +12,6 @@ from components.items.equipment import Equipment
 from components.items.item import Item
 from components.items.moveset import Moveset
 from components.items.useable import Useable
-from components.skills.baseSkill import BaseSkill
 from config_files import colors
 from data.actor_data.test_spawns import spawn_data
 from data.architecture_data.arch_static import arch_static_data

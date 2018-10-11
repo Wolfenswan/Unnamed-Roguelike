@@ -20,9 +20,11 @@ def initialize_window(game):
         'terminal10x10_gs_tc',  # 8
         'terminal12x12_gs_ro',  # 9 # FONT_LAYOUT_ASCII_INROW
         'terminal16x16_gs_ro',  # 10 # FONT_LAYOUT_ASCII_INROW
+        'Cheepicus_8x8x2', # 11
+        'Cheepicus_16x16', # 12
+        '16x16_sm', # 13
     )
-    font = fonts[10]+'.png'
-
+    font = fonts[11]+'.png'
     path = 'resources/fonts/'
     tcod.console_set_custom_font(os.path.join(path, font), tcod.FONT_TYPE_GREYSCALE | tcod.FONT_LAYOUT_ASCII_INROW)
     #tcod.console_set_custom_font(os.path.join(path, font), tcod.FONT_TYPE_GREYSCALE | tcod.FONT_LAYOUT_TCOD)

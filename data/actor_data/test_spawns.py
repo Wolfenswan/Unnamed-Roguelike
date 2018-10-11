@@ -23,7 +23,7 @@
 from components.AI.behavior.simple import Simple
 from components.AI.behavior.swarm import Swarm
 from config_files import colors
-from data.actor_data.act_skills import skill_generic_charge
+from data.actor_data.act_skills import skill_generic_charge, skill_generic_slam
 from data.data_types import RarityType, AttackType
 
 spawn_data = {
@@ -94,7 +94,7 @@ spawn_data = {
         'ai_movement': Simple,
         'ai_attack': Simple,
         'barks': ('insect',),
-        'skills': (), # TODO Slam
+        'skills': (skill_generic_slam,), # TODO Slam
         'dlvls': (1,100),
         'rarity': RarityType.RARE,
         'group_size': (1,1)
