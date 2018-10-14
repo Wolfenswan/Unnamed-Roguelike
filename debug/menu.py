@@ -1,5 +1,4 @@
-from data.actor_data.test_spawns import spawn_data
-from data.data_processing import gen_npc_from_dict
+from data.data_processing import gen_npc_from_dict, NPC_DATA_MERGED
 from gui.menus import options_menu
 from gui.messages import Message, MessageType, MessageCategory
 
@@ -21,14 +20,14 @@ def debug_menu(game):
         Message(f'Entity Debug Information set to {game.debug["map"]}', type=MessageType.GAME,
                 category=MessageCategory.OBSERVATION).add_to_log(game)
     elif choice == 3: # TODO make bodytype selectable
-        options = list(spawn_data.keys())
+        options = list(NPC_DATA_MERGED.keys())
         choice= options_menu('Monster Spawning', 'Pick the monster to spawn. The tile to the right of the player must not be blocked.', options)
         if choice is not None:
             key = options[choice]
             if game.map.is_blocked(game.player.x+1, game.player.y, game.blocking_ents):
                 Message(f'Position blocked!', type=MessageType.GAME).add_to_log(game)
             else:
-                npc = gen_npc_from_dict(spawn_data[key], game.player.x+1, game.player.y, game)
+                npc = gen_npc_from_dict(NPC_DATA_MERGED[key], game.player.x+1, game.player.y, game)
                 game.entities.append(npc)
     elif choice == 4:
         # Select Type, key, material, condition, craft

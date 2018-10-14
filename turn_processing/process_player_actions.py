@@ -63,7 +63,7 @@ def process_player_input(action, game, fov_map, targeting_item = None):
                     # If a NPC is blocking the way #
                     elif target.fighter:
                         if not player.fighter.is_blocking:
-                            attack_results = player.fighter.attack_setup(target, game)
+                            attack_results = player.fighter.melee_attack_setup(target, game)
                             turn_results.extend(attack_results)
                         else:
                             Message('PLACEHOLDER: cant attack while blocking.', type=MessageType.SYSTEM).add_to_log(game)
@@ -98,8 +98,8 @@ def process_player_input(action, game, fov_map, targeting_item = None):
 
                 if not target or not target.fighter:
                     # Movement other than fighting resets the current moveset
-                    if player.fighter.weapon:
-                        player.fighter.weapon.moveset.cycle_moves(reset=True)
+                    if player.fighter.active_weapon is not None:
+                        player.fighter.active_weapon.moveset.cycle_moves(reset=True)
 
                 game.state = GameState.ENEMY_TURN
 

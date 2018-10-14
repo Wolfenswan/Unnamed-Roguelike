@@ -1,6 +1,6 @@
 import logging
 
-from gui.menus import yesno_menu
+from gui.menus import yesno_menu, item_list_menu
 from gui.messages import Message
 
 
@@ -26,10 +26,13 @@ class Paperdoll:
         return items
 
     @property
-    def two_handed(self):
-        if self.weapon_arm.carried:
-            return self.weapon_arm.carried.item.equipment.two_handed
-        return False
+    def two_handed_weapons(self):
+        weapons = []
+        if self.weapon_arm.carried and self.weapon_arm.carried.item.equipment.two_handed:
+            weapons.append(self.weapon_arm.carried)
+        elif self.weapon_arm.ranged and self.weapon_arm.ranged.item.equipment.two_handed:
+            weapons.append(self.weapon_arm.ranged)
+        return weapons
 
     def equip(self, item_ent, game):
         results = []
@@ -50,13 +53,13 @@ class Paperdoll:
                 equipped_item = None
                 print('cancelled equipping 2h weapon') # TODO Placeholder
 
-        # If new item is shield, check if current weapon is two-handed #
-        if e_to == 'shield_arm' and self.two_handed:
-            main_weapon = self.weapon_arm.carried
-            choice = yesno_menu('Remove Two-Handed Weapon',
-                                f'Remove {main_weapon.name} to equip the {item_ent.name}?', game)
+        # If new item is shield, check for two-handed weapons #
+        if e_to == 'shield_arm' and self.two_handed_weapons:
+            choice = item_list_menu(self.owner, self.two_handed_weapons, 'Remove Two-Handed Weapon', f'Remove which weapon to equip {item_ent.name}?')
+            # choice = yesno_menu('Remove Two-Handed Weapon',
+            #                     , game)
             if choice:
-                results.extend(self.dequip(main_weapon))
+                results.extend(self.dequip(choice))
             else:
                 equipped_item = None
                 print('cancelled equipping shield bc of 2h weapon') # TODO Placeholder
@@ -74,6 +77,9 @@ class Paperdoll:
             self.owner.inventory.remove(item_ent)
             if qu_slots:
                 self.owner.qu_inventory.capacity += qu_slots
+
+            if self.owner.fighter.active_weapon is None:
+                self.owner.fighter.active_weapon = item_ent
 
             results.append({'item_equipped': item_ent, 'message': Message(f'You equip the {item_ent.name}')})
 
@@ -120,8 +126,9 @@ class Torso:
 
 
 class Arm:
-    def __init__(self, carried=None, armor=None, ring=None):
+    def __init__(self, carried=None, ranged=None, armor=None, ring=None):
         self.carried = carried
+        self.ranged = ranged
         self.armor = armor
         self.ring = ring
 

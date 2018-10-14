@@ -58,23 +58,25 @@ class GameMap:
         rand_x = randint(2, self.width - 2)
         rand_y = randint(2, self.height - 2)
         tile = self.tiles[rand_x, rand_y]
-        tiles = [tile] + self.surrounding_tiles(tile, dist = randint(3,15))
+        tiles = [tile] + tile.surrounding_tiles(dist = randint(3,15))
         for i, t in enumerate(tiles):
             chance = 100*i/len(tiles)
             if (150-chance) >= randint(0, 100):
                 t.fg_color = color
-                for t_2 in self.surrounding_tiles(t):
+                for t_2 in tile.surrounding_tiles():
                     if randint(0, 1):
                         t_2.fg_color = color
-
 
     def is_floor(self, x, y):
         return self.tiles[(x, y)].walkable
 
     def is_wall(self, x, y):
-        return self.tiles[(x,y)].blocked
+        tile = self.tiles.get((x,y))
+        if tile is None:
+            print(f'Checking {tile} is None')
+        return tile.blocked
 
-    def is_blocked(self, x, y, blocking_ents, filter = (BlockLevel.WALK,)):
+    def is_blocked(self, x, y, entities_to_consider, filter = (BlockLevel.WALK,)):
         """
         Returns True if position is either a wall or occupied by a blocking object.
         Filter corresponds to values in the Entity blocks attribute (dictionary)
@@ -86,18 +88,18 @@ class GameMap:
             return True
 
         for value in filter:
-            if any((ent.pos == (x, y) and ent.blocks.get(value, False)) for ent in blocking_ents):
-              return True
+            if any((ent.pos == (x, y) and ent.blocks.get(value, False)) for ent in entities_to_consider):
+                return True
 
         return False
 
-    def surrounding_tiles(self, tile, dist = 1):
-        tiles = []
-        for dx in range(-dist, dist):
-            for dy in range(-dist, dist):
-                if not (dx == 0 and dy == 0) and self.tiles.get((tile.x + dx, tile.y + dy)):
-                    tiles += [self.tiles[tile.x + dx, tile.y + dy]]
-        return tiles
+    def surrounding_pos(self, x, y, dist = 1):
+        pos_list = [] # TODO refactor using direction_utils
+        for dx in range(-dist, dist + 1):
+            for dy in range(-dist, dist + 1):
+                if not (dx == 0 and dy == 0) and self.tiles.get((x + dx, y + dy)) is not None:
+                    pos_list.append((x + dx, y + dy))
+        return pos_list
 
     def empty_pos_near_ent(self, ent, game):
         """ returns list of nearby empty (= walkable and not occupied by blocking object) coordinates """
@@ -113,13 +115,4 @@ class GameMap:
                 near_empty_tiles.append((to_x, to_y))
 
         return near_empty_tiles
-
-    def free_line_between_pos(self, x1, y1, x2, y2, game):
-        dist = distance_between_pos(x1, y1, x2, y2)
-        for s in range(dist):
-            x = round(x1 + s/dist * (x2-x1))
-            y = round(x1 + s/dist * (x2-x1))
-            if self.is_blocked(x, y, game):
-                return False
-        return True
 

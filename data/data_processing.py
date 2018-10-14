@@ -48,8 +48,8 @@ def merge_dictionaries(dicts):
 item_data = [use_potions_data, use_bombs_data, test_equipment_data, wp_creature_data]
 ITEM_DATA_MERGED = merge_dictionaries(item_data)
 
-actor_data = [spawn_data]
-ACTOR_DATA_MERGED = merge_dictionaries(actor_data)
+npc_data = [spawn_data]
+NPC_DATA_MERGED = merge_dictionaries(npc_data)
 
 architecture_data = [arch_static_data]
 ARCHITECTURE_DATA_MERGED = merge_dictionaries(architecture_data)
@@ -232,8 +232,7 @@ def gen_npc_from_dict(data:Dict, x:int, y:int, game:Game):
     base_av = randint(*data['base_armor'])
     base_strength = randint(*data['base_strength'])
     vision = data.get('nat_vision', 8)
-    ai_movement = data.get('ai_movement', Simple)
-    ai_attack = data.get('ai_attack', Simple)
+    ai_behavior = data.get('ai_behavior', Simple)
     skills = data.get('skills', None)
 
     # Modify values according to bodytype #
@@ -246,7 +245,7 @@ def gen_npc_from_dict(data:Dict, x:int, y:int, game:Game):
     base_strength = round(base_strength * str_multipl)
 
     fighter_component = Fighter(hp, stamina, base_av, base_strength, vision)
-    ai_component = BaseAI(movement=ai_movement(), attack=ai_attack())
+    ai_component = BaseAI(behavior=ai_behavior())
     inventory_component = Inventory(capacity=12)  # Todo Placeholder #
     skills_component = None
 

@@ -145,7 +145,7 @@ test_equipment_data = {
         'block_def': 4
     },
     'tower_shield': {
-        'name': 'tower_shield',
+        'name': 'tower shield',
         'materials': (Material.IRON, Material.STEEL),
         'descr': 'A large shield, covering most of your upper body.',
         'type': ItemType.SHIELD,
@@ -154,5 +154,16 @@ test_equipment_data = {
         "char": ')',
         'e_to': OH_EQUIP,
         'block_def': 8
+    },
+    'bow': { # TODO Placeholder #
+        'name': 'bow',
+        'materials': (Material.OAK, Material.CHITIN),
+        'descr': 'TODO Bow. Longer Line. Test.',
+        'type': ItemType.RANGED,
+        'rarity': RarityType.RARE,
+        'dlvls': (1,99),
+        "char": '(',
+        'two_handed': True,
+        'e_to': WP_EQUIP
     }
 }

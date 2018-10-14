@@ -15,33 +15,29 @@ def render_animation(game:Game, anim_delay:float):
     tcod.console_flush()
 
 
-def animate_move_line(ent:Entity, dx:int, dy:int, steps:int, game:Game, ignore_entities=False, anim_delay = 0.05):
+def animate_move_line(ent, dx:int, dy:int, steps:int, game:Game, ignore_entities=False, anim_delay = 0.05):
     """
     The entity will attempt to move the number of steps into the give direction.
     """
     for i in range(steps):
-        blocked = ent.try_move(dx, dy, game, ignore_entities=ignore_entities)
-        if blocked is None:
+        moved = ent.try_move(dx, dy, game, ignore_entities=ignore_entities)
+        if moved is True:
             render_animation(game, anim_delay)
-        elif blocked is False:
-            return False
         else:
-            return blocked
+            return False
 
 
-def animate_move_to(ent:Entity, tx:int, ty:int, game:Game, ignore_entities=False, anim_delay = 0.05):
+def animate_move_to(ent, tx:int, ty:int, game:Game, ignore_entities=False, anim_delay = 0.05):
     """
     The entity will attempt to move to the given target position.
     """
     while ((ent.x, ent.y) != (tx, ty)):
         dx, dy = ent.direction_to_pos(tx, ty)
-        blocked = ent.try_move(dx, dy, game, ignore_entities=ignore_entities)
-        if blocked is None:
+        moved = ent.try_move(dx, dy, game, ignore_entities=ignore_entities)
+        if moved is True:
             render_animation(game, anim_delay)
-        elif blocked is False:
-            return False
         else:
-            return blocked
+            return False
 
 
 def animate_projectile(start_x:int, start_y:int, target_x:int, target_y:int, distance:int, game:Game, homing=True, ignore_entities=True, anim_delay = 0.05, color=colors.flame):

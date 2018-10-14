@@ -5,6 +5,7 @@ from typing import Union
 import tcod
 from dataclasses import dataclass
 
+from components.AI.behavior.ranged import Ranged
 from components.AI.behavior.simple import Simple
 from components.AI.behavior.swarm import Swarm
 from components.actors.status_modifiers import Presence
@@ -14,12 +15,10 @@ from gui.messages import Message
 
 @dataclass
 class BaseAI:
-    movement : Union[Simple, Swarm]
-    attack : Union[Simple, Swarm]
+    behavior : Union[Simple, Swarm, Ranged]
 
     def __post_init__(self):
-        self.movement.owner = self
-        self.attack.owner = self
+        self.behavior.owner = self
 
     def take_turn(self, game, fov_map):
 
@@ -51,19 +50,19 @@ class BaseAI:
                 results.append({'message': message})
                 return results
 
-        if self.owner.fighter.stamina < self.owner.fighter.max_stamina / 10:
+        if npc.fighter.stamina < npc.fighter.max_stamina / 10:
           # Switch to resting AI mode
-          self.owner.fighter.recover(self.owner.fighter.max_stamina / 2)  # TODO Placeholder Stamina Management
+          npc.fighter.recover(npc.fighter.max_stamina / 2)  # TODO Placeholder Stamina Management
           message = Message(f'PLACEHOLDER: {npc.name} is exhausted and skipping turn to rest.')
           results.append({'message': message})
           return results
 
         # First check if the npc can see the player #
         if tcod.map_is_in_fov(fov_map, npc.x, npc.y):
-            npc.color_bg = None  # some special attacks modify a character's background color, this resets it
+            npc.color_bg = None  # some special attacks modify a character's background color
 
             # Consider using a skill #
-            # TODO might be moved into behavior components later #
+            # TODO might be merged into behavior components later #
             if npc.skills:
                 npc.skills.cooldown()
                 if npc.skills.available:
@@ -74,13 +73,8 @@ class BaseAI:
                         results.extend(skill_results)
                         return results
 
-            # If no skill is available, consider moving #
-            if npc.distance_to_ent(target) >= 2:
-                results.extend(self.movement.decide_move(target, game))
-
-            # Or consider attack, if next to target #
-            elif npc.distance_to_ent(target) < 2:
-                results.extend(self.movement.decide_attack(target, game))
+            # If no skill is available, decide on an action, based on behavior #
+            results.extend(self.behavior.decide_action(target, game))
 
         # If NPC is hidden from FOV, move randomly #
         else:
@@ -91,10 +85,6 @@ class BaseAI:
 
         return results
 
-    def set_behavior(self, movement=None, attack=None):
-        if movement:
-            self.movement = movement
-            self.movement.owner = self
-        if attack:
-            self.attack = attack
-            self.attack.owner = self
+    def set_behavior(self, behavior:Union[Simple, Swarm, Ranged]):
+        self.behavior = behavior
+        self.behavior.owner = self

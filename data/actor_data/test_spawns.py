@@ -19,7 +19,7 @@
     }
 
 """
-
+from components.AI.behavior.ranged import Ranged
 from components.AI.behavior.simple import Simple
 from components.AI.behavior.swarm import Swarm
 from config_files import colors
@@ -42,8 +42,7 @@ spawn_data = {
                 'ins_mandibles':{}
             }
         },
-        'ai_movement': Swarm,
-        'ai_attack': Swarm,
+        'ai_behavior': Swarm,
         'barks': ('insect',),
         'dlvls': (1,100),
         'rarity': RarityType.COMMON,
@@ -66,8 +65,7 @@ spawn_data = {
             }
         },
         #'nat_vision': 6,
-        'ai_movement': Simple,
-        'ai_attack': Simple,
+        'ai_behavior': Simple,
         'barks': ('insect',),
         'skills': (skill_generic_charge,),
         'dlvls': (1,100),
@@ -91,14 +89,35 @@ spawn_data = {
                 }
             }
         },
-        'ai_movement': Simple,
-        'ai_attack': Simple,
+        'ai_behavior': Simple,
         'barks': ('insect',),
-        'skills': (skill_generic_slam,), # TODO Slam
+        'skills': (skill_generic_slam,),
         'dlvls': (1,100),
         'rarity': RarityType.RARE,
         'group_size': (1,1)
-    }
+    },
+
+    'Spitting Beetle' : {
+        'name': 'Spitting Beetle',
+        'char': 'b',
+        'color': colors.light_green,
+        'descr': 'TODO: Spitting Beetle. Ranged.',
+        'max_hp': (6,8),
+        'max_stamina': (100,100),
+        'base_armor': (1,2),
+        'base_strength': (3,3),
+        'loadout': {
+            'equipment': {
+                'ins_ranged': {
+                }
+            }
+        },
+        'ai_behavior': Ranged,
+        'barks': ('insect',),
+        'dlvls': (1,100),
+        'rarity': RarityType.RARE,
+        'group_size': (1,2)
+    },
 
     # 'Bomb_Beetle': {
     #     'name': 'Bombardier Beetle',
@@ -112,7 +131,7 @@ spawn_data = {
     #     'nat_vision': 6,
     #     'ai': BasicAI,
     #     'barks': ('insect'),
-    #     'ai_movement': Distance,
+    #     'ai_behavior': Distance,
     #     'ai_attack': Ranged,
     #     'loadouts': None,
     #     'dlvls': (1,100),

@@ -34,5 +34,6 @@ item_material_data = {
         'color': colors.steel,
         'dmg_mod': 2,
         'av_mod': 2
-    }
+    },
+
 }

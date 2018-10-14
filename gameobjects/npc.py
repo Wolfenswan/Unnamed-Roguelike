@@ -3,11 +3,9 @@ from random import choice
 
 import tcod
 
-from data.data_types import GenericType
-from gameobjects.block_level import BlockLevel
+from game import Game
 from gameobjects.entity import Entity
-from gui.messages import Message, MessageType, MessageCategory
-from rendering.render_order import RenderOrder
+from map.directions_util import DIRECTIONS_CIRCLE
 
 
 class NPC(Entity):
@@ -73,7 +71,7 @@ class NPC(Entity):
                 # Set self's coordinates to the next path tile
                 logging.debug(f'{self} is A*-moving.')
                 if target.pos == (x,y): # At some edge-cases NPCs might attempt a* movement when they are adjacent to the target
-                    self.fighter.attack_setup(target, game)
+                    self.fighter.melee_attack_setup(target, game)
                 else:
                     self.x, self.y = x, y
                 logging.debug(f'{self} finished A*-moving.')
@@ -84,14 +82,30 @@ class NPC(Entity):
             logging.debug(f'{self} could not find a* path. falling back to regular movement')
             self.move_towards(target, game)
 
-    def bark(self,type):
-        """ make some noise """
-        results = []
-        if self.barks is not None:
-            try:
-                bark = choice(self.barks[type])
-            except:
-                logging.error('Could not find bark-type {0} in {1}.'.format(type, self.barks))
-            else:
-                results.append({'message':Message(f'The {self.name} {bark}', type=MessageType.FLUFF, category=MessageCategory.OBSERVATION)})
-        return results
+    def move_away_from(self, target: Entity, game: Game):
+        """ Move Entity away from intended target """
+
+        # loop through available directions and pick the first that is at least one square from the player
+        # loop does not check for walls, so an entity can back up into walls (and thus fail/be cornered)
+        dir_list = []
+        for dir in DIRECTIONS_CIRCLE:
+            flee_pos = (self.x + dir[0], self.y + dir[1])
+            distance = target.distance_to_pos(*flee_pos)
+            if distance > 1.5:
+                dir_list.append(dir)
+
+        if len(dir_list) > 0:
+            dir = choice(dir_list)
+            self.try_move(*dir, game)
+
+    # def bark(self,type):
+    #     """ make some noise """
+    #     results = []
+    #     if self.barks is not None:
+    #         try:
+    #             bark = choice(self.barks[type])
+    #         except:
+    #             logging.error('Could not find bark-type {0} in {1}.'.format(type, self.barks))
+    #         else:
+    #             results.append({'message':Message(f'The {self.name} {bark}', type=MessageType.FLUFF, category=MessageCategory.OBSERVATION)})
+    #     return results

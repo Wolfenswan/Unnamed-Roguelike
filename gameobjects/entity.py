@@ -11,7 +11,6 @@ from config_files import colors
 from components.AI.baseAI import BaseAI
 from components.skills.skillList import SkillList
 from components.actionplan import Actionplan
-from components.actors.fighter import Fighter
 from components.actors.status_modifiers import Presence
 from components.architecture import Architecture
 from components.inventory.inventory import Inventory
@@ -21,8 +20,10 @@ from components.statistics import Statistics
 from data.data_types import BodyType, Material, GenericType, MonsterType, ItemType
 from data.gui_data.gui_entity import bodytype_name_data
 from data.gui_data.material_strings import material_name_data
-from gameobjects.util_functions import entity_at_pos
+from game import Game
+from gameobjects.util_functions import entity_at_pos, free_line_between_pos, distance_between_pos
 from map.directions_util import direction_between_pos
+from map.game_map import GameMap
 from rendering.render_order import RenderOrder
 
 @dataclass
@@ -33,7 +34,7 @@ class Entity:
     x : int
     y : int
     char : str
-    color : tuple
+    color : colors
     name : str
     descr : str = ''
     type : Union[GenericType, ItemType, MonsterType] = field(default=GenericType.DEFAULT)
@@ -43,7 +44,7 @@ class Entity:
     material: Optional[Material] = None
     bodytype: Optional[BodyType] = None
 
-    fighter : Optional[Fighter] = None
+    fighter : Optional = None # Adding Fighter as Type Hint would cause a circular import
     ai: Optional[BaseAI] = None
     skills: Optional[SkillList] = None
     item: Optional[Item] = None
@@ -88,12 +89,8 @@ class Entity:
         self.actionplan.owner = self
         self.statistics.owner = self
 
-    def __str__(self):
-        return f'{self.name}:{id(self)}'
-
     def __repr__(self):
-        return f'{self.name}:{id(self)}\n' \
-               f'Pos: {self.pos}'
+        return f'{self.name}:{id(self)} at {self.pos}'
 
     ###############################
     # ATTRIBUTE RELATED FUNCTIONS #
@@ -156,8 +153,9 @@ class Entity:
     def extended_descr(self, game):
         extend_descr = []
         # TODO All colors are WIP
-        if self.fighter and self.fighter.weapon:
-            extend_descr += [f'It attacks with %dark_crimson%{self.fighter.weapon.attack_type.name.lower()}%% strikes.']
+        if self.fighter and self.fighter.active_weapon:
+            extend_descr += [
+                f'It attacks with %dark_crimson%{self.fighter.active_weapon.item.equipment.attack_type.name.lower()}%% strikes.']
 
         if self.fighter and game.player.fighter.shield:
             extend_descr += [f'Blocking its attacks will be %dark_crimson%{game.player.fighter.average_chance_to_block(self)}%%.']
@@ -174,8 +172,8 @@ class Entity:
                                 f'av:{self.fighter.defense} (modded:{self.fighter.modded_defense})',
                                 f'dmg:{self.fighter.base_dmg_potential} (modded:{self.fighter.modded_dmg_potential})',
                                 f'Your ctb:{game.player.fighter.average_chance_to_block(self, debug=True)}']
-            if self.fighter.weapon:
-                extend_descr += [f'wp:{self.fighter.weapon.full_name}']
+            if self.fighter.active_weapon:
+                extend_descr += [f'wp:{self.fighter.active_weapon.full_name}']
             if self.architecture:
                 ext1 = self.architecture.on_interaction.__name__ if self.architecture.on_interaction else None
                 ext2 = self.architecture.on_collision.__name__ if self.architecture.on_collision else None
@@ -198,6 +196,22 @@ class Entity:
         else:
             return False
 
+    #############################################
+    # PROPERTIES TO ACCESS COMPONENT ATTRIBUTES #
+    #############################################
+
+    @property
+    def attack_type(self):
+        return self.item.equipment.attack_type if self.item is not None and self.item.equipment is not None else None
+
+    @property
+    def dmg_potential(self):
+        return self.item.equipment.dmg_potential if self.item is not None and self.item.equipment is not None else None
+
+    @property
+    def moveset(self):
+        return self.item.equipment.moveset if self.item is not None and self.item.equipment is not None else None
+
     ####################
     # ACTION FUNCTIONS #
     ####################
@@ -212,32 +226,19 @@ class Entity:
     def try_move(self, dx, dy, game, ignore_entities=False, ignore_walls = False):
         """
         Attempts to move the entity in the given direction.
-        If the direction is blocked by another entity, the blocking entity is returned.
-        If the direction is non-walkable, False is returned
+        Returns True on successful move.
 
         """
         dest_x, dest_y = self.x + dx, self.y + dy
         if not game.map.is_wall(dest_x, dest_y) or ignore_walls:
             blocked = entity_at_pos(game.walk_blocking_ents, dest_x, dest_y)
             if blocked and not ignore_entities:
-                return blocked
+                return False
             else:
                 self.move(dx, dy)
+                return True
         else:
             return False
-
-    def move_away_from(self, target, game):
-        """ Move Entity away from intended target """
-
-        # loop through available directions and pick the first that is at least one square from the player
-        # loop does not check for walls, so an entity can back up into walls (and thus fail/be cornered)
-        for dx in (-1, 0, 1):
-            for dy in (-1, 0, 1):
-                flee_pos = (self.x + dx, self.y + dy)
-                distance = target.distance_to_pos(*flee_pos)
-                if distance > 1.5:
-                    self.try_move(dx, dy, game)
-                    return
 
     def proc_every_turn(self, last_player_action, game, start=True):
         """
@@ -263,10 +264,13 @@ class Entity:
         self.color = choice(colors)
 
     def distance_to_pos(self, x, y):
-        return math.sqrt((x - self.x) ** 2 + (y - self.y) ** 2)
+        return distance_between_pos(*self.pos, x, y)
 
     def distance_to_ent(self, other):
         return self.distance_to_pos(other.x, other.y)
+
+    def free_line_to_ent(self, other, game:Game):
+        return free_line_between_pos(*self.pos, *other.pos, game)
 
     def direction_to_pos(self, x, y):
         return direction_between_pos(*self.pos, x, y)

@@ -6,7 +6,7 @@ class GenericType(Enum):
     UNIQUE = auto()
 
 
-class MonsterType(Enum): # currently unused
+class MonsterType(Enum): # Placeholder at the moment
     GENERIC = auto()
     ELITE = auto()
     LEADER = auto()
@@ -15,6 +15,7 @@ class MonsterType(Enum): # currently unused
 class ItemType(Enum):
     USEABLE = auto()
     WEAPON = auto()
+    RANGED = auto()
     SHIELD = auto()
     ARMOR = auto()
     BELT = auto()
@@ -24,6 +25,7 @@ class ItemType(Enum):
 class ContainerType(Enum):
     BARREL = auto()
     CHEST_BASIC = auto()
+
 
 # RarityType can be assigned as an additional value to data entries, to add a random weight specific to that data entry
 class RarityType(Enum):
@@ -46,6 +48,13 @@ class Material(Enum):
     # BUFF LEATHER
     IRON = auto()
     STEEL = auto()
+
+
+class Element(Enum): # Placeholder at the moment
+    FIRE = auto()
+    WATER = auto()
+    EARTH = auto()
+    ACID = auto()
 
 
 class Condition(Enum):

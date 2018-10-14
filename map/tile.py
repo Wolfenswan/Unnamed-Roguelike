@@ -64,3 +64,12 @@ class Tile:
             self.block_sight = True
             self.walkable = False
         self.set_char()
+
+    def surrounding_tiles(self, dist = 1):
+        game_map = self.owner
+        tiles = []
+        for dx in range(-dist, dist):
+            for dy in range(-dist, dist):
+                if not (dx == 0 and dy == 0) and game_map.tiles.get((self.x + dx, self.y + dy)):
+                    tiles += [game_map.tiles[self.x + dx, self.y + dy]]
+        return tiles

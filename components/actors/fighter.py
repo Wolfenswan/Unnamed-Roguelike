@@ -2,6 +2,8 @@ from random import randint, choice
 
 import logging
 
+from dataclasses import dataclass
+
 from components.actors.fighter_util import DamagePercentage, AttributePercentage, get_gui_data
 from components.actors.status_modifiers import Presence, Surrounded
 from components.statistics import statistics_updater
@@ -10,22 +12,25 @@ from data.actor_data.act_status_mod import status_modifiers_data
 from data.item_data.wp_attacktypes import wp_attacktypes_data
 from data.gui_data.gui_fighter import hpdmg_string_data, stadmg_string_data, sta_color_data, stadmg_color_data, \
     sta_string_data, hpdmg_color_data, hp_string_data, hp_color_data
+from game import Game
 from gameobjects.block_level import BlockLevel
 from gameobjects.util_functions import entity_at_pos
 from gui.messages import Message, MessageType, MessageCategory
+from rendering.render_animations import animate_projectile
 from rendering.render_order import RenderOrder
 
-# TODO Dataclass
+@dataclass
 class Fighter:
-    def __init__(self, hp, stamina, base_av, base_strength, base_vision):
-        self.__hp = hp
-        self.max_hp = hp
-        self.__stamina = stamina
-        self.max_stamina = stamina
-        self.__base_av = base_av
-        self.__base_strength = base_strength
-        self.__base_vision = base_vision
+    __hp:int
+    __stamina:int
+    __base_av:int
+    __base_strength:int
+    __base_vision:int
 
+    def __post_init__(self):
+        self.active_weapon = None
+        self.max_hp = self.__hp
+        self.max_stamina = self.__stamina
         self.surrounded = Surrounded.FREE
         self.is_blocking = False
         self.presence = {
@@ -59,9 +64,6 @@ class Fighter:
     def hp_string(self):
         percentage = (self.__hp / self.max_hp * 100)
         return get_gui_data(percentage, hp_string_data, AttributePercentage)
-        # for hp_percentage in list(AttributePercentage):
-        #     if hp_percentage.value <= percentage:
-        #         return hp_string_data[hp_percentage]
 
     @property
     def hp_color(self):
@@ -108,8 +110,8 @@ class Fighter:
         :return: tuple of min/max damage
         :rtype: tuple
         """
-        if self.weapon:
-            return (self.strength+self.weapon.dmg_potential[0], self.strength + (self.weapon.dmg_potential[1]))
+        if self.active_weapon is not None:
+            return (self.strength + self.active_weapon.dmg_potential[0], self.strength + (self.active_weapon.dmg_potential[1]))
         return (self.strength, self.strength)
 
     @property
@@ -117,8 +119,8 @@ class Fighter:
         w_mod = 1
         p_mod = 1
 
-        if self.weapon:
-            w_mod = self.weapon.moveset.dmg_multipl
+        if self.active_weapon is not None:
+            w_mod = self.active_weapon.moveset.dmg_multipl
 
         if self.presence[Presence.DAZED]:
             p_mod = status_modifiers_data[Presence.DAZED]['dmg_multipl']
@@ -182,13 +184,24 @@ class Fighter:
         return vision
 
     @property
-    def weapon(self):
+    def weapon_melee(self):
         """
-        :return: Equipment component of currently equipped weapon.
+        :return: Currently equipped melee weapon entity
         """
         weapon_ent = self.owner.paperdoll.weapon_arm.weapon # TODO add check for 2nd hand after implementing dual wielding
         if weapon_ent:
-            return weapon_ent.item.equipment
+            return weapon_ent
+        else:
+            return None
+
+    @property
+    def weapon_ranged(self):
+        """
+        :return: Currently equipped ranged weapon entity
+        """
+        weapon_ent = self.owner.paperdoll.weapon_arm.ranged
+        if weapon_ent:
+            return weapon_ent
         else:
             return None
 
@@ -275,61 +288,68 @@ class Fighter:
     # ATTACK RELATED FUNCTIONS #
     ############################
 
-    def attack_setup(self, target, game, mod=1, attack_string='hits', ignore_moveset = False):
+    def attack_setup(self, target, game, dmg_mod_multipl=1, verb:str='hits', ignore_moveset:bool=False, melee:bool=True, ranged_projectile:bool=True):
         results = []
         blocked = False
         extra_attacks = []
 
         if ignore_moveset:
-            attack_power = choice(self.base_dmg_potential) * mod
+            attack_power = choice(self.base_dmg_potential) * dmg_mod_multipl
         else:
-            if self.weapon:
-                move_results = self.weapon.moveset.execute(self.owner, target)
-                attack_string = move_results.get('attack_verb', 'hits')
+            if self.active_weapon is not None:
+                move_results = self.active_weapon.moveset.execute(self.owner, target)
+                verb = move_results.get('attack_verb', 'hits')
                 extra_attacks = move_results.get('extra_attacks', [])
+            else:
+                verb = 'pummels'
 
-            attack_power = self.dmg_roll * mod
+            attack_power = self.dmg_roll * dmg_mod_multipl
+
+        if not melee and ranged_projectile:
+            animate_projectile(*self.owner.pos, *target.pos, self.owner.distance_to_ent(target), game)
 
         logging.debug(f'{self.owner.name} prepares to attack {target.name} with base damage {self.base_dmg_potential},'
                       f' (modded {self.modded_dmg_potential}) for a power of {attack_power}')
 
-        if self.stamina < attack_power/3:
+        if self.stamina < attack_power / 3:
             message = Message(f'PLACEHOLDER: Attacking without enough Stamina!', category=MessageCategory.COMBAT,
                               type=MessageType.SYSTEM)
             results.append({'message': message})
             return results
 
-        if target.fighter.stamina <= 0: # If the target is out of stamina, attack power is doubled
+        if target.fighter.stamina <= 0:  # If the target is out of stamina, attack power is doubled
             attack_power *= 2
 
         if target.fighter.is_blocking:
             blocked = target.fighter.attempt_block(self, attack_power)
 
-        if blocked: # Block exertion
+        if blocked:  # Block exertion
             sta_dmg = round(attack_power / 2)
-            mod = wp_attacktypes_data[self.weapon.attack_type].get('block_sta_dmg_multipl', 1)
-            sta_dmg = round(sta_dmg * mod)
-            logging.debug(f'{target.name} block exert multiplied by {mod} due to {self.owner.name} attack type {self.weapon.attack_type}')
+            dmg_mod_multipl = wp_attacktypes_data[self.active_weapon.attack_type].get('block_sta_dmg_multipl', 1)
+            sta_dmg = round(sta_dmg * dmg_mod_multipl)
+            logging.debug(
+                f'{target.name} block exert multiplied by {dmg_mod_multipl} due to {self.owner.name} attack type {self.active_weapon.attack_type}')
             results.append(target.fighter.exert(sta_dmg, 'block'))
 
-            if target.is_player:
-                message = Message(f'You block the attack, dazing the {self.owner.name_with_color}!',
-                                  category=MessageCategory.COMBAT, type=MessageType.COMBAT_GOOD)
-            else:
-                message = Message(f'The {self.owner.name_with_color} blocks your attack, dazing you!',
-                                  category=MessageCategory.COMBAT, type=MessageType.COMBAT_BAD)
+            if melee:
+                if target.is_player:
+                    message = Message(f'You block the attack, dazing the {self.owner.name_with_color}!',
+                                      category=MessageCategory.COMBAT, type=MessageType.COMBAT_GOOD)
+                else:
+                    message = Message(f'The {self.owner.name_with_color} blocks your attack, dazing you!',
+                                      category=MessageCategory.COMBAT, type=MessageType.COMBAT_BAD)
 
-            self.set_presence(Presence.DAZED, True, 1)
-            results.append({'message': message})
+                self.set_presence(Presence.DAZED, True, 1)
+                results.append({'message': message})
         else:
-            results.extend(self.attack_execute(target, attack_power, attack_string))
+            results.extend(self.attack_execute(target, attack_power, verb))
 
         for attack_pos in extra_attacks:
             extra_target = entity_at_pos(game.npc_ents, *attack_pos)
             if extra_target:
-                results.extend(self.attack_execute(extra_target, attack_power//2, 'further hits'))
+                results.extend(self.attack_execute(extra_target, attack_power // 2, 'further hits'))
 
-        self.exert(attack_power/3, 'attack')
+        self.exert(attack_power / 3, 'attack')
         return results
 
     def attack_execute(self, target, power, attack_string):
@@ -373,20 +393,23 @@ class Fighter:
         self.is_blocking = not self.is_blocking
 
     def attempt_block(self, attacker, damage):
+        """
+        If an actor's blocking defense is greater than the inflicted damage, all damage is nullified. Otherwise there
+        is a diminishing chance to block up to double of the block defense.
+        """
         block_def = self.modded_block_def
 
         if damage <= block_def:
             return True
         elif damage <= block_def * 2:
-            chance = self.block_chance(attacker.weapon.attack_type, damage)
-            print(chance)
+            chance = self.block_chance(attacker.active_weapon.attack_type, damage)
             if chance > 0 and chance >= randint(0,100):
                 return True
         return False
 
     def block_chance(self, attack_type, damage):
         """
-        Returns the chance to block a strike that surpasses an entitiess's block defense.
+        Returns the chance to block a strike that surpasses an entity's block defense.
         It is possible to block up to the double of maximum block defense.
         """
         block_def = self.shield.block_def
@@ -406,7 +429,7 @@ class Fighter:
         average = 0
         dmg_range = attacker.fighter.base_dmg_potential
         for dmg in dmg_range:
-            average += self.block_chance(attacker.fighter.weapon.attack_type, dmg)
+            average += self.block_chance(attacker.fighter.active_weapon.item.equipment.attack_type, dmg)
         average /= len(dmg_range)
 
         if debug:
@@ -448,7 +471,7 @@ class Fighter:
 
         # Create gibs
         # TODO Consider force of impact (amount of damage done beyond 0 hp?) to vary spread
-        for i in range(1, randint(2, 4)):
+        for i in range(1, randint(3, 5)):
             c_x, c_y = (randint(x - 1, x + 1), randint(y - 1, y + 1))
             game.map.tiles[(c_x, c_y)].gib()
             if not game.map.tiles[(c_x,c_y)].blocked and randint(0, 100) > 85:

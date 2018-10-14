@@ -19,6 +19,7 @@ def initialize_game(game):
 
     # Setup the Player character #
     game.cursor = Entity(0, 0, 'X', colors.white, 'Cursor', render_order=RenderOrder.CURSOR)
+    game.projectile = Entity(0, 0, '*', colors.white, 'Projectile', render_order=RenderOrder.NONE)
     player = Player('Player')
     player_loadouts = { # TODO adapt entries
         'loadout1': {
@@ -33,7 +34,7 @@ def initialize_game(game):
                 'belt_generic':{},
                 'round_shield':{}
             },
-            'backpack': ('pot_heal', 'bomb_1','bomb_1','bomb_1','torch', 'spear', 'flail')
+            'backpack': ('pot_heal', 'bomb_1','bomb_1','bomb_1','torch', 'spear', 'flail', 'bow')
         }
     }
 

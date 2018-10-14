@@ -63,6 +63,7 @@ moveset_flail = {
     }
 }
 
+
 moveset_mandibles = {
     'random' : True,
     'verbs': ('bites', 'gnaws at'),
@@ -76,6 +77,12 @@ moveset_mandibles = {
 
 
 moveset_claws = {
-    'verbs': ('lashes', 'claws', 'rips'),
+    'verbs': ('lashes', 'claws', 'rips','rends'),
+    1: {}
+}
+
+
+moveset_spit = {
+    'verbs': ('spits at', 'discharges saliva at'),
     1: {}
 }

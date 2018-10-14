@@ -1,3 +1,6 @@
+from gameobjects.util_functions import free_line_between_pos
+
+
 class SkillCondition:
     """
     TODO Add:
@@ -15,7 +18,7 @@ class SkillCondition:
         actor = kwargs.get('actor')
         target = kwargs.get('target')
         game = kwargs.get('game')
-        game.map.free_line_between_tiles(actor.x, actor.y, target.x, target.y)
+        free_line_between_pos(*actor.pos, *target.pos, game)
 
     @staticmethod
     def distance_to(**kwargs):

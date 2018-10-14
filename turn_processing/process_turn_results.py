@@ -61,8 +61,8 @@ def process_turn_results(player_turn_results, game, fov_map):
 
         if waiting:
             if player.in_combat(game):
-                if player.fighter.weapon:
-                    player.fighter.weapon.moveset.cycle_moves(reset=True) # Waiting resets weapon moves
+                if player.fighter.active_weapon:
+                    player.fighter.active_weapon.moveset.cycle_moves(reset=True) # Waiting resets weapon moves
                 game.state = GameState.ENEMY_TURN
             else:
                 # TODO placeholder for regeneration/resting
