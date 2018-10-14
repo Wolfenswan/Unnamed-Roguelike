@@ -71,7 +71,7 @@ class NPC(Entity):
                 # Set self's coordinates to the next path tile
                 logging.debug(f'{self} is A*-moving.')
                 if target.pos == (x,y): # At some edge-cases NPCs might attempt a* movement when they are adjacent to the target
-                    self.fighter.melee_attack_setup(target, game)
+                    self.fighter.attack_setup(target, game)
                 else:
                     self.x, self.y = x, y
                 logging.debug(f'{self} finished A*-moving.')

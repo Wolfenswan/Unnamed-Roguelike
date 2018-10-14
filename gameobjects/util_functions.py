@@ -19,16 +19,31 @@ def distance_between_pos(x1, y1, x2, y2, rounding=True):
     return distance
 
 
-def free_line_between_pos(x1, y1, x2, y2, game:Game):
+def line_between_pos(x1:int, y1:int, x2:int, y2:int, inclusive=False):
+    """
+    Draws a line from the starting position to the end position and returns all positions in between as a list.
+    List does not include start/end pos by default.
+    """
+
     dist = distance_between_pos(x1, y1, x2, y2)
     x, y = x1, y1
+    pos_list = []
+    if inclusive:
+        pos_list.append((x,y))
     for s in range(dist):
         dir = direction_between_pos(x, y, x2, y2)
         x += dir[0]
         y += dir[1]
-        if (x, y) == (x2, y2):
+        if (x, y) == (x2, y2) and not inclusive:
             break
-        if game.map.is_blocked(x, y, game.blocking_ents):
+        pos_list.append((x,y))
+    return pos_list
+
+
+def free_line_between_pos(x1, y1, x2, y2, game:Game, inclusive:bool=False):
+    pos_list = line_between_pos(x1, y1, x2, y2, inclusive)
+    for pos in pos_list:
+        if game.map.is_blocked(*pos, game.blocking_ents):
             return False
     return True
 

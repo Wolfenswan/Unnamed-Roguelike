@@ -64,6 +64,25 @@ moveset_flail = {
 }
 
 
+moveset_bow = {
+    1: {
+        'descr': f"A quick but {col1}weaker draw%% to gauge the distance to the target.",
+        'verb': 'shoots',
+        'dmg_multipl': 0.5
+    },
+    2: {
+        'descr': f"A {col1}standard draw%%, likely hitting the torso.",
+    },
+    3: {
+        'descr': f"A followup, {col1}average shot%%, to prepare for the final target.",
+    },
+    3: {
+        'descr': f"A {col1}devastating head shot%%, aimed right between the eyes.",
+        'dmg_multipl': 2
+    },
+}
+
+
 moveset_mandibles = {
     'random' : True,
     'verbs': ('bites', 'gnaws at'),

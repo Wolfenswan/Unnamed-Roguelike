@@ -5,13 +5,13 @@ class Simple:
 
     def decide_action(self, target, game):
         actor = self.owner.owner
-        distance = actor.distance_to_other(target)
+        distance = actor.distance_to_ent(target)
 
         results = []
 
-        if distance > 2:
+        if distance >= 2:
             actor.move_astar(target, game)
         else:
-            results.extend(actor.fighter.melee_attack_setup(target, game))
+            results.extend(actor.fighter.attack_setup(target, game))
 
         return results

@@ -67,6 +67,9 @@ def handle_player_turn_keys(key):
     if key_char in ['1','2','3','4','5','6','7','8','9']:
         return {'quick_use': int(key_char)}
 
+    if key.vk == tcod.KEY_TAB:
+        return {'toggle_weapon': True}
+
     if key_char == 'g':
         return {'pickup': True}
     elif key_char == 'i':
@@ -83,15 +86,9 @@ def handle_player_turn_keys(key):
         return {'toggle_block': True}
     elif key.vk in [tcod.KEY_ENTER, tcod.KEY_KPENTER]:
         return {'confirm': True}
-    # elif key_char == 'd':
-    #     return {'drop_inventory': True}
 
     # No key was pressed
     return {}
-
-
-# def handle_menu_keys(key):
-#     return {'menu_selection': key.c}
 
 
 def handle_player_dead_keys(key):
@@ -101,10 +98,6 @@ def handle_player_dead_keys(key):
         return {'show_inventory': True}
 
     return {}
-
-#
-# def handle_targeting_keys():
-#     return {}
 
 
 def handle_mouse(mouse):

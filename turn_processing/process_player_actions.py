@@ -36,6 +36,7 @@ def process_player_input(action, game, fov_map, targeting_item = None):
     # menu_selection = action.get('menu_selection')
     toggle_look = action.get('toggle_look')
     toggle_block = action.get('toggle_block')
+    toggle_weapon = action.get('toggle_weapon')
     confirm = action.get('confirm')
 
     turn_results = []
@@ -63,16 +64,14 @@ def process_player_input(action, game, fov_map, targeting_item = None):
                     # If a NPC is blocking the way #
                     elif target.fighter:
                         if not player.fighter.is_blocking:
-                            attack_results = player.fighter.melee_attack_setup(target, game)
+                            attack_results = player.fighter.attack_setup(target, game)
                             turn_results.extend(attack_results)
                         else:
                             Message('PLACEHOLDER: cant attack while blocking.', type=MessageType.SYSTEM).add_to_log(game)
                     # If a static object is blocking the way #
                     elif target.architecture:
 
-                        if interact and target.architecture.on_interaction: # interacting with the object
-                            #interaction_results  = Architecture.toggle_door(player, target, game)
-                            #interaction_results = target.architecture.on_interaction(player, target, game)
+                        if interact and target.architecture.on_interaction: # interacting with a architecture entity
                             interaction_results = target.architecture.on_interaction(player, target, game)
                             turn_results.extend(interaction_results)
 
@@ -80,9 +79,9 @@ def process_player_input(action, game, fov_map, targeting_item = None):
                             collision_results = target.architecture.on_collision(player, target, game)
                             turn_results.extend(collision_results)
                     elif move:
-                        print('Your way is blocked.') # TODO placeholder
+                        print('PLACEHOLDER: Your way is blocked.') # TODO placeholder
                     elif interact:
-                        print('There is nothing to interact with') # TODO placeholder
+                        print('PLACEHOLDER: There is nothing to interact with') # TODO placeholder
                 elif move:
                     player.move(dx, dy)
                     turn_results.append({'fov_recompute':True})
@@ -241,6 +240,11 @@ def process_player_input(action, game, fov_map, targeting_item = None):
         qu_results = player.qu_inventory.use(quick_use_item, game, entities=entities, fov_map=fov_map)
         turn_results.extend(qu_results)
 
+    if toggle_weapon:
+        new_weapon = player.fighter.toggle_weapon()
+        turn_results.append({'weapon_switched': new_weapon})
+
+    # Other #
     if exit:
         if game.state in (GameState.SHOW_INVENTORY, GameState.CURSOR_ACTIVE):
             game.state = game.previous_state

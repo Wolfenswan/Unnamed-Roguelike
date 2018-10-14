@@ -44,12 +44,12 @@ class SkillCharge(BaseSkill):
         hit = animate_move_to(user, tx, ty, game)
         if hit:
             if hit.fighter:
-                results.extend(user.fighter.melee_attack_setup(hit, game, dmg_mod_multipl=2, verb='gores', ignore_moveset=True))
+                results.extend(user.fighter.attack_setup(hit, game, dmg_mod_multipl=2, verb='gores', ignore_moveset=True))
             elif hit.architecture:
                 results.extend(
-                    user.fighter.melee_attack_setup(user, game, dmg_mod_multipl=0.5, verb='rams', ignore_moveset=True))
+                    user.fighter.attack_setup(user, game, dmg_mod_multipl=0.5, verb='rams', ignore_moveset=True))
         elif hit is False:  # If a wall is hit during the charge, damage the charging entity
-            results.extend(user.fighter.melee_attack_setup(user, game, dmg_mod_multipl=0.5, verb='rams', ignore_moveset=True))
+            results.extend(user.fighter.attack_setup(user, game, dmg_mod_multipl=0.5, verb='rams', ignore_moveset=True))
         return results
 
 
@@ -86,5 +86,5 @@ class SkillSlam(BaseSkill):
         hit = entity_at_pos(game.fighter_ents,tx, ty)
         if hit:
             if hit.fighter:
-                results.extend(user.fighter.melee_attack_setup(hit, game, dmg_mod_multipl=2, verb='slams', ignore_moveset=True))
+                results.extend(user.fighter.attack_setup(hit, game, dmg_mod_multipl=2, verb='slams', ignore_moveset=True))
         return results

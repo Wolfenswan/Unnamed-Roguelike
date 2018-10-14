@@ -15,7 +15,7 @@ class Swarm:
 
         results = []
 
-        if distance > 2:
+        if distance >= 2:
             # 1. Check: Is Target either surrounded by friendlies or friendlies are next to self #
             if friendlies_nearby or friendlies_near_target:
                 logging.debug(f'{actor} has friendly nearby and moves to player.')
@@ -25,10 +25,10 @@ class Swarm:
                 nearest_ent = actor.entities_in_distance(dist=actor.fighter.vision, entities=game.npc_ents)[0]
                 logging.debug(f'{actor} is moving to friendly.')
                 actor.move_astar(nearest_ent, game)
-    
+
             # 3. Check: If all else fails, try to flee #
             else:  # TODO coin toss whether to cower or flee?
-                logging.debug(f'{npc} is keeping distance from player.')
+                logging.debug(f'{actor} is keeping distance from player.')
                 actor.move_away_from(target, game)
         else:
             if friendlies_near_target:
@@ -44,10 +44,10 @@ class Swarm:
                             pos = choice(pos_list)
                             actor.x, actor.y = pos
 
-                # Swarmer may attack after moving around the target #
-                attack_results = actor.fighter.melee_attack_setup(target, game)
+                # Swarmer may attack after moving around the target
+                attack_results = actor.fighter.attack_setup(target, game)
+                results.extend(attack_results)
             else:
-                attack_results = self.decide_move(target, game)
-            results.extend(attack_results)
+                actor.move_away_from(target, game)
 
         return results

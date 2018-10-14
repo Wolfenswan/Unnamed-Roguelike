@@ -9,12 +9,13 @@ from components.actors.status_modifiers import Presence, Surrounded
 from components.statistics import statistics_updater
 from config_files import colors
 from data.actor_data.act_status_mod import status_modifiers_data
+from data.data_types import ItemType
 from data.item_data.wp_attacktypes import wp_attacktypes_data
 from data.gui_data.gui_fighter import hpdmg_string_data, stadmg_string_data, sta_color_data, stadmg_color_data, \
     sta_string_data, hpdmg_color_data, hp_string_data, hp_color_data
 from game import Game
 from gameobjects.block_level import BlockLevel
-from gameobjects.util_functions import entity_at_pos
+from gameobjects.util_functions import entity_at_pos, line_between_pos
 from gui.messages import Message, MessageType, MessageCategory
 from rendering.render_animations import animate_projectile
 from rendering.render_order import RenderOrder
@@ -188,7 +189,7 @@ class Fighter:
         """
         :return: Currently equipped melee weapon entity
         """
-        weapon_ent = self.owner.paperdoll.weapon_arm.weapon # TODO add check for 2nd hand after implementing dual wielding
+        weapon_ent = self.owner.paperdoll.weapon_arm.weapon_melee # TODO add check for 2nd hand after implementing dual wielding
         if weapon_ent:
             return weapon_ent
         else:
@@ -199,7 +200,7 @@ class Fighter:
         """
         :return: Currently equipped ranged weapon entity
         """
-        weapon_ent = self.owner.paperdoll.weapon_arm.ranged
+        weapon_ent = self.owner.paperdoll.weapon_arm.weapon_ranged
         if weapon_ent:
             return weapon_ent
         else:
@@ -283,15 +284,31 @@ class Fighter:
                                                planned_function=self.set_presence,
                                                planned_function_args=(presence, False))
 
+    def toggle_weapon(self):
+        if (self.weapon_melee is not None and self.weapon_ranged is not None):
+            if self.active_weapon == self.weapon_melee:
+                self.active_weapon = self.weapon_ranged
+            else:
+                self.active_weapon = self.weapon_melee
+        else:
+            if self.weapon_melee is not None:
+                self.active_weapon = self.weapon_melee
+            elif self.weapon_ranged is not None:
+                self.active_weapon = self.weapon_ranged
+            else:
+                self.active_weapon = None
+        return self.active_weapon
 
     ############################
     # ATTACK RELATED FUNCTIONS #
     ############################
 
-    def attack_setup(self, target, game, dmg_mod_multipl=1, verb:str='hits', ignore_moveset:bool=False, melee:bool=True, ranged_projectile:bool=True):
+    def attack_setup(self, target, game, dmg_mod_multipl=1, verb:str='hits', ignore_moveset:bool=False, ranged_projectile:bool=True):
         results = []
         blocked = False
         extra_attacks = []
+
+        melee = True if self.active_weapon.type == ItemType.WEAPON_MELEE else False
 
         if ignore_moveset:
             attack_power = choice(self.base_dmg_potential) * dmg_mod_multipl
@@ -306,6 +323,18 @@ class Fighter:
             attack_power = self.dmg_roll * dmg_mod_multipl
 
         if not melee and ranged_projectile:
+            logging.debug(f'{self.owner} is attempting ranged attack at {target}')
+            if not self.owner.free_line_to_ent(target, game):
+                pos_list = line_between_pos(*self.owner.pos, *target.pos)
+                obstacle = next(entity_at_pos(game.blocking_ents, *pos) for pos in pos_list if entity_at_pos(game.blocking_ents, *pos) is not None)
+                logging.debug(f'{obstacle} is blocking direct los')
+                if randint(0,1): # TODO can later be modified by skill level, attributes etc.
+                    message = Message(f'PLACEHOLDER: {self.owner.name} hits {obstacle.name} instead of {target.name}!',
+                                      category=MessageCategory.COMBAT,
+                                      type=MessageType.SYSTEM)
+                    results.append({'message': message})
+                    target = obstacle
+
             animate_projectile(*self.owner.pos, *target.pos, self.owner.distance_to_ent(target), game)
 
         logging.debug(f'{self.owner.name} prepares to attack {target.name} with base damage {self.base_dmg_potential},'
@@ -350,6 +379,7 @@ class Fighter:
                 results.extend(self.attack_execute(extra_target, attack_power // 2, 'further hits'))
 
         self.exert(attack_power / 3, 'attack')
+
         return results
 
     def attack_execute(self, target, power, attack_string):
@@ -460,10 +490,12 @@ class Fighter:
 
     def death(self, game):
 
-        if game.debug['invin'] and self.owner.is_player:
-            self.owner.fighter.hp = self.owner.fighter.max_hp
-
         ent = self.owner
+
+        if game.debug['invin'] and ent.is_player:
+            self.hp = self.max_hp
+            return Message(f'Invincibility enabled')
+
         ent.ai = None
         x, y = ent.x, ent.y
         ent.render_order = RenderOrder.NONE
@@ -477,12 +509,12 @@ class Fighter:
             if not game.map.tiles[(c_x,c_y)].blocked and randint(0, 100) > 85:
                 game.map.tiles[(c_x, c_y)].gib('~')
 
-            type = MessageType.GOOD if not ent.is_player else MessageType.BAD
-            message = Message(f'{ent.address_with_color.title()} {ent.state_verb_present} dead!', type=type, category=MessageCategory.OBSERVATION)
+        type = MessageType.GOOD if not ent.is_player else MessageType.BAD
+        message = Message(f'{ent.address_with_color.title()} {ent.state_verb_present} dead!', type=type, category=MessageCategory.OBSERVATION)
 
-            #ent.render_order = RenderOrder.CORPSE
-            ent.blocks[BlockLevel.WALK] = False
-            ent.ai = None
-            #ent.name = f'{ent.name.title()} remains'
+        #ent.render_order = RenderOrder.CORPSE
+        ent.blocks[BlockLevel.WALK] = False
+        ent.ai = None
+        #ent.name = f'{ent.name.title()} remains'
 
         return message

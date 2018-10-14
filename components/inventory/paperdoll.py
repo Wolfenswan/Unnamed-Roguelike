@@ -126,19 +126,19 @@ class Torso:
 
 
 class Arm:
-    def __init__(self, carried=None, ranged=None, armor=None, ring=None):
+    def __init__(self, carried=None, wp_ranged=None, armor=None, ring=None):
         self.carried = carried
-        self.ranged = ranged
+        self.ranged = wp_ranged
         self.armor = armor
         self.ring = ring
 
     # Due to the properties and respective setters equipment of various types will only occupy the self.carried slot
     @property
-    def weapon(self):
+    def weapon_melee(self):
         return self.carried
 
-    @weapon.setter
-    def weapon(self, item):
+    @weapon_melee.setter
+    def weapon_melee(self, item):
         self.carried = item
 
     @property
@@ -156,6 +156,14 @@ class Arm:
     @misc.setter
     def misc(self, item):
         self.carried = item
+
+    @property
+    def weapon_ranged(self):
+        return self.ranged
+
+    @weapon_ranged.setter
+    def weapon_ranged(self, item):
+        self.ranged = item
 
 
 class Legs:

@@ -25,7 +25,7 @@ cond_name_data = {
 
 
 cond_descr_data = {
-    ItemType.WEAPON: {
+    ItemType.WEAPON_MELEE: {
         Material.OAK: {
             Condition.POOR: (
                 'You are worried it might snap at any second.',
@@ -72,6 +72,20 @@ cond_descr_data = {
             ),
             Condition.LEGENDARY: default_descr['legend']
         }
+    },
+    ItemType.WEAPON_RANGED: {
+        Material.OAK: {
+            Condition.POOR: default_descr['poor'],
+            Condition.NORMAL: default_descr['normal'],
+            Condition.GOOD: default_descr['good'],
+            Condition.LEGENDARY: default_descr['legend']
+        },
+        Material.CHITIN: {
+            Condition.POOR: default_descr['poor'],
+            Condition.NORMAL: default_descr['normal'],
+            Condition.GOOD: default_descr['good'],
+            Condition.LEGENDARY: default_descr['legend']
+        },
     },
     ItemType.ARMOR: {
         Material.OAK: {

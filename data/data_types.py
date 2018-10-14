@@ -14,8 +14,8 @@ class MonsterType(Enum): # Placeholder at the moment
 
 class ItemType(Enum):
     USEABLE = auto()
-    WEAPON = auto()
-    RANGED = auto()
+    WEAPON_MELEE = auto()
+    WEAPON_RANGED = auto()
     SHIELD = auto()
     ARMOR = auto()
     BELT = auto()

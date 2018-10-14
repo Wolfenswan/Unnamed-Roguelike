@@ -201,6 +201,10 @@ class Entity:
     #############################################
 
     @property
+    def active_weapon(self):
+        return self.fighter.active_weapon if self.fighter is not None else None
+
+    @property
     def attack_type(self):
         return self.item.equipment.attack_type if self.item is not None and self.item.equipment is not None else None
 
@@ -246,6 +250,7 @@ class Entity:
         """
         if start:
             self.statistics.reset_turn()
+
             for event in self.every_turn_start:
                 eval(event)
         else:
@@ -281,10 +286,10 @@ class Entity:
     def same_pos_as(self, other_ent):
         return self.pos == other_ent.pos
 
-    def entities_in_distance(self, entities:[List], dist:float=1.5):
+    def entities_in_distance(self, entities:List, dist:float=1.5):
         """ returns nearby entities in given distance """
         entities_in_range = [ent for ent in entities if ent != self and self.distance_to_ent(ent) <= dist]
-        logging.debug(f'Nearby : {entities_in_range}')
+        #logging.debug(f'Nearby : {entities_in_range}')
         return entities_in_range
 
     def enemies_in_distance(self, hostile_entities:List, dist:float=1.5): # NOTE: Only relevant for player at the moment.

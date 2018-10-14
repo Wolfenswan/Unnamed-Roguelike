@@ -1,11 +1,11 @@
 from config_files import colors
 from data.data_types import ItemType, Material, AttackType
 from data.data_types import RarityType
-from data.item_data.wp_movesets import moveset_sword, moveset_spear, moveset_flail
+from data.item_data.wp_movesets import moveset_sword, moveset_spear, moveset_flail, moveset_bow
 
 WP_CHAR = '\\'
 WP_EQUIP = 'weapon_arm'  # which extremity the item is equipped to
-WP_TYPE = ItemType.WEAPON  # which slot it will take
+WP_TYPE = ItemType.WEAPON_MELEE  # which slot it will take
 
 ARM_CHAR = ']'
 ARM_EQUIP = 'torso'  # which extremity the item is equipped to
@@ -159,11 +159,13 @@ test_equipment_data = {
         'name': 'bow',
         'materials': (Material.OAK, Material.CHITIN),
         'descr': 'TODO Bow. Longer Line. Test.',
-        'type': ItemType.RANGED,
+        'type': ItemType.WEAPON_RANGED,
+        'dmg_potential': (2,4),
         'rarity': RarityType.RARE,
         'dlvls': (1,99),
         "char": '(',
         'two_handed': True,
+        'moveset': moveset_bow,
         'e_to': WP_EQUIP
     }
 }
