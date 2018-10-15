@@ -54,7 +54,6 @@ class Moveset():
             move['attack_verb'] = choice(self.general_verbs)
         else:
             move['attack_verb'] = move['verb']
-        self.cycle_moves()
         return move
 
     def cycle_moves(self, reset=False):

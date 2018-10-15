@@ -64,7 +64,7 @@ class Paperdoll:
                 equipped_item = None
                 print('cancelled equipping shield bc of 2h weapon') # TODO Placeholder
 
-        if equipped_item:
+        if equipped_item: # Remove an item in the same spot #
             choice = yesno_menu('Remove Item',f'Unequip your {equipped_item.name}?', game)
             if choice:
                 results.extend(self.dequip(equipped_item))
@@ -72,13 +72,13 @@ class Paperdoll:
             else:
                 print('kept') # TODO Placeholder
 
-        else:
+        else: # Equip the new item #
             setattr(extremity, e_type, item_ent)
             self.owner.inventory.remove(item_ent)
             if qu_slots:
                 self.owner.qu_inventory.capacity += qu_slots
 
-            if self.owner.fighter.active_weapon is None:
+            if self.owner.fighter.active_weapon is None: # If there is no active weapon, set the new weapon as active #
                 self.owner.fighter.active_weapon = item_ent
 
             results.append({'item_equipped': item_ent, 'message': Message(f'You equip the {item_ent.name}')})

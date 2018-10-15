@@ -65,6 +65,9 @@ class Item:
             if self.equipment.dmg_potential:
                 list.extend(dynamic_wrap(f' Base Damage: %{col}%{self.equipment.dmg_potential[0]}-{self.equipment.dmg_potential[1]}%%', max_width))
 
+            if self.equipment.attack_range:
+                list.extend(dynamic_wrap(f' Attack Range: %{col}%{self.equipment.attack_range[0]}-{self.equipment.attack_range[1]}%%', max_width))
+
             if self.equipment.attack_type:
                 list.extend(dynamic_wrap(f' Attack: %{col}%{self.equipment.attack_type.name.title()}%%', max_width))
 

@@ -65,9 +65,9 @@ moveset_flail = {
 
 
 moveset_bow = {
+    'verbs': ('shoots',),
     1: {
         'descr': f"A quick but {col1}weaker draw%% to gauge the distance to the target.",
-        'verb': 'shoots',
         'dmg_multipl': 0.5
     },
     2: {
@@ -76,7 +76,7 @@ moveset_bow = {
     3: {
         'descr': f"A followup, {col1}average shot%%, to prepare for the final target.",
     },
-    3: {
+    4: {
         'descr': f"A {col1}devastating head shot%%, aimed right between the eyes.",
         'dmg_multipl': 2
     },

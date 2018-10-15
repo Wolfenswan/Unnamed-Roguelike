@@ -314,6 +314,7 @@ def gen_item_from_data(data:Dict, x:int, y:int, materials=False, conditions=Fals
             cond_mod = condition.get('mod_multipl', 1)
             block_def += round((max(mat_mod + craft_mod, 1)) * cond_mod)
 
+        attack_range = data.get('attack_range')
         qu_slots = data.get('qu_slots')
         l_radius = data.get('l_radius')
         two_handed = data.get('two_handed')
@@ -325,7 +326,7 @@ def gen_item_from_data(data:Dict, x:int, y:int, materials=False, conditions=Fals
         else:
             moveset_component = None
 
-        equipment_component = Equipment(equip_to, dmg_potential=dmg_potential, av=av, block_def=block_def,
+        equipment_component = Equipment(equip_to, dmg_potential=dmg_potential, av=av, block_def=block_def, attack_range=attack_range,
                                         qu_slots=qu_slots, l_radius=l_radius, moveset=moveset_component,
                                         two_handed=two_handed, attack_type=attack_type)
 

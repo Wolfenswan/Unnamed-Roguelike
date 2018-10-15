@@ -20,14 +20,15 @@ def process_turn_results(player_turn_results, game, fov_map):
         item_dequipped = player_turn_result.get('item_dequipped')
         item_prepared = player_turn_result.get('item_prepared')
         weapon_switched = player_turn_result.get('weapon_switched')
-        targeting_item = player_turn_result.get('targeting')
+        targeting = player_turn_result.get('targeting')
         targeting_cancelled = player_turn_result.get('targeting_cancelled')
+        ranged_attack = player_turn_result.get('ranged_attack')
         waiting = player_turn_result.get('waiting')
         door_entity = player_turn_result.get('door_toggled')
         dead_entity = player_turn_result.get('dead')
 
         # List of results that activate the enemy's turn #
-        enemy_turn_on = [item_added, item_dropped, item_consumed, item_equipped, item_dequipped, item_prepared, weapon_switched]
+        enemy_turn_on = [item_added, item_dropped, item_consumed, item_equipped, item_dequipped, item_prepared, weapon_switched, ranged_attack]
 
         if message is not None:
             message.add_to_log(game)
@@ -39,7 +40,7 @@ def process_turn_results(player_turn_results, game, fov_map):
             message.add_to_log(game)
 
         if weapon_switched is not None:
-            Message(f'You ready your %{weapon_switched.color}%{weapon_switched.name}.%%').add_to_log(game)
+            Message(f'You ready your %{weapon_switched.color}%{weapon_switched.name}%%.').add_to_log(game)
 
         if item_added is not None:
             entities.remove(item_added)
@@ -53,15 +54,15 @@ def process_turn_results(player_turn_results, game, fov_map):
         if item_dropped is not None:
             entities.append(item_dropped)
 
-        if targeting_item is not None:
+        if targeting is not None:
             game.previous_state = GameState.PLAYERS_TURN
             game.state = GameState.CURSOR_ACTIVE
             game.cursor.x, game.cursor.y = game.player.x, game.player.y
-            results.append({'targeting_item': targeting_item})
+            results.append({'targeting_item': targeting})
 
         if targeting_cancelled is not None:
             game.state = game.previous_state
-            Message('Targeting cancelled').add_to_log(game)
+            Message('Targeting cancelled.').add_to_log(game)
 
         if waiting is not None:
             if player.in_combat(game):
@@ -85,5 +86,7 @@ def process_turn_results(player_turn_results, game, fov_map):
         filtered_enemy_turn_conditions = list(filter(lambda x: x is not None, enemy_turn_on))
         if len(filtered_enemy_turn_conditions) > 0:
             game.state = GameState.ENEMY_TURN
+
+    print(results)
 
     return results

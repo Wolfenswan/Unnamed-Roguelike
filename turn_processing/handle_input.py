@@ -38,13 +38,15 @@ def handle_keys(key, game_state):
 
 def handle_player_turn_keys(key):
     key_char = chr(key.c)
-    
+
+    # Movement Modifiers #
     action = 'move'
     if key.lctrl or key.rctrl:
         action = 'interact'
     elif key.lalt:
         action = 'dodge'
 
+    # Movement #
     if key.vk == tcod.KEY_UP or key_char == 'k' or key.vk == tcod.KEY_KP8:
         return {action: True, 'dir': (0, -1)}
     elif key.vk == tcod.KEY_DOWN or key_char == 'j' or key.vk == tcod.KEY_KP2:
@@ -64,12 +66,21 @@ def handle_player_turn_keys(key):
     elif key.vk == tcod.KEY_KP5 or key_char == '.':
         return {'wait': True}
 
-    if key_char in ['1','2','3','4','5','6','7','8','9']:
+    # Inventory Quick Use #
+    elif key_char in ['1','2','3','4','5','6','7','8','9']:
         return {'quick_use': int(key_char)}
 
-    if key.vk == tcod.KEY_TAB:
+    # Toggles #
+    elif key.vk == tcod.KEY_TAB:
         return {'toggle_weapon': True}
+    elif key_char == 'r':
+        return {'toggle_block': True}
+    elif key_char == 's':
+        return {'toggle_look': True}
+    elif key_char == 'f':
+        return {'toggle_fire': True}
 
+    # Item & Inventory Interaction #
     if key_char == 'g':
         return {'pickup': True}
     elif key_char == 'i':
@@ -80,10 +91,8 @@ def handle_player_turn_keys(key):
         return {'show_prepared': True}
     elif key_char == 'p' and not key.shift:
         return {'prepare': True}
-    elif key_char == 's':
-        return {'toggle_look': True}
-    elif key_char == 'r':
-        return {'toggle_block': True}
+
+    # General Keys #
     elif key.vk in [tcod.KEY_ENTER, tcod.KEY_KPENTER]:
         return {'confirm': True}
 

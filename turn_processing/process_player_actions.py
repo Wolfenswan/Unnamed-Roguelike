@@ -1,6 +1,8 @@
 """ Processes the actions from handle_keys into game-events """
 import tcod
 
+from config_files import colors
+from data.data_types import ItemType
 from game import GameState
 from gameobjects.util_functions import entity_at_pos
 from gui.manual import display_manual
@@ -8,10 +10,10 @@ from gui.menus import item_menu,  options_menu, item_list_menu
 from debug.menu import debug_menu
 from gui.messages import Message, MessageType, MessageCategory
 from loader_functions.data_loader import save_game
-from rendering.render_animations import animate_move_line
+from rendering.render_animations import animate_move_line, animate_projectile
 
 
-def process_player_input(action, game, fov_map, targeting_item = None):
+def process_player_input(action, game, fov_map, targeting_item):
     player = game.player
     cursor = game.cursor
     entities = game.entities
@@ -37,6 +39,7 @@ def process_player_input(action, game, fov_map, targeting_item = None):
     toggle_look = action.get('toggle_look')
     toggle_block = action.get('toggle_block')
     toggle_weapon = action.get('toggle_weapon')
+    toggle_fire = action.get('toggle_fire')
     confirm = action.get('confirm')
 
     turn_results = []
@@ -63,11 +66,16 @@ def process_player_input(action, game, fov_map, targeting_item = None):
                         Message('PLACEHOLDER: cant dodge into target.', type=MessageType.SYSTEM).add_to_log(game)
                     # If a NPC is blocking the way #
                     elif target.fighter:
-                        if not player.fighter.is_blocking:
-                            attack_results = player.fighter.attack_setup(target, game)
-                            turn_results.extend(attack_results)
+                        if player.fighter.is_blocking:
+                            turn_results.append({'message':Message('PLACEHOLDER: cant attack while blocking.', type=MessageType.SYSTEM)})
                         else:
-                            Message('PLACEHOLDER: cant attack while blocking.', type=MessageType.SYSTEM).add_to_log(game)
+                            if player.active_weapon_is_ranged: # TODO should attacking in melee with a ranged weapon incur penalties or be disabled?
+                                attack_results = player.fighter.attack_setup(target, game, dmg_mod_multipl=0.2, ignore_moveset=True)
+                                turn_results.append({'message': Message('PLACEHOLDER: attacking with ranged weapon in melee.',                                                        type=MessageType.SYSTEM)})
+                            else:
+                                attack_results = player.fighter.attack_setup(target, game)
+
+                            turn_results.extend(attack_results)
                     # If a static object is blocking the way #
                     elif target.architecture:
 
@@ -117,47 +125,29 @@ def process_player_input(action, game, fov_map, targeting_item = None):
                     pickup_results = player.inventory.add(choice)
                     turn_results.extend(pickup_results)
             else:
-                Message('There is nothing here.', category=MessageCategory.OBSERVATION).add_to_log(game)
+                turn_results.append({'message':Message('There is nothing here.', category=MessageCategory.OBSERVATION)})
 
     # Combat related #
     if toggle_block:
         if player.fighter.shield:
             player.fighter.toggle_blocking()
         else:
-            Message('PLACEHOLDER: Need shield to block.', type=MessageType.SYSTEM).add_to_log(game)
+            turn_results.append({'message':Message('PLACEHOLDER: Need shield to block.', type=MessageType.SYSTEM)})
 
     # Cursor Movement & Targeting #
     if toggle_look:
-        if game.state == GameState.CURSOR_ACTIVE:
-            game.state = GameState.PLAYERS_TURN
+        game.toggle_cursor(pos=player.pos, state=GameState.CURSOR_ACTIVE)
+
+    if toggle_fire:
+        if player.active_weapon_is_ranged:
+            # TODO place cursor on nearest target
+            # TODO account for minimal range
+            game.toggle_cursor(pos=player.pos, state=GameState.CURSOR_ACTIVE)
         else:
-            game.previous_state = game.state
-            game.state = GameState.CURSOR_ACTIVE
-            cursor.x, cursor.y = game.player.x, game.player.y
+            turn_results.append({'message': Message('PLACEHOLDER: Need ranged weapon to fire.', type=MessageType.SYSTEM)})
 
     if game.state == GameState.CURSOR_ACTIVE:
-        if move:
-            dx, dy = direction
-            destination_x = cursor.x + dx
-            destination_y = cursor.y + dy
-            if tcod.map_is_in_fov(fov_map, destination_x, destination_y):
-                if targeting_item is None:
-                    cursor.move(dx, dy)
-                elif player.distance_to_pos(destination_x, destination_y) \
-                        < targeting_item.item.useable.on_use_params.get('range',1):
-                    cursor.move(dx, dy)
-
-        if confirm and targeting_item:
-            # check whether the item is being used from the regular inventory or the quick use inventory
-            if targeting_item in player.inventory:
-                inv = player.inventory
-            else:
-                inv = player.qu_inventory
-            item_use_results = inv.use(targeting_item, game, target_pos=cursor.pos)
-            turn_results.extend(item_use_results)
-
-        if exit and targeting_item:
-            turn_results.append({'targeting_cancelled': True})
+        turn_results.extend(process_cursor_interaction(game, move, direction, confirm, exit, targeting_item))
 
     # Inventory display #
     if show_inventory or prepare:
@@ -269,3 +259,43 @@ def process_player_input(action, game, fov_map, targeting_item = None):
         debug_menu(game)
 
     return turn_results
+
+def process_cursor_interaction(game, move, direction, confirm, exit, targeting_item):
+    results = []
+
+    player = game.player
+    cursor = game.cursor
+    fov_map = game.fov_map
+
+    if move:
+        dx, dy = direction
+        destination_x = cursor.x + dx
+        destination_y = cursor.y + dy
+        if tcod.map_is_in_fov(fov_map, destination_x, destination_y):
+            if player.active_weapon_is_ranged and targeting_item is None:
+                if player.distance_to_pos(destination_x, destination_y) in range(*player.active_weapon.attack_range):
+                    cursor.try_move(dx, dy, game, ignore_entities=True)
+            elif targeting_item is not None and player.distance_to_pos(destination_x, destination_y) \
+                    <= targeting_item.item.useable.on_use_params.get('range', 1):
+                cursor.try_move(dx, dy, game, ignore_entities=True)
+            elif targeting_item is None:
+                cursor.move(dx, dy)
+
+    if confirm:
+        if targeting_item is not None:
+            inv = player.inventory if targeting_item in player.inventory else player.qu_inventory
+            item_use_results = inv.use(targeting_item, game, target_pos=cursor.pos)
+            results.extend(item_use_results)
+        elif player.active_weapon_is_ranged:
+            target = entity_at_pos(game.blocking_ents, *cursor.pos)
+            if target is not None:
+                attack_results = player.fighter.attack_setup(target, game)
+                results.extend(attack_results)
+            else:
+                animate_projectile(*player.pos, *cursor.pos, game, color=colors.beige) # TODO color can later differ by weapon/ammo type
+            results.append({'ranged_attack': True})
+
+    if exit and (targeting_item or player.active_weapon_is_ranged):
+        results.append({'targeting_cancelled': True})
+
+    return results

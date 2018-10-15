@@ -28,6 +28,7 @@ def game_loop(game):
 
     targeting_item = None
     fov_recompute = True
+    processed_turn_results = {}
 
     key = tcod.Key()
     # mouse = tcod.Mouse()
@@ -36,10 +37,10 @@ def game_loop(game):
     render_all(game, game.fov_map, debug=game.debug['map'])
 
     # Proof of Concept intro #
-    # player.render_order = RenderOrder.BOTTOM
-    # for i in range(5):
-    #     animate_explosion(*game.player.pos, 3, game, color=colors.turquoise)
-    # player.render_order = RenderOrder.PLAYER
+    player.render_order = RenderOrder.BOTTOM
+    for i in range(5):
+        animate_explosion(*game.player.pos, 3, game, color=colors.turquoise)
+    player.render_order = RenderOrder.PLAYER
 
     while not tcod.console_is_window_closed():
         # tcod.sys_set_fps(30)
@@ -61,7 +62,7 @@ def game_loop(game):
                 ent.proc_every_turn(action, game, start=True)
 
             # Process player input into turn results #
-            player_turn_results = process_player_input(action, game, fov_map, targeting_item=targeting_item)
+            player_turn_results = process_player_input(action, game, fov_map, targeting_item)
             logging.debug(f'Turn {game.turn} player results: {player_turn_results}')
 
             # The game exits if player turn results returns False #
@@ -85,6 +86,10 @@ def game_loop(game):
             for turn_result in processed_turn_results:
                 fov_recompute = turn_result.get('fov_recompute', False)
                 targeting_item = turn_result.get('targeting_item')
+                break
+            else:
+                fov_recompute = False
+                targeting_item = None if game.state == GameState.PLAYERS_TURN else targeting_item
 
 
 if __name__ == '__main__':

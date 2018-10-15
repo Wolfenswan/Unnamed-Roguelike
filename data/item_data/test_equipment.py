@@ -161,6 +161,7 @@ test_equipment_data = {
         'descr': 'TODO Bow. Longer Line. Test.',
         'type': ItemType.WEAPON_RANGED,
         'dmg_potential': (2,4),
+        'attack_range': (1,6),
         'rarity': RarityType.RARE,
         'dlvls': (1,99),
         "char": '(',

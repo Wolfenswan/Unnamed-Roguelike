@@ -26,6 +26,8 @@ def menu_loop(wait_for=None, cancel_with_escape=True, sort_by='str'):
         # elif type(wait_for) is dict:
         #     if char.lower() in wait_for.keys():
         #         return wait_for[char]
+        elif key.vk == tcod.KEY_KPENTER:
+            return None
         elif isinstance(wait_for, int):  # If menu is waiting to receive an index
             if isinstance(sort_by, str):
                 index = ord(char) - ord('a')

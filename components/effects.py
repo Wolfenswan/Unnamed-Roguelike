@@ -58,7 +58,7 @@ class Effect:
 
         results = []
 
-        animate_projectile(*user.pos, *target_pos, 0, game)  # TODO add color switch
+        animate_projectile(*user.pos, *target_pos, game)  # TODO add color switch
 
         if on_hit is not None:
             ent = next((ent for ent in game.fighter_ents if ent.pos == target_pos), None)

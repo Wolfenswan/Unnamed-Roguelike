@@ -5,6 +5,7 @@ import tcod
 from config_files import colors
 from game import Game
 from gameobjects.entity import Entity
+from gameobjects.util_functions import distance_between_pos
 from map.directions_util import DIRECTIONS_CIRCLE
 from rendering.render_main import render_map_screen
 from rendering.render_order import RenderOrder
@@ -40,13 +41,16 @@ def animate_move_to(ent, tx:int, ty:int, game:Game, ignore_entities=False, anim_
             return False
 
 
-def animate_projectile(start_x:int, start_y:int, target_x:int, target_y:int, distance:int, game:Game, homing=True, ignore_entities=True, anim_delay = 0.05, color=colors.flame):
+def animate_projectile(start_x:int, start_y:int, target_x:int, target_y:int, game:Game, forced_distance:int=0, homing=True, ignore_entities=True, anim_delay = 0.05, color=colors.flame):
     """
     Creates a temporary projectile and animates its movement from start position to target position.
 
     TODO additonal switches: character
     TODO doesn't return anything atm. Add return as needed
     """
+
+    distance = forced_distance if forced_distance > 0 else distance_between_pos(start_x, start_y, target_x, target_y)
+
     projectile = Entity(start_x, start_y, '*', color, 'Projectile', render_order=RenderOrder.ALWAYS)
     game.entities.append(projectile)
     if homing:

@@ -1,7 +1,7 @@
 import logging
 import math
 from random import choice
-from typing import Optional, Union, List
+from typing import Optional, Union, List, Tuple
 
 import tcod
 from dataclasses import dataclass, field
@@ -99,6 +99,11 @@ class Entity:
     @property
     def pos(self):
         return (self.x, self.y)
+
+    @pos.setter
+    def pos(self, new_pos:Tuple[int,int]):
+        self.x = new_pos[0]
+        self.y = new_pos[1]
 
     @property
     def full_name(self):
@@ -205,12 +210,24 @@ class Entity:
         return self.fighter.active_weapon if self.fighter is not None else None
 
     @property
+    def active_weapon_is_melee(self):
+        return self.active_weapon.type == ItemType.WEAPON_RANGED
+
+    @property
+    def active_weapon_is_ranged(self):
+        return self.active_weapon.type == ItemType.WEAPON_RANGED
+
+    @property
     def attack_type(self):
         return self.item.equipment.attack_type if self.item is not None and self.item.equipment is not None else None
 
     @property
     def dmg_potential(self):
         return self.item.equipment.dmg_potential if self.item is not None and self.item.equipment is not None else None
+
+    @property
+    def attack_range(self):
+        return self.item.equipment.attack_range if self.item is not None and self.item.equipment is not None else None
 
     @property
     def moveset(self):
@@ -297,6 +314,9 @@ class Entity:
         ents = self.entities_in_distance(hostile_entities, dist=dist)
         ents = [ent for ent in ents if not ent.is_corpse]
         return ents
+
+    # def nearest_enemy(self, hostile_entities:List, fov_map):
+    #     return next(self.visible_enemies(hostile_entities, fov_map))
 
     def surrounding_enemies(self, hostile_entities:List):
         ents = self.entities_in_distance(hostile_entities, dist=1.5)

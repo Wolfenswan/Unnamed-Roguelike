@@ -13,7 +13,6 @@ from data.data_types import ItemType
 from data.item_data.wp_attacktypes import wp_attacktypes_data
 from data.gui_data.gui_fighter import hpdmg_string_data, stadmg_string_data, sta_color_data, stadmg_color_data, \
     sta_string_data, hpdmg_color_data, hp_string_data, hp_color_data
-from game import Game
 from gameobjects.block_level import BlockLevel
 from gameobjects.util_functions import entity_at_pos, line_between_pos
 from gui.messages import Message, MessageType, MessageCategory
@@ -321,21 +320,26 @@ class Fighter:
                 verb = 'pummels'
 
             attack_power = self.dmg_roll * dmg_mod_multipl
+            self.active_weapon.moveset.cycle_moves()
 
-        if not melee and ranged_projectile:
+        if not melee:
             logging.debug(f'{self.owner} is attempting ranged attack at {target}')
             if not self.owner.free_line_to_ent(target, game):
                 pos_list = line_between_pos(*self.owner.pos, *target.pos)
-                obstacle = next(entity_at_pos(game.blocking_ents, *pos) for pos in pos_list if entity_at_pos(game.blocking_ents, *pos) is not None)
-                logging.debug(f'{obstacle} is blocking direct los')
-                if randint(0,1): # TODO can later be modified by skill level, attributes etc.
-                    message = Message(f'PLACEHOLDER: {self.owner.name} hits {obstacle.name} instead of {target.name}!',
-                                      category=MessageCategory.COMBAT,
-                                      type=MessageType.SYSTEM)
-                    results.append({'message': message})
-                    target = obstacle
+                try:
+                    obstacle = next(entity_at_pos(game.blocking_ents, *pos) for pos in pos_list if entity_at_pos(game.blocking_ents, *pos) is not None)
+                    logging.debug(f'{obstacle} is blocking direct los')
+                    if randint(0,1): # TODO can later be modified by skill level, attributes etc.
+                        message = Message(f'PLACEHOLDER: {self.owner.name} hits {obstacle.name} instead of {target.name}!',
+                                          category=MessageCategory.COMBAT,
+                                          type=MessageType.SYSTEM)
+                        results.append({'message': message})
+                        target = obstacle
+                except:
+                    return results
 
-            animate_projectile(*self.owner.pos, *target.pos, self.owner.distance_to_ent(target), game)
+            if ranged_projectile:
+                animate_projectile(*self.owner.pos,*target.pos,game, color=colors.beige) # TODO color can later be modified by weapon/ammo
 
         logging.debug(f'{self.owner.name} prepares to attack {target.name} with base damage {self.base_dmg_potential},'
                       f' (modded {self.modded_dmg_potential}) for a power of {attack_power}')

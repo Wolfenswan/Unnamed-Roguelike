@@ -23,8 +23,9 @@ def line_between_pos(x1:int, y1:int, x2:int, y2:int, inclusive=False):
     """
     Draws a line from the starting position to the end position and returns all positions in between as a list.
     List does not include start/end pos by default.
-    """
 
+    :param inclusive: True to include start/end pos
+    """
     dist = distance_between_pos(x1, y1, x2, y2)
     x, y = x1, y1
     pos_list = []

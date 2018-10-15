@@ -21,6 +21,7 @@ class GameState(Enum):
 class Game:
     def __init__(self, debug=False):
         self.map = None
+        self.cursor = None
         self.dlvl = 1
         self.entities = []
 
@@ -42,6 +43,14 @@ class Game:
             'invin': debug,
             'ent_info': debug
         }
+
+    def toggle_cursor(self, pos=(0,0), state=GameState.CURSOR_ACTIVE):
+        if self.state == state:
+            self.state = self.previous_state
+        else:
+            self.previous_state = self.state
+            self.state = state
+            self.cursor.pos = pos
 
     @property
     def player(self):

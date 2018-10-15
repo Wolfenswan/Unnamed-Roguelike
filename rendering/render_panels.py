@@ -4,6 +4,7 @@ import tcod
 
 from components.actors.status_modifiers import Surrounded
 from config_files import colors, cfg as cfg
+from game import GameState
 from rendering.util_functions import center_x_for_text, setup_console, print_string, dynamic_wrap
 
 
@@ -102,7 +103,10 @@ def render_object_panel(game, con, panel_x, panel_y, width, height):
 
             # Draw creature name and stats #
             # Some symbols don't print properly with console_print, that's why it's split into put_char_ex and print
-            symbol = '*' if (ent.x, ent.y) == (game.player.x, game.player.y) else f'{ent.char}'
+            if ent.pos == game.player.pos or (ent.pos == game.cursor.pos and game.state == GameState.CURSOR_ACTIVE):
+                symbol = '*'
+            else:
+                symbol = f'{ent.char}'
             tcod.console_put_char_ex(con, 1, y, symbol, ent.color, tcod.black)
             #wrapped_name = textwrap.wrap(f'{ent.full_name}', width - 3)
             wrapped_name = dynamic_wrap(f'{ent.full_name}', width - 3)
