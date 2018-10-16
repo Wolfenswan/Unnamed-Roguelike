@@ -46,11 +46,11 @@ class Item:
         col = 'desaturated_lime'
 
         if self.owner.type:
-            type_str = self.owner.type.name.title()
+            type_str = self.owner.type.name.replace('_',' ')
             if self.equipment and self.equipment.two_handed:
                 type_str += ' (Two-Handed)'
             #list.extend(dynamic_wrap(f' Type: %{col}%{type_str}%%', max_width))
-            listing += f'\n\n Type: %{col}%{type_str}%%'
+            listing += f'\n\n Type: %{col}%{type_str.title()}%%'
 
         if self.equipment:
 
@@ -70,12 +70,10 @@ class Item:
 
             if self.equipment.dmg_potential:
                 listing += f'\n\n Base Damage: %{col}%{self.equipment.dmg_potential[0]}-{self.equipment.dmg_potential[1]}%%'
-                print(listing)
                 # list.extend(dynamic_wrap(f' Base Damage: %{col}%{self.equipment.dmg_potential[0]}-{self.equipment.dmg_potential[1]}%%', max_width))
 
             if self.equipment.attack_range:
                 listing += f'\n\n Attack Range: %{col}%{self.equipment.attack_range[0]}-{self.equipment.attack_range[1]}%%'
-                print(listing)
                 # list.extend(dynamic_wrap(f' Attack Range: %{col}%{self.equipment.attack_range[0]}-{self.equipment.attack_range[1]}%%', max_width))
 
             if self.equipment.attack_type:
@@ -90,7 +88,7 @@ class Item:
                 listing += f'\n\nThis weapon utilizes %orange%{self.equipment.moveset.moves} attacks%%:'
                 for k, v in self.equipment.moveset.movelist.items():
                     if v.get('descr'):
-                        listing += f'\n%orange%{k}%%: {v.get("descr")}'
+                        listing += f'\n%orange%({k})%% {v.get("descr")}'
                         #list.extend(dynamic_wrap(f'%orange%{k}%%: {v.get("descr")}', max_width))
 
         return listing

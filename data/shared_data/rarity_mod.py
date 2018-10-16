@@ -15,8 +15,8 @@ rarity_values = {
 
     ItemType.USEABLE: 100,
     ItemType.MISC: 80,
-    ItemType.WEAPON_MELEE: 60,
-    ItemType.WEAPON_RANGED: 60,
+    ItemType.MELEE_WEAPON: 60,
+    ItemType.RANGED_WEAPON: 60,
     ItemType.SHIELD: 60,
     ItemType.ARMOR: 40,
     ItemType.BELT: 30,

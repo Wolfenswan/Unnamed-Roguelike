@@ -30,7 +30,7 @@ arch_containers_data = {
         "blocks": {BlockLevel.FLOOR:True},
         'container_room': (3, 8),
         'contents_rarity': (RarityType.COMMON, RarityType.UNCOMMON, RarityType.RARE),
-        'contents_type': (ItemType.USEABLE, ItemType.WEAPON_MELEE, ItemType.SHIELD, ItemType.MISC, ItemType.BELT),
+        'contents_type': (ItemType.USEABLE, ItemType.MELEE_WEAPON, ItemType.SHIELD, ItemType.MISC, ItemType.BELT),
         'on_collision': Architecture.blocks_info,
         'on_interaction': Architecture.open_container
     },
@@ -46,7 +46,7 @@ arch_containers_data = {
         "blocks": {BlockLevel.FLOOR:True, BlockLevel.WALK:True},
         'container_room': (1, 4),
         'contents_rarity': (RarityType.COMMON, RarityType.UNCOMMON),
-        'contents_type': (ItemType.WEAPON_MELEE, ItemType.SHIELD),
+        'contents_type': (ItemType.MELEE_WEAPON, ItemType.SHIELD),
         'on_collision': Architecture.blocks_info,
         'on_interaction': Architecture.open_container
     },

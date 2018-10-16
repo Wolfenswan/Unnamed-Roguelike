@@ -5,7 +5,7 @@ wp_creature_data = {
     'ins_mandibles': {
         'name': 'mandibles',
         'materials': (Material.CHITIN,),
-        'type': ItemType.WEAPON_MELEE,
+        'type': ItemType.MELEE_WEAPON,
         'e_to': 'weapon_arm',
         'dmg_potential': (4, 8),
         'moveset': moveset_mandibles,
@@ -16,7 +16,7 @@ wp_creature_data = {
     'ins_claws': {
         'name': 'claws',
         'materials': (Material.CHITIN,),
-        'type': ItemType.WEAPON_MELEE,
+        'type': ItemType.MELEE_WEAPON,
         'e_to': 'weapon_arm',
         'dmg_potential': (6, 6),
         'moveset': moveset_claws,
@@ -27,7 +27,7 @@ wp_creature_data = {
     'ins_ranged': {
         'name': 'spit',
         'materials': (Material.CHITIN,),
-        'type': ItemType.WEAPON_RANGED,
+        'type': ItemType.RANGED_WEAPON,
         'e_to': 'weapon_arm',
         'dmg_potential': (6, 6),
         'moveset': moveset_spit,

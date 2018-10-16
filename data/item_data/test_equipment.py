@@ -5,7 +5,7 @@ from data.item_data.wp_movesets import moveset_sword, moveset_spear, moveset_fla
 
 WP_CHAR = '\\'
 WP_EQUIP = 'weapon_arm'  # which extremity the item is equipped to
-WP_TYPE = ItemType.WEAPON_MELEE  # which slot it will take
+WP_TYPE = ItemType.MELEE_WEAPON  # which slot it will take
 
 ARM_CHAR = ']'
 ARM_EQUIP = 'torso'  # which extremity the item is equipped to
@@ -159,7 +159,7 @@ test_equipment_data = {
         'name': 'bow',
         'materials': (Material.OAK, Material.CHITIN),
         'descr': 'TODO Bow. Longer Line. Test.',
-        'type': ItemType.WEAPON_RANGED,
+        'type': ItemType.RANGED_WEAPON,
         'dmg_potential': (2,4),
         'attack_range': (1,6),
         'rarity': RarityType.RARE,

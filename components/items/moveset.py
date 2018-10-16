@@ -73,7 +73,6 @@ class Moveset():
 
         for extra_hit in extra_hits:
             rel_dir = relative_dir(dir, extra_hit)
-            print(rel_dir)
             pos = (attacker.x + rel_dir[0], attacker.y + rel_dir[1])
             extra_attacks.append(pos)
 

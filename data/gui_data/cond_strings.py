@@ -25,7 +25,7 @@ cond_name_data = {
 
 
 cond_descr_data = {
-    ItemType.WEAPON_MELEE: {
+    ItemType.MELEE_WEAPON: {
         Material.OAK: {
             Condition.POOR: (
                 'You are worried it might snap at any second.',
@@ -73,7 +73,7 @@ cond_descr_data = {
             Condition.LEGENDARY: default_descr['legend']
         }
     },
-    ItemType.WEAPON_RANGED: {
+    ItemType.RANGED_WEAPON: {
         Material.OAK: {
             Condition.POOR: default_descr['poor'],
             Condition.NORMAL: default_descr['normal'],

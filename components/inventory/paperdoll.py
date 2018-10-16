@@ -134,11 +134,11 @@ class Arm:
 
     # Due to the properties and respective setters equipment of various types will only occupy the self.carried slot
     @property
-    def weapon_melee(self):
+    def melee_weapon(self):
         return self.carried
 
-    @weapon_melee.setter
-    def weapon_melee(self, item):
+    @melee_weapon.setter
+    def melee_weapon(self, item):
         self.carried = item
 
     @property
@@ -158,11 +158,11 @@ class Arm:
         self.carried = item
 
     @property
-    def weapon_ranged(self):
+    def ranged_weapon(self):
         return self.ranged
 
-    @weapon_ranged.setter
-    def weapon_ranged(self, item):
+    @ranged_weapon.setter
+    def ranged_weapon(self, item):
         self.ranged = item
 
 

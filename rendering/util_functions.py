@@ -99,14 +99,14 @@ def dynamic_wrap(string, max_width):
     such as %c and %color% when wrapping words.
     """
 
+    codes = {}
     color_coded_words = COLOR_WRAP_PATTERN.findall(string)
-    stripped_words = []
     for coded_string in color_coded_words:
         color_code = color_code_pattern.match(coded_string)
         stripped_code = coded_string.replace(color_code.group(),'')
         stripped_code = stripped_code.replace('%%','')
         string = string.replace(coded_string,stripped_code) # Remove all color code wrappers from the string
-        stripped_words.append(stripped_code)
+        codes[stripped_code] = coded_string
 
     # Split the string at pre-defined line-breaks to preserve indentation.
     split_str = string.split('\n')
@@ -118,14 +118,15 @@ def dynamic_wrap(string, max_width):
         else:
             wrapped.extend(textwrap.wrap(sub_str, max_width, replace_whitespace=False))
 
-    # Re-add the color-wrapper strings
-    for _i, line in enumerate(wrapped):
-        for _x, word in enumerate(stripped_words):
-            if word in line:
-                print(f'replacing {word} in {line} with {color_coded_words[_x]}')
-                line = line.replace(word, color_coded_words[_x])
-                wrapped[_i] = line
-                break
+    # # Re-add the color-wrapper strings
+    if codes:
+        for i, line in enumerate(wrapped):
+            for k in codes.keys():
+                if k in line:
+                    print(f'replacing {k} in {line} with {codes[k]}')
+                    line = line.replace(k, codes[k])
+                    wrapped[i] = line
+                    codes[k] = k # This is a workaround to avoid color coding lines with a partial match after the code has been 'used' as intended
 
     return wrapped
 

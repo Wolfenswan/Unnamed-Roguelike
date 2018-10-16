@@ -94,7 +94,7 @@ def draw_window(title, body, options:Optional[List]=None,
 def render_description_window(game):
     ent = entity_at_pos(game.npc_ents + game.architecture_ents, *game.cursor.pos)
     if ent is not None:
-        x, y = pos_on_screen(ent.x -2, ent.y - 2, game.player)
+        x, y = pos_on_screen(ent.x + 2, ent.y - 2, game.player)
 
         title = f' {ent.full_name} '
         body = ent.extended_descr(game)

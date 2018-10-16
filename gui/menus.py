@@ -139,7 +139,6 @@ def item_menu(item_ent, game):
 
     title = item_ent.full_name
     body = item_ent.extended_descr(game)
-    print(body)
 
     options = []
     wait_for = []

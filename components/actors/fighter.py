@@ -188,7 +188,7 @@ class Fighter:
         """
         :return: Currently equipped melee weapon entity
         """
-        weapon_ent = self.owner.paperdoll.weapon_arm.weapon_melee # TODO add check for 2nd hand after implementing dual wielding
+        weapon_ent = self.owner.paperdoll.weapon_arm.melee_weapon # TODO add check for 2nd hand after implementing dual wielding
         if weapon_ent:
             return weapon_ent
         else:
@@ -199,7 +199,7 @@ class Fighter:
         """
         :return: Currently equipped ranged weapon entity
         """
-        weapon_ent = self.owner.paperdoll.weapon_arm.weapon_ranged
+        weapon_ent = self.owner.paperdoll.weapon_arm.ranged_weapon
         if weapon_ent:
             return weapon_ent
         else:
@@ -307,7 +307,7 @@ class Fighter:
         blocked = False
         extra_attacks = []
 
-        melee = True if self.active_weapon.type == ItemType.WEAPON_MELEE else False
+        melee = True if self.active_weapon.type == ItemType.MELEE_WEAPON else False
 
         if ignore_moveset:
             attack_power = choice(self.base_dmg_potential) * dmg_mod_multipl
