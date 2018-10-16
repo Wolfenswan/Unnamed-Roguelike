@@ -4,7 +4,7 @@ from typing import Union, List, Optional
 import tcod
 
 from config_files import cfg, colors
-from gameobjects.util_functions import entities_at_pos, entity_at_pos
+from gameobjects.util_functions import entity_at_pos
 from rendering.util_functions import center_x_for_text, draw_console_borders, pos_on_screen, print_string, dynamic_wrap
 
 
@@ -24,21 +24,16 @@ def set_window_on_screen(window_x, window_y, width, height):
 def draw_window(title, body, options:Optional[List]=None,
                 window_x:Optional[int]=None, window_y:Optional[int]=None, padding_x:Optional[int]=2, padding_y:Optional[int]=2,
                 sort_by = 'str', show_cancel_option=True, forced_width:Optional[int]=None, title_color=colors.white, options_colors=None):
-    if not options:
+    if options is None:
         options  = []
 
     # Calculate window width #
-    if forced_width:
+    if forced_width is not None:
         width = forced_width + padding_x * 2
     else:
         # calculate total width for the box, using the longest unwrapped string from either all options, title or body
-        if options:
-            width = max(len(string) for string in (options + [title, body])) + 4 + padding_x * 2
-        else:
-            width = min(len(body), round(cfg.MAP_SCREEN_WIDTH//2)) + padding_x * 2
+        width = min(max(len(string) for string in (options + [title, body])), round(cfg.SCREEN_WIDTH//3)) + padding_x * 2
 
-    #width = min(width, cfg.SCREEN_WIDTH//2)
-    # TODO: Wrapping is sometimes odd, as it does consider the (later removed) %colorcoding%-strings when wrapping
     body_wrapped = dynamic_wrap(body, width - padding_x * 2)
 
     # Calculate window height #
@@ -77,7 +72,10 @@ def draw_window(title, body, options:Optional[List]=None,
             print_string(window, padding_x, i + y, f'{line}', color=color)
 
     draw_console_borders(window, color=colors.white)
-    print_string(window, padding_x, 0, f'{title}', color=title_color)
+
+    tcod.console_put_char(window, padding_x, 0, tcod.CHAR_TEEW)
+    print_string(window, padding_x+1, 0, f'{title}', color=title_color)
+    tcod.console_put_char(window, padding_x+len(title)+1, 0, tcod.CHAR_TEEE)
 
     if show_cancel_option:
         # print_string(window, 0, height - 1, '<ESC TO CANCEL>')
@@ -96,10 +94,8 @@ def render_description_window(game):
     if ent is not None:
         x, y = pos_on_screen(ent.x + 2, ent.y - 2, game.player)
 
-        title = f' {ent.full_name} '
+        title = f'{ent.full_name}'
         body = ent.extended_descr(game)
-
-        width = min(len(body), round(cfg.MAP_SCREEN_WIDTH//2)) # TODO Tweak width
 
         draw_window(title, body, window_x=x, window_y=y, show_cancel_option=False, title_color=ent.color)
 

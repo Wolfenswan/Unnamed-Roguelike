@@ -88,3 +88,20 @@ class SkillSlam(BaseSkill):
             if hit.fighter:
                 results.extend(user.fighter.attack_setup(hit, game, dmg_mod_multipl=2, verb='slams', ignore_moveset=True))
         return results
+
+
+class SkillExplode(BaseSkill):
+    def __init__(self, **kwargs):
+        self.params = kwargs
+        if kwargs.get('name') is None:
+            self.params['name'] = 'Explode'
+        if kwargs.get('activate_conditions') is None:
+            self.params['activate_conditions'] = {SkillCondition.distance_to}
+
+        super().__init__(**self.params)
+
+    def activate(self, *args, **kwargs):
+        pass
+
+    def execute(self):
+        pass

@@ -4,6 +4,7 @@ from game import GameState
 from gameobjects.block_level import BlockLevel
 from gui.messages import Message
 
+
 def process_turn_results(player_turn_results, game, fov_map):
     player = game.player
     entities = game.entities
@@ -33,12 +34,6 @@ def process_turn_results(player_turn_results, game, fov_map):
         if message is not None:
             message.add_to_log(game)
 
-        if dead_entity is not None:
-            message = dead_entity.fighter.death(game)
-            if dead_entity.is_player:
-                game.state = GameState.PLAYER_DEAD
-            message.add_to_log(game)
-
         if weapon_switched is not None:
             Message(f'You ready your %{weapon_switched.color}%{weapon_switched.name}%%.').add_to_log(game)
 
@@ -55,9 +50,7 @@ def process_turn_results(player_turn_results, game, fov_map):
             entities.append(item_dropped)
 
         if targeting is not None:
-            game.previous_state = GameState.PLAYERS_TURN
-            game.state = GameState.CURSOR_ACTIVE
-            game.cursor.x, game.cursor.y = game.player.x, game.player.y
+            game.toggle_cursor(pos=player.pos)
             results.append({'targeting_item': targeting})
 
         if targeting_cancelled is not None:
@@ -82,11 +75,15 @@ def process_turn_results(player_turn_results, game, fov_map):
             # If the player interacted with a door, the fov map is updated)
             tcod.map_set_properties(fov_map, door_entity.x, door_entity.y, not door_entity.blocks.get(BlockLevel.SIGHT, False), not door_entity.blocks.get(BlockLevel.WALK, False))
 
+        if dead_entity is not None:
+            message = dead_entity.fighter.death(game)
+            if dead_entity.is_player:
+                game.state = GameState.PLAYER_DEAD
+            message.add_to_log(game)
+
         # Enable enemy turn if at least one of the results is not None
         filtered_enemy_turn_conditions = list(filter(lambda x: x is not None, enemy_turn_on))
         if len(filtered_enemy_turn_conditions) > 0:
             game.state = GameState.ENEMY_TURN
-
-    print(results)
 
     return results

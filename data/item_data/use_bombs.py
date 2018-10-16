@@ -12,7 +12,7 @@ use_bombs_data = {
         "char": BOMB_CHAR,
         "color": colors.dark_gray,
         'on_use': explosion_targeted,
-        "on_use_params": {'pwr': (8,15), 'radius': 3, 'range': 5},
+        "on_use_params": {'pwr': (8,15), 'radius': 3, 'range': (1,5)},
         'rarity': RarityType.UNCOMMON,
         'rarity_mod': -5,
         'dlvls': (1, 99)

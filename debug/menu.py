@@ -4,6 +4,7 @@ from gui.messages import Message, MessageType, MessageCategory
 
 
 def debug_menu(game):
+    results = []
     choice = options_menu('Debug Menu', 'Select Debug Option:',
                           ['Show full map', 'Invincible Player', 'Entity Debug Information', 'Spawn Monster', 'Spawn Item (Not implemented!)'], sort_by=1,
                           cancel_with_escape=True)
@@ -24,6 +25,7 @@ def debug_menu(game):
         choice= options_menu('Monster Spawning', 'Pick the monster to spawn. The tile to the right of the player must not be blocked.', options)
         if choice is not None:
             key = options[choice]
+            #results.append({'debug_spawn':choice})
             if game.map.is_blocked(game.player.x+1, game.player.y, game.blocking_ents):
                 Message(f'Position blocked!', type=MessageType.GAME).add_to_log(game)
             else:
@@ -32,3 +34,5 @@ def debug_menu(game):
     elif choice == 4:
         # Select Type, key, material, condition, craft
         pass
+
+    return results

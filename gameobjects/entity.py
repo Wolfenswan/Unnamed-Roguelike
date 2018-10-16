@@ -120,9 +120,9 @@ class Entity:
             if self.item.suffix:
                 full_name += f' {self.item.suffix}'
 
-        if self.architecture and self.inventory.capacity > 0:
-            if self.inventory.is_empty:
-                full_name += ' (empty)'
+        # if self.architecture and self.inventory:
+        #     if self.inventory.is_empty:
+        #         full_name += ' (e)'
 
         if self.fighter and self.fighter.hp <= 0:
             full_name += ' remains'
@@ -157,18 +157,20 @@ class Entity:
 
     def extended_descr(self, game):
         extend_descr = self.descr
-        # TODO All colors are WIP
-        if self.fighter and self.fighter.active_weapon:
-            extend_descr += f'\n\nIt attacks with %dark_crimson%{self.fighter.active_weapon.item.equipment.attack_type.name.lower()}%% strikes.'
+        col1 = 'dark_crimson' # TODO All colors are placeholders
+        col2 = 'yellow'
+        if self.fighter is not None:
+            if self.fighter.active_weapon:
+                extend_descr += f'\n\nIt attacks with %{col1}%{self.fighter.active_weapon.item.equipment.attack_type.name.lower()}%% strikes.'
 
-        if self.fighter and game.player.fighter.shield:
-            extend_descr += f'\n\nBlocking its attacks will be %dark_crimson%{game.player.fighter.average_chance_to_block(self)}%%.'
+            if game.player.fighter.shield:
+                extend_descr += f'\n\nBlocking its attacks will be %{col1}%{game.player.fighter.average_chance_to_block(self)}%%.'
 
-        if self.fighter and self.fighter.presence[Presence.DAZED]:
-            extend_descr += f'\n\n{self.pronoun.title()} {self.state_verb_present} %yellow%dazed%% and slightly confused.'
+            if self.fighter.presence[Presence.DAZED]:
+                extend_descr += f'\n\n{self.pronoun.title()} {self.state_verb_present} %{col2}%dazed%% and acting numbed.'
 
-        if self.fighter and self.fighter.presence[Presence.STUNNED]:
-            extend_descr += f'\n\n{self.pronoun.title()} {self.state_verb_present} %yellow%stunned%% and unable to attack.'
+            if self.fighter.presence[Presence.STUNNED]:
+                extend_descr += f'\n\n{self.pronoun.title()} {self.state_verb_present} %{col2}%stunned%% and unable to attack.'
 
         if self.item:
             extend_descr += self.item.attr_list

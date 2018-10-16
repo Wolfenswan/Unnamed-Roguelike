@@ -28,9 +28,8 @@ skill_generic_slam = {
 }
 
 skill_prime = {
-        'name': 'Prime Detonation',
-        'activate_condition': SkillCondition.distance_to,
-        'activate_condition_kwargs': {'min': 2, 'max': 6},
+        'skill': SkillExplode,
+        'activate_condition_kwargs': {'min_dist': 1, 'max_dist': 5},
         'on_activate': Effect.explosion,
         'on_activate_kwargs': {'delay':1},
         'cooldown_length': 6

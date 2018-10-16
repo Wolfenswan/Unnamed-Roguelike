@@ -49,46 +49,57 @@ class Item:
             type_str = self.owner.type.name.replace('_',' ')
             if self.equipment and self.equipment.two_handed:
                 type_str += ' (Two-Handed)'
-            #list.extend(dynamic_wrap(f' Type: %{col}%{type_str}%%', max_width))
             listing += f'\n\n Type: %{col}%{type_str.title()}%%'
 
         if self.equipment:
-
-            if self.equipment.e_to:
-                e_str = self.equipment.e_to.replace('_',' ')
-                #list.extend(dynamic_wrap(f' Equips To: %{col}%{e_str.title()}%%', max_width))
+            e_c = self.equipment
+            
+            if e_c.e_to:
+                e_str = e_c.e_to.replace('_',' ')
                 listing += f'\n\n Equips To: %{col}%{e_str.title()}%%'
 
-            if self.equipment.av:
-                 listing += f'\n\n Armor: %{col}%{self.equipment.av}%%'
-                # list.extend(dynamic_wrap(f' Armor: %{col}%{self.equipment.av}%%', max_width))
-                #list.extend(dynamic_wrap(f' Armor: %{col}%{self.equipment.av}%%', max_width))
+            if e_c.av:
+                 listing += f'\n\n Armor: %{col}%{e_c.av}%%'
 
-            if self.equipment.block_def:
-                 listing += f'\n\n Armor (Blocking): %{col}%{self.equipment.block_def}%%'
-                # list.extend(dynamic_wrap(f' Armor (Blocking): %{col}%{self.equipment.block_def}%%', max_width))
+            if e_c.block_def:
+                 listing += f'\n\n Armor (Blocking): %{col}%{e_c.block_def}%%'
 
-            if self.equipment.dmg_potential:
-                listing += f'\n\n Base Damage: %{col}%{self.equipment.dmg_potential[0]}-{self.equipment.dmg_potential[1]}%%'
-                # list.extend(dynamic_wrap(f' Base Damage: %{col}%{self.equipment.dmg_potential[0]}-{self.equipment.dmg_potential[1]}%%', max_width))
+            if e_c.dmg_potential:
+                listing += f'\n\n Base Damage: %{col}%{e_c.dmg_potential[0]}-{e_c.dmg_potential[1]}%%'
 
-            if self.equipment.attack_range:
-                listing += f'\n\n Attack Range: %{col}%{self.equipment.attack_range[0]}-{self.equipment.attack_range[1]}%%'
-                # list.extend(dynamic_wrap(f' Attack Range: %{col}%{self.equipment.attack_range[0]}-{self.equipment.attack_range[1]}%%', max_width))
+            if e_c.attack_range:
+                listing += f'\n\n Attack Range: %{col}%{e_c.attack_range[0]}-{e_c.attack_range[1]}%%'
 
-            if self.equipment.attack_type:
-                 listing += f'\n\n Attack: %{col}%{self.equipment.attack_type.name.title()}%%'
-                # list.extend(dynamic_wrap(f' Attack: %{col}%{self.equipment.attack_type.name.title()}%%', max_width))
+            if e_c.attack_type:
+                 listing += f'\n\n Attack: %{col}%{e_c.attack_type.name.title()}%%'
 
-            if self.equipment.l_radius:
-                 listing += f'\n\n Light Radius: %{col}%{self.equipment.l_radius}%%'
-                # list.extend(dynamic_wrap(f' Light Radius: %{col}%{self.equipment.l_radius}%%', max_width))
+            if e_c.l_radius:
+                 listing += f'\n\n Light Radius: %{col}%{e_c.l_radius}%%'
 
-            if self.equipment.moveset:
-                listing += f'\n\nThis weapon utilizes %orange%{self.equipment.moveset.moves} attacks%%:'
-                for k, v in self.equipment.moveset.movelist.items():
+            if e_c.moveset:
+                listing += f'\n\nThis weapon utilizes %orange%{e_c.moveset.moves} attacks%%:'
+                for k, v in e_c.moveset.movelist.items():
                     if v.get('descr'):
                         listing += f'\n%orange%({k})%% {v.get("descr")}'
-                        #list.extend(dynamic_wrap(f'%orange%{k}%%: {v.get("descr")}', max_width))
 
+        if self.useable:
+            u_c = self.useable
+
+            if u_c.on_use_effect.get('effect_name') is not None:
+                 listing += f"\n\n Effect: %{col}%{u_c.on_use_effect.get('effect_name').title()}%%"
+
+            if u_c.on_use_params.get('pwr') is not None:
+                pwr = u_c.on_use_params.get('pwr')
+                if isinstance(pwr, int):
+                    listing += f"\n\n Power: %{col}%{pwr}%%"
+                else:
+                    listing += f"\n\n Power: %{col}%{pwr[0]}-{pwr[1]}%%"
+
+            if u_c.on_use_params.get('radius') is not None:
+                listing += f"\n\n Range: %{col}%{u_c.on_use_params.get('radius')}%%"
+
+            if u_c.on_use_params.get('range') is not None:
+                u_range = u_c.on_use_params.get('range')
+                listing += f"\n\n Range: %{col}%{u_range[0]}-{u_range[1]}%%"
+        
         return listing

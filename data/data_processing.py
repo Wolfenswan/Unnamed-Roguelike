@@ -344,11 +344,14 @@ def gen_architecture(data:Dict, x:int, y:int):
     arguments = [x, y, *get_generic_args(data, material=material)]
     kwargs = get_generic_kwargs(data, default_render=RenderOrder.BOTTOM)
 
-    container_room = data.get('container_room', (0, 0))
+    container_room = data.get('container_room', None)
     on_collision = data.get('on_collision')
     on_interaction = data.get('on_interaction')
 
-    inventory_component = Inventory(capacity=randint(*container_room))
+    if container_room is not None:
+        inventory_component = Inventory(capacity=randint(*container_room))
+    else:
+        inventory_component = None
     architecture_component = Architecture(on_collision=on_collision, on_interaction=on_interaction)
 
     # create the static object using the arguments tuple

@@ -27,6 +27,7 @@ def game_loop(game):
     game.previous_state = game.state
 
     targeting_item = None
+    debug_spawn = None
     fov_recompute = True
     processed_turn_results = {}
 
@@ -58,11 +59,9 @@ def game_loop(game):
         # mouse_action = handle_mouse(mouse)
 
         if action:
-            for ent in game.entities:
-                ent.proc_every_turn(action, game, start=True)
-
+            logging.debug(f'Processing {action}')
             # Process player input into turn results #
-            player_turn_results = process_player_input(action, game, fov_map, targeting_item)
+            player_turn_results = process_player_input(action, game, last_turn_results=[targeting_item, debug_spawn])
             logging.debug(f'Turn {game.turn} player results: {player_turn_results}')
 
             # The game exits if player turn results returns False #
@@ -81,15 +80,19 @@ def game_loop(game):
                 for ent in game.entities:
                     ent.proc_every_turn(action, game, start=False)
                 game.turn += 1
+                for ent in game.entities:
+                    ent.proc_every_turn(action, game, start=True)
 
             # Prepare for next turn #
-            for turn_result in processed_turn_results:
-                fov_recompute = turn_result.get('fov_recompute', False)
-                targeting_item = turn_result.get('targeting_item')
-                break
+            if processed_turn_results:
+                for turn_result in processed_turn_results:
+                    fov_recompute = turn_result.get('fov_recompute', False)
+                    targeting_item = turn_result.get('targeting_item')
+                    debug_spawn = turn_result.get('debug_spawn')
             else:
                 fov_recompute = False
                 targeting_item = None if game.state == GameState.PLAYERS_TURN else targeting_item
+                debug_spawn = None if game.state == GameState.PLAYERS_TURN else debug_spawn
 
 
 if __name__ == '__main__':
