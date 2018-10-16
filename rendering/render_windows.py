@@ -1,4 +1,5 @@
 """ Windows are temporary panels """
+from typing import Union, List, Optional
 
 import tcod
 
@@ -20,31 +21,25 @@ def set_window_on_screen(window_x, window_y, width, height):
     return window_x, window_y
 
 
-def draw_window(title, body, options = None, window_x = None, window_y = None, padding_x = 2, padding_y = 2,
-                sort_by = 'str', show_cancel_option=True, forced_width=None, extend_body=None,
-                title_color=colors.white, options_colors=None):
+def draw_window(title, body, options:Optional[List]=None,
+                window_x:Optional[int]=None, window_y:Optional[int]=None, padding_x:Optional[int]=2, padding_y:Optional[int]=2,
+                sort_by = 'str', show_cancel_option=True, forced_width:Optional[int]=None, title_color=colors.white, options_colors=None):
     if not options:
         options  = []
-
-    if not extend_body:
-        extend_body = []
 
     # Calculate window width #
     if forced_width:
         width = forced_width + padding_x * 2
     else:
         # calculate total width for the box, using the longest unwrapped string from either all options, title or body
-        if options or extend_body:
-            width = max(len(string) for string in (options + extend_body + [title, body])) + 4 + padding_x * 2
+        if options:
+            width = max(len(string) for string in (options + [title, body])) + 4 + padding_x * 2
         else:
-            width = max(len(title), len(body)) + padding_x * 2
+            width = min(len(body), round(cfg.MAP_SCREEN_WIDTH//2)) + padding_x * 2
 
     #width = min(width, cfg.SCREEN_WIDTH//2)
     # TODO: Wrapping is sometimes odd, as it does consider the (later removed) %colorcoding%-strings when wrapping
     body_wrapped = dynamic_wrap(body, width - padding_x * 2)
-    if extend_body:
-        for line in extend_body:
-            body_wrapped.extend([line])
 
     # Calculate window height #
     height = padding_y * 2
@@ -63,6 +58,8 @@ def draw_window(title, body, options = None, window_x = None, window_y = None, p
         #print_string(window, padding_x, y, line)
         print_string(window, padding_x, y, line)
         y += 1
+        if line.count('\n') > 0:
+            y += 1
 
     # Print options to the window #
     if options:
@@ -95,22 +92,17 @@ def draw_window(title, body, options = None, window_x = None, window_y = None, p
 
 
 def render_description_window(game):
-    ent = None
-    ents = entities_at_pos(game.npc_ents + game.architecture_ents, *game.cursor.pos)
-    if ents:
-        if len(ents) > 1:
-            ent = entity_at_pos(ents, *game.cursor.pos)
-        if len(ents) == 1 or ent is None:
-            ent = ents[0]
-        x, y = pos_on_screen(ent.x + 2, ent.y - 2, game.player)
+    ent = entity_at_pos(game.npc_ents + game.architecture_ents, *game.cursor.pos)
+    if ent is not None:
+        x, y = pos_on_screen(ent.x -2, ent.y - 2, game.player)
 
-        #title = f'{ent.char} {ent.name}'
         title = f' {ent.full_name} '
-        body = ent.descr
-        extend_body = ent.extended_descr(game)
+        body = ent.extended_descr(game)
 
-        width = min(len(body), round(cfg.SCREEN_WIDTH//2))
-        draw_window(title, body, window_x=x, window_y=y, forced_width=width, show_cancel_option=False, title_color=ent.color, extend_body=extend_body)
+        width = min(len(body), round(cfg.MAP_SCREEN_WIDTH//2)) # TODO Tweak width
+
+        draw_window(title, body, window_x=x, window_y=y, show_cancel_option=False, title_color=ent.color)
+
 
 def render_equipment_window(equipment): # Experimental - Not implemented#
 
@@ -146,7 +138,7 @@ def render_equipment_window(equipment): # Experimental - Not implemented#
         px = x_coord[item_ent.type.name.lower()]
 
         draw_window(item_ent.name, item_ent.descr, window_x=px, window_y=py, forced_width=30, show_cancel_option=False,
-                    title_color=item_ent.color, extend_body=item_ent.item.attr_list(max_width=30))
+                    title_color=item_ent.color)
         #
         # descr_wrapped = textwrap.wrap(item_ent.descr, width)
         # height = len(descr_wrapped)

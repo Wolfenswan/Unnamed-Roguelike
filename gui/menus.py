@@ -138,7 +138,8 @@ def item_menu(item_ent, game):
     x, y = pos_on_screen(player.x + 2, player.y - 2, game.player)
 
     title = item_ent.full_name
-    body = item_ent.descr
+    body = item_ent.extended_descr(game)
+    print(body)
 
     options = []
     wait_for = []
@@ -172,8 +173,7 @@ def item_menu(item_ent, game):
         wait_for.append('d')
 
     width = min(len(body), round(cfg.SCREEN_WIDTH//2.5))
-    draw_window(title, body, options=options, window_x=x, window_y=y, sort_by=None, forced_width=width,
-                extend_body = item_ent.item.attr_list(max_width=width), title_color=item_ent.color)
+    draw_window(title, body, options=options, window_x=x, window_y=y, sort_by=None, forced_width=width, title_color=item_ent.color)
 
     choice = menu_loop(wait_for=wait_for)
 

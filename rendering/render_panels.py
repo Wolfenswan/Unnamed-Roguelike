@@ -137,10 +137,12 @@ def render_enemy_panel(game, con, panel_x, panel_y, width, height, color):
                 print_string(con, x, y, '~ ~ ~ MORE ~ ~ ~')
                 break
 
+            char = '*' if ent.pos == game.cursor.pos and game.state == GameState.CURSOR_ACTIVE else f'{ent.char}'
+
             # Draw creature name and stats #
             tcod.console_set_default_foreground(con, colors.gray)
             tcod.console_set_color_control(tcod.COLCTRL_1, ent.color, tcod.black)
-            tcod.console_put_char_ex(con, 1, y, ent.char, ent.color, tcod.black)
+            tcod.console_put_char_ex(con, 1, y, char, ent.color, tcod.black)
             print_string(con, 3, y, ent.full_name, color = ent.color)
             y += 1
             tcod.console_put_char_ex(con, 3, y, chr(192), tcod.gray, tcod.black)

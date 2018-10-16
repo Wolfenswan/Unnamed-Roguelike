@@ -37,10 +37,10 @@ def game_loop(game):
     render_all(game, game.fov_map, debug=game.debug['map'])
 
     # Proof of Concept intro #
-    player.render_order = RenderOrder.BOTTOM
-    for i in range(5):
-        animate_explosion(*game.player.pos, 3, game, color=colors.turquoise)
-    player.render_order = RenderOrder.PLAYER
+    # player.render_order = RenderOrder.BOTTOM
+    # for i in range(5):
+    #     animate_explosion(*game.player.pos, 3, game, color=colors.turquoise)
+    # player.render_order = RenderOrder.PLAYER
 
     while not tcod.console_is_window_closed():
         # tcod.sys_set_fps(30)

@@ -81,7 +81,7 @@ def multiply_rgb_color(color, factor_range = (0, 0.25), darken=False):
     return color
 
 
-color_wrap_pattern = re.compile(
+COLOR_WRAP_PATTERN = re.compile(
 r"""
 %{1}            # % indicating beginning of color-code
 \w+[.,\d()]*    # the color
@@ -98,24 +98,34 @@ def dynamic_wrap(string, max_width):
     This function makes sure that textwrap.wrap() does ignore formatting strings
     such as %c and %color% when wrapping words.
     """
-    codes ={}
-    color_coded_words = color_wrap_pattern.findall(string)
+
+    color_coded_words = COLOR_WRAP_PATTERN.findall(string)
+    stripped_words = []
     for coded_string in color_coded_words:
         color_code = color_code_pattern.match(coded_string)
         stripped_code = coded_string.replace(color_code.group(),'')
         stripped_code = stripped_code.replace('%%','')
         string = string.replace(coded_string,stripped_code) # Remove all color code wrappers from the string
-        codes[stripped_code] = coded_string
+        stripped_words.append(stripped_code)
 
+    # Split the string at pre-defined line-breaks to preserve indentation.
+    split_str = string.split('\n')
+    wrapped = []
     # Create a textwrap-list, using the new string without color-wrappers
-    wrapped = textwrap.wrap(string, max_width)
+    for sub_str in split_str:
+        if sub_str == '':
+            wrapped.append(' ')
+        else:
+            wrapped.extend(textwrap.wrap(sub_str, max_width, replace_whitespace=False))
 
     # Re-add the color-wrapper strings
-    for i, line in enumerate(wrapped):
-        for k in codes.keys():
-            if k in line:
-                line = line.replace(k, codes[k])
-                wrapped[i] = line
+    for _i, line in enumerate(wrapped):
+        for _x, word in enumerate(stripped_words):
+            if word in line:
+                print(f'replacing {word} in {line} with {color_coded_words[_x]}')
+                line = line.replace(word, color_coded_words[_x])
+                wrapped[_i] = line
+                break
 
     return wrapped
 
@@ -123,30 +133,11 @@ def dynamic_wrap(string, max_width):
 def print_string(con, x, y, string, color=None, fgcolor=colors.white, bgcolor=colors.black, color_coefficient=None, alignment=tcod.LEFT, background=tcod.BKGND_DEFAULT):
     """
     Prints a string to tcods console, supporting custom color-code wrappers.
-
-    :param con:
-    :type con:
-    :param x:
-    :type x:
-    :param y:
-    :type y:
-    :param string:
-    :type string:
-    :param color:   The color to use for strings inside a %c wrapper.
-    :type color:
-    :param fgcolor: The default foreground color for the string.
-    :type fgcolor:
-    :param bgcolor: The default background color for the string.
-    :type bgcolor:
-    :param alignment:
-    :type alignment:
-    :param background:
-    :type background:
     """
 
     #logging.debug(f'Printing {string}')
 
-    color_coded_words = color_wrap_pattern.findall(string)
+    color_coded_words = COLOR_WRAP_PATTERN.findall(string)
     col_ctrls = ()
 
     if color_coded_words:
