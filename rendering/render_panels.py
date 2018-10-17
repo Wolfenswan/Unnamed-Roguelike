@@ -103,7 +103,7 @@ def render_object_panel(game, con, panel_x, panel_y, width, height):
 
             # Draw creature name and stats #
             # Some symbols don't print properly with console_print, that's why it's split into put_char_ex and print
-            if ent.pos == game.player.pos or (ent.pos == game.cursor.pos and game.state == GameState.CURSOR_ACTIVE):
+            if ent.pos == game.player.pos or (ent.pos == game.cursor.pos and game.state in (GameState.CURSOR_ACTIVE, GameState.CURSOR_TARGETING)):
                 symbol = '*'
             else:
                 symbol = f'{ent.char}'
@@ -137,7 +137,7 @@ def render_enemy_panel(game, con, panel_x, panel_y, width, height, color):
                 print_string(con, x, y, '~ ~ ~ MORE ~ ~ ~')
                 break
 
-            char = '*' if ent.pos == game.cursor.pos and game.state == GameState.CURSOR_ACTIVE else f'{ent.char}'
+            char = '*' if ent.pos == game.cursor.pos and game.state in [GameState.CURSOR_ACTIVE, GameState.CURSOR_TARGETING] else f'{ent.char}'
 
             # Draw creature name and stats #
             tcod.console_set_default_foreground(con, colors.gray)

@@ -9,16 +9,16 @@
 # use_scrolls_data = {
 #     'scr_fireball': {
 #         "name": 'Scroll of Fireball',
-#         'descr': 'A timeless classic.',
-#         'type': ItemType.USEABLE,
-#         "char": SCROLL_CHAR,
-#         "color": SCROLL_COLOR,
-#         'on_use': cast_fireball_on,
+#        Key.DESCR: 'A timeless classic.',
+#         Key.TYPE: ItemType.USEABLE,
+#         Key.CHAR: SCROLL_CHAR,
+#         Key.COLOR: SCROLL_COLOR,
+#         Key.ON_USE: cast_fireball_on,
 #         'on_use_msg': 'Move the cursor over the intended target, press Enter to confirm.',
 #         'targeting': True,
-#         "on_use_params": {'dmg': 12, 'radius': 3, 'range': 5},
-#         'rarity': RarityType.UNCOMMON,
-#         'rarity_mod': -5,
-#         'dlvls': (1, 99)
+#         Key.ON_USE_PARAMS: {'dmg': 12, 'radius': 3, 'range': 5},
+#         Key.RARITY: RarityType.UNCOMMON,
+#         Key.RARITY_MOD: -5,
+#         Key.DLVLS: (1, 99)
 #     }
 # }

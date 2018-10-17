@@ -4,6 +4,7 @@ from dataclasses import dataclass
 
 from components.items.equipment import Equipment
 from components.items.useable import Useable
+from data.data_keys import Key
 from data.data_types import Craftsmanship, Condition
 from data.gui_data.cond_strings import cond_name_data
 from data.gui_data.craft_strings import craft_name_data
@@ -79,8 +80,8 @@ class Item:
             if e_c.moveset:
                 listing += f'\n\nThis weapon utilizes %orange%{e_c.moveset.moves} attacks%%:'
                 for k, v in e_c.moveset.movelist.items():
-                    if v.get('descr'):
-                        listing += f'\n%orange%({k})%% {v.get("descr")}'
+                    if v.get(Key.DESCR) is not None:
+                        listing += f'\n%orange%({k})%% {v.get(Key.DESCR)}'
 
         if self.useable:
             u_c = self.useable

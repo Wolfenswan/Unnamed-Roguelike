@@ -36,7 +36,7 @@ def render_map_screen(game, fov_map, debug=False):
     for entity in entities_in_render_order:
         draw_entity(game, con, entity, fov_map, debug=debug)
 
-    if game.state == GameState.CURSOR_ACTIVE:
+    if game.state in [GameState.CURSOR_ACTIVE, GameState.CURSOR_TARGETING]:
         draw_entity(game, con, game.cursor, fov_map, debug=debug)
 
     draw_console_borders(con ,color=colors.white)
@@ -78,10 +78,10 @@ def draw_tile(game, con, fov_map, tile_x, tile_y, screen_x, screen_y, debug=Fals
         tcod.console_put_char_ex(con, screen_x, screen_y, tile.char, tile.dark_color, colors.black)
 
 def draw_entity(game, con, entity, fov_map, debug=False):
-    if entity.render_order != RenderOrder.NONE or debug:
+    if entity.render_order != RenderOrder.NONE:
         x, y = pos_on_screen(*entity.pos, game.player)
 
-        if entity.is_visible(fov_map) or (entity.render_order == RenderOrder.ALWAYS and game.map.tiles[entity.pos].explored > 0):
+        if debug or entity.is_visible(fov_map) or (entity.render_order == RenderOrder.ALWAYS and game.map.tiles[entity.pos].explored > 0):
             tcod.console_put_char(con, x, y, entity.char)
             if entity.is_visible(fov_map) and entity is not game.cursor and not debug:
                 color = darken_color_by_fov_distance(game.player, entity.color, entity.x, entity.y, min=0.3)

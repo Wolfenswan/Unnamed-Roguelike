@@ -16,7 +16,7 @@ def place_items(game):
     possible_items = ITEM_DATA_MERGED
 
     # first, remove all items that can't be spawned on the current level
-    #possible_items = {k: v for k, v in ITEM_DATA_MERGED.items() if dlvl in v.get('dlvls',[0,99])}
+    #possible_items = {k: v for k, v in ITEM_DATA_MERGED.items() if dlvl in v.get(Key.DLVLS:,[0,99])}
 
    #max_items = (game_map.width * game_map.height) // cfg.ITEMS_DUNGEON_DIVISOR
     max_items = int(len(rooms) * cfg.ITEMS_DUNGEON_FACTOR)

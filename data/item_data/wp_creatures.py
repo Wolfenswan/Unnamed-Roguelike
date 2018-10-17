@@ -1,39 +1,40 @@
+from data.data_keys import Key
 from data.data_types import Material, ItemType, RarityType, AttackType, Element
 from data.item_data.wp_movesets import moveset_mandibles, moveset_claws, moveset_spit
 
 wp_creature_data = {
     'ins_mandibles': {
-        'name': 'mandibles',
-        'materials': (Material.CHITIN,),
-        'type': ItemType.MELEE_WEAPON,
-        'e_to': 'weapon_arm',
-        'dmg_potential': (4, 8),
-        'moveset': moveset_mandibles,
-        'attack': AttackType.NORMAL,
-        'rarity': RarityType.FORBIDDEN,
-        'can_drop': False # TODO not implemented
+        Key.NAME: 'mandibles',
+        Key.MATERIAL: (Material.CHITIN,),
+        Key.TYPE: ItemType.MELEE_WEAPON,
+        Key.EQUIP_TO: 'weapon_arm',
+        Key.DMG_POTENTIAL: (4, 8),
+        Key.MOVESET: moveset_mandibles,
+        Key.ATTACKTYPE: AttackType.NORMAL,
+        Key.RARITY: RarityType.FORBIDDEN,
+        Key.CAN_DROP: False # TODO not implemented
     },
     'ins_claws': {
-        'name': 'claws',
-        'materials': (Material.CHITIN,),
-        'type': ItemType.MELEE_WEAPON,
-        'e_to': 'weapon_arm',
-        'dmg_potential': (6, 6),
-        'moveset': moveset_claws,
-        'attack': AttackType.NORMAL,
-        'rarity': RarityType.FORBIDDEN,
-        'can_drop': False # TODO not implemented
+        Key.NAME: 'claws',
+        Key.MATERIAL: (Material.CHITIN,),
+        Key.TYPE: ItemType.MELEE_WEAPON,
+        Key.EQUIP_TO: 'weapon_arm',
+        Key.DMG_POTENTIAL: (6, 6),
+        Key.MOVESET: moveset_claws,
+        Key.ATTACKTYPE: AttackType.NORMAL,
+        Key.RARITY: RarityType.FORBIDDEN,
+        Key.CAN_DROP: False # TODO not implemented
     },
     'ins_ranged': {
-        'name': 'spit',
-        'materials': (Material.CHITIN,),
-        'type': ItemType.RANGED_WEAPON,
-        'e_to': 'weapon_arm',
-        'dmg_potential': (6, 6),
-        'moveset': moveset_spit,
-        'attack': AttackType.NORMAL,
-        'rarity': RarityType.FORBIDDEN,
-        'can_drop': False, # TODO not implemented
-        'element': Element.ACID # TODO not implemented
+        Key.NAME: 'spit',
+        Key.MATERIAL: (Material.CHITIN,),
+        Key.TYPE: ItemType.RANGED_WEAPON,
+        Key.EQUIP_TO: 'weapon_arm',
+        Key.DMG_POTENTIAL: (6, 6),
+        Key.MOVESET: moveset_spit,
+        Key.ATTACKTYPE: AttackType.NORMAL,
+        Key.RARITY: RarityType.FORBIDDEN,
+        Key.CAN_DROP: False, # TODO not implemented
+        Key.ELEMENT: Element.ACID # TODO not implemented
     },
 }

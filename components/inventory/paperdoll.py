@@ -101,6 +101,9 @@ class Paperdoll:
                 # TODO make sure items over capacity are moved to regular inventory
                 self.owner.qu_inventory.capacity -= qu_slots
 
+            if equipped_item == self.owner.fighter.active_weapon:
+                self.owner.fighter.active_weapon = None
+
             results.append({'item_dequipped': item_ent, 'message': Message(f'You remove the {item_ent.name}')})
         else:
             logging.error('Trying to dequip something that is not equipped. This should not happen...')

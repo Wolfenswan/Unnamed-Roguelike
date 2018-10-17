@@ -24,7 +24,7 @@ def handle_keys(key, game_state):
 
 
     # Game state specific inputs #
-    if game_state in [GameState.PLAYERS_TURN, GameState.PLAYER_RESTING, GameState.CURSOR_ACTIVE]:
+    if game_state in [GameState.PLAYERS_TURN, GameState.PLAYER_RESTING, GameState.CURSOR_ACTIVE, GameState.CURSOR_TARGETING]:
         return handle_player_turn_keys(key)
     elif game_state == GameState.PLAYER_DEAD:
         return handle_player_dead_keys(key)

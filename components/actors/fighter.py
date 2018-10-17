@@ -500,13 +500,19 @@ class Fighter:
             self.hp = self.max_hp
             return Message(f'Invincibility enabled')
 
-        ent.ai = None
+        # Strip ent of components and set it as a corpse
         x, y = ent.x, ent.y
-        ent.render_order = RenderOrder.NONE
-        game.map.tiles[(x, y)].gib('%')
+        ent.char = '%'
+        ent.color = colors.corpse
+        ent.render_order = RenderOrder.CORPSE
+        ent.blocks[BlockLevel.WALK] = False
+        ent.ai = None
+        ent.fighter = None
+        #ent.name = f'{ent.name.title()} remains'
 
         # Create gibs
         # TODO Consider force of impact (amount of damage done beyond 0 hp?) to vary spread
+        game.map.tiles[(x, y)].gib()
         for i in range(1, randint(3, 5)):
             c_x, c_y = (randint(x - 1, x + 1), randint(y - 1, y + 1))
             game.map.tiles[(c_x, c_y)].gib()
@@ -515,10 +521,5 @@ class Fighter:
 
         type = MessageType.GOOD if not ent.is_player else MessageType.BAD
         message = Message(f'{ent.address_with_color.title()} {ent.state_verb_present} dead!', type=type, category=MessageCategory.OBSERVATION)
-
-        #ent.render_order = RenderOrder.CORPSE
-        ent.blocks[BlockLevel.WALK] = False
-        ent.ai = None
-        #ent.name = f'{ent.name.title()} remains'
 
         return message

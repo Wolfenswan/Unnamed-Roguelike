@@ -1,6 +1,7 @@
 from random import choice, randint
 from typing import List
 
+from data.data_keys import Key
 from map.directions_util import relative_dir, RelativeDirection
 
 
@@ -10,13 +11,11 @@ class Moveset():
         self.movelist = movelist
         self.current_move = 1
 
-        if self.movelist.get('verbs'):
-            self.general_verbs = self.movelist['verbs']
-            del self.movelist['verbs']
-
-        if self.movelist.get('random'):
-            self.random = True
-            del self.movelist['random']
+        self.default_values = self.movelist.get(Key.DEFAULT)
+        if self.default_values is not None:
+            del self.movelist[Key.DEFAULT]
+        else:
+            self.default_values = {}
 
     @property
     def moves(self):
@@ -24,7 +23,7 @@ class Moveset():
 
     @property
     def dmg_multipl(self):
-        return self.movelist[self.current_move].get('dmg_multipl', 1)
+        return self.movelist[self.current_move].get(Key.DMG_MULTIPL, 1)
 
     @property
     def targets_gui(self):
@@ -32,7 +31,7 @@ class Moveset():
         l_1 = [' ',' ',' ']
         l_2 = [' ','@','%red%X%%']
         l_3 = [' ',' ',' ']
-        for extra_attack in self.movelist[self.current_move].get('extend_attack', []):
+        for extra_attack in self.movelist[self.current_move].get(Key.EXTEND_ATTACK, []):
             if extra_attack == RelativeDirection.BEHIND:
                 l_2[2] = t
             if extra_attack == RelativeDirection.LEFT:
@@ -47,17 +46,20 @@ class Moveset():
         return (l_1,l_2,l_3)
 
     def execute(self, attacker, target):
-        move = self.movelist[self.current_move]
-        if move.get('extend_attack'):
-            move['extra_attacks'] = self.get_extra_attack_positions(attacker, target, move['extend_attack'])
-        if move.get('verb') is None:
-            move['attack_verb'] = choice(self.general_verbs)
+        """
+        Creates a copy of the current move-dictionary and adds new key/value paris as needed by fighter.attack_setup
+        """
+        move = self.movelist[self.current_move].copy()
+        if move.get(Key.EXTEND_ATTACK):
+            move['extra_attacks'] = self.get_extra_attack_positions(attacker, target, move[Key.EXTEND_ATTACK])
+        if move.get(Key.VERB) is None:
+            move['attack_verb'] = choice(self.default_values[Key.VERBS])
         else:
-            move['attack_verb'] = move['verb']
+            move['attack_verb'] = move[Key.VERB]
         return move
 
     def cycle_moves(self, reset=False):
-        if self.random:
+        if self.default_values.get(Key.RANDOM, False):
             self.current_move = randint(1, self.moves)
         else:
             self.current_move += 1
@@ -67,8 +69,12 @@ class Moveset():
 
     @staticmethod
     def get_extra_attack_positions(attacker, target, extra_hits:List):
+        """
+        Returns all positions (as (x,y) tuples) also affected by the current move.
+
+        :return: [(x1,y1)...(xN,yN)]
+        """
         extra_attacks = []
-        x, y = target.pos
         dir = attacker.direction_to_ent(target)
 
         for extra_hit in extra_hits:

@@ -13,10 +13,12 @@ def set_window_on_screen(window_x, window_y, width, height):
     if window_x is None or window_y is None:
         window_x = (cfg.SCREEN_WIDTH - width) // 2
         window_y = (cfg.SCREEN_HEIGHT - height) // 2
-    elif window_x > cfg.SCREEN_WIDTH // 2:
-        # Make sure the window does not cut off screen
-        # width + 3 creates a minor offset to make sure the player is not concealed by the window
-        window_x -= (width + 3)
+    # elif window_x < cfg.SCREEN_WIDTH // 2:
+    # #     # Make sure the window does not cut off screen
+    # #     # width + 3 creates a minor offset to make sure the player is not concealed by the window
+    #      window_x -= width + 3
+    # elif width + 4 > cfg.MAP_SCREEN_WIDTH//2:
+    #     print(window_x, width)
 
     return window_x, window_y
 
@@ -92,7 +94,7 @@ def draw_window(title, body, options:Optional[List]=None,
 def render_description_window(game):
     ent = entity_at_pos(game.npc_ents + game.architecture_ents, *game.cursor.pos)
     if ent is not None:
-        x, y = pos_on_screen(ent.x + 2, ent.y - 2, game.player)
+        x, y = pos_on_screen(ent.x - 5, ent.y + 2, game.player)
 
         title = f'{ent.full_name}'
         body = ent.extended_descr(game)

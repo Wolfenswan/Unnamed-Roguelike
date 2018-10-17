@@ -1,3 +1,4 @@
+from data.data_keys import Key
 from data.data_types import AttackType
 from map.directions_util import RelativeDirection
 
@@ -5,103 +6,109 @@ col1 = '%dark_orange%'
 
 moveset_sword = {
     1: {
-        'descr': f'A {col1}swing%% from right to left, doing full damage.',
-        'verb': 'swings at',
+       Key.DESCR: f'A {col1}swing%% from right to left, doing full damage.',
+        Key.VERB: 'swings at',
     },
     2: {
-        'descr': f'A slightly {col1}weaker slash%% from the down left.',
-        'verb': 'slashes',
-        'dmg_multipl': 0.8
+       Key.DESCR: f'A slightly {col1}weaker slash%% from the down left.',
+        Key.VERB: 'slashes',
+        Key.DMG_MULTIPL: 0.8
     },
     3: {
-        'descr': f'A {col1}forceful stab%% towards the enemies center.',
-        'verb': 'stabs',
-        'dmg_multipl': 1.25
+       Key.DESCR: f'A {col1}forceful stab%% towards the enemies center.',
+        Key.VERB: 'stabs',
+        Key.DMG_MULTIPL: 1.25
     }
 }
 
 moveset_spear = {
     1: {
-        'descr': f'A {col1}weak stab%% to prepare for further attacks.',
-        'verb': 'pokes',
-        'dmg_multipl': 0.75
+       Key.DESCR: f'A {col1}weak stab%% to prepare for further attacks.',
+        Key.VERB: 'pokes',
+        Key.DMG_MULTIPL: 0.75
     },
     2: {
-        'descr': f"An {col1}standard thrust%%, using the weapon's full potential.",
-        'verb': 'thrusts at'
+       Key.DESCR: f"An {col1}standard thrust%%, using the weapon's full potential.",
+        Key.VERB: 'thrusts at'
     },
     3: {
-        'descr': f'A {col1}powerful thrust%%, piercing the target and hitting something behind it.',
-        'verb': 'forcefully thrusts through',
-        'dmg_multipl': 1.25,
-        'extend_attack': [RelativeDirection.BEHIND]
+       Key.DESCR: f'A {col1}powerful thrust%%, piercing the target and hitting something behind it.',
+        Key.VERB: 'forcefully thrusts through',
+        Key.DMG_MULTIPL: 1.25,
+        Key.EXTEND_ATTACK: [RelativeDirection.BEHIND]
     }
 }
 
 moveset_flail = {
-    'verbs': ('flails',),
+Key.DEFAULT: {Key.VERBS: ('flails',),},
     1: {
-        'descr': f'A {col1}weaker over-head swing%%, to get momentum.',
-        'dmg_multipl': 0.5,
-        'extend_attack': [RelativeDirection.LEFT, RelativeDirection.LEFT_BACK]
+       Key.DESCR: f'A {col1}weaker over-head swing%%, to get momentum.',
+        Key.DMG_MULTIPL: 0.5,
+        Key.EXTEND_ATTACK: [RelativeDirection.LEFT, RelativeDirection.LEFT_BACK]
     },
     2: {
-        'descr': f'A {col1}slightly stronger swing%%, speeding up the weapon.',
-        'dmg_multipl': 0.85,
-        'extend_attack': [RelativeDirection.RIGHT, RelativeDirection.LEFT, RelativeDirection.LEFT_BACK]
+       Key.DESCR: f'A {col1}slightly stronger swing%%, speeding up the weapon.',
+        Key.DMG_MULTIPL: 0.85,
+        Key.EXTEND_ATTACK: [RelativeDirection.RIGHT, RelativeDirection.LEFT, RelativeDirection.LEFT_BACK]
     },
     3: {
-        'descr': f"A {col1}standard swing%%, using the weapon's full potential.",
-        'dmg_multipl': 1,
-        'extend_attack': [RelativeDirection.RIGHT, RelativeDirection.LEFT, RelativeDirection.LEFT_BACK]
+       Key.DESCR: f"A {col1}standard swing%%, using the weapon's full potential.",
+        Key.DMG_MULTIPL: 1,
+        Key.EXTEND_ATTACK: [RelativeDirection.RIGHT, RelativeDirection.LEFT, RelativeDirection.LEFT_BACK]
     },
     4: {
-        'descr': f"A final {col1}overhead crush%% on a single head, ignoring shields.",
-        'verb': 'crushes',
-        'dmg_multipl': 1.25,
-        'attack': AttackType.QUICK,
+       Key.DESCR: f"A final {col1}overhead crush%% on a single head, ignoring shields.",
+        Key.VERB: 'crushes',
+        Key.DMG_MULTIPL: 1.25,
+        Key.ATTACKTYPE: AttackType.QUICK,
     }
 }
 
 
 moveset_bow = {
-    'verbs': ('shoots',),
+    Key.DEFAULT: {Key.VERBS: ('shoots',),},
     1: {
-        'descr': f"A quick but {col1}weaker draw%% to gauge the distance to the target.",
-        'dmg_multipl': 0.5
+       Key.DESCR: f"A quick but {col1}weaker draw%% to gauge the distance to the target.",
+        Key.DMG_MULTIPL: 0.5
     },
     2: {
-        'descr': f"A {col1}standard draw%%, likely hitting the torso.",
+       Key.DESCR: f"A {col1}standard draw%%, likely hitting the torso.",
     },
     3: {
-        'descr': f"A followup, {col1}average shot%%, to prepare for the final target.",
+       Key.DESCR: f"A followup, {col1}average shot%%, to prepare for the final target.",
     },
     4: {
-        'descr': f"A {col1}devastating head shot%%, aimed right between the eyes.",
-        'dmg_multipl': 2
+       Key.DESCR: f"A {col1}devastating head shot%%, aimed right between the eyes.",
+        Key.DMG_MULTIPL: 2
     },
 }
 
 
 moveset_mandibles = {
-    'random' : True,
-    'verbs': ('bites', 'gnaws at'),
+    Key.DEFAULT: {
+        Key.RANDOM: True,
+        Key.VERBS: ('bites', 'gnaws at'),
+    },
     1: {},
     2: {},
     3: {
-        'verb': 'nibbles at',
-        'dmg_multipl': 0.75
+        Key.VERB: 'nibbles at',
+        Key.DMG_MULTIPL: 0.75
     }
 }
 
 
 moveset_claws = {
-    'verbs': ('lashes', 'claws', 'rips','rends'),
+    Key.DEFAULT: {
+        Key.VERBS: ('lashes', 'claws', 'rips','rends'),
+    },
     1: {}
 }
 
 
 moveset_spit = {
-    'verbs': ('spits at', 'discharges saliva at'),
+    Key.DEFAULT: {
+        Key.VERBS: ('spits at', 'discharges saliva at'),
+    },
     1: {}
 }

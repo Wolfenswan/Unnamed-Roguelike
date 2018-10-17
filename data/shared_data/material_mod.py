@@ -1,39 +1,40 @@
 from config_files import colors
+from data.data_keys import Key
 from data.data_types import Material
 
 item_material_data = {
     'wood_1': {
-        'type': Material.OAK,
-        'color': colors.oak
+        Key.TYPE: Material.OAK,
+        Key.COLOR: colors.oak
     },
     'creature_1': {
-        'type': Material.CHITIN,
-        'color': colors.dark_gray
+        Key.TYPE: Material.CHITIN,
+        Key.COLOR: colors.dark_gray
     },
     'cloth_1': {
-        'type': Material.LINEN,
-        'color': colors.linen
+        Key.TYPE: Material.LINEN,
+        Key.COLOR: colors.linen
     },
     # 'cloth_2': {
-    #     'name': 'cotton',
-    #     'type': Material.WOOL,
-    #     'rarity': RarityType.COMMON,
-    #     'color': colors.WOOL
+    #     Key.NAME: 'cotton',
+    #     Key.TYPE: Material.WOOL,
+    #     Key.RARITY: RarityType.COMMON,
+    #     Key.COLOR: colors.WOOL
     # },
     'leather_1': {
-        'type': Material.LEATHER,
-        'color': colors.leather
+        Key.TYPE: Material.LEATHER,
+        Key.COLOR: colors.leather
     },
     'metal_1': {
-        'type': Material.IRON,
-        'color': colors.iron,
-        'av_mod': 1
+        Key.TYPE: Material.IRON,
+        Key.COLOR: colors.iron,
+        Key.AV_FLAT: 1
     },
     'metal_2': {
-        'type': Material.STEEL,
-        'color': colors.steel,
-        'dmg_mod': 2,
-        'av_mod': 2
+        Key.TYPE: Material.STEEL,
+        Key.COLOR: colors.steel,
+        Key.DMG_FLAT: 2,
+        Key.AV_FLAT: 2
     },
 
 }

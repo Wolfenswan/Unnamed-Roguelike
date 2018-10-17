@@ -41,23 +41,23 @@ def process_player_input(action, game, last_turn_results:Optional[List]):
         turn_results.extend(process_inventory_interaction(game, prepare))
 
     # Cursor Movement & Targeting #
-    if game.state == GameState.CURSOR_ACTIVE:
+    if game.state in [GameState.CURSOR_ACTIVE, GameState.CURSOR_TARGETING]:
         turn_results.extend(process_cursor_interaction(game, action, targeting_item))
 
     if toggle_look:
-        game.toggle_cursor(pos=player.pos)
+        game.toggle_cursor(player.pos)
 
     if toggle_fire:
         if player.active_weapon_is_ranged:
-            # TODO place cursor on nearest target
-            # TODO account for minimal range
-            game.toggle_cursor(pos=player.pos)
+            nearest_ent = player.nearest_entity(game.npc_ents, max_dist=player.active_weapon.attack_range[1])
+            pos = nearest_ent.pos if nearest_ent is not None else player.pos
+            game.toggle_cursor(pos, state=GameState.CURSOR_TARGETING)
         else:
             turn_results.append({'message': Message('PLACEHOLDER: Need ranged weapon to fire.', type=MessageType.SYSTEM)})
 
     # Other #
     if exit:
-        if game.state in (GameState.SHOW_INVENTORY, GameState.CURSOR_ACTIVE):
+        if game.state in (GameState.SHOW_INVENTORY, GameState.SHOW_QU_INVENTORY, GameState.CURSOR_ACTIVE, GameState.CURSOR_TARGETING):
             game.state = GameState.PLAYERS_TURN
         else:
             if player.fighter.hp > 0:
@@ -228,7 +228,7 @@ def process_player_interaction(game, action):
 
     if debug:
         results.extend(debug_menu(game))
-
+    print(game.state)
     return results
 
 def process_inventory_interaction(game, prepare):
@@ -316,16 +316,16 @@ def process_cursor_interaction(game, action, targeting_item):
 
     if confirm:
         if targeting_item is not None:
+            print('t')
             inv = player.inventory if targeting_item in player.inventory else player.qu_inventory
             item_use_results = inv.use(targeting_item, game, target_pos=cursor.pos)
             results.extend(item_use_results)
-            print(item_use_results)
         # elif debug_spawn is not None:
         #     npc = gen_npc_from_dict(NPC_DATA_MERGED[debug_spawn], *cursor.pos, game)
         #     game.entities.append(npc)
         elif player.active_weapon_is_ranged:
             target = entity_at_pos(game.blocking_ents, *cursor.pos)
-            if target is not None:
+            if target is not None and target.fighter is not None:
                 attack_results = player.fighter.attack_setup(target, game)
                 results.extend(attack_results)
             else:
@@ -335,4 +335,5 @@ def process_cursor_interaction(game, action, targeting_item):
     if exit and (targeting_item or player.active_weapon_is_ranged):
         results.append({'targeting_cancelled': True})
 
+    print(game.state)
     return results

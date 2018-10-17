@@ -21,7 +21,7 @@ def place_monsters(game):
     possible_spawns = NPC_DATA_MERGED
 
     # all spawnable actors have a dlvl range, so the spawn_data dictionary is reduced to all spawn-objects where the current dlvl is within this range
-    # possible_spawns = {k: v for k, v in spawn_data.items() if dlvl in v['dlvls']}
+    # possible_spawns = {k: v for k, v in spawn_data.items() if dlvl in v[Key.DLVLS:]}
     logging.debug('Creating monster for dungeon-level {0} from this list: {1}.'.format(dlvl, possible_spawns))
 
     #monsters_placed = 0

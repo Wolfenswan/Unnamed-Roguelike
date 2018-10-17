@@ -1,6 +1,7 @@
 from random import randint
 
 from config_files import cfg, colors
+from data.data_keys import Key
 from data.data_processing import gen_loadout, gen_architecture, ARCHITECTURE_DATA_MERGED
 from data.data_types import Material, Condition, Craftsmanship
 from debug.timer import debug_timer
@@ -23,18 +24,18 @@ def initialize_game(game):
     player = Player('Player')
     player_loadouts = { # TODO adapt entries
         'loadout1': {
-            'equipment': {
+            Key.EQUIPMENT: {
                 'sword': {
-                    'materials': (Material.IRON,),
-                    'conditions': (Condition.NORMAL,),
-                    'craftsmanships': (Craftsmanship.POOR,)
+                    Key.MATERIAL: (Material.IRON,),
+                    Key.CONDITION: (Condition.NORMAL,),
+                    Key.CRAFTSMANSHIP: (Craftsmanship.POOR,)
                 },
                 'brigandine':{},
                 'helmet':{},
                 'belt_generic':{},
                 'round_shield':{}
             },
-            'backpack': ('pot_heal', 'bomb_1','bomb_1','bomb_1','torch', 'spear', 'flail', 'bow')
+            Key.BACKPACK: ('pot_heal', 'bomb_1','bomb_1','bomb_1','torch', 'spear', 'flail', 'bow')
         }
     }
 
@@ -51,9 +52,9 @@ def initialize_game(game):
     game.map.make_map(game, cfg.ROOM_MIN_SIZE, cfg.ROOM_MAX_SIZE, dwidth, dheight)
 
     # Add the good stuff #
-    place_staticobjects(game)
-    place_containers(game)
-    place_doors(game)
+    # place_staticobjects(game)
+    # place_containers(game)
+    # place_doors(game)
     # place_items(game)
     # place_monsters(game)
 

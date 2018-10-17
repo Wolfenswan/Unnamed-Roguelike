@@ -310,7 +310,6 @@ class Entity:
     def entities_in_distance(self, entities:List, dist:float=1.5):
         """ returns nearby entities in given distance """
         entities_in_range = [ent for ent in entities if ent != self and self.distance_to_ent(ent) <= dist]
-        #logging.debug(f'Nearby : {entities_in_range}')
         return entities_in_range
 
     def enemies_in_distance(self, hostile_entities:List, dist:float=1.5): # NOTE: Only relevant for player at the moment.
@@ -318,6 +317,12 @@ class Entity:
         ents = self.entities_in_distance(hostile_entities, dist=dist)
         ents = [ent for ent in ents if not ent.is_corpse]
         return ents
+
+    def nearest_entity(self, entities:List, max_dist:float=5):
+        entities_in_range = self.entities_in_distance(entities, max_dist)
+        if entities_in_range:
+            return sorted(entities_in_range, key=lambda ent: ent.distance_to_ent(self))[0]
+        return None
 
     # def nearest_enemy(self, hostile_entities:List, fov_map):
     #     return next(self.visible_enemies(hostile_entities, fov_map))

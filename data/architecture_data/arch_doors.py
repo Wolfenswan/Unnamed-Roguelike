@@ -1,4 +1,5 @@
 from components.architecture import Architecture
+from data.data_keys import Key
 from data.data_types import Material
 from data.data_types import RarityType
 from gameobjects.block_level import BlockLevel
@@ -6,15 +7,15 @@ from rendering.render_order import RenderOrder
 
 arch_doors_data = {
     'door': {
-        'name': 'Door',
-        'materials': (Material.OAK, Material.IRON, Material.STEEL),
-        'descr': "A creaky old door.",
-        'rarity': RarityType.COMMON,
-        'blocks': {BlockLevel.FLOOR: True, BlockLevel.WALK: False},
-        'dlvls': (1, 99),
-        "char": '-',
-        'rendering': RenderOrder.ALWAYS,
-        'on_collision': Architecture.toggle_door,
-        'on_interaction': Architecture.toggle_door
+        Key.NAME: 'Door',
+        Key.MATERIAL: (Material.OAK, Material.IRON, Material.STEEL),
+        Key.DESCR: "A creaky old door.",
+        Key.RARITY: RarityType.COMMON,
+        Key.BLOCKS: {BlockLevel.FLOOR: True, BlockLevel.WALK: False},
+        Key.DLVLS: (1, 99),
+        Key.CHAR: '-',
+        Key.RENDERING: RenderOrder.ALWAYS,
+        Key.ON_COLLISION: Architecture.toggle_door,
+        Key.ON_INTERACTION: Architecture.toggle_door
     }
 }

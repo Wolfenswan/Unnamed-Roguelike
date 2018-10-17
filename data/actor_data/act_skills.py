@@ -1,6 +1,7 @@
 from components.skills.skillConditions import SkillCondition
 from components.effects import Effect
-from components.skills.skills import SkillCharge, SkillSlam
+from components.skills.skills import SkillCharge, SkillSlam, SkillExplode
+from data.data_keys import Key
 
 """
 Each dictionary refers to a skill class and contains the parameters to customize the instance of each skill accordingly.
@@ -8,7 +9,7 @@ Each dictionary refers to a skill class and contains the parameters to customize
 
 skill_generic_charge = {
         'skill' : SkillCharge,
-        'name': 'Charge',
+        Key.NAME: 'Charge',
         'activate_condition_kwargs': {'min_dist': 2, 'max_dist': 6},
         'on_activate_kwargs': {'delay':1},
         'cooldown_length': 6
@@ -21,7 +22,7 @@ skill_quick_charge = {
 
 skill_generic_slam = {
     'skill' : SkillSlam,
-    'name': 'Slam',
+    Key.NAME: 'Slam',
     'activate_condition_kwargs': {'min_dist': 1, 'max_dist': 1.5},
     'on_activate_kwargs': {'delay':1},
     'cooldown_length': 4

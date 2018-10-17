@@ -73,7 +73,7 @@ class MessageLog:
     def add_message(self, message, turn):
 
         # Split the message if necessary, among multiple lines
-        new_msg_lines = dynamic_wrap(message.text, self.width - self.x)
+        new_msg_lines = dynamic_wrap(message.text, self.width - self.x * 2)
 
         for line in reversed(new_msg_lines):
             # If the buffer is full, remove the first line to make room for the new one

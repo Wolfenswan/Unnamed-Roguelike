@@ -50,11 +50,13 @@ def process_turn_results(player_turn_results, game, fov_map):
             entities.append(item_dropped)
 
         if targeting is not None:
-            game.toggle_cursor(pos=player.pos)
+            nearest_ent = player.nearest_entity(game.npc_ents, max_dist=targeting.item.useable.on_use_params.get('range',(1,1))[1])
+            pos = nearest_ent.pos if nearest_ent is not None else player.pos
+            game.toggle_cursor(pos, state=GameState.CURSOR_TARGETING)
             results.append({'targeting_item': targeting})
 
         if targeting_cancelled is not None:
-            game.state = game.previous_state
+            game.state = GameState.PLAYERS_TURN
             Message('Targeting cancelled.').add_to_log(game)
 
         if waiting is not None:
@@ -66,7 +68,7 @@ def process_turn_results(player_turn_results, game, fov_map):
                 # TODO placeholder for regeneration/resting
                 player.fighter.hp += player.fighter.max_hp/10
                 player.fighter.recover(player.fighter.max_stamina / 10) # TODO Placeholder Stamina Managment
-                game.state = GameState.PLAYER_RESTING
+                #game.state = GameState.PLAYER_RESTING
 
         if fov_recompute is not None:
             results.append({'fov_recompute': fov_recompute})

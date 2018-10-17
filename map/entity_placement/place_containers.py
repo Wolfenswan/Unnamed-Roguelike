@@ -2,6 +2,7 @@ import logging
 from random import choice, randint
 
 from config_files import cfg
+from data.data_keys import Key
 from data.data_processing import CONTAINER_DATA_MERGED, pick_from_data_dict_by_rarity, gen_architecture, \
     gen_item_from_data, ITEM_DATA_MERGED
 from data.data_types import RarityType
@@ -76,9 +77,9 @@ def fill_container(container, dlvl, rarity_filter=None, type_filter=None, forced
                 break
     else:
         possible_items = {k: v for k, v in ITEM_DATA_MERGED.items() if
-                          dlvl in range(*v.get('dlvls', (1, 99)))
-                          and v.get('type') in type_filter
-                          and v.get('rarity', RarityType.COMMON) in rarity_filter}
+                          dlvl in range(*v.get(Key.DLVLS, (1, 99)))
+                          and v.get(Key.TYPE) in type_filter
+                          and v.get(Key.RARITY, RarityType.COMMON) in rarity_filter}
         num_of_items = randint(0, container.inventory.capacity)
         logging.debug(f'Creating {num_of_items} items (max: {container.inventory.capacity})')
         for i in range(num_of_items):

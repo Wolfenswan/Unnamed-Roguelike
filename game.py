@@ -1,6 +1,6 @@
 from enum import Enum, auto
 
-from config_files import cfg
+from config_files import cfg, colors
 from gameobjects.block_level import BlockLevel
 from gui.messages import MessageLog
 
@@ -9,7 +9,8 @@ class GameState(Enum):
     GAME_PAUSED = auto()
     PLAYERS_TURN = auto()
     PLAYER_RESTING = auto()
-    CURSOR_ACTIVE = auto()
+    CURSOR_ACTIVE = auto()      # Cursor displayed & description window drawn
+    CURSOR_TARGETING = auto()   # Cursor displayed & no description window drawn
     EQUIPMENT_ACTIVE = auto()
     SHOW_INVENTORY = auto()
     SHOW_QU_INVENTORY = auto()
@@ -17,6 +18,7 @@ class GameState(Enum):
     SHOW_ITEM = auto()
     ENEMY_TURN = auto()
     PLAYER_DEAD = auto()
+
 
 class Game:
     def __init__(self, debug=False):
@@ -45,6 +47,11 @@ class Game:
         }
 
     def toggle_cursor(self, pos=(0,0), state=GameState.CURSOR_ACTIVE):
+        if state == GameState.CURSOR_TARGETING:
+            self.cursor.color = colors.red
+        else:
+            self.cursor.color = colors.white
+
         if self.state == state:
             self.state = self.previous_state
         else:

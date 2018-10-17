@@ -25,7 +25,7 @@ class Useable:
         if self.on_use_function is None:
             results.append({'message': Message(f'The {item_entity.name} cannot be used like this.', category=MessageCategory.OBSERVATION)})
         else:
-            if self.targeted and not game.state == GameState.CURSOR_ACTIVE:
+            if self.targeted and not game.state in [GameState.CURSOR_ACTIVE, GameState.CURSOR_TARGETING]:
                 results.append({'targeting': item_entity,'message': Message('Move the cursor over the intended target, press Enter to confirm.')})
             else:
                 item_use_results = self.on_use_function(game=game, user=user, used_item=item_entity, **kwargs, **self.on_use_params, **self.on_use_effect)
