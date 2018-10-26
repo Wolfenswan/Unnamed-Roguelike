@@ -46,7 +46,7 @@ def place_containers(game):
                 pos = create_ent_position(room, data, game)
                 if pos:
                     con = gen_architecture(data, *pos)
-                    fill_container(con, dlvl, rarity_filter=data['contents_rarity'], type_filter=data['contents_type'], forced_content=data.get('content_forced'))
+                    fill_container(con, dlvl, rarity_filter=data[Key.CONTENTS_RARITY], type_filter=data[Key.CONTENTS_TYPE], forced_content=data.get('content_forced'))
                     entities.append(con)
 
     logging.debug(f'Placed {len(game.container_ents)} (maximum: {max_containers}) items with {len(rooms)} rooms untouched.')

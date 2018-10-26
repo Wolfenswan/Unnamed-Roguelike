@@ -1,6 +1,4 @@
-from components.skills.skillConditions import SkillCondition
-from components.effects import Effect
-from components.skills.skills import SkillCharge, SkillSlam, SkillExplode
+from components.skills.skills import SkillCharge, SkillSlam, SkillExplodeSelf
 from data.data_keys import Key
 
 """
@@ -8,30 +6,29 @@ Each dictionary refers to a skill class and contains the parameters to customize
 """
 
 skill_generic_charge = {
-        'skill' : SkillCharge,
+        Key.SKILL : SkillCharge,
         Key.NAME: 'Charge',
-        'activate_condition_kwargs': {'min_dist': 2, 'max_dist': 6},
-        'on_activate_kwargs': {'delay':1},
-        'cooldown_length': 6
+        Key.ACTIVATE_CONDITION_KWARGS: {'min_dist': 2, 'max_dist': 6},
+        Key.ON_ACTIVATE_KWARGS: {'delay':1},
+        Key.COOLDOWN_LENGTH: 6
     }
 
 skill_quick_charge = {
         **skill_generic_charge,
-        'cooldown_length': 3
+        Key.COOLDOWN_LENGTH: 3
     }
 
 skill_generic_slam = {
-    'skill' : SkillSlam,
+    Key.SKILL : SkillSlam,
     Key.NAME: 'Slam',
-    'activate_condition_kwargs': {'min_dist': 1, 'max_dist': 1.5},
-    'on_activate_kwargs': {'delay':1},
-    'cooldown_length': 4
+    Key.ACTIVATE_CONDITION_KWARGS: {'min_dist': 1, 'max_dist': 1.5},
+    Key.ON_ACTIVATE_KWARGS: {'delay':1},
+    Key.COOLDOWN_LENGTH: 4
 }
 
-skill_prime = {
-        'skill': SkillExplode,
-        'activate_condition_kwargs': {'min_dist': 1, 'max_dist': 5},
-        'on_activate': Effect.explosion,
-        'on_activate_kwargs': {'delay':1},
-        'cooldown_length': 6
+skill_explode_self = {
+    Key.SKILL: SkillExplodeSelf,
+    Key.ACTIVATE_CONDITION_KWARGS: {'min_dist': 1, 'max_dist': 5},
+    Key.ON_ACTIVATE_KWARGS: {'delay':4, 'radius':4, 'pwr':(20,30)},
+    Key.COOLDOWN_LENGTH: 16
 }

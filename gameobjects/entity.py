@@ -252,13 +252,14 @@ class Entity:
         """
         Attempts to move the entity in the given direction.
         Returns True on successful move.
-
+        Returns False if wall blocks movement.
+        Returns Entity if entity blocks movement.
         """
         dest_x, dest_y = self.x + dx, self.y + dy
         if not game.map.is_wall(dest_x, dest_y) or ignore_walls:
             blocked = entity_at_pos(game.walk_blocking_ents, dest_x, dest_y)
             if blocked and not ignore_entities:
-                return False
+                return blocked
             else:
                 self.move(dx, dy)
                 return True

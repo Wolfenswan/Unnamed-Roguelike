@@ -5,6 +5,7 @@ from random import randint, choice
 
 from config_files import cfg
 #from data.actor_data.test_spawns import spawn_data
+from data.data_keys import Key
 from data.data_processing import gen_npc_from_dict, pick_from_data_dict_by_rarity, NPC_DATA_MERGED
 from debug.timer import debug_timer
 from gameobjects.block_level import BlockLevel
@@ -45,11 +46,11 @@ def place_monsters(game):
             while m <= num_of_monsters and len(game.npc_ents) < max_monsters:
                 key= pick_from_data_dict_by_rarity(possible_spawns, dlvl)
                 entry = possible_spawns[key]
-                group_size = randint(*entry['group_size'])
+                group_size = randint(*entry[Key.GROUP_SIZE])
                 for i in range(group_size):
                     logging.debug('Creating monster #{0} of #{1} total.'.format(m + 1, num_of_monsters))
                     logging.debug(
-                        'Attempting to add {0} #{1} to group of size {2}, in room {3}...'.format(entry['name'], i+1, group_size, room))
+                        'Attempting to add {0} #{1} to group of size {2}, in room {3}...'.format(entry[Key.NAME], i+1, group_size, room))
 
                     # check if room would be overfilled
                     if m + 1 > num_of_monsters:

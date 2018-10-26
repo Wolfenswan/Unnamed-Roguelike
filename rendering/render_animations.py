@@ -5,7 +5,7 @@ import tcod
 from config_files import colors
 from game import Game
 from gameobjects.entity import Entity
-from gameobjects.util_functions import distance_between_pos
+from gameobjects.util_functions import distance_between_pos, entity_at_pos
 from map.directions_util import DIRECTIONS_CIRCLE
 from rendering.render_main import render_map_screen
 from rendering.render_order import RenderOrder
@@ -21,24 +21,27 @@ def animate_move_line(ent, dx:int, dy:int, steps:int, game:Game, ignore_entities
     The entity will attempt to move the number of steps into the give direction.
     """
     for i in range(steps):
-        moved = ent.try_move(dx, dy, game, ignore_entities=ignore_entities)
-        if moved is True:
+        move_attempt = ent.try_move(dx, dy, game, ignore_entities=ignore_entities)
+        if move_attempt is True:
             render_animation(game, anim_delay)
         else:
-            return False
+            return move_attempt
 
 
 def animate_move_to(ent, tx:int, ty:int, game:Game, ignore_entities=False, anim_delay = 0.05):
     """
     The entity will attempt to move to the given target position.
+
+    :returns: True if animation was successful. False if animation was blocked by a wall. Entity if animation was blocked by an entity.
     """
     while ((ent.x, ent.y) != (tx, ty)):
         dx, dy = ent.direction_to_pos(tx, ty)
-        moved = ent.try_move(dx, dy, game, ignore_entities=ignore_entities)
-        if moved is True:
+        move_attempt = ent.try_move(dx, dy, game, ignore_entities=ignore_entities)
+        if move_attempt is True:
             render_animation(game, anim_delay)
         else:
-            return False
+            return move_attempt
+    return True
 
 
 def animate_projectile(start_x:int, start_y:int, target_x:int, target_y:int, game:Game, forced_distance:int=0, homing=True, ignore_entities=True, anim_delay = 0.05, color=colors.flame):

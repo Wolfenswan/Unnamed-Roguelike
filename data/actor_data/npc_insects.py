@@ -1,12 +1,31 @@
 """
     template:
-    
+    'data_key': {
+        Key.NAME: str
+        Key.CHAR: str
+        Key.COLOR: color
+        Key.DESCR: str
+        Key.MAX_HP: (int min, int max)
+        Key.MAX_STAMINA: (int min, int max)
+        Key.BASE_ARMOR: (int min, int max)
+        Key.BASE_STRENGTH: (int min, int max),
+        Key.LOADOUT: {
+            Key.EQUIPMENT:{}
+            Key.BACKPACK:{}
+        },
+        Key.AI_BEHAVIOR: Behavior
+        Key.SKILLS: (Skill, Skill...)
+        Key.BARKS: (key, key...),
+        Key.GROUP_SIZE: (int, int),
+        Key.DLVLS: (int, int),
+        Key.RARITY: RarityType.
+    }
 """
 from components.AI.behavior.ranged import Ranged
 from components.AI.behavior.simple import Simple
 from components.AI.behavior.swarm import Swarm
 from config_files import colors
-from data.actor_data.act_skills import skill_generic_charge, skill_generic_slam
+from data.actor_data.act_skills import skill_generic_charge, skill_generic_slam, skill_explode_self
 from data.data_keys import Key
 from data.data_types import RarityType, AttackType
 
@@ -47,7 +66,7 @@ spawn_data = {
                 }
             }
         },
-        Key.SKILL: (skill_generic_charge,),
+        Key.SKILLS: (skill_generic_charge,),
         Key.AI_BEHAVIOR: Simple,
         Key.BARKS: ('insect',),
         Key.GROUP_SIZE: (1, 3),
@@ -71,7 +90,7 @@ spawn_data = {
                 }
             }
         },
-        Key.SKILL: (skill_generic_slam,),
+        Key.SKILLS: (skill_generic_slam,),
         Key.AI_BEHAVIOR: Simple,
         Key.BARKS: ('insect',),
         Key.GROUP_SIZE: (1, 1),
@@ -92,13 +111,32 @@ spawn_data = {
                 'ins_ranged':{}
             }
         },
-        Key.SKILL: (),
         Key.AI_BEHAVIOR: Ranged,
         Key.BARKS: ('insect',),
         Key.GROUP_SIZE: (1, 3),
         Key.DLVLS: (1, 100),
         Key.RARITY: RarityType.RARE
     },
+    'volatile_louse': {
+        Key.NAME: 'Volatile Louse',
+        Key.CHAR: 'l',
+        Key.COLOR: colors.light_flame,
+        Key.DESCR: 'TODO',
+        Key.MAX_HP: (1,1),
+        Key.MAX_STAMINA: (100,100),
+        Key.BASE_ARMOR: (0,0),
+        Key.BASE_STRENGTH: (1,1),
+        Key.LOADOUT: {
+            Key.EQUIPMENT:{'ins_mandibles':{}},
+            Key.BACKPACK:{}
+        },
+        Key.AI_BEHAVIOR: Simple,
+        Key.SKILLS: (skill_explode_self,),
+        Key.BARKS: ('insect',),
+        Key.GROUP_SIZE: (1, 1),
+        Key.DLVLS: (1, 100),
+        Key.RARITY: RarityType.RARE
+    }
 
     # 'Bomb_Beetle: {
     #     'name: 'Bombardier Beetle',

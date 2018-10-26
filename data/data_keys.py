@@ -1,5 +1,8 @@
 from enum import Enum, auto
 
+"""
+All data entries refer to members of the Key class as dictionary keys.
+"""
 
 class Key(Enum):
     # Generic #
@@ -64,6 +67,9 @@ class Key(Enum):
     VERB = auto()
     VERBS = auto()
     EXTEND_ATTACK = auto()
+    ACTIVATE_CONDITION_KWARGS = auto()
+    ON_ACTIVATE_KWARGS = auto()
+    COOLDOWN_LENGTH = auto()
     RANDOM = auto()
 
     # Architecture #

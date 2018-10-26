@@ -2,6 +2,7 @@ from components.skills.baseSkill import BaseSkill
 from components.skills.skillConditions import SkillCondition
 from config_files import colors
 from game import Game
+from components.effects import Effect
 from gameobjects.entity import Entity
 from gameobjects.util_functions import entity_at_pos
 from gui.messages import Message, MessageType, MessageCategory
@@ -25,7 +26,7 @@ class SkillCharge(BaseSkill):
         results = []
 
         d_x, d_y = user.direction_to_ent(target)
-        tx, ty = target.x + d_x, target.y + d_y
+        tx, ty = target.x + d_x, target.y + d_y # The charge leads to the target pos, plus one further step in the respective direction
 
         user.color_bg = colors.dark_red
         user.actionplan.add_to_queue(execute_in=delay, planned_function=self.execute,
@@ -43,9 +44,9 @@ class SkillCharge(BaseSkill):
                                            type=MessageType.COMBAT)})
         hit = animate_move_to(user, tx, ty, game)
         if hit:
-            if hit.fighter:
+            if hit.fighter is not None:
                 results.extend(user.fighter.attack_setup(hit, game, dmg_mod_multipl=2, verb='gores', ignore_moveset=True))
-            elif hit.architecture:
+            elif hit.architecture is not None:
                 results.extend(
                     user.fighter.attack_setup(user, game, dmg_mod_multipl=0.5, verb='rams', ignore_moveset=True))
         elif hit is False:  # If a wall is hit during the charge, damage the charging entity
@@ -90,7 +91,7 @@ class SkillSlam(BaseSkill):
         return results
 
 
-class SkillExplode(BaseSkill):
+class SkillExplodeSelf(BaseSkill):
     def __init__(self, **kwargs):
         self.params = kwargs
         if kwargs.get('name') is None:
@@ -100,8 +101,26 @@ class SkillExplode(BaseSkill):
 
         super().__init__(**self.params)
 
-    def activate(self, *args, **kwargs):
-        pass
+    def activate(self, target:Entity, game:Game, **kwargs):
+        user = self.owner
+        delay = kwargs['delay']
+        results = []
 
-    def execute(self):
-        pass
+        user.color_bg = colors.dark_red # TODO change main color instead & make it brighter
+        user.actionplan.add_to_queue(execute_in=delay, planned_function=self.execute,
+                                     planned_function_args=(game), fixed=True, exclusive=True)
+        results.append({'message': Message(
+            f'The {user.name} is suddenly starting to glow.',
+            category=MessageCategory.OBSERVATION,
+            type=MessageType.ALERT)})
+        return results
+
+    def execute(self, game):
+        results = []
+        self.owner.color_bg = None  # Reset the entities bg-color, which the skill preparation had changed
+
+        results.extend(Effect.explosion(game=game, target_pos=self.owner.pos, **self.on_activate_kwargs))
+        if self.owner.fighter.hp > 0:
+            self.owner.fighter.death(game)
+
+        return results

@@ -356,8 +356,8 @@ class Fighter:
         if target.fighter.is_blocking:
             blocked = target.fighter.attempt_block(self, attack_power)
 
-        if blocked:  # Block exertion
-            sta_dmg = round(attack_power / 2)
+        if blocked:  # TODO move to own function
+            sta_dmg = round(attack_power / 2) # TODO should attacker also take sta damage?
             dmg_mod_multipl = wp_attacktypes_data[self.active_weapon.attack_type].get('block_sta_dmg_multipl', 1)
             sta_dmg = round(sta_dmg * dmg_mod_multipl)
             logging.debug(
@@ -507,7 +507,8 @@ class Fighter:
         ent.render_order = RenderOrder.CORPSE
         ent.blocks[BlockLevel.WALK] = False
         ent.ai = None
-        ent.fighter = None
+        if not self.owner.is_player:
+            ent.fighter = None
         #ent.name = f'{ent.name.title()} remains'
 
         # Create gibs

@@ -1,4 +1,4 @@
-from typing import Dict
+from typing import Dict, Callable
 
 from dataclasses import dataclass, field
 
@@ -14,8 +14,8 @@ class Useable:
     charges : int = 1
 
     def __post_init__(self):
-        self.on_use_function = self.on_use_effect.get('on_execution')
-        self.targeted = self.on_use_effect.get('targeted', False)
+        self.on_use_function : Callable = self.on_use_effect.get('on_execution')
+        self.targeted : bool = self.on_use_effect.get('targeted', False)
 
     def use(self, user, game, **kwargs):
 

@@ -10,7 +10,6 @@ class Effect:
     def direct_damage(affected_ent = None, string='hit', **kwargs):
         # NOTE: Does currently not take any defenses into account.
         amount = randint(*kwargs.get('pwr'))
-
         if affected_ent is None:
             affected_ent = kwargs.get('user')
 
@@ -73,7 +72,7 @@ class Effect:
         game = kwargs['game']
         center = kwargs.get('target_pos')
         radius = kwargs.get('radius',3)
-        on_hit = kwargs.get('on_expl_hit')
+        on_hit = kwargs.get('on_expl_hit', Effect.direct_damage)
         effect_name = kwargs.get('effect_name', 'explosion')
         effect_verb = kwargs.get('effect_verb', 'burns')
 

@@ -4,6 +4,7 @@ from components.effects import Effect
 These dictionaries serve as reference to apply effects to useable items or skills.
 """
 
+# TODO Key Enum
 heal = {
         'effect_name': 'heal',
         'on_execution': Effect.direct_heal

@@ -17,14 +17,16 @@ from data.actor_data.npc_insects import spawn_data
 from data.architecture_data.arch_static import arch_static_data
 from data.architecture_data.arch_containers import arch_containers_data
 from data.data_keys import Key
+from data.item_data.equ_armor import equ_armor_data
+from data.item_data.equ_creatures import equ_creature_data
+from data.item_data.equ_offhand import equ_offhand_data
+from data.item_data.equ_weapons import equ_weapon_data
 from data.item_data.use_bombs import use_bombs_data
-from data.item_data.wp_creatures import wp_creature_data
 from data.gui_data.craft_strings import craft_descr_data
 from data.actor_data.act_bodytypes import bodytype_data
 from data.shared_data.quality_mod import qual_cond_data, qual_craft_data
 from data.data_types import GenericType, Condition, RarityType, BodyType, Material, Craftsmanship
 from data.shared_data.material_mod import item_material_data
-from data.item_data.test_equipment import test_equipment_data
 from data.item_data.use_potions import use_potions_data
 from data.gui_data.cond_strings import cond_descr_data
 from data.shared_data.rarity_mod import rarity_values
@@ -46,7 +48,7 @@ def merge_dictionaries(dicts):
     return merged_dict
 
 
-item_data = [use_potions_data, use_bombs_data, test_equipment_data, wp_creature_data]
+item_data = [use_potions_data, use_bombs_data, equ_creature_data, equ_weapon_data, equ_armor_data, equ_offhand_data]
 ITEM_DATA_MERGED = merge_dictionaries(item_data)
 
 npc_data = [spawn_data]
@@ -88,6 +90,9 @@ def pick_from_data_dict_by_rarity(dic:Dict, dlvl:int=0):
             logging.debug(f'Decided on {candidate}')
             return candidate
 
+def enum_pairs_to_kwargs(dictionary:Dict):
+    # Enums can't be passed as key words, so a temporary dictionary using their names as keys is created
+    return {_k.name.lower(): _v for _k, _v in dictionary}
 
 # Data retrieving functions #
 def get_generic_args(data:Dict, material:Material=None, condition:Condition=None, craftsmanship:Craftsmanship=None, bodytype:BodyType=None, randomize_color:bool=False):
@@ -249,12 +254,12 @@ def gen_npc_from_dict(data:Dict, x:int, y:int, game:Game):
     ai_component = BaseAI(behavior=ai_behavior())
     inventory_component = Inventory(capacity=12)  # Todo Placeholder #
     skills_component = None
-
     if skills is not None:
         skills_component = SkillList()
         for _data in skills:
-            params = {key:val for key, val in _data.items() if key != Key.SKILL}
-            skill = _data[Key.SKILL](**params)
+            skill_kwargs = enum_pairs_to_kwargs(_data.items())
+            del skill_kwargs['skill'] # the key words dont need to reference the skill class itself
+            skill = _data[Key.SKILL](**skill_kwargs) # initialize the Skill
             skills_component.add_skill(skill)
 
     npc = NPC(*arguments, **kwargs, bodytype=bodytype.get(Key.TYPE), fighter=fighter_component, ai=ai_component,
@@ -272,6 +277,7 @@ def gen_npc_from_dict(data:Dict, x:int, y:int, game:Game):
 
 
 def gen_item_from_data(data:Dict, x:int, y:int, material=False, condition=False, craftsmanship=False, forced_attacktype=None):
+    print(data)
     material = get_material_data(data, forced=material)
     condition = get_condition_data(forced=condition) if material else {}
     craftsmanship = get_craftsmanship_data(forced=craftsmanship) if material else {}
@@ -320,11 +326,9 @@ def gen_item_from_data(data:Dict, x:int, y:int, material=False, condition=False,
         two_handed = data.get(Key.TWO_HANDED)
         attack_type = forced_attacktype if forced_attacktype else data.get(Key.ATTACKTYPE)
         moveset = data.get(Key.MOVESET)
-        print(moveset)
 
         if moveset:
             moveset_component = Moveset(moveset.copy())
-            print(moveset_component)
         else:
             moveset_component = None
 
@@ -370,8 +374,8 @@ def gen_loadout(actor:Entity, loadout:Dict, game:Game):
     backpack = loadout.get(Key.BACKPACK, {})
 
     for key in equipment.keys():
-        kwargs = {_k.name.lower():_v for _k,_v in equipment[key].items()} # Enums can't be passed as key words, so a temporary dictionary using their names is created
-        print(kwargs)
+        print(key)
+        kwargs = enum_pairs_to_kwargs(equipment[key].items())
         item = gen_item_from_data(ITEM_DATA_MERGED.get(key), 0, 0, **kwargs)
         actor.paperdoll.equip(item, game)
 

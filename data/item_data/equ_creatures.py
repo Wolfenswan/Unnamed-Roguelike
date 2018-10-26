@@ -1,8 +1,8 @@
 from data.data_keys import Key
 from data.data_types import Material, ItemType, RarityType, AttackType, Element
-from data.item_data.wp_movesets import moveset_mandibles, moveset_claws, moveset_spit
+from data.item_data._movesets import moveset_mandibles, moveset_claws, moveset_spit
 
-wp_creature_data = {
+equ_creature_data = {
     'ins_mandibles': {
         Key.NAME: 'mandibles',
         Key.MATERIAL: (Material.CHITIN,),

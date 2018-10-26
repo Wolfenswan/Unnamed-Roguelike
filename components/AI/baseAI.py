@@ -59,7 +59,6 @@ class BaseAI:
 
         # First check if the npc can see the player #
         if tcod.map_is_in_fov(fov_map, npc.x, npc.y):
-            npc.color_bg = None  # some special attacks modify a character's background color
 
             # Consider using a skill #
             # TODO might be merged into behavior components later #
