@@ -6,7 +6,7 @@ default_descr = {
     'poor': ('It is in poor condition',
              'You expect it to break any second.'),
     'normal': ('It is in a fairly ordinary condition.',
-               'It should hold... for a while.'
+               'It should hold... for a while.',
                 'There is nothing remarkable about its condition.'),
     'good': ('It is in a good condition.',
              'You are suprised at its better than average condition',
@@ -28,10 +28,13 @@ cond_descr_data = {
     ItemType.MELEE_WEAPON: {
         Material.OAK: {
             Condition.POOR: (
-                'You are worried it might snap at any second.',
+                'The wood is brittle and might just snap any second.',
                 "It is terribly splintered, but at least the enemy might loose an eye when it breaks."
             ),
-            Condition.NORMAL: default_descr['normal'],
+            Condition.NORMAL: (
+                "The oak has mostly withstood the test of time.",
+                "Unremarkable but it does have a basic finish at least."
+            ),
             Condition.GOOD: (
                 'The oak wood seems sturdy and in good condition.',
                 'The oak frame has been spared by worms and is in nearly mint condition.'
@@ -39,7 +42,10 @@ cond_descr_data = {
             Condition.LEGENDARY: default_descr['legend']
         },
         Material.CHITIN: {
-            Condition.POOR: default_descr['poor'],
+            Condition.POOR: (
+                "Whatever insect had to die to make it, must not have been hard to kill at all",
+                "Bits of meat and goo of the former owner are a testament to how little work this item has seen."
+            ),
             Condition.NORMAL: default_descr['normal'],
             Condition.GOOD: default_descr['good'],
             Condition.LEGENDARY: default_descr['legend']

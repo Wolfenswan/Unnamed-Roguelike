@@ -10,6 +10,7 @@ from map.directions_util import DIRECTIONS_CIRCLE
 from rendering.render_main import render_map_screen
 from rendering.render_order import RenderOrder
 
+
 def render_animation(game:Game, anim_delay:float):
     render_map_screen(game, game.fov_map, debug=game.debug['map'])
     time.sleep(anim_delay)
@@ -68,7 +69,7 @@ def animate_explosion(center_x:int, center_y:int, spread:int, game:Game, ignore_
     """
     Creates a projectiles moving outward from the center position.
 
-    TODO additonal switches: character
+    TODO additonal switches: character to use for projectile
     TODO doesn't return anything atm. Add return as needed
     """
     projectiles = []
@@ -87,6 +88,27 @@ def animate_explosion(center_x:int, center_y:int, spread:int, game:Game, ignore_
     for p in projectiles:
         if p in game.entities:
             game.entities.remove(p)
+
+
+def animate_sparkle(center_x:int, center_y:int, game:Game, tickss:int=3, radius:int=1, anim_delay:float=0.05, color=colors.flame):
+    """
+    Creates a 'sparkling' effect  around the center, by rendering several randomly created projectiles at the same time.
+    """
+    
+    projectiles = []
+    directions = DIRECTIONS_CIRCLE
+    for _tick in ticks:
+        for _dir in directions:
+            for _dist in radius:
+                if randint(0,1):
+                    projectile = Entity(center_x, center_y, '*', color, 'Projectile', render_order=RenderOrder.ALWAYS)
+                    projectiles.append(projectile)
+        render_animation(game, anim_delay)
+
+    for p in projectiles:
+        game.entities.remove(p)
+
+
 
 
 def animate_cone():

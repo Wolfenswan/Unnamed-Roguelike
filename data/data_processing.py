@@ -227,7 +227,7 @@ def get_bodytype_data(data:Dict, forced:bool=False):
 
 # Generating Functions #
 @debug_timer
-def gen_npc_from_dict(data:Dict, x:int, y:int, game:Game):
+def gen_npc_from_data(data:Dict, x:int, y:int, game:Game):
     bodytype = get_bodytype_data(data, forced=False)
 
     arguments = (x, y, *get_generic_args(data, randomize_color=True, bodytype=bodytype))

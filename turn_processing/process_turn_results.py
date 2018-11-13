@@ -28,6 +28,9 @@ def process_turn_results(player_turn_results, game, fov_map):
         door_entity = player_turn_result.get('door_toggled')
         dead_entity = player_turn_result.get('dead')
 
+        # debug menu #
+        debug_menu_selection = player_turn_result.get('debug_menu_selection')
+
         # List of results that activate the enemy's turn #
         enemy_turn_on = [item_added, item_dropped, item_consumed, item_equipped, item_dequipped, item_prepared, weapon_switched, ranged_attack]
 
@@ -55,11 +58,11 @@ def process_turn_results(player_turn_results, game, fov_map):
             game.toggle_cursor(pos, state=GameState.CURSOR_TARGETING)
             results.append({'targeting_item': targeting})
 
-        if targeting_cancelled is not None:
+        if targeting_cancelled:
             game.state = GameState.PLAYERS_TURN
             Message('Targeting cancelled.').add_to_log(game)
 
-        if waiting is not None:
+        if waiting:
             if player.in_combat(game):
                 if player.fighter.active_weapon:
                     player.fighter.active_weapon.moveset.cycle_moves(reset=True) # Waiting resets weapon moves
@@ -70,7 +73,7 @@ def process_turn_results(player_turn_results, game, fov_map):
                 player.fighter.recover(player.fighter.max_stamina / 10) # TODO Placeholder Stamina Managment
                 #game.state = GameState.PLAYER_RESTING
 
-        if fov_recompute is not None:
+        if fov_recompute:
             results.append({'fov_recompute': fov_recompute})
 
         if door_entity is not None:
@@ -82,6 +85,10 @@ def process_turn_results(player_turn_results, game, fov_map):
             if dead_entity.is_player:
                 game.state = GameState.PLAYER_DEAD
             message.add_to_log(game)
+
+        if debug_menu_selection is not None:
+            game.toggle_cursor(player.pos, state=GameState.CURSOR_TARGETING)
+            results.append({'debug_spawn': debug_menu_selection})
 
         # Enable enemy turn if at least one of the results is not None
         filtered_enemy_turn_conditions = list(filter(lambda x: x is not None, enemy_turn_on))

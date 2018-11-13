@@ -29,7 +29,7 @@ def game_loop(game):
     targeting_item = None
     debug_spawn = None
     fov_recompute = True
-    processed_turn_results = {}
+    final_turn_results = {}
 
     key = tcod.Key()
     # mouse = tcod.Mouse()
@@ -61,7 +61,7 @@ def game_loop(game):
         if action:
             logging.debug(f'Processing {action}')
             # Process player input into turn results #
-            player_turn_results = process_player_input(action, game, last_turn_results=[targeting_item, debug_spawn])
+            player_turn_results = process_player_input(action, game, last_turn_results=final_turn_results)
             logging.debug(f'Turn {game.turn} player results: {player_turn_results}')
 
             # The game exits if player turn results returns False #
@@ -91,8 +91,12 @@ def game_loop(game):
                     debug_spawn = turn_result.get('debug_spawn')
             else:
                 fov_recompute = False
+                # variables used for cursor-targeting are reset to None, once game state has changed back to the player control
                 targeting_item = None if game.state == GameState.PLAYERS_TURN else targeting_item
                 debug_spawn = None if game.state == GameState.PLAYERS_TURN else debug_spawn
+
+            final_turn_results = {'targeting_item': targeting_item,
+                                  'debug_spawn': debug_spawn}
 
 
 if __name__ == '__main__':

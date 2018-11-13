@@ -24,10 +24,10 @@ def initialize_window(game):
         'Cheepicus_16x16', # 12
         '16x16_sm', # 13
     )
-    font = fonts[11]+'.png'
+    font = fonts[8]+'.png'
     path = 'resources/fonts/'
-    tcod.console_set_custom_font(os.path.join(path, font), tcod.FONT_TYPE_GREYSCALE | tcod.FONT_LAYOUT_ASCII_INROW)
-    #tcod.console_set_custom_font(os.path.join(path, font), tcod.FONT_TYPE_GREYSCALE | tcod.FONT_LAYOUT_TCOD)
+    #tcod.console_set_custom_font(os.path.join(path, font), tcod.FONT_TYPE_GREYSCALE | tcod.FONT_LAYOUT_ASCII_INROW)
+    tcod.console_set_custom_font(os.path.join(path, font), tcod.FONT_TYPE_GREYSCALE | tcod.FONT_LAYOUT_TCOD)
 
     tcod.console_init_root(cfg.SCREEN_WIDTH, cfg.SCREEN_HEIGHT, cfg.GAME_NAME, False)
 

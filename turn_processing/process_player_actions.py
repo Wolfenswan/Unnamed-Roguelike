@@ -1,10 +1,10 @@
 """ Processes the actions from handle_keys into game-events """
-from typing import List, Optional
+from typing import List, Optional, Dict
 
 import tcod
 
 from config_files import colors
-from data.data_processing import gen_npc_from_dict, NPC_DATA_MERGED
+from data.data_processing import gen_npc_from_data, NPC_DATA_MERGED, ITEM_DATA_MERGED, gen_item_from_data
 from data.data_types import ItemType
 from game import GameState
 from gameobjects.util_functions import entity_at_pos
@@ -16,7 +16,7 @@ from loader_functions.data_loader import save_game
 from rendering.render_animations import animate_move_line, animate_projectile
 
 
-def process_player_input(action, game, last_turn_results:Optional[List]):
+def process_player_input(action, game, last_turn_results:Optional[Dict]):
     player = game.player
 
     exit = action.get('exit')
@@ -29,8 +29,8 @@ def process_player_input(action, game, last_turn_results:Optional[List]):
 
     turn_results = []
 
-    targeting_item = last_turn_results[0]
-    debug_spawn = last_turn_results[1]
+    targeting_item = last_turn_results.get('targeting_item')
+    debug_spawn = last_turn_results.get('debug_spawn')
 
     # Player Movement and Interaction #
     if game.state in [GameState.PLAYERS_TURN, GameState.PLAYER_RESTING]:
@@ -42,7 +42,7 @@ def process_player_input(action, game, last_turn_results:Optional[List]):
 
     # Cursor Movement & Targeting #
     if game.state in [GameState.CURSOR_ACTIVE, GameState.CURSOR_TARGETING]:
-        turn_results.extend(process_cursor_interaction(game, action, targeting_item))
+        turn_results.extend(process_cursor_interaction(game, action, targeting_item, debug_spawn))
 
     if toggle_look:
         game.toggle_cursor(player.pos)
@@ -228,7 +228,7 @@ def process_player_interaction(game, action):
 
     if debug:
         results.extend(debug_menu(game))
-    print(game.state)
+
     return results
 
 def process_inventory_interaction(game, prepare):
@@ -288,7 +288,7 @@ def process_inventory_interaction(game, prepare):
 
     return results
 
-def process_cursor_interaction(game, action, targeting_item):
+def process_cursor_interaction(game, action, targeting_item, debug_spawn):
     results = []
 
     player = game.player
@@ -316,13 +316,19 @@ def process_cursor_interaction(game, action, targeting_item):
 
     if confirm:
         if targeting_item is not None:
-            print('t')
             inv = player.inventory if targeting_item in player.inventory else player.qu_inventory
             item_use_results = inv.use(targeting_item, game, target_pos=cursor.pos)
             results.extend(item_use_results)
-        # elif debug_spawn is not None:
-        #     npc = gen_npc_from_dict(NPC_DATA_MERGED[debug_spawn], *cursor.pos, game)
-        #     game.entities.append(npc)
+        elif debug_spawn is not None:
+            if debug_spawn in NPC_DATA_MERGED.keys() and not game.map.is_blocked(*cursor.pos, game.blocking_ents):
+                ent = gen_npc_from_data(NPC_DATA_MERGED[debug_spawn], *cursor.pos, game)
+                game.entities.append(ent)
+            elif debug_spawn in ITEM_DATA_MERGED.keys() and not game.map.is_blocked(*cursor.pos, []):
+                item = gen_item_from_data(ITEM_DATA_MERGED[debug_spawn], *cursor.pos)
+                game.entities.append(item)
+                # TODO ent = gen_npc_from_dict(NPC_DATA_MERGED[debug_spawn], *cursor.pos, game)
+            else:
+                results.append({'message':Message('Illegal position', type=MessageType.SYSTEM)})
         elif player.active_weapon_is_ranged:
             target = entity_at_pos(game.blocking_ents, *cursor.pos)
             if target is not None and target.fighter is not None:

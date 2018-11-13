@@ -1,4 +1,4 @@
-from data.data_processing import gen_npc_from_dict, NPC_DATA_MERGED
+from data.data_processing import gen_npc_from_data, NPC_DATA_MERGED, ITEM_DATA_MERGED
 from gui.menus import options_menu
 from gui.messages import Message, MessageType, MessageCategory
 
@@ -20,19 +20,22 @@ def debug_menu(game):
         game.debug['ent_info'] = not game.debug['ent_info']
         Message(f'Entity Debug Information set to {game.debug["map"]}', type=MessageType.GAME,
                 category=MessageCategory.OBSERVATION).add_to_log(game)
-    elif choice == 3: # TODO make bodytype selectable
+    elif choice == 3:
+        # TODO make bodytype selectable
         options = list(NPC_DATA_MERGED.keys())
-        choice= options_menu('Monster Spawning', 'Pick the monster to spawn. The tile to the right of the player must not be blocked.', options)
+        choice= options_menu('Monster Spawning', 'Pick the monster to spawn. Enter to spawn, ESC to cancel.', options)
         if choice is not None:
             key = options[choice]
-            #results.append({'debug_spawn':choice})
-            if game.map.is_blocked(game.player.x+1, game.player.y, game.blocking_ents):
-                Message(f'Position blocked!', type=MessageType.GAME).add_to_log(game)
-            else:
-                npc = gen_npc_from_dict(NPC_DATA_MERGED[key], game.player.x+1, game.player.y, game)
-                game.entities.append(npc)
+            results.append({'debug_menu_selection':key})
     elif choice == 4:
-        # Select Type, key, material, condition, craft
-        pass
+        # TODO make material etc. selectable
+        # TODO split between useable & equipment? split by itemType? (submenus?)
+        options = list(ITEM_DATA_MERGED.keys())
+        choice = options_menu('Item Spawning',
+                              'Pick the item to spawn. Enter to spawn, ESC to cancel.',
+                              options)
+        if choice is not None:
+            key = options[choice]
+            results.append({'debug_menu_selection': key})
 
     return results

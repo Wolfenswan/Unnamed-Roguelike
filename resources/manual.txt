@@ -8,11 +8,17 @@
 
 ================================================================================
 
-This game is originally based on the Roguebasin Python Tutorial.
-However, since I started working on it, it has become quite the
-different beast and is slowly evolving into a game of it's own.
+This game was created as a continuation of the (revised) Roguebasin Roguelike Tutorial.
+By now it has grown into a beast of its own, sporting various gameplay elements that the original
+tutorial never added.
 
-Eventually, it might even have a proper introduction.
+As it is still in very early development - in fact, it might never see a proper release, being primarily a private project 
+there is little in terms of story, balance is nonexistent and kinks are expected. Nevertheless, the master branch should always
+be playable.
+
+I am envisioning a Roguelike that in many ways feels and plays very familar to traditional members of the genre, while
+making combat less indirect, slightly more dynamic and maybe even a bit arcade-like. Examples of this would be dodging and blocking
+being active actions, rather than passive stats.
 
 - CONTENTS -
 
