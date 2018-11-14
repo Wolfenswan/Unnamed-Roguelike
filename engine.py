@@ -6,6 +6,7 @@ from config_files import cfg, colors
 from game import GameState, Game
 from gui.menus import options_menu
 from loader_functions.data_loader import load_game
+from loader_functions.intro import play_intro
 from rendering.render_animations import animate_explosion
 from rendering.render_order import RenderOrder
 from turn_processing.handle_input import handle_keys
@@ -37,11 +38,7 @@ def game_loop(game):
     recompute_fov(game, player.x, player.y)
     render_all(game, game.fov_map, debug=game.debug['map'])
 
-    # Proof of Concept intro #
-    # player.render_order = RenderOrder.BOTTOM
-    # for i in range(5):
-    #     animate_explosion(*game.player.pos, 3, game, color=colors.turquoise)
-    # player.render_order = RenderOrder.PLAYER
+    play_intro(game)
 
     while not tcod.console_is_window_closed():
         # tcod.sys_set_fps(30)

@@ -504,8 +504,10 @@ class Fighter:
         x, y = ent.x, ent.y
         ent.char = '%'
         ent.color = colors.corpse
+        ent.bg_color = colors.black
         ent.render_order = RenderOrder.CORPSE
         ent.blocks[BlockLevel.WALK] = False
+        ent.blocks[BlockLevel.FLOOR] = False
         ent.ai = None
         if not self.owner.is_player:
             ent.fighter = None

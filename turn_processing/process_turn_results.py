@@ -87,7 +87,7 @@ def process_turn_results(player_turn_results, game, fov_map):
             message.add_to_log(game)
 
         if debug_menu_selection is not None:
-            game.toggle_cursor(player.pos, state=GameState.CURSOR_TARGETING)
+            game.toggle_cursor((player.x+1,player.y), state=GameState.CURSOR_TARGETING)
             results.append({'debug_spawn': debug_menu_selection})
 
         # Enable enemy turn if at least one of the results is not None

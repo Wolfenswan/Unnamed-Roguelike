@@ -1,4 +1,6 @@
 import time
+from random import randint
+from typing import Tuple, List
 
 import tcod
 
@@ -13,8 +15,8 @@ from rendering.render_order import RenderOrder
 
 def render_animation(game:Game, anim_delay:float):
     render_map_screen(game, game.fov_map, debug=game.debug['map'])
-    time.sleep(anim_delay)
     tcod.console_flush()
+    time.sleep(anim_delay)
 
 
 def animate_move_line(ent, dx:int, dy:int, steps:int, game:Game, ignore_entities=False, anim_delay = 0.05):
@@ -65,7 +67,7 @@ def animate_projectile(start_x:int, start_y:int, target_x:int, target_y:int, gam
     game.entities.remove(projectile)
 
 
-def animate_explosion(center_x:int, center_y:int, spread:int, game:Game, ignore_walls=False, anim_delay = 0.05, color=colors.flame):
+def animate_explosion(center_x:int, center_y:int, game:Game, spread:int=3, ignore_walls=False, anim_delay = 0.08, color=colors.flame):
     """
     Creates a projectiles moving outward from the center position.
 
@@ -74,7 +76,7 @@ def animate_explosion(center_x:int, center_y:int, spread:int, game:Game, ignore_
     """
     projectiles = []
     directions = DIRECTIONS_CIRCLE
-    for _x in directions:
+    for _dir in directions:
         projectile = Entity(center_x, center_y, '*', color, 'Projectile', render_order=RenderOrder.ALWAYS)
         projectiles.append(projectile)
         game.entities.append(projectile)
@@ -90,30 +92,65 @@ def animate_explosion(center_x:int, center_y:int, spread:int, game:Game, ignore_
             game.entities.remove(p)
 
 
-def animate_sparkle(center_x:int, center_y:int, game:Game, tickss:int=3, radius:int=1, anim_delay:float=0.05, color=colors.flame):
+def animate_sparkle(center_x:int, center_y:int, game:Game, ticks:int=3, radius:int=2, anim_delay:float=0.5, color=colors.flame):
     """
     Creates a 'sparkling' effect  around the center, by rendering several randomly created projectiles at the same time.
     """
     
-    projectiles = []
+
     directions = DIRECTIONS_CIRCLE
-    for _tick in ticks:
-        for _dir in directions:
-            for _dist in radius:
-                if randint(0,1):
-                    projectile = Entity(center_x, center_y, '*', color, 'Projectile', render_order=RenderOrder.ALWAYS)
+    for _tick in range(ticks):
+        projectiles = []
+        for dir in directions:
+            for dist in range(radius):
+                dist += 1
+                if randint(0,100) <= 50:
+                    x = center_x + (dir[0]*dist)
+                    y = center_y + (dir[1]*dist)
+                    projectile = Entity(x, y, '*', color, 'Projectile', render_order=RenderOrder.ALWAYS)
                     projectiles.append(projectile)
+                    game.entities.append(projectile)
         render_animation(game, anim_delay)
 
-    for p in projectiles:
-        game.entities.remove(p)
+        for p in projectiles:
+            game.entities.remove(p)
 
-
+    time.sleep(anim_delay)
 
 
 def animate_cone():
     pass
 
 
-def animate_ray():
-    pass
+def animate_ray(center_x:int, center_y:int, game:Game, length:int = 2, dir:Tuple[int,int]=(0,1), anim_delay:float=0.4, color=colors.flame):
+    projectiles = []
+
+    for step in range(length):
+        step += 1
+        x = center_x + (dir[0] * step)
+        y = center_y + (dir[1] * step)
+        projectile = Entity(x, y, '*', color, 'Projectile', render_order=RenderOrder.ALWAYS)
+        projectiles.append(projectile)
+        game.entities.append(projectile)
+
+    render_animation(game, anim_delay)
+
+    for p in projectiles:
+        game.entities.remove(p)
+
+def animate_multi_ray(center_x:int, center_y:int, game:Game, length:int = 2, dirs:Tuple[Tuple[int,int], ...]=((0,1),(0,-1)), anim_delay:float=0.4, color=colors.flame):
+    projectiles = []
+
+    for dir in dirs:
+        for step in range(length):
+            step += 1
+            x = center_x + (dir[0] * step)
+            y = center_y + (dir[1] * step)
+            projectile = Entity(x, y, '*', color, 'Projectile', render_order=RenderOrder.ALWAYS)
+            projectiles.append(projectile)
+            game.entities.append(projectile)
+
+    render_animation(game, anim_delay)
+
+    for p in projectiles:
+        game.entities.remove(p)

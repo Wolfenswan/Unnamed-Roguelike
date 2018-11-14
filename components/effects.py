@@ -79,7 +79,7 @@ class Effect:
         entities = [ent for ent in game.alive_ents if ent.distance_to_pos(*center) <= radius]
         results = []
 
-        animate_explosion(*center, radius, game)  # TODO add color switch
+        animate_explosion(*center, game, radius)  # TODO add color switch
 
         results.append({'message': Message(f'The {effect_name} {effect_verb} everything within {radius} tiles!')})
 

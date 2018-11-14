@@ -79,7 +79,8 @@ class GameMap:
     def is_blocked(self, x, y, entities_to_consider, filter = (BlockLevel.WALK,)):
         """
         Returns True if position is either a wall or occupied by a blocking object.
-        Filter corresponds to values in the Entity blocks attribute (dictionary)
+        Filter corresponds to values in the Entity.blocks attribute (dictionary).
+        By default only walk-blocking entities are filtered.
 
         :return: blocked?
         :rtype: bool
