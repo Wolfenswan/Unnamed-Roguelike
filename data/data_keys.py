@@ -88,3 +88,4 @@ class Key(Enum):
     DMG_FLAT = auto()
     AV_FLAT = auto()
     MOD_MULTIPL = auto()
+    EXERT_MULTIPL = auto()

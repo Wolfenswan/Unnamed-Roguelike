@@ -26,6 +26,10 @@ class Moveset():
         return self.movelist[self.current_move].get(Key.DMG_MULTIPL, 1)
 
     @property
+    def exert_multipl(self):
+        return self.movelist[self.current_move].get(Key.EXERT_MULTIPL, 1)
+
+    @property
     def targets_gui(self):
         t = '%orange%X%%'
         l_1 = [' ',' ',' ']

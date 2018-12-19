@@ -265,7 +265,7 @@ class Fighter:
 
     @statistics_updater('sta_change', substract=True)
     def exert(self, amount, string='action'):
-        self.stamina -= amount
+        self.stamina -= round(amount)
         logging.debug(f'{self.owner.name} exerted by {string} for {amount}')
         #pronoun = 'Your' if self.owner.isplayer else 'The'
         if self.owner.is_player:
@@ -311,6 +311,7 @@ class Fighter:
 
         if ignore_moveset:
             attack_power = choice(self.base_dmg_potential) * dmg_mod_multipl
+            attack_exertion = attack_power / 3
         else:
             if self.active_weapon is not None:
                 move_results = self.active_weapon.moveset.execute(self.owner, target)
@@ -320,6 +321,7 @@ class Fighter:
                 verb = 'pummels'
 
             attack_power = self.dmg_roll * dmg_mod_multipl
+            attack_exertion = attack_power / 3 * self.active_weapon.moveset.exert_multipl
             self.active_weapon.moveset.cycle_moves()
 
         if not melee:
@@ -382,7 +384,7 @@ class Fighter:
             if extra_target:
                 results.extend(self.attack_execute(extra_target, attack_power // 2, 'further hits'))
 
-        self.exert(attack_power / 3, 'attack')
+        self.exert(attack_exertion, 'attack')
 
         return results
 

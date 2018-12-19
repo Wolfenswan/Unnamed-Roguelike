@@ -12,12 +12,14 @@ moveset_sword = {
     2: {
        Key.DESCR: f'A slightly {col1}weaker slash%% from the down left.',
         Key.VERB: 'slashes',
-        Key.DMG_MULTIPL: 0.8
+        Key.DMG_MULTIPL: 0.8,
+        Key.EXERT_MULTIPL: 0.8,
     },
     3: {
        Key.DESCR: f'A {col1}forceful stab%% towards the enemies center.',
         Key.VERB: 'stabs',
-        Key.DMG_MULTIPL: 1.25
+        Key.DMG_MULTIPL: 1.25,
+        Key.EXERT_MULTIPL: 1.25,
     }
 }
 
@@ -25,7 +27,8 @@ moveset_spear = {
     1: {
        Key.DESCR: f'A {col1}weak stab%% to prepare for further attacks.',
         Key.VERB: 'pokes',
-        Key.DMG_MULTIPL: 0.75
+        Key.DMG_MULTIPL: 0.75,
+        Key.EXERT_MULTIPL: 0.75,
     },
     2: {
        Key.DESCR: f"An {col1}standard thrust%%, using the weapon's full potential.",
@@ -35,6 +38,7 @@ moveset_spear = {
        Key.DESCR: f'A {col1}powerful thrust%%, piercing the target and hitting something behind it.',
         Key.VERB: 'forcefully thrusts through',
         Key.DMG_MULTIPL: 1.25,
+        Key.EXERT_MULTIPL: 1.25,
         Key.EXTEND_ATTACK: [RelativeDirection.BEHIND]
     }
 }
@@ -60,6 +64,7 @@ Key.DEFAULT: {Key.VERBS: ('flails',),},
        Key.DESCR: f"A final {col1}overhead crush%% on a single head, ignoring shields.",
         Key.VERB: 'crushes',
         Key.DMG_MULTIPL: 1.25,
+        Key.EXERT_MULTIPL: 1.25,
         Key.ATTACKTYPE: AttackType.QUICK,
     }
 }
