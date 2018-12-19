@@ -6,7 +6,6 @@ from config_files import cfg
 
 def initialize_window(game):
     """ initializes everything relevant to game window """
-    tcod.console_print_rect()
     # Set custom font #
     fonts = (
         'arial10x10',  # 0
