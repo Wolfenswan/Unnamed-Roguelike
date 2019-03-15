@@ -9,7 +9,7 @@ from data.data_types import ItemType
 from game import GameState
 from gameobjects.util_functions import entity_at_pos
 from gui.manual import display_manual
-from gui.menus import item_menu,  options_menu, item_list_menu
+from gui.menus import item_menu,  generic_options_menu, item_list_menu
 from debug.menu import debug_menu
 from gui.messages import Message, MessageType, MessageCategory
 from loader_functions.data_loader import save_game
@@ -61,7 +61,7 @@ def process_player_input(action, game, last_turn_results:Optional[Dict]):
             game.state = GameState.PLAYERS_TURN
         else:
             if player.fighter.hp > 0:
-                choice = options_menu('Quit Game', 'Do you want to quit the game?', ['Save & Quit', 'Just Quit'], sort_by=1, cancel_with_escape=True)
+                choice = generic_options_menu('Quit Game', 'Do you want to quit the game?', ['Save & Quit', 'Just Quit'], sort_by=1, cancel_with_escape=True)
                 if choice == 0:
                     save_game(game)
                     return False

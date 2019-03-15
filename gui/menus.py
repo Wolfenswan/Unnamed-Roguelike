@@ -1,3 +1,5 @@
+from typing import Union
+
 import tcod
 
 from config_files import cfg
@@ -5,7 +7,7 @@ from rendering.util_functions import pos_on_screen
 from rendering.render_windows import draw_window
 
 
-def menu_loop(wait_for=None, cancel_with_escape=True, sort_by='str'):
+def menu_loop(wait_for=None, cancel_with_escape=True, sort_by:Union[int,str]='string'):
     """
     The loop waits for a key input.
     If wait_for is an integer, it waits for a key that corresponds to an integer in range of (0, wait_for)
@@ -44,7 +46,7 @@ def menu_loop(wait_for=None, cancel_with_escape=True, sort_by='str'):
                 return key.vk
 
 
-def options_menu(title, body, options, sort_by='str', cancel_with_escape=True):
+def generic_options_menu(title, body, options, sort_by='str', cancel_with_escape=True):
     draw_window(title, body, options, show_cancel_option=cancel_with_escape, sort_by=sort_by)
 
     choice = menu_loop(wait_for=len(options), sort_by=sort_by, cancel_with_escape=cancel_with_escape)

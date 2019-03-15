@@ -2,17 +2,15 @@ import logging
 
 import tcod
 
-from config_files import cfg, colors
+from config_files import cfg
 from game import GameState, Game
-from gui.menus import options_menu
+from gui.menus import generic_options_menu
 from loader_functions.data_loader import load_game
+from loader_functions.initialize_game import initialize_game
 from loader_functions.intro import play_intro
-from rendering.render_animations import animate_explosion
-from rendering.render_order import RenderOrder
 from turn_processing.handle_input import handle_keys
 from turn_processing.process_npc_actions import process_npc_actions
 from turn_processing.process_player_actions import process_player_input
-from loader_functions.initialize_game import initialize_game
 from debug.logger import initialize_logging
 from loader_functions.initialize_window import initialize_window
 from rendering.fov_functions import initialize_fov, recompute_fov
@@ -95,24 +93,33 @@ def game_loop(game):
             final_turn_results = {'targeting_item': targeting_item,
                                   'debug_spawn': debug_spawn}
 
-
-if __name__ == '__main__':
-    initialize_logging(debugging=True)
-    game = Game(debug=False)
-    initialize_window(game)
-
-    choice = options_menu(cfg.GAME_NAME, 'Welcome to the Dungeon',
-                          options=['Play a new game', 'Continue last game', 'Quit'], cancel_with_escape=False,
-                          sort_by=1)
+def main_menu(game_ent):
+    choice = generic_options_menu(cfg.GAME_NAME, 'Welcome to the Dungeon',
+                                  options=['Play a new game', 'Continue last game', 'Show Options [TBA]', 'Quit'], cancel_with_escape=False,
+                                  sort_by=1)
     if choice == 0:
-        game = initialize_game(game)
+        return initialize_game(game_ent)
     elif choice == 1:
         try:
-            game = load_game()
+            return load_game()
         except:
             # TODO show a file loading error popup
             pass
-    elif choice == 2:
+    # elif choice == 2:
+        # TODO Game Options
+        # pass
+    elif choice == 3:
+        return False
+
+
+if __name__ == '__main__':
+    initialize_logging(debugging=True)
+    game_ent = Game(debug=False)
+    initialize_window(game_ent)
+
+    game = main_menu(game_ent)
+
+    if game is False:
         exit()
 
     game.fov_map = initialize_fov(game)

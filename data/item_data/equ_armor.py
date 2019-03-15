@@ -27,17 +27,17 @@ equ_armor_data = {
         Key.AV: 2,
         Key.RARITY: RarityType.UNCOMMON,
     },
-    'helmet': {
+    'round_helmet': {
         **default_values,
         Key.NAME: 'Round Helmet',
         Key.MATERIAL: (Material.LEATHER, Material.IRON),
-        Key.DESCR: 'At least it is not a bucket.',
+        Key.DESCR: 'A simple, round helmet.',
         Key.RARITY: RarityType.COMMON,
         Key.CHAR: '(',
         Key.EQUIP_TO: 'head',
         Key.AV: 1
     },
-    'belt_generic': {
+    'belt': {
         **default_values,
         Key.NAME: 'Belt',
         Key.DESCR: 'A basic utility belt.',

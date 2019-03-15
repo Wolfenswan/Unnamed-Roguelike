@@ -3,15 +3,15 @@ from data.data_keys import Key
 from data.data_types import Material
 
 item_material_data = {
-    'wood_1': {
+    'oak': {
         Key.TYPE: Material.OAK,
         Key.COLOR: colors.oak
     },
-    'creature_1': {
+    'chitin': {
         Key.TYPE: Material.CHITIN,
         Key.COLOR: colors.dark_gray
     },
-    'cloth_1': {
+    'linen': {
         Key.TYPE: Material.LINEN,
         Key.COLOR: colors.linen
     },
@@ -21,16 +21,16 @@ item_material_data = {
     #     Key.RARITY: RarityType.COMMON,
     #     Key.COLOR: colors.WOOL
     # },
-    'leather_1': {
+    'leather': {
         Key.TYPE: Material.LEATHER,
         Key.COLOR: colors.leather
     },
-    'metal_1': {
+    'iron': {
         Key.TYPE: Material.IRON,
         Key.COLOR: colors.iron,
         Key.AV_FLAT: 1
     },
-    'metal_2': {
+    'steel': {
         Key.TYPE: Material.STEEL,
         Key.COLOR: colors.steel,
         Key.DMG_FLAT: 2,

@@ -12,7 +12,6 @@ from map.entity_placement.place_architecture import place_staticobjects, place_d
 from map.entity_placement.place_containers import place_containers
 from map.entity_placement.place_items import place_items
 from map.game_map import GameMap
-from rendering.render_animations import animate_explosion
 from rendering.render_order import RenderOrder
 
 @debug_timer
@@ -31,8 +30,8 @@ def initialize_game(game):
                     Key.CRAFTSMANSHIP: (Craftsmanship.POOR,)
                 },
                 'brigandine':{},
-                'helmet':{},
-                'belt_generic':{},
+                'round_helmet':{},
+                'belt':{},
                 'round_shield':{}
             },
             Key.BACKPACK: ('pot_heal', 'bomb_1','bomb_1','bomb_1','torch', 'spear', 'flail', 'bow')
@@ -52,11 +51,11 @@ def initialize_game(game):
     game.map.make_map(game, cfg.ROOM_MIN_SIZE, cfg.ROOM_MAX_SIZE, dwidth, dheight)
 
     # Add the good stuff #
-    # place_staticobjects(game)
-    # place_containers(game)
-    # place_doors(game)
-    # place_items(game)
-    # place_monsters(game)
+    place_staticobjects(game)
+    place_containers(game)
+    place_doors(game)
+    place_items(game)
+    place_monsters(game)
 
     player.x, player.y = game.map.rooms[0].center
     p = gen_architecture(ARCHITECTURE_DATA_MERGED['portal'],player.x, player.y)

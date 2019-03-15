@@ -54,6 +54,8 @@ class Element(Enum): # Placeholder at the moment
     FIRE = auto()
     WATER = auto()
     EARTH = auto()
+    AIR = auto()
+    LIGHTNING = auto()
     ACID = auto()
 
 
