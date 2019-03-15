@@ -36,7 +36,8 @@ def game_loop(game):
     recompute_fov(game, player.x, player.y)
     render_all(game, game.fov_map, debug=game.debug['map'])
 
-    play_intro(game)
+    if game.turn == 1:
+        play_intro(game)
 
     while not tcod.console_is_window_closed():
         # tcod.sys_set_fps(30)
@@ -105,9 +106,9 @@ def main_menu(game_ent):
         except:
             # TODO show a file loading error popup
             pass
-    # elif choice == 2:
+    elif choice == 2:
         # TODO Game Options
-        # pass
+        pass
     elif choice == 3:
         return False
 
