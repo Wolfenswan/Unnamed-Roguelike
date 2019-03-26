@@ -1,3 +1,5 @@
+import logging
+
 from components.skills.baseSkill import BaseSkill
 from components.skills.skillConditions import SkillCondition
 from config_files import colors
@@ -42,15 +44,18 @@ class SkillCharge(BaseSkill):
         results = []
         results.append({'message': Message(f'The {user.name} charges forward!', category=MessageCategory.OBSERVATION,
                                            type=MessageType.COMBAT)})
-        hit = animate_move_to(user, tx, ty, game)
-        if hit:
-            if hit.fighter is not None:
-                results.extend(user.fighter.attack_setup(hit, game, dmg_mod_multipl=2, verb='gores', ignore_moveset=True))
-            elif hit.architecture is not None:
+        missed = animate_move_to(user, tx, ty, game)
+        logging.debug(f'{user.name} hits {hit}.')
+
+        if missed is False: # if a wall is hit during the charge, damage the charging entity
+            results.extend(user.fighter.attack_setup(user, game, dmg_mod_multipl=0.5, verb='rams', ignore_moveset=True))
+        elif not isinstance(missed, bool): # if missed is not bool, another entity was hit
+            ent = missed
+            if ent.fighter is not None:
+                results.extend(user.fighter.attack_setup(ent, game, dmg_mod_multipl=2, verb='gores', ignore_moveset=True))
+            elif ent.architecture is not None:
                 results.extend(
                     user.fighter.attack_setup(user, game, dmg_mod_multipl=0.5, verb='rams', ignore_moveset=True))
-        elif hit is False:  # If a wall is hit during the charge, damage the charging entity
-            results.extend(user.fighter.attack_setup(user, game, dmg_mod_multipl=0.5, verb='rams', ignore_moveset=True))
         return results
 
 
