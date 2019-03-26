@@ -1,4 +1,5 @@
 """ Processes the actions from handle_keys into game-events """
+import logging
 from typing import List, Optional, Dict
 
 import tcod
@@ -79,7 +80,7 @@ def process_player_interaction(game, action):
     debug = action.get('debug')
     manual = action.get('manual')
     move = action.get('move')
-    dodge = action.get('dodge')
+    # dodge = action.get('dodge')
     interact = action.get('interact')
     direction = action.get('dir')
     wait = action.get('wait')
@@ -91,6 +92,7 @@ def process_player_interaction(game, action):
     show_prepared = action.get('show_prepared')
     # drop_inventory = action.get('drop_inventory')
     # menu_selection = action.get('menu_selection')
+    toggle_dodge = action.get('toggle_dodge')
     toggle_block = action.get('toggle_block')
     toggle_weapon = action.get('toggle_weapon')
 
@@ -101,9 +103,10 @@ def process_player_interaction(game, action):
 
     results = []
 
-    if move or interact or dodge:
+    if move or interact:
         dx, dy = direction
         destination_x, destination_y = player.x + dx, player.y + dy
+        dodging = player.fighter.is_dodging
 
         if not game_map.is_wall(destination_x, destination_y):
             target = entity_at_pos(game.walk_blocking_ents, destination_x, destination_y)
@@ -115,7 +118,7 @@ def process_player_interaction(game, action):
                 # target = game.interactable_entity_at_pos(destination_x, destination_y)
 
             if target:
-                if dodge:
+                if dodging:
                     Message('PLACEHOLDER: cant dodge into target.', type=MessageType.SYSTEM).add_to_log(game)
                 # If a NPC is blocking the way #
                 elif target.fighter:
@@ -142,23 +145,21 @@ def process_player_interaction(game, action):
                     if move and target.architecture.on_collision:  # bumping into the object
                         collision_results = target.architecture.on_collision(player, target, game)
                         results.extend(collision_results)
-                elif move:
-                    print('PLACEHOLDER: Your way is blocked.')  # TODO placeholder
-                elif interact:
-                    print('PLACEHOLDER: There is nothing to interact with')  # TODO placeholder
+                # elif move: # TODO Are these still required?
+                #     print('PLACEHOLDER: Your way is blocked.')
+                # elif interact:
+                #     print('PLACEHOLDER: There is nothing to interact with')
             elif move:
-                player.move(dx, dy)
-                results.append({'fov_recompute': True})
-            elif dodge:
-                if player.fighter.can_dodge:
-                    animate_move_line(player, dx, dy, 2, game, anim_delay=0.05)
-                    results.append(player.fighter.exert(player.fighter.defense * 2, 'dodge'))
-                    results.append({'fov_recompute': True})
+                if dodging:
+                    if player.fighter.can_dodge:
+                        animate_move_line(player, dx, dy, 2, game, anim_delay=0.05)
+                        results.append(player.fighter.exert(player.fighter.defense * 2, 'dodge'))
+                        results.append({'fov_recompute': True})
+                    else:
+                        results.append({'message': Message('PLACEHOLDER: Stamina too low to dodge!')})
                 else:
-                    results.append({'message': Message('PLACEHOLDER: Stamina too low to dodge!')})
-                if player.fighter.is_blocking:
-                    player.fighter.toggle_blocking()
-
+                    player.move(dx, dy)
+                    results.append({'fov_recompute': True})
             if not target or not target.fighter:
                 # Movement other than fighting resets the current moveset
                 if player.fighter.active_weapon is not None:
@@ -185,14 +186,25 @@ def process_player_interaction(game, action):
 
     # Combat related #
     if toggle_block:
-        if player.fighter.shield:
+        results.extend(player.fighter.toggle_blocking())
+
+    if toggle_dodge:
+        results.extend(player.fighter.toggle_dodging())
+
+    # No dodging while blocking possible; disable one or the other, depending on input
+    if player.fighter.is_blocking and player.fighter.is_dodging:
+        if toggle_block:
+            player.fighter.toggle_dodging()
+        elif toggle_dodge:
             player.fighter.toggle_blocking()
         else:
-            results.append({'message': Message('PLACEHOLDER: Need shield to block.', type=MessageType.SYSTEM)})
+            logging.debug('ERROR: Both blocking and dodging active.')
+
 
     if toggle_weapon:
         new_weapon = player.fighter.toggle_weapon()
         results.append({'weapon_switched': new_weapon})
+
 
     # Quick use handling #
     if quick_use_idx and quick_use_idx <= len(player.qu_inventory):

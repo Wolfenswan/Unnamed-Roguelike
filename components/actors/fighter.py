@@ -33,6 +33,7 @@ class Fighter:
         self.max_stamina = self.__stamina
         self.surrounded = Surrounded.FREE
         self.is_blocking = False
+        self.is_dodging = False
         self.presence = {
             Presence.DAZED: False,
             Presence.STUNNED: False
@@ -426,7 +427,32 @@ class Fighter:
     #############################
 
     def toggle_blocking(self):
-        self.is_blocking = not self.is_blocking
+        results = []
+
+        if self.is_blocking:
+            results.append({'message': Message('You stop blocking.', type=MessageType.COMBAT_INFO)})
+            self.is_blocking = False
+        elif self.shield:
+            results.append({'message': Message(f'You ready your {self.shield.name}.', type=MessageType.COMBAT_INFO)})
+            self.is_blocking = True
+        else:
+            results.append({'message': Message('You need a shield to block.', type=MessageType.COMBAT_INFO)})
+
+        return results
+
+
+    def toggle_dodging(self):
+        results = []
+
+        if self.is_dodging:
+            results.append({'message': Message('You stop dodging.', type=MessageType.COMBAT_INFO)})
+            self.is_dodging = False
+        else:
+            results.append({'message': Message('You start dodging.', type=MessageType.COMBAT_INFO)})
+            self.is_dodging = True
+
+        return results
+
 
     def attempt_block(self, attacker, damage):
         """

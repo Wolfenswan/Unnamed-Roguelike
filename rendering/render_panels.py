@@ -58,6 +58,9 @@ def render_player_panel(game, con, panel_x, panel_y, width, height):
     color = colors.white if player.fighter.modded_defense >= player.fighter.defense else colors.dark_red
     print_string(con, 2, y+2, f'DEF: %c{player.fighter.modded_defense}%c', color=color) # TODO implement fighter.modded_defense
 
+    color = colors.white if player.fighter.is_dodging else colors.dark_gray
+    print_string(con, 10, y + 1, f'*DODGING*', color=color)
+
     if player.fighter.shield and player.fighter.shield.block_def:
         col1 = 'dark_gray' if not player.fighter.is_blocking else 'white'
         col2 = 'dark_red' if player.fighter.shield.block_def > player.fighter.modded_block_def else f'{col1}'
