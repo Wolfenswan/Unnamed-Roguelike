@@ -16,7 +16,7 @@ As it is still in very early development - in fact, it might never see a proper 
 there is little in terms of story, balance is nonexistent and kinks are expected. Nevertheless, the master branch should always
 be playable.
 
-I am envisioning a Roguelike that in many ways feels and plays very familar to traditional members of the genre, while
+I am envisioning a Roguelike that in many ways feels and plays very familiar to traditional members of the genre, while
 making combat less indirect, slightly more dynamic and maybe even a bit arcade-like. Examples of this would be dodging and blocking
 being active actions, rather than passive stats.
 
@@ -56,10 +56,11 @@ Arrow Keys:
 Left    Right
     Down
 
-Num 5 or . - Wait a turn. Rests outside combat, blocks during combat.
+Num 5 or . - Wait a turn. Rests outside combat.
 < - descend a flight of stairs
 
 - ACTIONS -
+r   - (r)eady yourself for blocking attacks
 s   - (s)earch your surroundings
         - use movement keys to control the cursor
         - a description will be displayed if applicable
@@ -75,7 +76,7 @@ E   - shows your (e)quipment
 
 - MOVEMENT MODIFIERS -
 - CTRL + Movement - Interact with an object in the given direction
-- ALT + Movement - Attempt a attempt_dodge in the given direction, moving 2 tiles
+- ALT + Movement - Attempt a dodge in the given direction, moving 2 tiles
 
 - OTHER ACTIONS -
 ? - Display this manual

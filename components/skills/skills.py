@@ -50,9 +50,9 @@ class SkillCharge(BaseSkill):
             results.extend(user.fighter.attack_setup(user, game, dmg_mod_multipl=0.5, verb='rams', ignore_moveset=True))
         elif not isinstance(missed, bool): # if missed is not bool, another entity was hit
             ent = missed
-            if ent.fighter is not None:
+            if ent.fighter is not None: # if another actor was hit, that actor is damaged
                 results.extend(user.fighter.attack_setup(ent, game, dmg_mod_multipl=2, verb='gores', ignore_moveset=True))
-            elif ent.architecture is not None:
+            elif ent.architecture is not None: # if architecture was hit, user damages itself
                 results.extend(
                     user.fighter.attack_setup(user, game, dmg_mod_multipl=0.5, verb='rams', ignore_moveset=True))
         return results

@@ -11,7 +11,8 @@ from loader_functions.data_loader import load_game
 from loader_functions.initialize_font import initialize_font
 from loader_functions.initialize_game import initialize_game
 from loader_functions.intro import play_intro
-from turn_processing.handle_input import handle_keys
+# from turn_processing.input_handling import handle_keys
+from turn_processing.input_handling import handle_keys
 from turn_processing.process_npc_actions import process_npc_actions
 from turn_processing.process_player_actions import process_player_input
 from debug.logger import initialize_logging
