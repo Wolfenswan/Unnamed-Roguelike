@@ -8,7 +8,7 @@ from map.game_map import GameMap
 
 class Ranged:
     """
-    Simple behavior moves the npc straight towards the player, attack if next to them and use a skill if available.
+    Range behavior attempts to stay at a distance and attack if far enough away.
     """
 
     def decide_action(self, target, game:Game):

@@ -181,12 +181,13 @@ class Entity:
                 extend_descr += f'\nav:{self.fighter.defense} (modded:{self.fighter.modded_defense})'
                 extend_descr += f'\ndmg:{self.fighter.base_dmg_potential} (modded:{self.fighter.modded_dmg_potential})'
                 extend_descr += f'\nYour ctb:{game.player.fighter.average_chance_to_block(self, debug=True)}'
-            if self.fighter.active_weapon:
+            if self.fighter and self.fighter.active_weapon:
                 extend_descr += f'\n\nwp:{self.fighter.active_weapon.full_name}'
             if self.architecture:
                 ext1 = self.architecture.on_interaction.__name__ if self.architecture.on_interaction else None
                 ext2 = self.architecture.on_collision.__name__ if self.architecture.on_collision else None
-                extend_descr += f'\n\ninteract:{ext1}', f'collision:{ext2}'
+                print(ext1, ext2)
+                extend_descr += f'\n\ninteract:{ext1}, collision:{ext2}'
 
         return extend_descr
 

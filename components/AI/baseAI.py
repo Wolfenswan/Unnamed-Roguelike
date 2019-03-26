@@ -33,12 +33,7 @@ class BaseAI:
         # free_line = game.map.free_line_between_pos(target.x, target.y, npc.x, npc.y, game)
         # print(free_line)
 
-        # Process action queue and planned action if applicable #
-        planned_action_results = npc.actionplan.process_queue()
-        if planned_action_results:
-            results.extend(planned_action_results)
-            return results
-
+        # First check if turn is entirely skipped
         if presence[Presence.STUNNED]:
             message = Message(f'PLACEHOLDER: {npc.name} is stunned and skipping turn.')
             results.append({'message': message})
@@ -49,6 +44,12 @@ class BaseAI:
                 message = Message(f'PLACEHOLDER: {npc.name} is dazed and skipping turn.')
                 results.append({'message': message})
                 return results
+
+        # Process action queue and planned action if applicable, skipping the rest of the turn #
+        planned_action_results = npc.actionplan.process_queue()
+        if planned_action_results:
+            results.extend(planned_action_results)
+            return results
 
         if npc.fighter.stamina < npc.fighter.max_stamina / 10:
           # Switch to resting AI mode
@@ -83,6 +84,7 @@ class BaseAI:
                 npc.move(dx, dy)
 
         return results
+
 
     def set_behavior(self, behavior:Union[Simple, Swarm, Ranged]):
         self.behavior = behavior

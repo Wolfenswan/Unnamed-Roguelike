@@ -25,7 +25,10 @@ def set_window_on_screen(window_x, window_y, width, height):
 
 def draw_window(title, body, options:Optional[List]=None,
                 window_x:Optional[int]=None, window_y:Optional[int]=None, padding_x:Optional[int]=2, padding_y:Optional[int]=2,
-                sort_by = 'str', show_cancel_option=True, forced_width:Optional[int]=None, title_color=colors.white, options_colors=None):
+                sort_by = 'str', show_cancel_option=True, forced_width:Optional[int]=None, title_color=colors.white, options_colors=None, clear=True):
+
+    cancel_string = '<ESC TO CANCEL>'
+
     if options is None:
         options  = []
 
@@ -33,8 +36,14 @@ def draw_window(title, body, options:Optional[List]=None,
     if forced_width is not None:
         width = forced_width + padding_x * 2
     else:
-        # calculate total width for the box, using the longest unwrapped string from either all options, title or body
-        width = min(max(len(string) for string in (options + [title, body])), round(cfg.SCREEN_WIDTH//3)) + padding_x * 2
+        # calculate total width for the box, using the longest unwrapped string from either all possibly displayed strings
+        all_strings = (options + [title, body])
+        if show_cancel_option:
+            all_strings.append(cancel_string)
+        longest_string = max(all_strings, key=len)
+        width = min(len(longest_string), round(cfg.SCREEN_WIDTH // 3)) + padding_x * 2
+        if longest_string in options:
+            width += 4 # This accounts for the listing points (e.g. (1) <option>)
 
     body_wrapped = dynamic_wrap(body, width - padding_x * 2)
 
@@ -65,7 +74,7 @@ def draw_window(title, body, options:Optional[List]=None,
         for i, option in enumerate(options):
             if isinstance(sort_by, str):
                 line = f'({chr(letter_index)}) {option}'
-                letter_index += 1  # by incrementing the ascii code for the letter, we go through the alphabet
+                letter_index += 1  # cycle the alphabet by incrementing the ascii code referencing a letter
             elif isinstance(sort_by, int):
                 line = f'({str(i + 1)}) {option}'
             else:
@@ -89,6 +98,12 @@ def draw_window(title, body, options:Optional[List]=None,
     tcod.console_blit(window, 0, 0, width, height, 0, window_x, window_y, 1, 1)
 
     tcod.console_flush()
+
+    return window
+
+
+def clear_window(window):
+    pass
 
 
 def render_description_window(game):

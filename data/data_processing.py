@@ -63,7 +63,13 @@ CONTAINER_DATA_MERGED = merge_dictionaries(container_data)
 
 def pick_from_data_dict_by_rarity(dic:Dict, dlvl:int=0):
     """
-    picks a random key from the given dictionary items, using the 'rarity' and (optionally) Key.TYPE values
+    Picks a random key from the given dictionary items
+
+    The function first creates a mini-dictionary of possible candidates, using two rarity parameters:
+    a) Key.RARITY: the rarity value of the object itself, assigned in the data files
+    b) Key.TYPE: the rarity value of the material, assigned to the object (e.g. steel being rarer than iron)
+
+    Then it randomly picks a key from these candidates using choice()
 
     :param dict:
     :type dict: dict
@@ -78,9 +84,9 @@ def pick_from_data_dict_by_rarity(dic:Dict, dlvl:int=0):
 
     while True:
         random = randint(0, 100)
-        possible_items = {
+        possible_items = { # Create dictionary of candidates
             k: v for k, v in dic.items()
-            if rarity_values[v.get('rarity', RarityType.COMMON)] + v.get('rarity_mod', 0) >= random
+            if rarity_values[v.get(Key.RARITY, RarityType.COMMON)] + v.get(Key.RARITY_MOD, 0) >= random
             and rarity_values[v.get(Key.TYPE, RarityType.COMMON)] >= random
         }
         candidates = list(possible_items.keys())

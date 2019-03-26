@@ -6,7 +6,7 @@ class Tile:
     """
     A tile on a map. It may or may not be blocked, and may or may not block sight.
     """
-    def __init__(self, blocked, x, y, block_sight=None, walkable = None):
+    def __init__(self, blocked, x, y, block_sight=None, block_walk = None, block_projectile=None):
         self.blocked = blocked
         self.x, self.y = x, y
         self.char = chr(178)
@@ -15,8 +15,11 @@ class Tile:
         if block_sight is None:
             self.block_sight = blocked
 
-        if walkable is None:
+        if block_walk is None:
             self.walkable = not blocked
+
+        if block_projectile is None:
+            self.block_projectile = not blocked
 
         self.fg_color = colors.stone
 

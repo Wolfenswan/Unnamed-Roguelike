@@ -4,8 +4,11 @@ import tcod
 
 from config_files import cfg
 from game import GameState, Game
-from gui.menus import generic_options_menu
+# from gui.menus import generic_options_menu, main_menu
+from gui.menus import main_menu
+# from loader_functions.data_loader import load_game
 from loader_functions.data_loader import load_game
+from loader_functions.initialize_font import initialize_font
 from loader_functions.initialize_game import initialize_game
 from loader_functions.intro import play_intro
 from turn_processing.handle_input import handle_keys
@@ -36,7 +39,7 @@ def game_loop(game):
     recompute_fov(game, player.x, player.y)
     render_all(game, game.fov_map, debug=game.debug['map'])
 
-    if game.turn == 1:
+    if game.turn == 1 and game.debug is False:
         play_intro(game)
 
     while not tcod.console_is_window_closed():
@@ -94,35 +97,30 @@ def game_loop(game):
             final_turn_results = {'targeting_item': targeting_item,
                                   'debug_spawn': debug_spawn}
 
-def main_menu(game_ent):
-    choice = generic_options_menu(cfg.GAME_NAME, 'Welcome to the Dungeon',
-                                  options=['Play a new game', 'Continue last game', 'Show Options [TBA]', 'Quit'], cancel_with_escape=False,
-                                  sort_by=1)
-    if choice == 0:
-        return initialize_game(game_ent)
-    elif choice == 1:
-        try:
-            return load_game()
-        except:
-            # TODO show a file loading error popup
-            pass
-    elif choice == 2:
-        # TODO Game Options
-        pass
-    elif choice == 3:
-        return False
-
 
 if __name__ == '__main__':
-    initialize_logging(debugging=True)
-    game_ent = Game(debug=False)
-    initialize_window(game_ent)
+    initialize_logging(debugging=cfg.DEBUG)
+    game = Game(debug=cfg.DEBUG)
+    initialize_font()
+    initialize_window(game)
 
-    game = main_menu(game_ent)
 
-    if game is False:
-        exit()
+    while True:
+        start_game = main_menu()
+
+        if start_game == 0:
+            game = initialize_game(game)
+            break
+        elif start_game == 1:
+            try:
+                game = load_game()
+                break
+            except:
+                # TODO show a file loading error popup
+                exit()
+        elif start_game == 3:
+            exit()
 
     game.fov_map = initialize_fov(game)
-
     game_loop(game)
+

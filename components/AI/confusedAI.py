@@ -3,7 +3,7 @@ from random import randint
 import game
 from gui.messages import Message, MessageType
 
-# OLD #
+# OLD TODO replace with convused behavior #
 class ConfusedAI:
     def __init__(self, previous_ai, game, number_of_turns=10):
         self.previous_ai = previous_ai

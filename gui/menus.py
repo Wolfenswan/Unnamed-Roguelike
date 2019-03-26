@@ -2,9 +2,10 @@ from typing import Union
 
 import tcod
 
-from config_files import cfg
+from config_files import cfg, colors
+from loader_functions.initialize_font import initialize_font, all_fonts
 from rendering.util_functions import pos_on_screen
-from rendering.render_windows import draw_window
+from rendering.render_windows import draw_window, clear_window
 
 
 def menu_loop(wait_for=None, cancel_with_escape=True, sort_by:Union[int,str]='string'):
@@ -46,10 +47,14 @@ def menu_loop(wait_for=None, cancel_with_escape=True, sort_by:Union[int,str]='st
                 return key.vk
 
 
-def generic_options_menu(title, body, options, sort_by='str', cancel_with_escape=True):
-    draw_window(title, body, options, show_cancel_option=cancel_with_escape, sort_by=sort_by)
+def generic_options_menu(title:str, body:str, options:list, sort_by:Union[str, int]='str', cancel_with_escape=True):
+    window = draw_window(title, body, options, show_cancel_option=cancel_with_escape, sort_by=sort_by)
 
     choice = menu_loop(wait_for=len(options), sort_by=sort_by, cancel_with_escape=cancel_with_escape)
+
+    tcod.console_delete(window)
+    tcod.console_flush()
+
     return choice
 
 
@@ -179,3 +184,34 @@ def item_menu(item_ent, game):
     choice = menu_loop(wait_for=wait_for)
 
     return choice
+
+
+def options_menu():
+    choice = generic_options_menu('Game Options', '',
+                                  options=['Toggle Fullscreen', 'Change Font'],
+                                  sort_by=1)
+    if choice == 0:
+        tcod.console_set_fullscreen(not tcod.console_is_fullscreen())
+    elif choice == 1:
+        available_fonts = all_fonts()
+        font_id = generic_options_menu('Font Selection', f'Default font:\n{cfg.FONT_DEFAULT.capitalize()}',
+                                      options=available_fonts,
+                                      sort_by=1)
+        if font_id is not None:
+            initialize_font(available_fonts[font_id])
+
+    # Unless menus was exited with ESC, the menu remains open
+    if choice is not None:
+        tcod.console_flush()
+        options_menu()
+
+
+def main_menu():
+    choice = generic_options_menu(cfg.GAME_NAME, 'Welcome to the Dungeon',
+                                  options=['Play a new game', 'Continue last game', 'Game Options', 'Quit'], cancel_with_escape=False,
+                                  sort_by=1)
+    if choice == 2:
+        options_menu()
+        tcod.console_flush()
+    else:
+        return choice

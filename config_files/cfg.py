@@ -2,6 +2,7 @@
 """ Constant variables """
 import tcod
 
+DEBUG = True
 GAME_NAME = 'RoguelikeTutReloaded'
 
 # Console
@@ -10,6 +11,9 @@ MAP_SCREEN_HEIGHT = 40
 SCREEN_WIDTH = MAP_SCREEN_WIDTH + 25
 SCREEN_HEIGHT = MAP_SCREEN_HEIGHT + 15
 LIMIT_FPS = 30
+
+FONT_DEFAULT = 'arial12x12.png'
+FONT_TCOD_LAYOUT = ['arial12x12.png','dejavu12x12_gs_tc.png','dejavu12x12_gs_tc.png','consolas10x10_gs_tc.png']
 
 # DUNGEON SETTINGS #
 DUNGEON_MIN_WIDTH = MAP_SCREEN_WIDTH

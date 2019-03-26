@@ -4,13 +4,17 @@ from typing import Tuple
 
 
 class Actionplan:
+    """
+    Actionplan govers the AI's skill usage and skill execution in future turns. It contains a queueing-system containing
+    skill related functions to be executed in x turns. Whenever a function reaches the queue's first position it is executed, usually
+    overriding the AI's regular behavior (moving/attacking etc.) by executing a skill.
+    """
     def __init__(self):
         self.planned_queue = []
 
     def add_to_queue(self, execute_in:int=1, planned_function:Callable=None, planned_function_args:Tuple=None, fixed:bool=False, exclusive:bool=False):
         """
         Add function to queue to execute in n turns.
-        # TODO Should instances where an actor has to skip a turn(e.g. stunned) be indicated via a unique switch?
 
         :param execute_in: Delay until plan is executed.
         :param planned_function: Planned function to execute
@@ -25,13 +29,26 @@ class Actionplan:
         checked_queue = [v for v in self.planned_queue if v['execute_in'] == execute_in]
 
         if len(checked_queue) > 0:
-            # Case 1: Existing plan conflicts and is fixed
+            # Case 1: Existing plan conflicts and is exclusive (TODO NOT FULLY IMPLEMENTED)
             if any(v.get('exclusive', False) for v in checked_queue):
-                logging.debug(f'Aborting: Conflict with existing & exclusive plan(s): {checked_queue}')
-                # TODO should new plan be added one turn after exclusive plan?
-                # TODO what if both are exclusive?
-                return
-            # Case 2: New plan is exclusive, all other plans will have to be pushed back or overwritten
+                plan = checked_queue[0]
+                logging.debug(f'Conflict with existing & exclusive plan(s): {checked_queue}')
+                # If existing plan is also fixed...
+                if plan.get('fixed', False):
+                    # ... and new plan also fixed, override old fixed plan
+                    if fixed:
+                        self.planned_queue.remove(checked_queue[0])
+                    # ... and new plan is not fixed, add it one spot later
+                    else:
+                        self.add_to_queue(execute_in=execute_in+1, planned_function=planned_function, planned_function_args=planned_function_args, fixed=fixed, exclusive=exclusive)
+                        return
+                # If existing exclusive plan is not fixed, push it back
+                else:
+                    self.add_to_queue(execute_in=plan['execute_in'] + 1, planned_function=plan['planned_function'],
+                                      planned_function_args=plan['planned_function_args'], fixed=plan['fixed'],
+                                      exclusive=plan['exclusive'])
+
+            # Case 2: New plan is exclusive but existing plan at the spots are not, all other plans will have to be pushed back or overwritten
             elif exclusive:
                 for plan in checked_queue:
                     if not plan.get('fixed', False): # If the plan is not fixed, it will be pushed back

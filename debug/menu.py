@@ -6,7 +6,7 @@ from gui.messages import Message, MessageType, MessageCategory
 def debug_menu(game):
     results = []
     choice = generic_options_menu('Debug Menu', 'Select Debug Option:',
-                                  ['Show full map', 'Invincible Player', 'Entity Debug Information', 'Spawn Monster', 'Spawn Item (Not implemented!)'], sort_by=1,
+                                  ['Show full map', 'Invincible Player', 'Entity Debug Information', 'Spawn Monster', 'Spawn Item'], sort_by=1,
                                   cancel_with_escape=True)
     if choice == 0:
         game.debug['map'] = not game.debug['map']
