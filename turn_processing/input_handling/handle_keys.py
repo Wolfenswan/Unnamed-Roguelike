@@ -77,7 +77,7 @@ def handle_player_turn_keys(key):
     elif key_char == keys_dict['block']:
         return {'toggle_block': True}
     elif key_char == keys_dict['dodge']:
-        return {'toggle_block': True}
+        return {'toggle_dodge': True}
     elif key_char == keys_dict['look']:
         return {'toggle_look': True}
     elif key_char == keys_dict['fire']:
