@@ -5,6 +5,7 @@
 import tcod
 
 from game import GameState
+from map.directions_util import Direction
 from turn_processing.input_handling.input_keys import keys_dict
 
 
@@ -49,13 +50,13 @@ def handle_player_turn_keys(key):
 
     # Movement #
     if key.vk == tcod.KEY_UP or key_char == keys_dict['vim_up'] or key.vk == tcod.KEY_KP8:
-        return {action: True, 'dir': (0, -1)}
+        return {action: True, 'dir': Direction.UP.value}
     elif key.vk == tcod.KEY_DOWN or key_char == keys_dict['vim_down'] or key.vk == tcod.KEY_KP2:
-        return {action: True, 'dir': (0, 1)}
+        return {action: True, 'dir': Direction.DOWN.value}
     elif key.vk == tcod.KEY_LEFT or key_char == keys_dict['vim_left'] or key.vk == tcod.KEY_KP4:
-        return {action: True, 'dir': (-1, 0)}
+        return {action: True, 'dir': Direction.LEFT.value}
     elif key.vk == tcod.KEY_RIGHT or key_char == keys_dict['vim_right'] or key.vk == tcod.KEY_KP6:
-        return {action: True, 'dir': (1, 0)}
+        return {action: True, 'dir': Direction.RIGHT.value}
     elif key_char == keys_dict['vim_lup'] or key.vk == tcod.KEY_KP7:
         return {action: True, 'dir': (-1, -1)}
     elif key_char == keys_dict['vim_rup'] or key.vk == tcod.KEY_KP9:
