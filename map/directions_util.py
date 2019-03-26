@@ -48,11 +48,6 @@ DIRECTIONS_CIRCLE = [dir.value for dir in [Direction.NORTH, Direction.NORTH_EAST
                     Direction.SOUTH, Direction.SOUTH_WEST, Direction.WEST, Direction.NORTH_WEST]]
 
 
-# DIRECTIONAL_MAPPING = {
-#     (Direction.NORTH, RelativeDirection.LEFT): (0, -1),
-#     (Direction.NORTH, RelativeDirection.RIGHT): (0, 1)
-#     }
-
 def relative_dir(dir:Direction, rel_dir:RelativeDirection):
     i = DIRECTIONS_CIRCLE.index(dir)
     if rel_dir == RelativeDirection.BEHIND:

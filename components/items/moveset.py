@@ -6,6 +6,11 @@ from map.directions_util import relative_dir, RelativeDirection
 
 
 class Moveset():
+    """
+    Moveset is a component for weapon-type equipment. It governs the change of stance
+    with each attack, modifying attack values, possible targets and the data to indicate
+    these targets in the GUI.
+    """
     def __init__(self, movelist):
         self.random = False
         self.movelist = movelist
@@ -31,13 +36,19 @@ class Moveset():
 
     @property
     def targets_gui(self):
+        """
+        The target indicator works by using three lists, each indicating a row in the GUI.
+        The 'center' (list 2[1]) represents the player, while the spot to it's 'right' (list 2[2] indicates
+        the initially hit target (a red X). All additional targets are drawn as an orange X at their
+        respective positions.
+        """
         t = '%orange%X%%'
         l_1 = [' ',' ',' ']
-        l_2 = [' ','@','%red%X%%']
+        l_2 = [' ','@','%red%X%%',' ']
         l_3 = [' ',' ',' ']
         for extra_attack in self.movelist[self.current_move].get(Key.EXTEND_ATTACK, []):
             if extra_attack == RelativeDirection.BEHIND:
-                l_2[2] = t
+                l_2[3] = t
             if extra_attack == RelativeDirection.LEFT:
                 l_1[2] = t
             if extra_attack == RelativeDirection.RIGHT:

@@ -58,13 +58,13 @@ def handle_player_turn_keys(key):
     elif key.vk == tcod.KEY_RIGHT or key_char == keys_dict['vim_right'] or key.vk == tcod.KEY_KP6:
         return {action: True, 'dir': Direction.RIGHT.value}
     elif key_char == keys_dict['vim_lup'] or key.vk == tcod.KEY_KP7:
-        return {action: True, 'dir': (-1, -1)}
+        return {action: True, 'dir': Direction.UP_LEFT.value}
     elif key_char == keys_dict['vim_rup'] or key.vk == tcod.KEY_KP9:
-        return {action: True, 'dir': (1, -1)}
+        return {action: True, 'dir': Direction.UP_RIGHT.value}
     elif key_char == keys_dict['vim_ldown'] or key.vk == tcod.KEY_KP1:
-        return {action: True, 'dir': (-1, 1)}
+        return {action: True, 'dir': Direction.DOWN_LEFT.value}
     elif key_char == keys_dict['vim_rdown'] or key.vk == tcod.KEY_KP3:
-        return {action: True, 'dir': (1, 1)}
+        return {action: True, 'dir': Direction.DOWN_RIGHT.value}
     elif key.vk == tcod.KEY_KP5 or key_char == keys_dict['wait']:
         return {'wait': True}
 
