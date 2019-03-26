@@ -1,5 +1,4 @@
 import logging
-import math
 from random import choice
 from typing import Optional, Union, List, Tuple
 
@@ -23,7 +22,6 @@ from data.gui_data.material_strings import material_name_data
 from game import Game
 from gameobjects.util_functions import entity_at_pos, free_line_between_pos, distance_between_pos
 from map.directions_util import direction_between_pos
-from map.game_map import GameMap
 from rendering.render_order import RenderOrder
 
 @dataclass

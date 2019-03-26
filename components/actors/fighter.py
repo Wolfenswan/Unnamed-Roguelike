@@ -16,7 +16,7 @@ from data.gui_data.gui_fighter import hpdmg_string_data, stadmg_string_data, sta
 from gameobjects.block_level import BlockLevel
 from gameobjects.util_functions import entity_at_pos, line_between_pos
 from gui.messages import Message, MessageType, MessageCategory
-from rendering.render_animations import animate_projectile
+from rendering.render_animations import animate_projectile, animate_move_line
 from rendering.render_order import RenderOrder
 
 @dataclass
@@ -450,6 +450,18 @@ class Fighter:
         else:
             results.append({'message': Message('You start dodging.', type=MessageType.COMBAT_INFO)})
             self.is_dodging = True
+
+        return results
+
+
+    def dodge(self, dx, dy, game):
+        results = []
+
+        if self.can_dodge:
+                animate_move_line(self.owner, dx, dy, 2, game, anim_delay=0.05)
+                results.append(self.exert(self.defense * 2, 'dodge'))
+        else:
+            results.append({'message': Message('PLACEHOLDER: Stamina too low to dodge!')})
 
         return results
 

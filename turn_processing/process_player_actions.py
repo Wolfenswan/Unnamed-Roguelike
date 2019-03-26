@@ -151,15 +151,12 @@ def process_player_interaction(game, action):
                 #     print('PLACEHOLDER: There is nothing to interact with')
             elif move:
                 if dodging:
-                    if player.fighter.can_dodge:
-                        animate_move_line(player, dx, dy, 2, game, anim_delay=0.05)
-                        results.append(player.fighter.exert(player.fighter.defense * 2, 'dodge'))
-                        results.append({'fov_recompute': True})
-                    else:
-                        results.append({'message': Message('PLACEHOLDER: Stamina too low to dodge!')})
+                    results.extend(player.fighter.dodge(dx, dy, game))
                 else:
                     player.move(dx, dy)
-                    results.append({'fov_recompute': True})
+
+                results.append({'fov_recompute': True})
+
             if not target or not target.fighter:
                 # Movement other than fighting resets the current moveset
                 if player.fighter.active_weapon is not None:
