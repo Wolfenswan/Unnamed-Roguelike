@@ -45,7 +45,6 @@ class SkillCharge(BaseSkill):
         results.append({'message': Message(f'The {user.name} charges forward!', category=MessageCategory.OBSERVATION,
                                            type=MessageType.COMBAT)})
         missed = animate_move_to(user, tx, ty, game)
-        logging.debug(f'{user.name} hits {hit}.')
 
         if missed is False: # if a wall is hit during the charge, damage the charging entity
             results.extend(user.fighter.attack_setup(user, game, dmg_mod_multipl=0.5, verb='rams', ignore_moveset=True))
