@@ -214,10 +214,14 @@ class Entity:
 
     @property
     def active_weapon_is_melee(self):
+        if self.active_weapon is None:
+            return False
         return self.active_weapon.type == ItemType.RANGED_WEAPON
 
     @property
     def active_weapon_is_ranged(self):
+        if self.active_weapon is None:
+            return False
         return self.active_weapon.type == ItemType.RANGED_WEAPON
 
     @property

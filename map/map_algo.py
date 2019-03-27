@@ -38,6 +38,10 @@ class Tunneling:
                 # finally, append the new room to the list
                 rooms.append(new_room)
 
+        # Set the room.exits list attribute for each room
+        # for room in rooms:
+        #     room.exits(game_map)
+
     @staticmethod
     def create_tunnels(game_map, room_list = None, randomize=False):
         all_rooms = game_map.rooms

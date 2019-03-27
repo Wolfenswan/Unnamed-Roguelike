@@ -1,15 +1,16 @@
 import logging
 from random import choice
 
+from data.data_keys import Key
 from debug.timer import debug_timer
 from gameobjects.block_level import BlockLevel
 
 @debug_timer
-def create_ent_position(room, data, game, allow_exits=True):
+def find_ent_position(room, data, game, allow_exits=True, exclusive=False):
     # Get a random position for an entity in the given room
     game_map = game.map
-    blocks = data.get('blocks', {})
-    if data.get('walls_only', False):
+    blocks = data.get(Key.BLOCKS, {})
+    if data.get(Key.WALLS_ONLY, False):
         pos = room.ranpos(game_map, floor=False)
         if pos is False:
             logging.debug(f'No wall positions found in {room}')

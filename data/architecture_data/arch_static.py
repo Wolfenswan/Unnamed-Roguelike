@@ -29,6 +29,13 @@ arch_static_data = {
         Key.WALLS_ONLY: True,
         Key.COLOR: colors.dark_green
     },
+    'lichen': {
+        Key.NAME: 'Lichen',
+        Key.DESCR: 'A callous growth of dry, hoarse fungi.',
+        Key.CHAR: chr(177),
+        Key.WALLS_ONLY: True,
+        Key.COLOR: colors.dark_amber
+    },
     'portal': {
         Key.NAME: 'Portal',
         Key.DESCR: 'TODO Portal',

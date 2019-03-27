@@ -9,7 +9,7 @@ from data.data_keys import Key
 from data.data_processing import gen_npc_from_data, pick_from_data_dict_by_rarity, NPC_DATA_MERGED
 from debug.timer import debug_timer
 from gameobjects.block_level import BlockLevel
-from map.entity_placement.util_functions import create_ent_position
+from map.entity_placement.util_functions import find_ent_position
 
 
 @debug_timer
@@ -65,7 +65,7 @@ def place_monsters(game):
                     else:
                         m += 1
                         entry['blocks'] = {BlockLevel.WALK: True}
-                        pos = create_ent_position(room, entry, game)
+                        pos = find_ent_position(room, entry, game)
                         if pos:
                             ent = gen_npc_from_data(entry, *pos, game)
                             game.entities.append(ent)

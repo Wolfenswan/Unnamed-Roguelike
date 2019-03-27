@@ -1,33 +1,23 @@
 from random import choice
 
-# Todo @dataclass
+from dataclasses import dataclass
+
+
+@dataclass
 class Rect:
-    def __init__(self, x, y, w, h):
-        self.x1 = x
-        self.y1 = y
-        self.x2 = x + w
-        self.y2 = y + h
-        self.w = w
-        self.h = h
+    x1 : int
+    y1 : int
+    w : int
+    h : int
+
+    def __post_init__(self):
+        self.x2 = self.x1 + self.w
+        self.y2 = self.y1 + self.h
         self.center = int((self.x1 + self.x2) / 2), int((self.y1 + self.y2) / 2)
         self.pos_list = []
         for y in range(self.y1, self.y2):
             for x in range(self.x1, self.x2):
                 self.pos_list.append((x, y))
-
-    # @property
-    # def center(self):
-    #     center_x = int((self.x1 + self.x2) / 2)
-    #     center_y = int((self.y1 + self.y2) / 2)
-    #     return center_x, center_y
-
-    # @property
-    # def pos_list(self):
-    #     pos_list = []
-    #     for y in range(self.y1, self.y2):
-    #         for x in range(self.x1, self.x2):
-    #             pos_list.append((x, y))
-    #     return pos_list
 
     def create_room(self, game_map):
         # go through the tiles in the rectangle and make them passable
@@ -73,18 +63,10 @@ class Rect:
         game_map = game.map
         exits = self.exits(game_map)
         free_tiles = [pos for pos in self.pos_list if not game_map.is_blocked(*pos, game.blocking_ents, filter=filter) and (allow_exits or pos not in exits)]
-        #free_tiles = []
-        # for x in range(self.x1, self.x2):
-        #     for y in range(self.y1, self.y2):
-        #         if not game_map.is_blocked(x, y, game):
-        #             if allow_exits or ((x, y) not in exits):
-        #                 free_tiles.append((x, y))
-                # except:
-                #     logging.error(f'Position {x}/{y} in room {self} of size {self.w}/{self.h} at x{self.x1}/y{self.y1}-x{self.x2}/y{self.y2} is out of bounds')
 
         return free_tiles
 
-    def exits(self, game_map, max_width = 3):
+    def exits(self, game_map, max_width = 3, set_attr = True):
         """
         :return: room exists
         :rtype: list of tuples
@@ -143,4 +125,6 @@ class Rect:
             except:
                 pass
 
+        # if set_attr:
+        #     self.exits = exits
         return exits

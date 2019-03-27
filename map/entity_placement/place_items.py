@@ -4,7 +4,7 @@ from random import randint, choice
 from config_files import cfg
 from data.data_processing import gen_item_from_data, pick_from_data_dict_by_rarity, ITEM_DATA_MERGED
 from debug.timer import debug_timer
-from map.entity_placement.util_functions import create_ent_position
+from map.entity_placement.util_functions import find_ent_position
 
 @debug_timer
 def place_items(game):
@@ -44,8 +44,7 @@ def place_items(game):
                     break
                 else:
                     # Get a random position for the item
-                    # TODO make sure items are not placed on blocking architecture
-                    pos = create_ent_position(room, data, game)
+                    pos = find_ent_position(room, data, game)
                     if pos:
                         # Generate the item at the given position
                         item = gen_item_from_data(data, *pos)
