@@ -3,13 +3,47 @@
 # TODO Consider using tdl for event handling instead? Might allow using a large dictionary instead of if/elif snake
 
 import tcod
+import tcod.event as e
 
 from game import GameState
 from map.directions_util import Direction
 from turn_processing.input_handling.input_keys import keys_dict
 
 
-def handle_keys(key, game_state):
+def handle_keys(key_event, game_state):
+    # logging.debug(f'Handling {key}')
+
+    print(key_event)
+
+    # Inputs valid in all game states #
+    key = key_event.sym
+    mod = int(key_event.mod)
+
+    # if key.vk == tcod.KEY_ENTER and key.lalt:
+    #     # Alt+Enter: toggle full screen
+    #     return {'fullscreen': True}
+    # elif key.vk == tcod.KEY_ESCAPE:
+    #     # Exit the game
+    #     return {'exit': True}
+    # elif chr(key.c) == keys_dict['manual'] and key.shift:
+    #     return {'manual': True}
+    # elif chr(key.c) == keys_dict['debug'] and key.lalt:
+    #     return {'debug': True}
+
+
+    # Game state specific inputs #
+    # if game_state in [GameState.PLAYERS_TURN, GameState.PLAYER_RESTING, GameState.CURSOR_ACTIVE, GameState.CURSOR_TARGETING]:
+    #     return handle_player_turn_keys(key)
+    # elif game_state == GameState.PLAYER_DEAD:
+    #     return handle_player_dead_keys(key)
+    # elif game_state in (GameStates.SHOW_INVENTORY, GameStates.DROP_INVENTORY, GameStates.SHOW_ITEM):
+    #     return handle_menu_keys(key)
+    # elif game_state == GameStates.TARGETING:
+    #     results = dict(handle_targeting_keys())
+
+    return {}
+
+def handle_keys_legacy(key, game_state):
     # logging.debug(f'Handling {key}')
 
     # Inputs valid in all game states #

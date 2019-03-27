@@ -1,6 +1,7 @@
 import logging
 
 import tcod
+import tcod.event
 
 from config_files import cfg
 from game import GameState, Game
@@ -11,7 +12,7 @@ from loader_functions.data_loader import load_game
 from loader_functions.initialize_font import initialize_font
 from loader_functions.initialize_game import initialize_game
 from loader_functions.intro import play_intro
-from turn_processing.input_handling.handle_keys import handle_keys
+from turn_processing.input_handling.handle_keys import handle_keys, handle_keys_legacy
 from turn_processing.process_npc_actions import process_npc_actions
 from turn_processing.process_player_actions import process_player_input
 from debug.logger import initialize_logging
@@ -46,15 +47,23 @@ def game_loop(game):
         # tcod.sys_set_fps(30)
         # tcod.sys_check_for_event(tcod.EVENT_KEY_PRESS, key, '')
 
-        logging.debug(f'Beginning turn {game.turn}. State: {game.state}. Recomputing FOV: {fov_recompute}')
+        #
 
         if fov_recompute:
             recompute_fov(game, player.x, player.y)
             fov_recompute = False
         render_all(game, fov_map, debug=game.debug['map'])
 
+        # TODO new tcod.event system
+        # action = False
+        # for event in tcod.event.wait():
+        #     if event.type == "QUIT":
+        #         exit()
+        #     elif event.type == "KEYDOWN":
+        #         action = handle_keys(event, game.state)
+
         tcod.sys_wait_for_event(tcod.EVENT_KEY_PRESS, key, None, True)
-        action = handle_keys(key, game.state)
+        action = handle_keys_legacy(key, game.state)
         # mouse_action = handle_mouse(mouse)
 
         if action:
@@ -96,6 +105,8 @@ def game_loop(game):
 
             final_turn_results = {'targeting_item': targeting_item,
                                   'debug_spawn': debug_spawn}
+
+            logging.debug(f'Ending turn {game.turn}. State: {game.state}. Recomputing FOV: {fov_recompute}')
 
 
 if __name__ == '__main__':
