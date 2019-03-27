@@ -18,7 +18,12 @@ class DamagePercentage(Enum):
     VERY_LIGHT = 1
     NONE = 0
 
-def get_gui_data(percentage:float, dictionary:Dict,category: Union[AttributePercentage, DamagePercentage]):
+def get_gui_data(percentage:float, dictionary:Dict, category: Union[AttributePercentage, DamagePercentage]):
+    """
+    Given a percentage value and a dictionary from gui_fighter containing strings or colors, this returns the adequate
+    value to display the fighter's status in the GUI.
+    """
+
     for enum in list(category):
         if enum.value <= percentage:
             value = dictionary[enum]

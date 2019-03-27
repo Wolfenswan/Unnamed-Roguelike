@@ -70,8 +70,7 @@ def process_turn_results(player_turn_results, game, fov_map):
             else:
                 # TODO placeholder for regeneration/resting
                 player.fighter.hp += player.fighter.max_hp/10
-                player.fighter.recover(player.fighter.max_stamina / 10) # TODO Placeholder Stamina Managment
-                #game.state = GameState.PLAYER_RESTING
+                player.fighter.recover(player.fighter.max_stamina / 10)
 
         if fov_recompute:
             results.append({'fov_recompute': fov_recompute})

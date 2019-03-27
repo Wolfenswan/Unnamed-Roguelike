@@ -335,7 +335,6 @@ def process_cursor_interaction(game, action, targeting_item, debug_spawn):
             elif debug_spawn in ITEM_DATA_MERGED.keys() and not game.map.is_blocked(*cursor.pos, []):
                 item = gen_item_from_data(ITEM_DATA_MERGED[debug_spawn], *cursor.pos)
                 game.entities.append(item)
-                # TODO ent = gen_npc_from_dict(NPC_DATA_MERGED[debug_spawn], *cursor.pos, game)
             else:
                 results.append({'message':Message('Illegal position', type=MessageType.SYSTEM)})
         elif player.active_weapon_is_ranged:
@@ -344,7 +343,7 @@ def process_cursor_interaction(game, action, targeting_item, debug_spawn):
                 attack_results = player.fighter.attack_setup(target, game)
                 results.extend(attack_results)
             else:
-                animate_projectile(*player.pos, *cursor.pos, game, color=colors.beige) # TODO color can later differ by weapon/ammo type
+                animate_projectile(*player.pos, *cursor.pos, game, color=colors.beige) # TODO ranged projectile color can later differ by weapon/ammo type
             results.append({'ranged_attack': True})
 
     if exit and (targeting_item or player.active_weapon_is_ranged):

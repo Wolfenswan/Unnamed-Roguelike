@@ -108,7 +108,8 @@ class Fighter:
         """
         Attribute returns the entity's current damage potential (base + weapon)
         as tuple with the fighter's base str added.
-        :return: tuple of min/max damage
+
+        :return: (min/max damage)
         :rtype: tuple
         """
         if self.active_weapon is not None:
@@ -117,6 +118,13 @@ class Fighter:
 
     @property
     def modded_dmg_potential(self):
+        """
+        Returns the fighter's modded damage potential, taking it's presence and the current moveset-stance's multiplier
+        into account
+
+        :return: (min/max damage)
+        :rtype: tuple
+        """
         w_mod = 1
         p_mod = 1
 
@@ -133,6 +141,7 @@ class Fighter:
 
     @property
     def dmg_roll(self):
+        """ Returns a random damage value, taking all possible modifiers into account """
         return randint(*self.modded_dmg_potential)
 
     @property
@@ -179,7 +188,7 @@ class Fighter:
         vision = self.__base_vision
         for e in self.owner.paperdoll.equipped_items:
             l_radius = vars(e.item.equipment).get('l_radius')
-            # This extra step is required as l_radius value is set to None for all Equipments during data processing
+            # This extra step is required as l_radius value is set to None for all Equipment during data processing
             if l_radius:
                 vision += l_radius
         return vision
@@ -209,13 +218,25 @@ class Fighter:
     @property
     def shield(self):
         """
-        :return: Equipment component of currently equipped shield (or parrying weapon).
+        :return: Equipment component (NOT entity itself) of currently equipped shield (or parrying weapon).
         """
         shield_ent = self.owner.paperdoll.shield_arm.shield  # TODO add check for 2nd hand after implementing dual wielding
         if shield_ent:
             return shield_ent.item.equipment
         else:
             return None
+
+    def check_surrounded(self, game):
+        nearby_enemies = len(self.owner.surrounding_enemies(game.npc_ents))
+        if nearby_enemies < 3:
+            return Surrounded.FREE
+        elif nearby_enemies < 5:
+            return Surrounded.THREATENED
+        else:
+            return Surrounded.OVERWHELMED
+
+    # GUI-related functions #
+    # These all use current percentages of hp/stamina to pass a string or color on to the GUI.
 
     def hpdmg_string(self, damage):
         percentage = (damage / self.max_hp * 100)
@@ -233,14 +254,6 @@ class Fighter:
         percentage = (damage / self.max_stamina * 100)
         return get_gui_data(percentage, stadmg_color_data, DamagePercentage)
 
-    def check_surrounded(self, game):
-        nearby_enemies = len(self.owner.surrounding_enemies(game.npc_ents))
-        if nearby_enemies < 3:
-            return Surrounded.FREE
-        elif nearby_enemies < 5:
-            return Surrounded.THREATENED
-        else:
-            return Surrounded.OVERWHELMED
 
     #################################
     # ATTRIBUTE MODIFYING FUNCTIONS #
@@ -383,7 +396,7 @@ class Fighter:
         for attack_pos in extra_attacks:
             extra_target = entity_at_pos(game.npc_ents, *attack_pos)
             if extra_target:
-                results.extend(self.attack_execute(extra_target, attack_power // 2, 'further hits'))
+                results.extend(self.attack_execute(extra_target, attack_power // 2, 'further hits')) # TODO currently flat half damage; can be replaced with moveset-tailored multiplier
 
         self.exert(attack_exertion, 'attack')
 
@@ -521,16 +534,6 @@ class Fighter:
                 return 'very hard'
             else:
                 return 'impossible'
-
-    # def attempt_dodge(self):
-    #     results = []
-    #     exertion = self.defense * 2
-    #     if self.stamina >= exertion:
-    #         #results.append({'dodge_direction':(dx,dy)})
-    #         results.append(self.exert(exertion, 'dodge'))
-    #     else:
-    #         results.append({'message':Message('PLACEHOLDER: Stamina too low to dodge!')})
-    #     return results
 
     def death(self, game):
 

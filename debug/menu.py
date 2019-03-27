@@ -28,6 +28,7 @@ def debug_menu(game):
             key = options[choice]
             results.append({'debug_menu_selection':key})
     elif choice == 4:
+        # TODO paginate when items > 26 (or less)
         # TODO make material etc. selectable
         # TODO split between useable & equipment? split by itemType? (submenus?)
         options = list(ITEM_DATA_MERGED.keys())

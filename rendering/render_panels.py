@@ -56,7 +56,7 @@ def render_player_panel(game, con, panel_x, panel_y, width, height):
 
     print_string(con, 2, y +1, f'STR: {player.fighter.strength}')
     color = colors.white if player.fighter.modded_defense >= player.fighter.defense else colors.dark_red
-    print_string(con, 2, y+2, f'DEF: %c{player.fighter.modded_defense}%c', color=color) # TODO implement fighter.modded_defense
+    print_string(con, 2, y+2, f'DEF: %c{player.fighter.modded_defense}%c', color=color)
 
     color = colors.white if player.fighter.is_dodging else colors.dark_gray
     print_string(con, 10, y + 1, f'*DODGING*', color=color)
