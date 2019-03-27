@@ -1,6 +1,6 @@
 import logging
 from collections import Callable
-from typing import Tuple
+from typing import Tuple, Dict
 
 
 class Actionplan:
@@ -12,7 +12,7 @@ class Actionplan:
     def __init__(self):
         self.planned_queue = []
 
-    def add_to_queue(self, execute_in:int=1, planned_function:Callable=None, planned_function_args:Tuple=None, fixed:bool=False, exclusive:bool=False):
+    def add_to_queue(self, execute_in:int, planned_function:Callable, planned_function_args:Tuple=None, planned_function_kwargs:Dict=None, fixed:bool=False, exclusive:bool=False):
         """
         Add function to queue to execute in n turns.
 
@@ -40,20 +40,20 @@ class Actionplan:
                         self.planned_queue.remove(checked_queue[0])
                     # ... and new plan is not fixed, add it one spot later
                     else:
-                        self.add_to_queue(execute_in=execute_in+1, planned_function=planned_function, planned_function_args=planned_function_args, fixed=fixed, exclusive=exclusive)
+                        self.add_to_queue(execute_in+1, planned_function, planned_function_args, planned_function_kwargs, fixed=fixed, exclusive=exclusive)
                         return
                 # If existing exclusive plan is not fixed, push it back
                 else:
-                    self.add_to_queue(execute_in=plan['execute_in'] + 1, planned_function=plan['planned_function'],
-                                      planned_function_args=plan['planned_function_args'], fixed=plan['fixed'],
+                    self.add_to_queue(plan['execute_in'] + 1, plan['planned_function'],
+                                     plan['planned_function_args'], plan['planned_function_kwargs'], fixed=plan['fixed'],
                                       exclusive=plan['exclusive'])
 
             # Case 2: New plan is exclusive but existing plan at the spots are not, all other plans will have to be pushed back or overwritten
             elif exclusive:
                 for plan in checked_queue:
                     if not plan.get('fixed', False): # If the plan is not fixed, it will be pushed back
-                        self.add_to_queue(execute_in=plan['execute_in'] + 1, planned_function=plan['planned_function'],
-                                          planned_function_args=plan['planned_function_args'], fixed=plan['fixed'], exclusive=plan['exclusive'])
+                        self.add_to_queue(plan['execute_in'] + 1, plan['planned_function'],
+                                          plan['planned_function_args'], plan['planned_function_kwargs'], fixed=plan['fixed'], exclusive=plan['exclusive'])
                     else: # otherwise it will simply be deleted
                         self.planned_queue.remove(plan)
 

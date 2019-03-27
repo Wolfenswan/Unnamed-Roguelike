@@ -38,9 +38,9 @@ def initialize_game(game):
         }
     }
 
-    # gen_loadout(player, player_loadouts['loadout1'], game)
-    # for item_ent in player.inventory.items + player.paperdoll.equipped_items:
-    #     item_ent.item.identify()
+    gen_loadout(player, player_loadouts['loadout1'], game)
+    for item_ent in player.inventory.items + player.paperdoll.equipped_items:
+        item_ent.item.identify()
 
     game.entities.append(player)
 

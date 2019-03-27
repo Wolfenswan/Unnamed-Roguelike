@@ -2,6 +2,8 @@ from random import choice
 
 from dataclasses import dataclass
 
+from debug.timer import debug_timer
+
 
 @dataclass
 class Rect:
@@ -66,14 +68,16 @@ class Rect:
 
         return free_tiles
 
+    @debug_timer
     def exits(self, game_map, max_width = 3, set_attr = True):
         """
-        :return: room exists
+        :return: room exits
         :rtype: list of tuples
         """
 
         # TODO properly avoid out of index errors
-        # TODO Candidate for list comprehension and using game_map.is_floor/.is_wall methods
+        # TODO Should this turn out to be time intensitive: Run once at rectangle creation, setting exits as attribute (rather than calling exits() whenever needed)
+        # Further optimization would be proper list comprehension and using game_map.is_floor/.is_wall methods
 
         exits = []
 

@@ -67,6 +67,7 @@ class Key(Enum):
     VERB = auto()
     VERBS = auto()
     EXTEND_ATTACK = auto()
+    ACTIVATE_CONDITIONS = auto()
     ACTIVATE_CONDITION_KWARGS = auto()
     ON_ACTIVATE_KWARGS = auto()
     COOLDOWN_LENGTH = auto()

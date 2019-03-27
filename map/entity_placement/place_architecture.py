@@ -24,7 +24,7 @@ def place_staticobjects(game):
         max_in_room = (room.w * room.h) // cfg.SOBJECTS_ROOM_DIVISOR
         num_to_place = (randint(0, max_in_room))
 
-        logging.debug(f'Placing {num_to_place} staticobjects in {rooms} (Max: {max_in_room})')
+        #logging.debug(f'Placing {num_to_place} staticobjects in {rooms} (Max: {max_in_room})')
 
         for i in range(num_to_place):
             key = pick_from_data_dict_by_rarity(possible_objects, dlvl)

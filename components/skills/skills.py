@@ -1,7 +1,6 @@
 import logging
 
 from components.skills.baseSkill import BaseSkill
-from components.skills.skillConditions import SkillCondition
 from config_files import colors
 from game import Game
 from components.effects import Effect
@@ -14,15 +13,9 @@ from rendering.render_animations import animate_move_to
 class SkillCharge(BaseSkill):
 
     def __init__(self, **kwargs):
-        self.params = kwargs
-        if kwargs.get('name') is None:
-            self.params['name'] = 'Charge'
-        if kwargs.get('activate_conditions') is None:
-            self.params['activate_conditions'] = {SkillCondition.distance_to}
+        super().__init__(**kwargs)
 
-        super().__init__(**self.params)
-
-    def activate(self, target:Entity, game:Game, **kwargs):
+    def prepare(self, target:Entity, game:Game, **kwargs):
         user = self.owner
         delay = kwargs['delay']
         results = []
@@ -36,7 +29,7 @@ class SkillCharge(BaseSkill):
         results.append({'message':Message(f'The {user.name} prepares to charge.', category=MessageCategory.OBSERVATION, type=MessageType.ALERT)})
         return results
 
-    def execute(self, tx: int, ty: int, game: Game):
+    def execute(self, tx: int, ty: int, game: Game, **kwargs):
         # TODO attack_string should be defined in their own data file
         user = self.owner
         user.color_bg = None  # Reset the entities bg-color, which the skill preparation had changed
@@ -60,15 +53,9 @@ class SkillCharge(BaseSkill):
 
 class SkillSlam(BaseSkill):
     def __init__(self, **kwargs):
-        self.params = kwargs
-        if kwargs.get('name') is None:
-            self.params['name'] = 'Slam'
-        if kwargs.get('activate_conditions') is None:
-            self.params['activate_conditions'] = {SkillCondition.distance_to}
+        super().__init__(**kwargs)
 
-        super().__init__(**self.params)
-
-    def activate(self, target:Entity, game:Game, **kwargs):
+    def prepare(self, target:Entity, game:Game, **kwargs):
         user = self.owner
         delay = kwargs['delay']
         results = []
@@ -81,7 +68,7 @@ class SkillSlam(BaseSkill):
             type=MessageType.ALERT)})
         return results
 
-    def execute(self, tx: int, ty: int, game: Game):
+    def execute(self, tx: int, ty: int, game: Game, **kwargs):
         user = self.owner
         user.color_bg = None  # Reset the entities bg-color, which the skill preparation had changed
 
@@ -97,15 +84,9 @@ class SkillSlam(BaseSkill):
 
 class SkillExplodeSelf(BaseSkill):
     def __init__(self, **kwargs):
-        self.params = kwargs
-        if kwargs.get('name') is None:
-            self.params['name'] = 'Explode'
-        if kwargs.get('activate_conditions') is None:
-            self.params['activate_conditions'] = {SkillCondition.distance_to}
+        super().__init__(**kwargs)
 
-        super().__init__(**self.params)
-
-    def activate(self, target:Entity, game:Game, **kwargs):
+    def prepare(self, target:Entity, game:Game, **kwargs):
         user = self.owner
         delay = kwargs['delay']
         results = []
@@ -119,7 +100,7 @@ class SkillExplodeSelf(BaseSkill):
             type=MessageType.ALERT)})
         return results
 
-    def execute(self, game):
+    def execute(self, game:Game, **kwargs):
         results = []
         self.owner.color_bg = None  # Reset the entities bg-color, which the skill preparation had changed
 
@@ -127,4 +108,26 @@ class SkillExplodeSelf(BaseSkill):
         if self.owner.fighter.hp > 0:
             self.owner.fighter.death(game)
 
+        return results
+
+
+class SkillEntangle(BaseSkill):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+    def prepare(self, target:Entity, game:Game, **kwargs):
+        user = self.owner
+        delay = kwargs['delay']
+        results = []
+
+        user.actionplan.add_to_queue(execute_in=delay, planned_function=self.execute,
+                                     planned_function_args=(game), fixed=True, exclusive=True)
+
+        return results
+
+    def execute(self, target:Entity, game:Game, **kwargs):
+        results = []
+        user = self.owner
+        results.append({'message': Message(f'The {user.name} wraps itself around {target.name}!', category=MessageCategory.OBSERVATION,
+                                           type=MessageType.COMBAT)})
         return results

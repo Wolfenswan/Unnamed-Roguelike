@@ -25,7 +25,7 @@ from components.AI.behavior.ranged import Ranged
 from components.AI.behavior.simple import Simple
 from components.AI.behavior.swarm import Swarm
 from config_files import colors
-from data.actor_data.act_skills import skill_generic_charge, skill_generic_slam, skill_explode_self
+from data.actor_data.act_skills import skill_generic_charge, skill_generic_slam, skill_explode_self, skill_entangle
 from data.data_keys import Key
 from data.data_types import RarityType, AttackType
 
@@ -78,7 +78,7 @@ spawn_data = {
         Key.NAME: 'Mantis Ogre',
         Key.CHAR: 'M',
         Key.COLOR: colors.light_green,
-        Key.DESCR: "TODO",
+        Key.DESCR: "Certainly not praying, the elongated frame of these creatures belies the power of their claws.",
         Key.MAX_HP: (20, 28),
         Key.MAX_STAMINA: (100, 100),
         Key.BASE_ARMOR: (4, 5),
@@ -101,7 +101,7 @@ spawn_data = {
         Key.NAME: 'Spitting Beetle',
         Key.CHAR: 'b',
         Key.COLOR: colors.light_green,
-        Key.DESCR: "TODO",
+        Key.DESCR: "Viscous fluid seeps along tubal appendages towards its front.",
         Key.MAX_HP: (6, 8),
         Key.MAX_STAMINA: (100, 100),
         Key.BASE_ARMOR: (0, 3),
@@ -117,11 +117,11 @@ spawn_data = {
         Key.DLVLS: (1, 100),
         Key.RARITY: RarityType.RARE
     },
-    'volatile_louse': {
-        Key.NAME: 'Volatile Louse',
+    'volatile_larva': {
+        Key.NAME: 'Volatile Larva',
         Key.CHAR: 'l',
         Key.COLOR: colors.light_flame,
-        Key.DESCR: 'TODO',
+        Key.DESCR: 'Red liquid swirls around in a pulsating bulb.',
         Key.MAX_HP: (1,1),
         Key.MAX_STAMINA: (100,100),
         Key.BASE_ARMOR: (0,0),
@@ -136,44 +136,28 @@ spawn_data = {
         Key.GROUP_SIZE: (1, 1),
         Key.DLVLS: (1, 100),
         Key.RARITY: RarityType.RARE
-    }
+    },
+    'centipede' : {
+        Key.NAME: 'Centipede',
+        Key.CHAR: 'c',
+        Key.COLOR: colors.lighter_lime,
+        Key.DESCR: 'The criss-crossing movement via its plethora of legs masks its impressive length.',
+        Key.MAX_HP: (20,30),
+        Key.MAX_STAMINA: (100,100),
+        Key.BASE_ARMOR: (2,3),
+        Key.BASE_STRENGTH: (6,10),
+        Key.LOADOUT: {
+            Key.EQUIPMENT:{'ins_mandibles':{}},
+            Key.BACKPACK:{}
+        },
+        Key.AI_BEHAVIOR: Simple,
+        Key.SKILLS: (skill_entangle,),
+        Key.BARKS: ('insect',),
+        Key.GROUP_SIZE: (1, 1),
+        Key.DLVLS: (1, 100),
+        Key.RARITY: RarityType.UNCOMMON
+    },
+    '' : {
 
-    # 'Bomb_Beetle: {
-    #     'name: 'Bombardier Beetle',
-    #     'char: 'b',
-    #     'color: colors.cyan,
-    #     'descr: ".",
-    #     'max_hp: (4,6),
-    #     'max_stamina:(4,8),
-    #     'nat_armor: (0,0),
-    #     'nat_power: (1,1),
-    #     'nat_vision: 6,
-    #     'ai: BasicAI,
-    #     'barks: ('insect'),
-    #     'ai_behavior: Distance,
-    #     'ai_attack: Ranged,
-    #     'loadouts: None,
-    #     'dlvls: (1,100),
-    #     'chance: 50,
-    #     'group_size: (1,3)
-    # },
-
-    # 'Suicide_Beetle: {
-    #     'name: 'Volatile Beetle',
-    #     'char: 'v',
-    #     'color: colors.flame,
-    #     'descr: "You can see combustive liquid swirling through the thin skin of this creature's bloated belly.",
-    #     'max_hp: (3,3),
-    #     'max_stamina:(4,8),
-    #     'nat_armor: (0,0),
-    #     'nat_power: (1,1),
-    #     'nat_vision: 6,
-    #     'ai: BasicAI,
-    #     'barks: ('insect'),
-    #     'skills: ('skill_prime_expl_beetle',  ),
-    #     'loadouts: None,
-    #     'dlvls: (1,100),
-    #     'chance: 10,
-    #     'group_size: (1,1)
-    # },
+    },
 }

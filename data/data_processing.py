@@ -97,7 +97,8 @@ def pick_from_data_dict_by_rarity(dic:Dict, dlvl:int=0):
             return candidate
 
 def enum_pairs_to_kwargs(dictionary:Dict):
-    # Enums can't be passed as key words, so a temporary dictionary using their names as keys is created
+    # Enum-keys can't be passed as key words, so a temporary dictionary using their names as keys is created
+    # E.g.: Key.NAME -> 'name'
     return {_k.name.lower(): _v for _k, _v in dictionary}
 
 # Data retrieving functions #
@@ -263,7 +264,7 @@ def gen_npc_from_data(data:Dict, x:int, y:int, game:Game):
     if skills is not None:
         skills_component = SkillList()
         for _data in skills:
-            skill_kwargs = enum_pairs_to_kwargs(_data.items())
+            skill_kwargs = enum_pairs_to_kwargs(_data.items()) # Enum-Keys need to be 'translated' into strings
             del skill_kwargs['skill'] # the key words dont need to reference the skill class itself
             skill = _data[Key.SKILL](**skill_kwargs) # initialize the Skill
             skills_component.add_skill(skill)

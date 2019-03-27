@@ -22,17 +22,24 @@ class BaseSkill:
     def __repr__(self):
         return f'{self.name}:{id(self)}(Owner: {self.owner})'
 
-    def activate(self, *args, **kwargs):
+    def prepare(self, *args, **kwargs):
         # TODO add exception
-        logging.debug(f'{self} is missing a activate() method')
+        logging.debug(f'{self} is missing a custom prepare() method')
+
+    def execute(self, *args, **kwargs):
+        # TODO add exception
+        logging.debug(f'{self} is missing a custom execute() method')
 
     def use(self, *args):
         actor = self.owner
         results = []
 
         logging.debug(f'Special attack for {actor}. Cooldown {self.cooldown} of {self.cooldown_length}')
-        activation_results = self.activate(*args, **self.on_activate_kwargs)
-        results.extend(activation_results)
+        if self.on_activate_kwargs['delay'] > 0:
+            skill_results = self.prepare(*args, **self.on_activate_kwargs)
+        else:
+            skill_results = self.execute(*args, **self.on_activate_kwargs)
+        results.extend(skill_results)
         self.cooldown_skill(reset=True)
         return results
 
