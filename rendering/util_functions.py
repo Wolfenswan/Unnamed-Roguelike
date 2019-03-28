@@ -1,5 +1,5 @@
 import logging
-import re
+import regex as re
 import textwrap
 from random import uniform
 
@@ -34,7 +34,7 @@ def setup_console(con, caption=None, fgcolor=tcod.white, bgcolor =tcod.black, bo
     if borders:
         draw_console_borders(con, color = bordercolor)
     if caption:
-        print_string(con, 2, 0, caption)
+        print_string(con, 2, 0, caption, color=fgcolor)
 
 
 def draw_console_borders(con, width=None, height=None, color=colors.dark_grey, bgcolor=colors.black):
@@ -80,17 +80,18 @@ def multiply_rgb_color(color, factor_range = (0, 0.25), darken=False):
     color = tcod.Color(*color)
     return color
 
-
 COLOR_WRAP_PATTERN = re.compile(
 r"""
 %{1}            # % indicating beginning of color-code
-\w+[.,\d()]*    # the color
+\w+             # the color (either name or Color()
+[(\d,\s)]*      # Optional: The tuple for Color()
 %{1}            # % indicating end of color-code
 [()+:\s\w-]+    # the word or string to color
 %{2}            # %% indicating end of color-wrapping
 """, re.X)
 
-color_code_pattern = re.compile('%{1}(\w+[.,\d()]*)%{1}')
+# %{1}\w+%{1}([()+:\s\w-]+%{2})
+color_code_pattern = re.compile('%{1}(\w+[(\d,\s)]*)%{1}')
 
 
 def dynamic_wrap(string, max_width):
@@ -137,18 +138,18 @@ def print_string(con, x, y, string, color=None, fgcolor=colors.white, bgcolor=co
     """
 
     #logging.debug(f'Printing {string}')
-    print('1', string)
     #tcod.console_print_ex(con, x, y, background, alignment, string % )
-    color_coded_words = COLOR_WRAP_PATTERN.findall(string)
+    color_coded_words = re.findall(COLOR_WRAP_PATTERN, string)
+
     col_ctrls = ()
 
     if color_coded_words:
-        print('1a')
+        #print(color_coded_words.groups())
         for i, word in enumerate(color_coded_words):
             color_code = color_code_pattern.match(word)
-            if color_code.group(1)[0:5] == 'Color':
+            if color_code.group(1)[0:5] == 'Color': # if the string is wrapped as %Color(int,int,int)%String%%
                 color_str = eval(color_code.group(1))
-            else:
+            else: # if the string is wrapped as %color_name%String%%
                 color_str = eval(f'colors.{color_code.group(1)}') # Resolve the color-code as a config.colors.py entry: %red%->colors.red
             if color_coefficient:
                 color_str = tuple(int(color_coefficient * x) for x in color_str)
@@ -156,23 +157,22 @@ def print_string(con, x, y, string, color=None, fgcolor=colors.white, bgcolor=co
             new_word = new_word.replace('%%', '%c')
             string = string.replace(word, new_word) # Update the original string
             col_ctrl = eval(f'tcod.COLCTRL_{i+1}')
-            color_str = colors.purple
+            #color_str = colors.purple # TODO Debug
             tcod.console_set_color_control(col_ctrl, color_str, bgcolor)
             col_ctrls += (col_ctrl, tcod.COLCTRL_STOP)
-        string = string % col_ctrls
 
     if color:
-        print('1b')
         if not '%c' in string: # If no tcod wrappers are present, wrap the entire string
-            print('1b', string)
             string = f'%c{string}%c'
-            print('1b', string)
         if color_coefficient:
             color = tuple(int(color_coefficient * x) for x in color)
-        color = colors.pink
+        #color = colors.pink # TODO Debug
         tcod.console_set_color_control(tcod.COLCTRL_1, color, bgcolor)
-        string = string % (tcod.COLCTRL_1, tcod.COLCTRL_STOP)
-        print(string)
+        col_ctrls = (tcod.COLCTRL_1, tcod.COLCTRL_STOP)
+
+    string = string.replace('%c', ' %c', 1) # This works
+    string = string % col_ctrls
+    #string = string.replace(' ', '', 1) # This breaks color again
 
     if fgcolor and color_coefficient:
         fgcolor = tuple(int(color_coefficient * x) for x in fgcolor)
@@ -180,10 +180,10 @@ def print_string(con, x, y, string, color=None, fgcolor=colors.white, bgcolor=co
     #tcod.console_set_default_foreground(con, fgcolor)
     #con.default_fg = tcod.white
     #tcod.console_print_ex(con, x, y, background, alignment, string)
-    fg = color if color else fgcolor
-    # con.print_(x, y, string)
-    tcod.console_set_color_control(tcod.COLCTRL_1, colors.pink, bgcolor)
-    tcod.console_set_color_control(tcod.COLCTRL_2, colors.purple, bgcolor)
+    #fg = color if color else fgcolor
+    con.print(x, y, string, fg=fgcolor)
+    # tcod.console_set_color_control(tcod.COLCTRL_1, colors.pink, bgcolor)
+    # tcod.console_set_color_control(tcod.COLCTRL_2, colors.purple, bgcolor)
     # con.print_(x, y, '%cTEST%c %cTEST%c' % (tcod.COLCTRL_1, tcod.COLCTRL_STOP, tcod.COLCTRL_2,  tcod.COLCTRL_STOP))
-    con.print(x, y, ' %%TEST2%% %cTEST3%c' % (tcod.COLCTRL_1, tcod.COLCTRL_STOP, tcod.COLCTRL_2,  tcod.COLCTRL_STOP))
+    #con.print(x, y, '%cTEST2%c %cTEST3%c' % (tcod.COLCTRL_1, tcod.COLCTRL_STOP, tcod.COLCTRL_2,  tcod.COLCTRL_STOP))
     #con.default_fg = tcod.white
