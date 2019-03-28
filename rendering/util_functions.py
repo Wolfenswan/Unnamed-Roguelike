@@ -139,7 +139,7 @@ def print_string(con, x, y, string, color=None, fgcolor=colors.white, bgcolor=co
 
     #logging.debug(f'Printing {string}')
     #tcod.console_print_ex(con, x, y, background, alignment, string % )
-    color_coded_words = re.findall(COLOR_WRAP_PATTERN, string)
+    color_coded_words = COLOR_WRAP_PATTERN.findall(string)
 
     col_ctrls = ()
 
@@ -157,7 +157,6 @@ def print_string(con, x, y, string, color=None, fgcolor=colors.white, bgcolor=co
             new_word = new_word.replace('%%', '%c')
             string = string.replace(word, new_word) # Update the original string
             col_ctrl = eval(f'tcod.COLCTRL_{i+1}')
-            #color_str = colors.purple # TODO Debug
             tcod.console_set_color_control(col_ctrl, color_str, bgcolor)
             col_ctrls += (col_ctrl, tcod.COLCTRL_STOP)
 
@@ -166,24 +165,17 @@ def print_string(con, x, y, string, color=None, fgcolor=colors.white, bgcolor=co
             string = f'%c{string}%c'
         if color_coefficient:
             color = tuple(int(color_coefficient * x) for x in color)
-        #color = colors.pink # TODO Debug
         tcod.console_set_color_control(tcod.COLCTRL_1, color, bgcolor)
         col_ctrls = (tcod.COLCTRL_1, tcod.COLCTRL_STOP)
 
-    string = string.replace('%c', ' %c', 1) # This works
+    if string[0:2] == '%c':  # TODO Workaround for https://github.com/libtcod/python-tcod/issues/71
+        string = string.replace('%c', ' %c', 1)
+        x -= 1
     string = string % col_ctrls
-    #string = string.replace(' ', '', 1) # This breaks color again
 
     if fgcolor and color_coefficient:
         fgcolor = tuple(int(color_coefficient * x) for x in fgcolor)
 
-    #tcod.console_set_default_foreground(con, fgcolor)
-    #con.default_fg = tcod.white
-    #tcod.console_print_ex(con, x, y, background, alignment, string)
-    #fg = color if color else fgcolor
-    con.print(x, y, string, fg=fgcolor)
-    # tcod.console_set_color_control(tcod.COLCTRL_1, colors.pink, bgcolor)
-    # tcod.console_set_color_control(tcod.COLCTRL_2, colors.purple, bgcolor)
-    # con.print_(x, y, '%cTEST%c %cTEST%c' % (tcod.COLCTRL_1, tcod.COLCTRL_STOP, tcod.COLCTRL_2,  tcod.COLCTRL_STOP))
-    #con.print(x, y, '%cTEST2%c %cTEST3%c' % (tcod.COLCTRL_1, tcod.COLCTRL_STOP, tcod.COLCTRL_2,  tcod.COLCTRL_STOP))
+    #con.default_fg = fgcolor # TODO can probably be deleted
+    con.print(x, y, string, fg=fgcolor, alignment=alignment, bg_blend=background)
     #con.default_fg = tcod.white

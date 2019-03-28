@@ -59,8 +59,6 @@ def render_player_panel(game, con, panel_x, panel_y, width, height):
     print_string(con, 2, y+2, f'DEF: %c{player.fighter.modded_defense}%c', color=color)
 
     color = colors.white if player.fighter.is_dodging else colors.dark_gray
-    print(player.fighter.is_dodging)
-    #print_string(con, 10, y + 1, f' %cDODGING%c', color=color)
     print_string(con, 10, y + 1, f'DODGING', color=color)
     #
     if player.fighter.shield and player.fighter.shield.block_def:
@@ -71,7 +69,7 @@ def render_player_panel(game, con, panel_x, panel_y, width, height):
     # Weapon #
     y += 2
     if player.fighter.active_weapon is not None:
-        print_string(con, 1, y + 2, f' %c{game.player.fighter.active_weapon.name}%c:', color=colors.pink)#game.player.fighter.active_weapon.color)
+        print_string(con, 1, y + 2, f' %c{game.player.fighter.active_weapon.name}%c:', color=game.player.fighter.active_weapon.color)
         print_string(con, 2, y + 3,
                      f'Attack: {game.player.fighter.active_weapon.moveset.current_move}/{game.player.fighter.active_weapon.moveset.moves}')
         print_string(con, 2, y+4, f'Damage: {game.player.fighter.modded_dmg_potential[0]}-{game.player.fighter.modded_dmg_potential[-1]}')
