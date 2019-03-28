@@ -20,7 +20,7 @@ def render_all(game, fov_map, debug=False):
 
     tcod.console_flush()
 
-    clear_all(game.con, game.entities)
+    clear_all(game.root, game.entities)
 
 
 def render_map_screen(game, fov_map, debug=False):
@@ -28,7 +28,8 @@ def render_map_screen(game, fov_map, debug=False):
     entities = game.entities
 
     # Render game map #
-    tcod.console_clear(con)
+    con.clear()
+    #tcod.console_clear(con)
     render_map_centered_on_player(game, con, fov_map, debug=debug)
 
     # Draw all entities #

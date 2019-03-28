@@ -13,8 +13,6 @@ from turn_processing.input_handling.input_keys import keys_dict
 def handle_keys(key_event, game_state):
     # logging.debug(f'Handling {key}')
 
-    print(key_event)
-
     # Inputs valid in all game states #
     key = key_event.sym
     mod = int(key_event.mod)

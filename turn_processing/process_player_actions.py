@@ -349,5 +349,4 @@ def process_cursor_interaction(game, action, targeting_item, debug_spawn):
     if exit and (targeting_item or player.active_weapon_is_ranged):
         results.append({'targeting_cancelled': True})
 
-    print(game.state)
     return results

@@ -12,16 +12,16 @@ def render_panels(game):
 
     render_player_panel(game, game.top_right_panel, cfg.SIDE_PANEL_X, 0, cfg.SIDE_PANEL_WIDTH,
                        cfg.PLAYER_PANEL_HEIGHT)
-    render_status_panel(game, game.status_panel, cfg.STATUS_PANEL_Y, cfg.BOTTOM_PANELS_WIDTH, cfg.STATUS_PANEL_HEIGHT)
-    render_object_panel(game, game.lower_right_panel, cfg.SIDE_PANEL_X, cfg.PLAYER_PANEL_HEIGHT + cfg.COMBAT_PANEL_HEIGHT, cfg.SIDE_PANEL_WIDTH,
-                       cfg.OBJECT_PANEL_HEIGHT)
-
-    color = colors.dark_gray if not game.player.visible_enemies(game.npc_ents, game.fov_map) else colors.dark_red
-    render_enemy_panel(game, game.center_right_panel, cfg.SIDE_PANEL_X, cfg.PLAYER_PANEL_HEIGHT, cfg.SIDE_PANEL_WIDTH,
-                       cfg.COMBAT_PANEL_HEIGHT, color)
-    render_message_panel(game.combat_log, 'Combat', game.bottom_center_panel, cfg.MSG_PANEL2_X, cfg.BOTTOM_PANELS_Y, cfg.MSG_PANEL2_WIDTH, cfg.BOTTOM_PANELS_HEIGHT, color, game.turn)
-    render_message_panel(game.observation_log, 'Observations', game.bottom_left_panel, 0, cfg.BOTTOM_PANELS_Y,
-                         cfg.MSG_PANEL1_WIDTH, cfg.BOTTOM_PANELS_HEIGHT, colors.dark_gray, game.turn)
+    # render_status_panel(game, game.status_panel, cfg.STATUS_PANEL_Y, cfg.BOTTOM_PANELS_WIDTH, cfg.STATUS_PANEL_HEIGHT)
+    # render_object_panel(game, game.lower_right_panel, cfg.SIDE_PANEL_X, cfg.PLAYER_PANEL_HEIGHT + cfg.COMBAT_PANEL_HEIGHT, cfg.SIDE_PANEL_WIDTH,
+    #                    cfg.OBJECT_PANEL_HEIGHT)
+    #
+    # color = colors.dark_gray if not game.player.visible_enemies(game.npc_ents, game.fov_map) else colors.dark_red
+    # render_enemy_panel(game, game.center_right_panel, cfg.SIDE_PANEL_X, cfg.PLAYER_PANEL_HEIGHT, cfg.SIDE_PANEL_WIDTH,
+    #                    cfg.COMBAT_PANEL_HEIGHT, color)
+    # render_message_panel(game.combat_log, 'Combat', game.bottom_center_panel, cfg.MSG_PANEL2_X, cfg.BOTTOM_PANELS_Y, cfg.MSG_PANEL2_WIDTH, cfg.BOTTOM_PANELS_HEIGHT, color, game.turn)
+    # render_message_panel(game.observation_log, 'Observations', game.bottom_left_panel, 0, cfg.BOTTOM_PANELS_Y,
+    #                      cfg.MSG_PANEL1_WIDTH, cfg.BOTTOM_PANELS_HEIGHT, colors.dark_gray, game.turn)
 
 def render_player_panel(game, con, panel_x, panel_y, width, height):
     setup_console(con, caption='Status', borders=True)
@@ -31,58 +31,62 @@ def render_player_panel(game, con, panel_x, panel_y, width, height):
 
     # Health & Stamina #
     y += 2
-    hp_string = f'HEALTH : %c{player.fighter.hp}/{player.fighter.max_hp}%c'
-    print_string(con, 1, y, hp_string, color=game.player.fighter.hp_color)
-    hp_diff = player.statistics.hp_change
-    if hp_diff != 0:
-        col = '%darker_green%+' if hp_diff > 0 else '%darker_red%'
-        print_string(con, len(hp_string)- 2, y, f'({col}{hp_diff}%%)')
-
-    sta_string = f'STAMINA : %c{player.fighter.stamina}/{player.fighter.max_stamina}%c'
-    print_string(con, 1, y+1,  sta_string, color = game.player.fighter.stamina_color)
-    sta_diff = player.statistics.sta_change
-    if sta_diff != 0:
-        col = colors.lighter_sea if sta_diff > 0 else colors.darker_sea
-        print_string(con, len(sta_string)-2, y+1,  f'(%{col}%{sta_diff}%%)')
-
-    # Equipment-derived stats #
-    y += 2
-    # Defensive Stats #
-    surrounded = player.fighter.surrounded
-    if surrounded == Surrounded.THREATENED:
-        print_string(con, 6, y, '*THREATENED*', color=colors.orange)
-    if surrounded == Surrounded.OVERWHELMED:
-        print_string(con, 6, y, '*OVERWHELMED*', color=colors.red)
-
-    print_string(con, 2, y +1, f'STR: {player.fighter.strength}')
-    color = colors.white if player.fighter.modded_defense >= player.fighter.defense else colors.dark_red
-    print_string(con, 2, y+2, f'DEF: %c{player.fighter.modded_defense}%c', color=color)
+    # hp_string = f'HEALTH : %c{player.fighter.hp}/{player.fighter.max_hp}%c'
+    # print_string(con, 1, y, hp_string, color=game.player.fighter.hp_color)
+    # hp_diff = player.statistics.hp_change
+    # if hp_diff != 0:
+    #     col = '%darker_green%+' if hp_diff > 0 else '%darker_red%'
+    #     print_string(con, len(hp_string)- 2, y, f'({col}{hp_diff}%%)')
+    #
+    # sta_string = f'STAMINA : %c{player.fighter.stamina}/{player.fighter.max_stamina}%c'
+    # print_string(con, 1, y+1,  sta_string, color = game.player.fighter.stamina_color)
+    # sta_diff = player.statistics.sta_change
+    # if sta_diff != 0:
+    #     col = colors.lighter_sea if sta_diff > 0 else colors.darker_sea
+    #     print_string(con, len(sta_string)-2, y+1,  f'(%{col}%{sta_diff}%%)')
+    #
+    # # Equipment-derived stats #
+    # y += 2
+    # # Defensive Stats #
+    # surrounded = player.fighter.surrounded
+    # if surrounded == Surrounded.THREATENED:
+    #     print_string(con, 6, y, '*THREATENED*', color=colors.orange)
+    # if surrounded == Surrounded.OVERWHELMED:
+    #     print_string(con, 6, y, '*OVERWHELMED*', color=colors.red)
+    #
+    # print_string(con, 2, y +1, f'STR: {player.fighter.strength}')
+    # color = colors.white if player.fighter.modded_defense >= player.fighter.defense else colors.dark_red
+    # print_string(con, 2, y+2, f'DEF: %c{player.fighter.modded_defense}%c', color=color)
 
     color = colors.white if player.fighter.is_dodging else colors.dark_gray
-    print_string(con, 10, y + 1, f'*DODGING*', color=color)
-
+    print(player.fighter.is_dodging)
+    #print_string(con, 10, y + 1, f' %cDODGING%c', color=color)
+    print_string(con, 10, y + 1, f'DODGING', color=color)
+    #
     if player.fighter.shield and player.fighter.shield.block_def:
         col1 = 'dark_gray' if not player.fighter.is_blocking else 'white'
         col2 = 'dark_red' if player.fighter.shield.block_def > player.fighter.modded_block_def else f'{col1}'
-        print_string(con, 10, y+2, f'%{col1}%BLOCK:%% %{col2}%{player.fighter.modded_block_def}%%')
-
-    # Weapon #
+        print_string(con, 10, y+2, f' %{col1}%BLOCK:%% %{col2}%{player.fighter.modded_block_def}%%')
+    #
+    # # Weapon #
     y += 2
     if player.fighter.active_weapon is not None:
-        print_string(con, 1, y + 2, f'%c{game.player.fighter.active_weapon.name}%c:', color=game.player.fighter.active_weapon.color)
-        print_string(con, 2, y + 3,
-                     f'Attack: {game.player.fighter.active_weapon.moveset.current_move}/{game.player.fighter.active_weapon.moveset.moves}')
-        print_string(con, 2, y+4, f'Damage: {game.player.fighter.modded_dmg_potential[0]}-{game.player.fighter.modded_dmg_potential[-1]}')
-
-        print_string(con, 2, y+6, f'Targets:')
-        for i, line in enumerate(player.fighter.active_weapon.moveset.targets_gui):
-            print_string(con, 10, y+5+i, ''.join(line))
-
-    # Quick Slots #
+        print_string(con, 1, y + 2, f' %c{game.player.fighter.active_weapon.name}%c:', color=colors.pink)#game.player.fighter.active_weapon.color)
+    #    print_string(con, 2, y + 3,
+    #                  f'Attack: {game.player.fighter.active_weapon.moveset.current_move}/{game.player.fighter.active_weapon.moveset.moves}')
+    #     print_string(con, 2, y+4, f'Damage: {game.player.fighter.modded_dmg_potential[0]}-{game.player.fighter.modded_dmg_potential[-1]}')
+    #
+    #     print_string(con, 2, y+6, f'Targets:')
+    #     for i, line in enumerate(player.fighter.active_weapon.moveset.targets_gui):
+    #         print_string(con, 10, y+5+i, ''.join(line))
+    #
+    # # Quick Slots #
     # y = 14
     # draw_quickslots(con, y, game)
 
-    tcod.console_blit(con, 0, 0, width, height, 0, panel_x, panel_y)
+    #con.blit(game.root, panel_x, panel_y, 0, 0, width, height)
+    con.blit(game.root, panel_x, panel_y, 0, 0, width, height)
+    #tcod.console_blit(con, 0, 0, width, height, 0, panel_x, panel_y)
 
 def render_object_panel(game, con, panel_x, panel_y, width, height):
     setup_console(con, caption='Objects', borders=True)
@@ -118,7 +122,8 @@ def render_object_panel(game, con, panel_x, panel_y, width, height):
                 print_string(con, 3+i, y, line, color=ent.color)
                 y += 2
 
-    tcod.console_blit(con, 0, 0, width, height, 0, panel_x, panel_y)
+    #tcod.console_blit(con, 0, 0, width, height, 0, panel_x, panel_y)
+    con.blit(game.root, panel_x, panel_y, 0, 0, width, height)
 
 def render_enemy_panel(game, con, panel_x, panel_y, width, height, color):
     setup_console(con, caption='Enemies', borders=True, bordercolor=color)
@@ -161,7 +166,7 @@ def render_enemy_panel(game, con, panel_x, panel_y, width, height, color):
 
             y += 1
 
-    tcod.console_blit(con, 0, 0, width, height, 0, panel_x, panel_y)
+    con.blit(game.root, panel_x, panel_y, 0, 0, width, height)
 
 
 def render_message_panel(message_log, title, con, panel_x, panel_y, width, height, color, current_turn):
@@ -184,28 +189,32 @@ def render_message_panel(message_log, title, con, panel_x, panel_y, width, heigh
     tcod.console_blit(con, 0, 0, width, height, 0, panel_x, panel_y)
 
 
-def render_status_panel(game, console, panel_y, width, height):
-    setup_console(console, fgcolor=colors.light_gray)
+def render_status_panel(game, con, panel_y, width, height):
+    setup_console(con, fgcolor=colors.light_gray)
 
-    draw_bar(console, 1, 1, 20, f'{game.player.fighter.hp_string}', int(game.player.fighter.hp), game.player.fighter.max_hp,
+    draw_bar(con, 1, 1, 20, f'{game.player.fighter.hp_string}', int(game.player.fighter.hp), game.player.fighter.max_hp,
              game.player.fighter.hp_color, tcod.darkest_red)
-    draw_bar(console, width-21, 1, 20, f'{game.player.fighter.stamina_string}', int(game.player.fighter.stamina), game.player.fighter.max_stamina,
+    draw_bar(con, width-21, 1, 20, f'{game.player.fighter.stamina_string}', int(game.player.fighter.stamina), game.player.fighter.max_stamina,
              game.player.fighter.stamina_color, colors.darkest_blue)
 
-    draw_quickslots(console, 0, game)
+    draw_quickslots(con, 0, game)
 
-    tcod.console_blit(console, 0, 0, width, height, 0, 0, panel_y)
-    tcod.console_print_frame(console, 0, 0, width, height)
+    con.blit(game.root, 0, panel_y, 0, 0, width, height)
+    tcod.console_print_frame(con, 0, 0, width, height)
 
 
 def draw_bar(panel, x, y, total_width, name, value, maximum, bar_color, back_color):
     bar_width = int(float(value) / maximum * total_width)
 
-    tcod.console_set_default_background(panel, back_color)
+    panel.default_bg = back_color
+    #tcod.console_set_default_background(panel, back_color)
+    # TODO panel.rect()
     tcod.console_rect(panel, x, y, total_width, 1, False, tcod.BKGND_SCREEN)
 
-    tcod.console_set_default_background(panel, bar_color)
+    panel.default_bg = bar_color
+    #tcod.console_set_default_background(panel, bar_color)
     if bar_width > 0:
+        # TODO panel.rect()
         tcod.console_rect(panel, x, y, bar_width, 1, False, tcod.BKGND_SCREEN)
 
     print_string(panel, int(x + total_width / 2), y, f'{name.title()}', alignment = tcod.CENTER, background=tcod.BKGND_NONE)

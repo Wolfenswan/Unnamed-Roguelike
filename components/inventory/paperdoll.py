@@ -36,7 +36,6 @@ class Paperdoll:
 
     def equip(self, item_ent, game):
         results = []
-        print(item_ent.type)
         e_type = item_ent.type.name.lower() # Entity.type is a enum member of the ItemType Class.
         e_to = item_ent.item.equipment.e_to
         qu_slots = item_ent.item.equipment.qu_slots

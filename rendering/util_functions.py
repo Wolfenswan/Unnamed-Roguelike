@@ -28,9 +28,9 @@ def get_names_under_mouse(mouse, entities, fov_map):
 
 
 def setup_console(con, caption=None, fgcolor=tcod.white, bgcolor =tcod.black, borders=False, bordercolor = colors.dark_gray):
-    tcod.console_set_default_foreground(con, fgcolor)
-    tcod.console_set_default_background(con, bgcolor)
-    tcod.console_clear(con)
+    con.default_fg = fgcolor
+    con.default_bg = bgcolor
+    con.clear()
     if borders:
         draw_console_borders(con, color = bordercolor)
     if caption:
@@ -137,11 +137,13 @@ def print_string(con, x, y, string, color=None, fgcolor=colors.white, bgcolor=co
     """
 
     #logging.debug(f'Printing {string}')
-
+    print('1', string)
+    #tcod.console_print_ex(con, x, y, background, alignment, string % )
     color_coded_words = COLOR_WRAP_PATTERN.findall(string)
     col_ctrls = ()
 
     if color_coded_words:
+        print('1a')
         for i, word in enumerate(color_coded_words):
             color_code = color_code_pattern.match(word)
             if color_code.group(1)[0:5] == 'Color':
@@ -154,21 +156,34 @@ def print_string(con, x, y, string, color=None, fgcolor=colors.white, bgcolor=co
             new_word = new_word.replace('%%', '%c')
             string = string.replace(word, new_word) # Update the original string
             col_ctrl = eval(f'tcod.COLCTRL_{i+1}')
+            color_str = colors.purple
             tcod.console_set_color_control(col_ctrl, color_str, bgcolor)
             col_ctrls += (col_ctrl, tcod.COLCTRL_STOP)
         string = string % col_ctrls
 
     if color:
+        print('1b')
         if not '%c' in string: # If no tcod wrappers are present, wrap the entire string
+            print('1b', string)
             string = f'%c{string}%c'
+            print('1b', string)
         if color_coefficient:
             color = tuple(int(color_coefficient * x) for x in color)
+        color = colors.pink
         tcod.console_set_color_control(tcod.COLCTRL_1, color, bgcolor)
         string = string % (tcod.COLCTRL_1, tcod.COLCTRL_STOP)
+        print(string)
 
     if fgcolor and color_coefficient:
         fgcolor = tuple(int(color_coefficient * x) for x in fgcolor)
 
-    tcod.console_set_default_foreground(con, fgcolor)
-    tcod.console_print_ex(con, x, y, background, alignment, string)
-    tcod.console_set_default_foreground(con, tcod.white)
+    #tcod.console_set_default_foreground(con, fgcolor)
+    #con.default_fg = tcod.white
+    #tcod.console_print_ex(con, x, y, background, alignment, string)
+    fg = color if color else fgcolor
+    # con.print_(x, y, string)
+    tcod.console_set_color_control(tcod.COLCTRL_1, colors.pink, bgcolor)
+    tcod.console_set_color_control(tcod.COLCTRL_2, colors.purple, bgcolor)
+    # con.print_(x, y, '%cTEST%c %cTEST%c' % (tcod.COLCTRL_1, tcod.COLCTRL_STOP, tcod.COLCTRL_2,  tcod.COLCTRL_STOP))
+    con.print(x, y, ' %%TEST2%% %cTEST3%c' % (tcod.COLCTRL_1, tcod.COLCTRL_STOP, tcod.COLCTRL_2,  tcod.COLCTRL_STOP))
+    #con.default_fg = tcod.white

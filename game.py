@@ -34,7 +34,7 @@ class Game:
         self.player_turn_results = []
 
         # GUI #
-        self.con = None
+        self.root = None
         self.fov_map = None
         self.bottom_panel = None
         self.observation_log = MessageLog(cfg.MSG_X, cfg.MSG_PANEL1_WIDTH, cfg.MSG_HEIGHT)

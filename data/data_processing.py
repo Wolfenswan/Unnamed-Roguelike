@@ -284,7 +284,6 @@ def gen_npc_from_data(data:Dict, x:int, y:int, game:Game):
 
 
 def gen_item_from_data(data:Dict, x:int, y:int, material=False, condition=False, craftsmanship=False, forced_attacktype=None):
-    print(data)
     material = get_material_data(data, forced=material)
     condition = get_condition_data(forced=condition) if material else {}
     craftsmanship = get_craftsmanship_data(forced=craftsmanship) if material else {}
@@ -381,7 +380,6 @@ def gen_loadout(actor:Entity, loadout:Dict, game:Game):
     backpack = loadout.get(Key.BACKPACK, {})
 
     for key in equipment.keys():
-        print(key)
         kwargs = enum_pairs_to_kwargs(equipment[key].items())
         item = gen_item_from_data(ITEM_DATA_MERGED.get(key), 0, 0, **kwargs)
         actor.paperdoll.equip(item, game)

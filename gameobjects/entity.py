@@ -184,7 +184,6 @@ class Entity:
             if self.architecture:
                 ext1 = self.architecture.on_interaction.__name__ if self.architecture.on_interaction else None
                 ext2 = self.architecture.on_collision.__name__ if self.architecture.on_collision else None
-                print(ext1, ext2)
                 extend_descr += f'\n\ninteract:{ext1}, collision:{ext2}'
 
         return extend_descr
