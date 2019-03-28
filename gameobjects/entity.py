@@ -10,7 +10,7 @@ from config_files import colors
 from components.AI.baseAI import BaseAI
 from components.skills.skillList import SkillList
 from components.actionplan import Actionplan
-from components.actors.status_modifiers import Presence
+from components.actors.fighter_util import Effect
 from components.architecture import Architecture
 from components.inventory.inventory import Inventory
 from components.inventory.paperdoll import Paperdoll
@@ -19,6 +19,7 @@ from components.statistics import Statistics
 from data.data_types import BodyType, Material, GenericType, MonsterType, ItemType
 from data.gui_data.gui_entity import bodytype_name_data
 from data.gui_data.material_strings import material_name_data
+from data.gui_data.gui_fighter import effects_descr_data
 from game import Game
 from gameobjects.util_functions import entity_at_pos, free_line_between_pos, distance_between_pos
 from map.directions_util import direction_between_pos
@@ -155,20 +156,17 @@ class Entity:
 
     def extended_descr(self, game):
         extend_descr = self.descr
-        col1 = 'dark_crimson' # TODO All colors are placeholders
-        col2 = 'yellow'
+        col = 'dark_crimson' # TODO All colors are placeholders
         if self.fighter is not None:
             if self.fighter.active_weapon:
-                extend_descr += f'\n\nIt attacks with %{col1}%{self.fighter.active_weapon.item.equipment.attack_type.name.lower()}%% strikes.'
+                extend_descr += f'\n\nIt attacks with %{col}%{self.fighter.active_weapon.item.equipment.attack_type.name.lower()}%% strikes.'
 
             if game.player.fighter.shield:
-                extend_descr += f'\n\nBlocking its attacks will be %{col1}%{game.player.fighter.average_chance_to_block(self)}%%.'
+                extend_descr += f'\n\nBlocking its attacks will be %{col}%{game.player.fighter.average_chance_to_block(self)}%%.'
 
-            if self.fighter.presence[Presence.DAZED]:
-                extend_descr += f'\n\n{self.pronoun.title()} {self.state_verb_present} %{col2}%dazed%% and acting numbed.'
-
-            if self.fighter.presence[Presence.STUNNED]:
-                extend_descr += f'\n\n{self.pronoun.title()} {self.state_verb_present} %{col2}%stunned%% and unable to attack.'
+            for effect, active in self.fighter.effects.items():
+                if active:
+                    extend_descr += f'\n\n{self.pronoun.title()} {self.state_verb_present} {effects_descr_data[effect]}'
 
         if self.item:
             extend_descr += self.item.attr_list

@@ -4,8 +4,8 @@ import logging
 
 from dataclasses import dataclass
 
-from components.actors.fighter_util import DamagePercentage, AttributePercentage, get_gui_data
-from components.actors.status_modifiers import Presence, Surrounded
+from components.actors.fighter_util import DamagePercentage, AttributePercentage, get_gui_data, Effect, Surrounded, \
+    Stance
 from components.statistics import statistics_updater
 from config_files import colors
 from data.actor_data.act_status_mod import status_modifiers_data
@@ -32,11 +32,15 @@ class Fighter:
         self.max_hp = self.__hp
         self.max_stamina = self.__stamina
         self.surrounded = Surrounded.FREE
-        self.is_blocking = False
-        self.is_dodging = False
-        self.presence = {
-            Presence.DAZED: False,
-            Presence.STUNNED: False
+        self.stances = {
+            Stance.BLOCKING: False,
+            Stance.DODGING: False
+        }
+        self.effects = {
+            Effect.DAZED: False,
+            Effect.STUNNED: False,
+            Effect.ENTANGLED: False,
+            Effect.CONFUSED: False
         }
 
     ##############
@@ -100,6 +104,14 @@ class Fighter:
         return get_gui_data(percentage, sta_color_data, AttributePercentage)
 
     @property
+    def is_blocking(self):
+        return self.stances[Stance.BLOCKING]
+
+    @property
+    def is_dodging(self):
+        return self.stances[Stance.DODGING]
+
+    @property
     def strength(self):
         return self.__base_strength
 
@@ -131,11 +143,11 @@ class Fighter:
         if self.active_weapon is not None:
             w_mod = self.active_weapon.moveset.dmg_multipl
 
-        if self.presence[Presence.DAZED]:
-            p_mod = status_modifiers_data[Presence.DAZED]['dmg_multipl']
+        if self.effects[Effect.DAZED]:
+            p_mod = status_modifiers_data[Effect.DAZED]['dmg_multipl']
 
-        if self.presence[Presence.STUNNED]:
-            p_mod = status_modifiers_data[Presence.STUNNED]['dmg_multipl']
+        if self.effects[Effect.STUNNED]:
+            p_mod = status_modifiers_data[Effect.STUNNED]['dmg_multipl']
 
         return (round(self.base_dmg_potential[0] * w_mod * p_mod), round(self.base_dmg_potential[-1] * w_mod * p_mod))
 
@@ -158,11 +170,11 @@ class Fighter:
     @property
     def modded_defense(self):
         modded_def = self.defense
-        if self.presence[Presence.DAZED]:
-            modded_def *= status_modifiers_data[Presence.DAZED]['av_multipl']
+        if self.effects[Effect.DAZED]:
+            modded_def *= status_modifiers_data[Effect.DAZED]['av_multipl']
 
-        if self.presence[Presence.STUNNED]:
-            modded_def *= status_modifiers_data[Presence.STUNNED]['av_multipl']
+        if self.effects[Effect.STUNNED]:
+            modded_def *= status_modifiers_data[Effect.STUNNED]['av_multipl']
 
         if self.surrounded != Surrounded.FREE:
             modded_def *= status_modifiers_data[self.surrounded]['av_multipl']
@@ -290,8 +302,8 @@ class Fighter:
             return {'message': message}
         return {}
 
-    def set_presence(self, presence:Presence, value:int, duration:int=0):
-        self.presence[presence] = value
+    def set_presence(self, presence:Effect, value:int, duration:int=0):
+        self.effects[presence] = value
         if duration > 0: # If duration > 0, set a plan to disable the current presence in n turns
             self.owner.actionplan.add_to_queue(execute_in=duration,
                                                planned_function=self.set_presence,
@@ -388,7 +400,7 @@ class Fighter:
                     message = Message(f'The {self.owner.name_with_color} blocks your attack, dazing you!',
                                       category=MessageCategory.COMBAT, type=MessageType.COMBAT_BAD)
 
-                self.set_presence(Presence.DAZED, True, 1)
+                self.set_presence(Effect.DAZED, True, 1)
                 results.append({'message': message})
         else:
             results.extend(self.attack_execute(target, attack_power, verb))
@@ -444,10 +456,10 @@ class Fighter:
 
         if self.is_blocking:
             results.append({'message': Message('You stop blocking.', type=MessageType.COMBAT_INFO)})
-            self.is_blocking = False
+            self.stances[Stance.BLOCKING] = False
         elif self.shield:
             results.append({'message': Message(f'You ready your {self.shield.name}.', type=MessageType.COMBAT_INFO)})
-            self.is_blocking = True
+            self.stances[Stance.BLOCKING] = True
         else:
             results.append({'message': Message('You need a shield to block.', type=MessageType.COMBAT_INFO)})
 
@@ -459,10 +471,10 @@ class Fighter:
 
         if self.is_dodging:
             results.append({'message': Message('You stop dodging.', type=MessageType.COMBAT_INFO)})
-            self.is_dodging = False
+            self.stances[Stance.DODGING] = False
         else:
             results.append({'message': Message('You start dodging.', type=MessageType.COMBAT_INFO)})
-            self.is_dodging = True
+            self.stances[Stance.DODGING] = True
 
         return results
 
@@ -474,7 +486,7 @@ class Fighter:
                 animate_move_line(self.owner, dx, dy, 2, game, anim_delay=0.05)
                 results.append(self.exert(self.defense * 2, 'dodge'))
         else:
-            results.append({'message': Message('PLACEHOLDER: Stamina too low to dodge!')})
+            results.append({'message': Message('You are too exhausted!', type=MessageType.COMBAT_BAD)})
 
         return results
 

@@ -170,7 +170,8 @@ def print_string(con, x, y, string, color=None, fgcolor=colors.white, bgcolor=co
 
     if string[0:2] == '%c':  # TODO Workaround for https://github.com/libtcod/python-tcod/issues/71
         string = string.replace('%c', ' %c', 1)
-        x -= 1
+        if x > 0:
+            x -= 1
     string = string % col_ctrls
 
     if fgcolor and color_coefficient:

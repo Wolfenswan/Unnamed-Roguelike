@@ -1,12 +1,12 @@
-from components.actors.status_modifiers import Presence, Surrounded
+from components.actors.fighter_util import Effect, Surrounded
 
 status_modifiers_data = {
-    Presence.DAZED: {
+    Effect.DAZED: {
         'av_multipl' : 0.75,
         'dmg_multipl': 0.75,
         'skip_turn_chance': 15
     },
-    Presence.STUNNED: {
+    Effect.STUNNED: {
         'av_multipl' : 0.5,
         'dmg_multipl' : 0,
         'skip_turn_chance': 100,

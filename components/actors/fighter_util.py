@@ -1,5 +1,24 @@
-from enum import Enum
+from enum import Enum, auto
 from typing import Union, Dict
+
+
+class Stance(Enum):
+    DODGING = auto()
+    BLOCKING = auto()
+
+
+class Effect(Enum):
+    NORMAL = auto()
+    DAZED = auto()
+    STUNNED = auto()
+    ENTANGLED = auto()
+    CONFUSED = auto()
+
+
+class Surrounded(Enum):
+    FREE = auto()
+    THREATENED = auto()
+    OVERWHELMED = auto()
 
 
 class AttributePercentage(Enum):
@@ -10,6 +29,7 @@ class AttributePercentage(Enum):
     VERY_LOW = 1
     EMPTY = 0
 
+
 class DamagePercentage(Enum):
     VERY_HIGH = 60
     HIGH = 40
@@ -17,6 +37,7 @@ class DamagePercentage(Enum):
     LIGHT = 5
     VERY_LIGHT = 1
     NONE = 0
+
 
 def get_gui_data(percentage:float, dictionary:Dict, category: Union[AttributePercentage, DamagePercentage]):
     """

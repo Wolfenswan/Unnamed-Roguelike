@@ -2,7 +2,7 @@
 
 import tcod
 
-from components.actors.status_modifiers import Surrounded
+from components.actors.fighter_util import Surrounded
 from config_files import colors, cfg as cfg
 from game import GameState
 from rendering.util_functions import center_x_for_text, setup_console, print_string, dynamic_wrap
@@ -154,7 +154,7 @@ def render_enemy_panel(game, con, panel_x, panel_y, width, height, color):
             tcod.console_set_color_control(tcod.COLCTRL_3, ent.fighter.stamina_color, tcod.black)
             status_line = f'%c{ent.fighter.hp_string.title()}%c|%c{ent.fighter.stamina_string.title()}%c'\
                           % (tcod.COLCTRL_2, tcod.COLCTRL_STOP, tcod.COLCTRL_3, tcod.COLCTRL_STOP)
-            for status, active in ent.fighter.presence.items():
+            for status, active in ent.fighter.effects.items():
                 if active:
                     status_line += f' %white%{status.name[0]}%%'
 
