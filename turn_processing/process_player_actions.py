@@ -118,7 +118,10 @@ def process_player_interaction(game, action):
                 # target = game.interactable_entity_at_pos(destination_x, destination_y)
 
             if target:
-                if dodging:
+                if player.can_attack is False:
+                    results.append({'message': Message('You are unable to attack!',
+                                                       type=MessageType.COMBAT_BAD)})
+                elif dodging:
                     Message('PLACEHOLDER: cant dodge into target.', type=MessageType.SYSTEM).add_to_log(game)
                 # If a NPC is blocking the way #
                 elif target.fighter:
@@ -150,7 +153,10 @@ def process_player_interaction(game, action):
                 # elif interact:
                 #     print('PLACEHOLDER: There is nothing to interact with')
             elif move:
-                if dodging:
+                if player.can_move is False:
+                    results.append({'message': Message('You are unable to move!',
+                                                       type=MessageType.COMBAT_BAD)})
+                elif dodging:
                     results.extend(player.fighter.dodge(dx, dy, game))
                 else:
                     player.move(dx, dy)

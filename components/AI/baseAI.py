@@ -8,7 +8,7 @@ from dataclasses import dataclass
 from components.AI.behavior.ranged import Ranged
 from components.AI.behavior.simple import Simple
 from components.AI.behavior.swarm import Swarm
-from components.actors.fighter_util import Effect
+from components.actors.fighter_util import State
 from data.actor_data.act_status_mod import status_modifiers_data
 from gui.messages import Message
 
@@ -34,13 +34,13 @@ class BaseAI:
         # print(free_line)
 
         # First check if turn is entirely skipped
-        if presence[Effect.STUNNED]:
+        if presence[State.STUNNED]:
             message = Message(f'PLACEHOLDER: {npc.name} is stunned and skipping turn.')
             results.append({'message': message})
             return results
 
-        if presence[Effect.DAZED]:
-            if randint(0,100) <= status_modifiers_data[Effect.DAZED]['skip_turn_chance']:
+        if presence[State.DAZED]:
+            if randint(0,100) <= status_modifiers_data[State.DAZED]['skip_turn_chance']:
                 message = Message(f'PLACEHOLDER: {npc.name} is dazed and skipping turn.')
                 results.append({'message': message})
                 return results

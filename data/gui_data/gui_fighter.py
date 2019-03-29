@@ -1,4 +1,4 @@
-from components.actors.fighter_util import DamagePercentage, AttributePercentage, Effect
+from components.actors.fighter_util import DamagePercentage, AttributePercentage, State
 from config_files import colors
 
 # HEALTH #
@@ -82,12 +82,12 @@ stadmg_color_data = {
 
 # TODO Unused
 effects_color_data = {
-    Effect.DAZED: colors.dark_crimson,
-    Effect.STUNNED: colors.dark_crimson
+    State.DAZED: colors.dark_crimson,
+    State.STUNNED: colors.dark_crimson
 }
 
 col = colors.dark_crimson
 effects_descr_data = {
-    Effect.DAZED: f'%{col}%dazed%% and acting numbed.',
-    Effect.STUNNED: f'%{col}%stunned%% and unable to attack.'
+    State.DAZED: f'%{col}%dazed%% and acting numbed.',
+    State.STUNNED: f'%{col}%stunned%% and unable to attack.'
 }

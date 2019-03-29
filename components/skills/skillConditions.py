@@ -31,5 +31,29 @@ class SkillCondition:
             return False
 
     @staticmethod
+    def actor_state(**kwargs):
+        """
+        Checks whether own state is in a given condition
+        Required kwargs: 'state', 'condition'
+        """
+        actor = kwargs.get('actor')
+        state = kwargs['state']
+        condition = kwargs['state_condition']
+
+        return actor.effects[state] == condition
+
+    @staticmethod
+    def target_state(**kwargs):
+        """
+        Checks whether target's state is in a given condition
+        Required kwargs: 'state', 'condition'
+        """
+        target = kwargs.get('target')
+        state = kwargs['state']
+        condition = kwargs['state_condition']
+
+        return target.effects[state] == condition
+
+    @staticmethod
     def always_available():
         return True

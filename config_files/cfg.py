@@ -2,7 +2,7 @@
 """ Constant variables """
 import tcod
 
-DEBUG = False
+DEBUG = True
 GAME_NAME = 'RoguelikeTutReloaded'
 
 # Console

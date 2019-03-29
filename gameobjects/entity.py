@@ -10,12 +10,13 @@ from config_files import colors
 from components.AI.baseAI import BaseAI
 from components.skills.skillList import SkillList
 from components.actionplan import Actionplan
-from components.actors.fighter_util import Effect
+from components.actors.fighter_util import State
 from components.architecture import Architecture
 from components.inventory.inventory import Inventory
 from components.inventory.paperdoll import Paperdoll
 from components.items.item import Item
 from components.statistics import Statistics
+from data.actor_data.act_status_mod import status_modifiers_data
 from data.data_types import BodyType, Material, GenericType, MonsterType, ItemType
 from data.gui_data.gui_entity import bodytype_name_data
 from data.gui_data.material_strings import material_name_data
@@ -193,6 +194,28 @@ class Entity:
     def is_corpse(self):
         return self.fighter.hp <= 0 if self.fighter else False
 
+    @property
+    def can_move(self):
+        if self.fighter:
+            for state, active in self.effects.items():
+                if active and status_modifiers_data[state].get('can_move', True) is False:
+                    return False
+            else: # for...else applies if the for loop finished without breaking
+                return True
+        else:   # TODO are there any entities that are not fighters but can move?
+            return False
+
+    @property
+    def can_attack(self):
+        if self.fighter:
+            for state, active in self.effects.items():
+                if active and status_modifiers_data[state].get('can_attack', True) is False:
+                    return False
+            else:   # for...else applies if the for loop finished without breaking
+                return True
+        else:
+            return False
+
     def in_combat(self, game): # NOTE: Only relevant for player at the moment.
         enemies = game.npc_ents
         visible_enemies = self.visible_enemies(enemies, game.fov_map)
@@ -237,6 +260,10 @@ class Entity:
     def moveset(self):
         return self.item.equipment.moveset if self.item is not None and self.item.equipment is not None else None
 
+    @property
+    def effects(self):
+        return self.fighter.effects if self.fighter is not None else None
+
     ####################
     # ACTION FUNCTIONS #
     ####################
@@ -277,6 +304,7 @@ class Entity:
                 eval(event)
         else:
             if self.is_player:
+                self.actionplan.process_queue()
                 # TODO Placeholder for proper stamina management (currently flat 1% recovered)
                 if not self.in_combat(game) and not self.fighter.sta_full and not last_player_action.get('dodge'):
                     self.fighter.recover(self.fighter.max_stamina / 100)

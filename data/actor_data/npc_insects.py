@@ -25,7 +25,8 @@ from components.AI.behavior.ranged import Ranged
 from components.AI.behavior.simple import Simple
 from components.AI.behavior.swarm import Swarm
 from config_files import colors
-from data.actor_data.act_skills import skill_generic_charge, skill_generic_slam, skill_explode_self, skill_entangle
+from data.actor_data.act_skills import skill_generic_charge, skill_generic_slam, skill_explode_self, skill_entangle, \
+    skill_entangle_timed
 from data.data_keys import Key
 from data.data_types import RarityType, AttackType
 
@@ -151,7 +152,7 @@ spawn_data = {
             Key.BACKPACK:{}
         },
         Key.AI_BEHAVIOR: Simple,
-        Key.SKILLS: (skill_entangle,),
+        Key.SKILLS: (skill_entangle_timed,),
         Key.BARKS: ('insect',),
         Key.GROUP_SIZE: (1, 1),
         Key.DLVLS: (1, 100),

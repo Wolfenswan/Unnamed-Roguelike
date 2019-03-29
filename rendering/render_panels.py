@@ -65,7 +65,15 @@ def render_player_panel(game, con, panel_x, panel_y, width, height):
         col1 = 'dark_gray' if not player.fighter.is_blocking else 'white'
         col2 = 'dark_red' if player.fighter.shield.block_def > player.fighter.modded_block_def else f'{col1}'
         print_string(con, 10, y+2, f'%{col1}%BLOCK:%% %{col2}%{player.fighter.modded_block_def}%%')
-    #
+
+    # Effects #
+    y += 2
+    x = 2
+    for effect, active in player.effects.items():
+        if active:
+            print_string(con, x, y + 2, effect.name[0], color=colors.red)
+            x += 2
+
     # Weapon #
     y += 2
     if player.fighter.active_weapon is not None:
@@ -74,9 +82,9 @@ def render_player_panel(game, con, panel_x, panel_y, width, height):
                      f'Attack: {game.player.fighter.active_weapon.moveset.current_move}/{game.player.fighter.active_weapon.moveset.moves}')
         print_string(con, 2, y+4, f'Damage: {game.player.fighter.modded_dmg_potential[0]}-{game.player.fighter.modded_dmg_potential[-1]}')
 
-        print_string(con, 2, y+6, f'Targets:')
+        print_string(con, 2, y+7, f'Targets:')
         for i, line in enumerate(player.fighter.active_weapon.moveset.targets_gui):
-            print_string(con, 10, y+5+i, ''.join(line))
+            print_string(con, 10, y+6+i, ''.join(line))
 
     # Quick Slots #
     y = 14

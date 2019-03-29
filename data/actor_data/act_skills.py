@@ -1,3 +1,4 @@
+from components.actors.fighter_util import State
 from components.skills.skillConditions import SkillCondition
 from components.skills.skills import SkillCharge, SkillSlam, SkillExplodeSelf, SkillEntangle
 from data.data_keys import Key
@@ -40,8 +41,14 @@ skill_explode_self = {
 skill_entangle = {
     Key.SKILL : SkillEntangle,
     Key.NAME : 'Entangle',
-    Key.ACTIVATE_CONDITIONS : {SkillCondition.distance_to},
-    Key.ACTIVATE_CONDITION_KWARGS: {'min_dist': 1, 'max_dist': 1.5},
+    Key.ACTIVATE_CONDITIONS : {SkillCondition.distance_to, SkillCondition.target_state},
+    Key.ACTIVATE_CONDITION_KWARGS: {'min_dist': 1, 'max_dist': 1.5,'state': State.ENTANGLED, 'state_condition': False},
     Key.ON_ACTIVATE_KWARGS: {'delay':0},
     Key.COOLDOWN_LENGTH: 6
 }
+
+skill_entangle_timed = {
+    **skill_entangle,
+    Key.ON_ACTIVATE_KWARGS: {'delay': 0, 'duration': 5},
+    Key.COOLDOWN_LENGTH: 8
+    }

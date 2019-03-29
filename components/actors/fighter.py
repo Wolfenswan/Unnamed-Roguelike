@@ -4,7 +4,7 @@ import logging
 
 from dataclasses import dataclass
 
-from components.actors.fighter_util import DamagePercentage, AttributePercentage, get_gui_data, Effect, Surrounded, \
+from components.actors.fighter_util import DamagePercentage, AttributePercentage, get_gui_data, State, Surrounded, \
     Stance
 from components.statistics import statistics_updater
 from config_files import colors
@@ -37,10 +37,10 @@ class Fighter:
             Stance.DODGING: False
         }
         self.effects = {
-            Effect.DAZED: False,
-            Effect.STUNNED: False,
-            Effect.ENTANGLED: False,
-            Effect.CONFUSED: False
+            State.DAZED: False,
+            State.STUNNED: False,
+            State.ENTANGLED: False,
+            State.CONFUSED: False
         }
 
     ##############
@@ -131,25 +131,32 @@ class Fighter:
     @property
     def modded_dmg_potential(self):
         """
-        Returns the fighter's modded damage potential, taking it's presence and the current moveset-stance's multiplier
-        into account
+        Returns the fighter's modded damage potential, taking all possible modifiers into account.
+        Only the average value between all modifiers is applied.
 
         :return: (min/max damage)
         :rtype: tuple
         """
-        w_mod = 1
-        p_mod = 1
+        mod = 1
+        modifiers = []
 
+        # Moveset modifiers #
         if self.active_weapon is not None:
-            w_mod = self.active_weapon.moveset.dmg_multipl
+            modifiers.append(self.active_weapon.moveset.dmg_multipl)
 
-        if self.effects[Effect.DAZED]:
-            p_mod = status_modifiers_data[Effect.DAZED]['dmg_multipl']
+        # Status effects #
+        for state, active in self.effects.items():
+            if active:
+                modifiers.append(status_modifiers_data[state].get('dmg_multipl',1))
 
-        if self.effects[Effect.STUNNED]:
-            p_mod = status_modifiers_data[Effect.STUNNED]['dmg_multipl']
+        # Surrounded modifiers #
+        modifiers.append(status_modifiers_data[self.surrounded].get('dmg_multipl',1))
 
-        return (round(self.base_dmg_potential[0] * w_mod * p_mod), round(self.base_dmg_potential[-1] * w_mod * p_mod))
+        # Calculate average modifier
+        if len(modifiers) > 0:
+            mod = sum(modifiers)/len(modifiers)
+
+        return (round(self.base_dmg_potential[0] * mod), round(self.base_dmg_potential[-1] * mod))
 
     @property
     def dmg_roll(self):
@@ -169,17 +176,19 @@ class Fighter:
     
     @property
     def modded_defense(self):
-        modded_def = self.defense
-        if self.effects[Effect.DAZED]:
-            modded_def *= status_modifiers_data[Effect.DAZED]['av_multipl']
+        mod = 1
+        modifiers = []
+        for state, active in self.effects.items():
+            if active:
+                modifiers.append(status_modifiers_data[state].get('av_multipl',1))
 
-        if self.effects[Effect.STUNNED]:
-            modded_def *= status_modifiers_data[Effect.STUNNED]['av_multipl']
+        modifiers.append(status_modifiers_data[self.surrounded].get('av_multipl',1))
 
-        if self.surrounded != Surrounded.FREE:
-            modded_def *= status_modifiers_data[self.surrounded]['av_multipl']
+        # Calculate average modifier
+        if len(modifiers) > 0:
+            mod = sum(modifiers) / len(modifiers)
 
-        return round(modded_def)
+        return round(self.defense * mod)
 
     @property
     def modded_block_def(self):
@@ -247,6 +256,7 @@ class Fighter:
         else:
             return Surrounded.OVERWHELMED
 
+
     # GUI-related functions #
     # These all use current percentages of hp/stamina to pass a string or color on to the GUI.
 
@@ -302,12 +312,12 @@ class Fighter:
             return {'message': message}
         return {}
 
-    def set_presence(self, presence:Effect, value:int, duration:int=0):
-        self.effects[presence] = value
+    def set_effect(self, state:State, value:bool, duration:int=0):
+        self.effects[state] = value
         if duration > 0: # If duration > 0, set a plan to disable the current presence in n turns
             self.owner.actionplan.add_to_queue(execute_in=duration,
-                                               planned_function=self.set_presence,
-                                               planned_function_args=(presence, False))
+                                               planned_function=self.set_effect,
+                                               planned_function_args=(state, False))
 
     def toggle_weapon(self):
         if (self.weapon_melee is not None and self.weapon_ranged is not None):
@@ -400,7 +410,7 @@ class Fighter:
                     message = Message(f'The {self.owner.name_with_color} blocks your attack, dazing you!',
                                       category=MessageCategory.COMBAT, type=MessageType.COMBAT_BAD)
 
-                self.set_presence(Effect.DAZED, True, 1)
+                self.set_effect(State.DAZED, True, 1)
                 results.append({'message': message})
         else:
             results.extend(self.attack_execute(target, attack_power, verb))

@@ -1,5 +1,6 @@
 import logging
 
+from components.actors.fighter_util import State
 from components.skills.baseSkill import BaseSkill
 from config_files import colors
 from game import Game
@@ -128,6 +129,8 @@ class SkillEntangle(BaseSkill):
     def execute(self, target:Entity, game:Game, **kwargs):
         results = []
         user = self.owner
+        duration = kwargs.get('duration',0)
+        target.fighter.set_effect(State.ENTANGLED, True, duration)
         results.append({'message': Message(f'The {user.name} wraps itself around {target.name}!', category=MessageCategory.OBSERVATION,
                                            type=MessageType.COMBAT)})
         return results

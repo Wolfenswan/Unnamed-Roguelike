@@ -7,8 +7,8 @@ class Stance(Enum):
     BLOCKING = auto()
 
 
-class Effect(Enum):
-    NORMAL = auto()
+class State(Enum):
+    #NORMAL = auto()
     DAZED = auto()
     STUNNED = auto()
     ENTANGLED = auto()
