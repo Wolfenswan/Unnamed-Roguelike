@@ -138,13 +138,11 @@ def print_string(con, x, y, string, color=None, fgcolor=colors.white, bgcolor=co
     """
 
     #logging.debug(f'Printing {string}')
-    #tcod.console_print_ex(con, x, y, background, alignment, string % )
     color_coded_words = COLOR_WRAP_PATTERN.findall(string)
 
     col_ctrls = ()
 
     if color_coded_words:
-        #print(color_coded_words.groups())
         for i, word in enumerate(color_coded_words):
             color_code = color_code_pattern.match(word)
             if color_code.group(1)[0:5] == 'Color': # if the string is wrapped as %Color(int,int,int)%String%%
@@ -168,15 +166,9 @@ def print_string(con, x, y, string, color=None, fgcolor=colors.white, bgcolor=co
         tcod.console_set_color_control(tcod.COLCTRL_1, color, bgcolor)
         col_ctrls = (tcod.COLCTRL_1, tcod.COLCTRL_STOP)
 
-    if string[0:2] == '%c':  # TODO Workaround for https://github.com/libtcod/python-tcod/issues/71
-        string = string.replace('%c', ' %c', 1)
-        if x > 0:
-            x -= 1
     string = string % col_ctrls
 
     if fgcolor and color_coefficient:
         fgcolor = tuple(int(color_coefficient * x) for x in fgcolor)
 
-    #con.default_fg = fgcolor # TODO can probably be deleted
     con.print(x, y, string, fg=fgcolor, alignment=alignment, bg_blend=background)
-    #con.default_fg = tcod.white
