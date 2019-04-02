@@ -12,6 +12,7 @@ from rendering.util_functions import draw_console_borders, pos_on_screen
 
 
 def render_all(game, fov_map, debug=False):
+
     render_map_screen(game, fov_map, debug=debug)
     render_panels(game)
 
@@ -20,8 +21,6 @@ def render_all(game, fov_map, debug=False):
 
     tcod.console_flush()
 
-    clear_all(game.root, game.entities)
-
 
 def render_map_screen(game, fov_map, debug=False):
     con = game.map_panel
@@ -29,7 +28,6 @@ def render_map_screen(game, fov_map, debug=False):
 
     # Render game map #
     con.clear()
-    #tcod.console_clear(con)
     render_map_centered_on_player(game, con, fov_map, debug=debug)
 
     # Draw all entities #
@@ -42,7 +40,8 @@ def render_map_screen(game, fov_map, debug=False):
 
     draw_console_borders(con ,color=colors.white)
     #game.con.blit(game.map_panel, width=cfg.MAP_SCREEN_WIDTH, height=cfg.MAP_SCREEN_HEIGHT)
-    tcod.console_blit(con, 0, 0, cfg.MAP_SCREEN_WIDTH, cfg.MAP_SCREEN_HEIGHT, 0, 0, 0)
+    con.blit(game.root, 0, 0, 0, 0, cfg.MAP_SCREEN_WIDTH, cfg.MAP_SCREEN_HEIGHT)
+    #tcod.console_blit(con, 0, 0, cfg.MAP_SCREEN_WIDTH, cfg.MAP_SCREEN_HEIGHT, 0, 0, 0)
 
 
 def render_map_centered_on_player(game, con, fov_map, debug=False):
@@ -97,11 +96,12 @@ def draw_entity(game, con, entity, fov_map, debug=False):
                 tcod.console_set_char_background(con, x, y, entity.color_bg)
 
 
-def clear_entity(con, entity):
-    # erase the character that represents this object
-    tcod.console_put_char(con, entity.x, entity.y, ' ', tcod.BKGND_NONE)
-
-
-def clear_all(con, entities):
-    for entity in entities:
-        clear_entity(con, entity)
+# Probably obsolete code
+# def clear_entity(con, entity):
+#     # erase the character that represents this object
+#     tcod.console_put_char(con, entity.x, entity.y, ' ', tcod.BKGND_NONE)
+#
+#
+# def clear_all(con, entities):
+#     for entity in entities:
+#         clear_entity(con, entity)

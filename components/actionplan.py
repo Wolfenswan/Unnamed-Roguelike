@@ -76,6 +76,9 @@ class Actionplan:
         """
         results = []
 
+        for v in self.planned_queue:
+            v['execute_in'] -= 1
+
         execute_plans = [v for v in self.planned_queue if v['execute_in'] == 0]
         if execute_plans:
             for plan in execute_plans:
@@ -84,9 +87,6 @@ class Actionplan:
                 self.planned_queue.remove(plan)
 
             logging.debug(f'Planned queue after executing plan(s): {self.planned_queue}')
-
-        for v in self.planned_queue:
-            v['execute_in'] -= 1
 
         return results
 

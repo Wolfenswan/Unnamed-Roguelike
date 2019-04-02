@@ -83,7 +83,7 @@ spawn_data = {
         Key.MAX_HP: (20, 28),
         Key.MAX_STAMINA: (100, 100),
         Key.BASE_ARMOR: (4, 5),
-        Key.BASE_STRENGTH: (12, 12),
+        Key.BASE_STRENGTH: (8, 10),
         Key.LOADOUT: {
             Key.EQUIPMENT:{
                 'ins_claws':{
@@ -145,8 +145,8 @@ spawn_data = {
         Key.DESCR: 'The criss-crossing movement via its plethora of legs masks its impressive length.',
         Key.MAX_HP: (20,30),
         Key.MAX_STAMINA: (100,100),
-        Key.BASE_ARMOR: (2,3),
-        Key.BASE_STRENGTH: (6,10),
+        Key.BASE_ARMOR: (1,3),
+        Key.BASE_STRENGTH: (3,5),
         Key.LOADOUT: {
             Key.EQUIPMENT:{'ins_mandibles':{}},
             Key.BACKPACK:{}

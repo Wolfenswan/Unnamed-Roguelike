@@ -16,6 +16,7 @@ def find_ent_position(room, data, game, allow_exits=True, exclusive=False):
             logging.debug(f'No wall positions found in {room}')
         return pos
     elif blocks.get(BlockLevel.WALK, False):
+        allow_exits = False
         free_tiles = room.free_tiles(game, allow_exits=allow_exits, filter=(BlockLevel.WALK, BlockLevel.FLOOR))
     else:
         #pos = room.ranpos(game_map) # This is faster but can cause bugs with items created on blocking objects

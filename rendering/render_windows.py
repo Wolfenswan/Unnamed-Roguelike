@@ -23,7 +23,7 @@ def set_window_on_screen(window_x, window_y, width, height):
     return window_x, window_y
 
 
-def draw_window(title, body, options:Optional[List]=None,
+def draw_window(title, body, game, options:Optional[List]=None,
                 window_x:Optional[int]=None, window_y:Optional[int]=None, padding_x:Optional[int]=2, padding_y:Optional[int]=2,
                 sort_by = 'str', show_cancel_option=True, forced_width:Optional[int]=None, title_color=colors.white, options_colors=None, clear=True):
 
@@ -56,12 +56,11 @@ def draw_window(title, body, options:Optional[List]=None,
         height += len(options) + padding_y
 
     # Create the window #
-    window = tcod.console_new(width, height)
+    window = tcod.console.Console(width, height)
 
     # Print the body to the window #
     y = padding_y
     for i, line in enumerate(body_wrapped):
-        #print_string(window, padding_x, y, line)
         print_string(window, padding_x, y, line)
         y += 1
         if line.count('\n') > 0:
@@ -89,13 +88,12 @@ def draw_window(title, body, options:Optional[List]=None,
     tcod.console_put_char(window, padding_x+len(title)+1, 0, tcod.CHAR_TEEE)
 
     if show_cancel_option:
-        # print_string(window, 0, height - 1, '<ESC TO CANCEL>')
         string = '<ESC TO CANCEL>'
         x = center_x_for_text(width, string)
         print_string(window, x, height - 1, string)
 
     window_x, window_y = set_window_on_screen(window_x, window_y, width, height)
-    tcod.console_blit(window, 0, 0, width, height, 0, window_x, window_y, 1, 1)
+    window.blit(game.root, window_x, window_y, 0, 0, width, height,)
 
     tcod.console_flush()
 
@@ -114,7 +112,7 @@ def render_description_window(game):
         title = f'{ent.full_name}'
         body = ent.extended_descr(game)
 
-        draw_window(title, body, window_x=x, window_y=y, show_cancel_option=False, title_color=ent.color)
+        draw_window(title, body, game, window_x=x, window_y=y, show_cancel_option=False, title_color=ent.color)
 
 
 def render_equipment_window(equipment): # Experimental - Not implemented#

@@ -6,7 +6,7 @@ from gui.messages import Message, MessageType, MessageCategory
 def debug_menu(game):
     results = []
     choice = generic_options_menu('Debug Menu', 'Select Debug Option:',
-                                  ['Show full map', 'Invincible Player', 'Entity Debug Information', 'Spawn Monster', 'Spawn Item'], sort_by=1,
+                                  ['Show full map', 'Invincible Player', 'Entity Debug Information', 'Spawn Monster', 'Spawn Item'], game, sort_by=1,
                                   cancel_with_escape=True)
     if choice == 0:
         game.debug['map'] = not game.debug['map']
@@ -23,7 +23,7 @@ def debug_menu(game):
     elif choice == 3:
         # TODO make bodytype selectable
         options = list(NPC_DATA_MERGED.keys())
-        choice= generic_options_menu('Monster Spawning', 'Pick the monster to spawn. Enter to spawn, ESC to cancel.', options)
+        choice= generic_options_menu('Monster Spawning', 'Pick the monster to spawn. Enter to spawn, ESC to cancel.', options, game)
         if choice is not None:
             key = options[choice]
             results.append({'debug_menu_selection':key})
@@ -34,7 +34,7 @@ def debug_menu(game):
         options = list(ITEM_DATA_MERGED.keys())
         choice = generic_options_menu('Item Spawning',
                               'Pick the item to spawn. Enter to spawn, ESC to cancel.',
-                                      options)
+                                      options, game)
         if choice is not None:
             key = options[choice]
             results.append({'debug_menu_selection': key})

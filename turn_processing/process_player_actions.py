@@ -10,7 +10,7 @@ from data.data_types import ItemType
 from game import GameState
 from gameobjects.util_functions import entity_at_pos
 from gui.manual import display_manual
-from gui.menus import item_menu,  generic_options_menu, item_list_menu
+from gui.menus import item_menu, generic_options_menu, item_list_menu, test_menu
 from debug.menu import debug_menu
 from gui.messages import Message, MessageType, MessageCategory
 from loader_functions.data_loader import save_game
@@ -62,7 +62,8 @@ def process_player_input(action, game, last_turn_results:Optional[Dict]):
             game.state = GameState.PLAYERS_TURN
         else:
             if player.fighter.hp > 0:
-                choice = generic_options_menu('Quit Game', 'Do you want to quit the game?', ['Save & Quit', 'Just Quit'], sort_by=1, cancel_with_escape=True)
+                #test_menu(game)
+                choice = generic_options_menu('Quit Game', 'Do you want to quit the game?', ['Save & Quit', 'Just Quit'], game, sort_by=1, cancel_with_escape=True)
                 if choice == 0:
                     save_game(game)
                     return False
@@ -253,16 +254,16 @@ def process_inventory_interaction(game, prepare):
 
     if game.state == GameState.SHOW_INVENTORY:
         if not prepare:
-            selected_item_ent = item_list_menu(player, player.inventory)
+            selected_item_ent = item_list_menu(player, player.inventory, game)
         else:
-            selected_item_ent = item_list_menu(player, player.inventory.useable_items, body='Prepare which item?')
+            selected_item_ent = item_list_menu(player, player.inventory.useable_items, game, body='Prepare which item?')
 
     elif game.state == GameState.SHOW_EQUIPMENT:
         #render_equipment_window(player.paperdoll.equipped_items, game)
-        selected_item_ent = item_list_menu(player, player.paperdoll.equipped_items, title='Equipment')
+        selected_item_ent = item_list_menu(player, player.paperdoll.equipped_items, game, title='Equipment')
 
     elif game.state == GameState.SHOW_QU_INVENTORY:
-        selected_item_ent = item_list_menu(player, player.qu_inventory, title='Prepared Items')
+        selected_item_ent = item_list_menu(player, player.qu_inventory, game, title='Prepared Items')
 
     if game.state in [GameState.SHOW_INVENTORY, GameState.SHOW_QU_INVENTORY, GameState.SHOW_EQUIPMENT]:
         if selected_item_ent:

@@ -47,13 +47,10 @@ def menu_loop(wait_for=None, cancel_with_escape=True, sort_by:Union[int,str]='st
                 return key.vk
 
 
-def generic_options_menu(title:str, body:str, options:list, sort_by:Union[str, int]='str', cancel_with_escape=True):
-    window = draw_window(title, body, options, show_cancel_option=cancel_with_escape, sort_by=sort_by)
+def generic_options_menu(title:str, body:str, options:list, game, sort_by:Union[str, int]='str', cancel_with_escape=True):
+    window = draw_window(title, body, game, options, show_cancel_option=cancel_with_escape, sort_by=sort_by)
 
     choice = menu_loop(wait_for=len(options), sort_by=sort_by, cancel_with_escape=cancel_with_escape)
-
-    tcod.console_delete(window)
-    tcod.console_flush()
 
     return choice
 
@@ -65,14 +62,14 @@ def yesno_menu(title, body, game):
     options = ['(Y)es', '(N)o']
     wait_for = ['y', 'n']
 
-    draw_window(title, body, options, window_x=x, window_y=y, forced_width=len(body), sort_by=None)
+    draw_window(title, body, game, options, window_x=x, window_y=y, forced_width=len(body), sort_by=None)
 
     choice = menu_loop(wait_for=wait_for)
 
     return True if choice == 'y' else False
 
 
-def item_list_menu(entity, item_list, title='Inventory', body='Press the key next to an item to select it.', colorize_options=True):
+def item_list_menu(entity, item_list, game, title='Inventory', body='Press the key next to an item to select it.', colorize_options=True):
     # TODO add optional filter
     # TODO allow cycling through filters
 
@@ -86,7 +83,7 @@ def item_list_menu(entity, item_list, title='Inventory', body='Press the key nex
 
     width = len(max(options, key=len)) + 4 if options else 0
 
-    draw_window(title, body, options=options, window_x=x, window_y=y, forced_width=width, options_colors=options_colors)
+    draw_window(title, body, game, options=options, window_x=x, window_y=y, forced_width=width, options_colors=options_colors)
 
     choice = menu_loop(wait_for=len(options))
 
@@ -135,7 +132,7 @@ def item_menu(item_ent, game):
         wait_for.append('d')
 
     width = min(len(body), round(cfg.SCREEN_WIDTH//2.5))
-    draw_window(title, body, options=options, window_x=x, window_y=y, sort_by=None, forced_width=width, title_color=item_ent.color)
+    draw_window(title, body, game, options=options, window_x=x, window_y=y, sort_by=None, forced_width=width, title_color=item_ent.color)
 
     choice = menu_loop(wait_for=wait_for)
 
@@ -144,14 +141,14 @@ def item_menu(item_ent, game):
 
 def options_menu(game):
     choice = generic_options_menu('Game Options', '',
-                                  options=['Toggle Fullscreen', 'Change Font', f'{"Disable" if game.debug else "Enable"} Debug [TBA]'],
+                                  ['Toggle Fullscreen', 'Change Font', f'{"Disable" if game.debug else "Enable"} Debug [TBA]'], game,
                                   sort_by=1)
     if choice == 0:
         tcod.console_set_fullscreen(not tcod.console_is_fullscreen())
     elif choice == 1:
         available_fonts = all_fonts()
         font_id = generic_options_menu('Font Selection', f'Default font:\n{cfg.FONT_DEFAULT.capitalize()}',
-                                      options=available_fonts,
+                                      available_fonts, game,
                                       sort_by=1)
         if font_id is not None:
             initialize_font(available_fonts[font_id])
@@ -167,10 +164,18 @@ def options_menu(game):
 
 def main_menu(game):
     choice = generic_options_menu(cfg.GAME_NAME, 'Welcome to the Dungeon',
-                                  options=['Play a new game', 'Continue last game', 'Game Options', 'Quit'], cancel_with_escape=False,
+                                    ['Play a new game', 'Continue last game', 'Game Options', 'Quit'], game, cancel_with_escape=False,
                                   sort_by=1)
     if choice == 2:
         options_menu(game)
         tcod.console_flush()
     else:
         return choice
+
+
+def test_menu(game):
+
+    window = tcod.console.Console(10, 10)
+    window.blit(game.root, 50, 50, 0, 0, 10, 10, key_color=(90,90,90))
+    tcod.console_flush()
+    choice = menu_loop(wait_for=2, sort_by=1, cancel_with_escape=True)
