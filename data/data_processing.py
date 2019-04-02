@@ -27,7 +27,7 @@ from data.actor_data.act_bodytypes import bodytype_data
 from data.shared_data.quality_mod import qual_cond_data, qual_craft_data
 from data.data_types import GenericType, Condition, RarityType, BodyType, Material, Craftsmanship
 from data.shared_data.material_mod import item_material_data
-from data.item_data.use_potions import use_potions_data
+from data.item_data.use_potions import use_potions_data, use_potions_variants_data
 from data.gui_data.cond_strings import cond_descr_data
 from data.shared_data.rarity_mod import rarity_values
 from debug.timer import debug_timer
@@ -48,7 +48,7 @@ def merge_dictionaries(dicts):
     return merged_dict
 
 
-item_data = [use_potions_data, use_bombs_data, equ_creature_data, equ_weapon_data, equ_armor_data, equ_offhand_data]
+item_data = [use_potions_data, use_potions_variants_data, use_bombs_data, equ_creature_data, equ_weapon_data, equ_armor_data, equ_offhand_data]
 ITEM_DATA_MERGED = merge_dictionaries(item_data)
 
 npc_data = [spawn_data]
@@ -150,9 +150,6 @@ def get_generic_args(data:Dict, material:Material=None, condition:Condition=None
                     descr += f" (Description missing for {material[Key.TYPE]}/{craftsmanship[Key.TYPE]})"
 
     if bodytype and bodytype[Key.TYPE].name != 'NORMAL':
-        # name = (f'{bodytype["type"].name} ' + name).title()
-        # TODO extra description
-
         # Tweak the color slightly to indicate enemy type #
         # TODO Tweak as necessary
         # if bodytype[Key.TYPE] == BodyType.SCRAWNY:

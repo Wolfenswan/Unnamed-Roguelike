@@ -81,7 +81,7 @@ class Inventory:
         inventory = self.owner.inventory
         qu_inventory = self.owner.qu_inventory
 
-        if item in qu_inventory and not inventory.is_full:
+        if item in qu_inventory.items and not inventory.is_full:
             qu_inventory.remove(item)
             inventory.add(item)
             results.append({

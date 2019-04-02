@@ -158,7 +158,4 @@ spawn_data = {
         Key.DLVLS: (1, 100),
         Key.RARITY: RarityType.UNCOMMON
     },
-    '' : {
-
-    },
 }

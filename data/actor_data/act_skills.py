@@ -32,6 +32,7 @@ skill_generic_slam = {
 
 skill_explode_self = {
     Key.SKILL: SkillExplodeSelf,
+    Key.NAME : 'Explode',
     Key.ACTIVATE_CONDITIONS : {SkillCondition.distance_to},
     Key.ACTIVATE_CONDITION_KWARGS: {'min_dist': 1, 'max_dist': 5},
     Key.ON_ACTIVATE_KWARGS: {'delay':4, 'radius':4, 'pwr':(20,30)},

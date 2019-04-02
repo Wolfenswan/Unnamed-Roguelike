@@ -36,6 +36,13 @@ arch_static_data = {
         Key.WALLS_ONLY: True,
         Key.COLOR: colors.dark_amber
     },
+    'chains': {
+        Key.NAME: 'Chains',
+        Key.DESCR: 'Rusted chains, caked in dried liquids.',
+        Key.CHAR: '%',
+        Key.WALLS_ONLY: True,
+        Key.COLOR: colors.dark_gray
+    },
     'portal': {
         Key.NAME: 'Portal',
         Key.DESCR: 'TODO Portal',

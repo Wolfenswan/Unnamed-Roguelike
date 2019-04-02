@@ -90,7 +90,13 @@ class Entity:
         self.statistics.owner = self
 
     def __repr__(self):
-        return f'{self.name}:{id(self)} at {self.pos}'
+        string = f'{self.name}:{id(self)}'
+        if self.pos != (0, 0):
+            string += f'at {self.pos}'
+        return string
+
+    def __eq__(self, other):
+        return id(self) == id(other)
 
     ###############################
     # ATTRIBUTE RELATED FUNCTIONS #

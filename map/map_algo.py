@@ -166,7 +166,7 @@ class DrunkWalk:
             direction = "west"
 
         # ==== Walk ====
-        # check colision at edges
+        # check collision at edges
         if (0 < self.drunkardX + dx < mapWidth - 1) and (0 < self.drunkardY + dy < mapHeight - 1):
             self.drunkardX += dx
             self.drunkardY += dy

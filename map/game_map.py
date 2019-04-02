@@ -54,7 +54,7 @@ class GameMap:
 
 
     def color_area(self, color):
-        """ Simple function to colorize an area of the map """
+        """ Simple function to colorize an area of the map to emulate Biomes """
         rand_x = randint(2, self.width - 2)
         rand_y = randint(2, self.height - 2)
         tile = self.tiles[rand_x, rand_y]

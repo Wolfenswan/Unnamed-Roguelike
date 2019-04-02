@@ -142,9 +142,9 @@ def item_menu(item_ent, game):
     return choice
 
 
-def options_menu():
+def options_menu(game):
     choice = generic_options_menu('Game Options', '',
-                                  options=['Toggle Fullscreen', 'Change Font'],
+                                  options=['Toggle Fullscreen', 'Change Font', f'{"Disable" if game.debug else "Enable"} Debug [TBA]'],
                                   sort_by=1)
     if choice == 0:
         tcod.console_set_fullscreen(not tcod.console_is_fullscreen())
@@ -155,19 +155,22 @@ def options_menu():
                                       sort_by=1)
         if font_id is not None:
             initialize_font(available_fonts[font_id])
+    elif choice == 2:
+        pass
+        # game.debug = not game.debug
 
     # Unless menus was exited with ESC, the menu remains open
     if choice is not None:
         tcod.console_flush()
-        options_menu()
+        options_menu(game)
 
 
-def main_menu():
+def main_menu(game):
     choice = generic_options_menu(cfg.GAME_NAME, 'Welcome to the Dungeon',
                                   options=['Play a new game', 'Continue last game', 'Game Options', 'Quit'], cancel_with_escape=False,
                                   sort_by=1)
     if choice == 2:
-        options_menu()
+        options_menu(game)
         tcod.console_flush()
     else:
         return choice

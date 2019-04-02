@@ -2,7 +2,7 @@
 """ Constant variables """
 import tcod
 
-DEBUG = True
+DEBUG = False
 GAME_NAME = 'RoguelikeTutReloaded'
 
 # Console
@@ -40,7 +40,7 @@ CONTAINER_ROOM_DIVISOR = 30 # room width * room height // this
 
 # STATIC OBJECT SETTINGS #
 #SOBJECTS_DUNGEON_FACTOR = 5 # total rooms times this (UNUSED)
-SOBJECTS_ROOM_DIVISOR = 50  # room width * room height // this
+SOBJECTS_ROOM_DIVISOR = 20  # room width * room height // this
 
 # GUI PANELS
 # PANELS_BORDER_COLOR = colors.dark_grey

@@ -1,29 +1,34 @@
+from dataclasses import dataclass
+
 from config_files import colors
 from rendering.util_functions import multiply_rgb_color
 
-# TODO dataclass
+@dataclass
 class Tile:
     """
     A tile on a map. It may or may not be blocked, and may or may not block sight.
     """
-    def __init__(self, blocked, x, y, block_sight=None, block_walk = None, block_projectile=None):
-        self.blocked = blocked
-        self.x, self.y = x, y
+    blocked : bool
+    x : int
+    y : int
+    block_sight : bool = None
+    block_walk : bool = None
+    block_projectile : bool = None
+
+    def __post_init__(self):
         self.char = chr(178)
+        self.fg_color = colors.stone
+        self.explored = 0
 
         # By default, if a tile is blocked, it also blocks sight
-        if block_sight is None:
-            self.block_sight = blocked
+        if self.block_sight is None:
+            self.block_sight = self.blocked
 
-        if block_walk is None:
-            self.walkable = not blocked
+        if self.block_walk is None:
+            self.walkable = not self.blocked
 
-        if block_projectile is None:
-            self.block_projectile = not blocked
-
-        self.fg_color = colors.stone
-
-        self.explored = 0
+        if self.block_projectile is None:
+            self.block_projectile = not self.blocked
 
     @property
     def pos(self):

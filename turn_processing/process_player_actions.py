@@ -112,10 +112,7 @@ def process_player_interaction(game, action):
             target = entity_at_pos(game.walk_blocking_ents, destination_x, destination_y)
 
             if target is None and interact:  # Check for non-blocking interactable objects
-                # print(len(game.interactable_ents))
-                # print(game.interactable_ents)
                 target = entity_at_pos(game.interactable_ents, destination_x, destination_y)
-                # target = game.interactable_entity_at_pos(destination_x, destination_y)
 
             if target:
                 if player.can_attack is False:
@@ -217,11 +214,13 @@ def process_player_interaction(game, action):
 
     # Inventory display #
     if show_inventory or prepare:
-        if len(player.inventory) > 0:
+        if show_inventory and len(player.inventory) == 0:
+            Message('Your inventory is empty.', category=MessageCategory.OBSERVATION).add_to_log(game)
+        elif prepare and len(player.inventory.useable_items) > 0:
+            Message('You have no items to prepare.', category=MessageCategory.OBSERVATION).add_to_log(game)
+        else:
             game.previous_state = game.state
             game.state = GameState.SHOW_INVENTORY
-        else:
-            Message('Your inventory is empty.', category=MessageCategory.OBSERVATION).add_to_log(game)
 
     if show_prepared:
         if len(player.qu_inventory) > 0:

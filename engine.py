@@ -117,7 +117,7 @@ if __name__ == '__main__':
 
 
     while True:
-        start_game = main_menu()
+        start_game = main_menu(game)
 
         if start_game == 0:
             game = initialize_game(game)
