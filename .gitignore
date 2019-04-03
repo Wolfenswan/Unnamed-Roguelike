@@ -60,4 +60,4 @@ venv.bak/
 /venv_win/
 /venv_linux/
 venv_start.bat
-/docs/*
+/docs/
