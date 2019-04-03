@@ -14,7 +14,7 @@ class Architecture:
 
 
     @staticmethod
-    def use_stairs(interacting_ent, arch_entity, game):
+    def change_level(interacting_ent, arch_entity, game):
         if arch_entity.char == '>':
             results = [{'level_change': 1},]
         else:

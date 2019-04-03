@@ -1,0 +1,184 @@
+Bugs/Known Issues:
+- qu items are not moved to inventory when removing equipment with qu slots?
+- hitting additional targets ignores their blocking status
+- menus dont close when exited -> overlapping menus
+- odd bug when switching to Cheepicus_8x8x2.png from any other font (background not fully black)
+- containers can be placed on doors -> doors are displayed above barrel
+- odd black spots when opening menus (rendering related?)
+- after using stairs, lctrl keeps registering as 'pressed' (despite not being pressed)
+    - pressing lctrl resets key handling properly
+    - change to </> to use stairs?
+
+
+PEP Reminders
+- @classmethod when interacting with the class itself
+- use else after for loop if loop is supposed to be interrupted by break or return
+- use zip() when iterating through two lists
+- f'' supports evaluations: f'{True if 0 > 10 else False'}' -> False
+- isinstance() when checking type
+
+TESTING:
+- Case1 in Actionplan (existing exclusive plan)
+
+CURRENT
+- Monster generator (destroyable)
+    - different generator for each monster?
+
+
+UPCOMING
+- Ent Placement
+    - Implement the 'exclusive' switch to find_end_position to make sure e.g. chests and barrels are on their own
+- Basic Goals
+    - Generate "goal architecture" (at the lowest level?) (pre-fab rooms later)
+        - needs to be destroyed with black powder bomb
+    - Queen Boss (immobile, but ranged attack? lays eggs?)
+        - randomized special ability (e.g. shield to protect from bombs)
+    - Items to retrieve (take up spot in inventory)
+    - has to return to portal?
+- AI Skill
+    - add a randomized aspect when deciding on a cooled down skill
+    - add a smart check to make sure no exclusive skills exist at the same delay (??)
+- Enemies:
+    - Smash-attack:
+        - Throws 1 spot back (x-tra damage if thrown against wall?)
+        - Stuns/Dazes for 1 turn?
+        - maybe make seperate throw attack
+    - "Suicide": Maybe also add a charge ability, only to be used after its set to explode?
+        - add new skill condition: other skill on cooldown/no other skill available
+    - "Bombardier" (lobs grenade-like projectile)
+    - "Cone": Attacks with cone (can teamkill etc.) (Fire ant?)
+    - "Louse": Same as roach, but makes a simple 'hop' every few turns (essentially teleporting 2 steps, can jump over others)
+    - "creepy crawlies": cover the floor, need to targeted with fire or AoE
+- GUI work
+    - messages displaying same information should be merged (using counters: 'x2')
+    - Highlight "you" in messages with white color
+    Manual
+        - Dynamic scrolling, instead of predefined pages
+    Menus
+        - allow pages in menus, change via left/right or up/down
+- new static object: steel fence with portcullis halving a room
+    - does block walk but not sight/projectile
+Light sources
+    - add light_source component to entity
+    - if range of light_source is in player's FOV, add that area to FOV
+Movesets
+    - atm further targets take flat half damage (add new modifier to moveset)
+    - new weapon: bo-dachi or similar (hits front & back, twirls)
+    - new weapon: two-hander
+Dungeon
+    - map generation takes dlvl into account (dungeon only, dungeon + caves etc., biomes etc)
+    - entity placement takes dlvl into account (chance for stronger mobs etc.)
+
+
+New Concept Ideas:
+Player Skill
+    - TONGUE (Antlion/Chameleon)
+- Monster Generators
+    - specified objects in walls/floors to spawn on non-explored/non-visible tiles
+    - capped by total monster limit
+    - interactable/destroyable? (With specific items?)
+- Health
+    - Instant Heal potions are very rare
+    - Herbs or others can be used outside of combat to promote regeneration(instant heal?)
+    - Bigger wounds > More Herbs used
+    - Maybe add "herbal pouch" similar to Water bag?
+- Water
+    - Carry permanent item to store water
+    - Can be refilled at fresh water sources (fountains)
+    - Can be drunk to restore Stamina
+    - Can be drunk during combat if offhand is free.
+    - % filled indicated on player status panel
+- On Monster Death
+    - Drop Equipped/Carried Items
+    - drop a "loot bag" container instead of individual items to avoid clutter (deleted if empty)
+- AI
+    - Ravenous behavior: Will start consuming corpses in FOV
+- GUI
+    - draw ent description to enemy panel instead of popup?
+
+    - windows can remain open? see options_menu for example
+- MAP
+    - zig-zagging tunnels rather than only v then h or h then v
+- Puzzle-Room
+    - "Paint" with corpses
+
+Existing features:
+Blocking:
+    - Should blocking weapons be implemented?
+        - e.g. dueling dagger
+        - mostly just fluff
+        - All checks currently aim at shield/assume blocking is only possible with shield
+- Containers
+    - Reopen Inventory Window if container is not empty
+- Weapons
+    - add "head-weapon" (mandibles)
+Targeting
+    - add "target pos" to results list (so cursor will show at last target)
+- Fighting
+   - add attack_type to individual moves
+   - Should a block reduce the attacker's stamina by an additional ammount?
+   - can mantis ogre slam friendly fire?
+- Containers
+    - ability to add things to containers
+    - expand filters so they also accept material filters
+    - expand filters to restrict certain levels of craftsmanship/quality?
+Spawning
+    - set spawning chance in relation to dlvl (chance to spawn outside range, lower the further outside range)
+    - alternative dlvls = [(dlvl, weight), (dlvl, weight)] - from dlvl on have that weight
+Animation
+    - secondary console as overlay to only render animation-stuff
+MAP-Generation:
+    - djistraks algo to connect stairs as emergency measure?
+    - rather than one large drunk-walk, have a small drunk-walk for each generated room?
+Options-Window:
+    - switch to sort options next to each other instead of below/on top
+Menus:
+    - Add a 'popup'-switch; if True positioned next to player, else center-screen
+    - Or: Popup-next-to switch: passing an entity causes the popup next to the entity
+    - display items in more than one row (esp. inventory)
+Targeting:
+    - Cursor displays area of effect
+Skills:
+    - verbs defined as list in data (Key.VERBS), then randomly picked from in skill-function
+    - tweak skill usage conditions: pre-defined generic conditions, set as tuple of conditions in skills_data
+- Generation
+    - https://www.reddit.com/r/roguelikedev/comments/2y3rkg/faq_friday_7_loot/
+- play around with torch noise generation from libtcod sample file
+
+OPTIONAL
+Map
+    - river, crosses once through map (maybe with source)
+    - Biomes, different colored floors/walls, different dungeon algos (cave/dungeon) -> use data files
+on-death-trigger
+    - e.g. for entangling enemies: entanglement lasts until enemy is killed
+breaking free
+    - chance to break free from entanglement (compare actor strength? proc every turn with rising chance?)
+equipment screen
+    - display window for each paperdoll extremity
+    - windows only show item name and attributes (but not descr)
+    - selecting an item shows full info
+Fluff
+    - Killing monsters adds to melee_weapon description (blood covered)
+    - weapon counts enemies killed with it
+    - if gibs land on player, armor gets bloodied description
+    - different blood color
+- Smartify font selection:
+        - auto-create font list from parsing folder
+        - set default font in cfg
+        - add list to cfg defining which fonts use the rarer layout
+- Basic Character Selection
+    - Select class
+    - Enter Name (use libtcod name list for random selection)
+- Magic
+    - overcharge system (energy contimatination from inate powers?)
+    - hardly discharges on its own, needs to kill enemies to go faster?
+- Weapons
+    - ranged weapons
+        - blocking as usual?
+        - off-hand ranged melee_weapon like pistol (how to do dual-wield?)
+        - ammo: pouches on belt (optionally for armor?)
+        - quiver: part of backpack (new item!)
+- add "backpack" equipment-item that replaces the default inventory
+
+
+- Github issue Hexadecimal

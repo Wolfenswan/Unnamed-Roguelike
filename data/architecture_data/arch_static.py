@@ -62,7 +62,7 @@ arch_static_data = {
         Key.BLOCKS: {BlockLevel.SIGHT: False, BlockLevel.FLOOR: True},
         Key.RARITY: RarityType.UNIQUE,
         Key.RENDERING: RenderOrder.ALWAYS,
-        Key.ON_INTERACTION: Architecture.use_stairs
+        Key.ON_INTERACTION: Architecture.change_level
     },
     'stairs_up': {
         Key.NAME: 'Upward Stairs',
@@ -72,6 +72,6 @@ arch_static_data = {
         Key.BLOCKS: {BlockLevel.SIGHT: False, BlockLevel.FLOOR: True},
         Key.RARITY: RarityType.UNIQUE,
         Key.RENDERING: RenderOrder.ALWAYS,
-        Key.ON_INTERACTION: Architecture.use_stairs
+        Key.ON_INTERACTION: Architecture.change_level
     },
 }
