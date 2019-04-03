@@ -24,35 +24,35 @@ from turn_processing.process_turn_results import process_turn_results
 
 def game_loop(game):
     player = game.player
-    fov_map = game.fov_map
-
-    game.state = GameState.PLAYERS_TURN
-    game.previous_state = game.state
 
     targeting_item = None
     debug_spawn = None
+    fov_reset = False
     fov_recompute = True
     final_turn_results = {}
 
     key = tcod.Key()
     # mouse = tcod.Mouse()
 
+    game.fov_map = initialize_fov(game)
     recompute_fov(game, player.x, player.y)
     render_all(game, game.fov_map, debug=game.debug['map'])
 
-    if game.turn == 1 and game.debug is False:
+    if game.turn == 1 and game.debug['global'] is False:
         play_intro(game)
 
+    game.state = GameState.PLAYERS_TURN
+    game.previous_state = game.state
     while not tcod.console_is_window_closed():
         # tcod.sys_set_fps(30)
         # tcod.sys_check_for_event(tcod.EVENT_KEY_PRESS, key, '')
 
-        #
-
-        if fov_recompute:
+        if fov_reset:
+            game.fov_map = initialize_fov(game)
+        if fov_recompute or fov_reset:
             recompute_fov(game, player.x, player.y)
             fov_recompute = False
-        render_all(game, fov_map, debug=game.debug['map'])
+        render_all(game, game.fov_map, debug=game.debug['map'])
 
         # TODO new tcod.event system
         # action = False
@@ -77,7 +77,7 @@ def game_loop(game):
                 break
 
             # Process turn results #
-            processed_turn_results = process_turn_results(player_turn_results, game, fov_map)
+            processed_turn_results = process_turn_results(player_turn_results, game, game.fov_map)
             logging.debug(f'Turn {game.turn}. State: {game.state}. Processed results: {player_turn_results}')
 
             # Enemies take turns #
@@ -95,18 +95,20 @@ def game_loop(game):
             if processed_turn_results:
                 for turn_result in processed_turn_results:
                     fov_recompute = turn_result.get('fov_recompute', False)
+                    fov_reset = turn_result.get('fov_reset', False)
                     targeting_item = turn_result.get('targeting_item')
                     debug_spawn = turn_result.get('debug_spawn')
             else:
                 fov_recompute = False
-                # variables used for cursor-targeting are reset to None, once game state has changed back to the player control
+                fov_reset = False
+                # variables used for cursor-targeting are reset to None, once game state has changed back to player control
                 targeting_item = None if game.state == GameState.PLAYERS_TURN else targeting_item
                 debug_spawn = None if game.state == GameState.PLAYERS_TURN else debug_spawn
 
             final_turn_results = {'targeting_item': targeting_item,
                                   'debug_spawn': debug_spawn}
 
-            logging.debug(f'Ending turn {game.turn}. State: {game.state}. Recomputing FOV: {fov_recompute}')
+            logging.debug(f'Ending turn {game.turn}. State: {game.state}. FOV Reset/Recompute: {fov_reset}/{fov_recompute}')
 
 
 if __name__ == '__main__':
@@ -114,7 +116,6 @@ if __name__ == '__main__':
     game = Game(debug=cfg.DEBUG)
     initialize_font()
     initialize_window(game)
-
 
     while True:
         start_game = main_menu(game)
@@ -132,6 +133,5 @@ if __name__ == '__main__':
         elif start_game == 3:
             exit()
 
-    game.fov_map = initialize_fov(game)
     game_loop(game)
 

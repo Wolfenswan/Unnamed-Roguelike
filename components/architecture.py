@@ -12,14 +12,15 @@ class Architecture:
     def blocks_info(interacting_ent, arch_entity, game):
         return [{'message': Message(f'A {arch_entity.name} blocks your way.', category=MessageCategory.OBSERVATION)}]
 
+
     @staticmethod
-    def use_stairs(down):
-        if down:
-            # generate new dungeon level
-            pass
+    def use_stairs(interacting_ent, arch_entity, game):
+        if arch_entity.char == '>':
+            results = [{'level_change': 1},]
         else:
-            # retrieve old dungeon level
-            pass
+            results = [{'level_change': -1},]
+        return results
+
 
     @staticmethod
     def toggle_door(interacting_ent, door_ent, game):
@@ -52,7 +53,7 @@ class Architecture:
             results.append({'message':Message(f'The {container_ent.name} is empty.', category=MessageCategory.OBSERVATION)})
             # TODO ability to put things into container
         else:
-            selection = item_list_menu(container_ent, container_ent.inventory, title=f'{container_ent.name}')
+            selection = item_list_menu(container_ent, container_ent.inventory, game, title=f'{container_ent.name}')
             if selection:
                 if not interacting_ent.inventory.is_full:
                     results.append({'message':Message(f'You take the {selection.name} from the {container_ent.name}.', category=MessageCategory.OBSERVATION)})

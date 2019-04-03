@@ -7,16 +7,17 @@ from gameobjects.util_functions import entity_at_pos
 
 def initialize_fov(game):
     game_map = game.map
-    fov_map = tcod.map_new(game_map.width, game_map.height)
+    fov_map = tcod.map.Map(game_map.width, game_map.height)
 
     for x in range(game_map.width):
         for y in range(game_map.height):
-            tcod.map_set_properties(fov_map, x, y, not game_map.tiles[(x,y)].block_sight,
-                                       not game_map.tiles[(x,y)].blocked)
+            fov_map.transparent[y,x] = not game_map.tiles[(x,y)].block_sight
+            fov_map.walkable[y,x] = not game_map.tiles[(x,y)].blocked
+
             ent = entity_at_pos(game.sight_blocking_ents, x, y)
             if ent:
-                tcod.map_set_properties(fov_map, x, y, not ent.blocks.get(BlockLevel.SIGHT, False),
-                                        not ent.blocks.get(BlockLevel.WALK, False))
+                fov_map.transparent[y,x] = not game_map.tiles[(x, y)].block_sight
+                fov_map.walkable[y,x] = not game_map.tiles[(x, y)].blocked
 
     return fov_map
 
@@ -27,7 +28,7 @@ def recompute_fov(game, x, y):
     light_walls = cfg.FOV_LIGHT_WALLS
     radius = game.player.fighter.vision
 
-    tcod.map_compute_fov(game.fov_map, x, y, radius, light_walls, algorithm)
+    game.fov_map.compute_fov(x, y, radius, light_walls, algorithm)
 
 
 def darken_color_by_fov_distance(ent, color, x, y, randomness = 0, min=0.1):

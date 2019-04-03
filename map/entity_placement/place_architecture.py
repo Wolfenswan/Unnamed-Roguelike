@@ -1,5 +1,5 @@
 import logging
-from random import randint
+from random import randint, choice
 
 from config_files import cfg
 from data.architecture_data.arch_doors import arch_doors_data
@@ -9,7 +9,7 @@ from map.entity_placement.util_functions import find_ent_position
 
 
 @debug_timer
-def place_staticobjects(game):
+def place_generic_architecture(game):
     dlvl = game.dlvl
     game_map = game.map
     entities = game.entities
@@ -34,6 +34,33 @@ def place_staticobjects(game):
             if pos:
                 arch = gen_architecture(data, *pos)
                 entities.append(arch)
+
+
+@debug_timer
+def place_special_architecture(game):
+    # Portal #
+    if game.dlvl == 1:
+        if game.turn == 1:
+            pos = game.map.rooms[0].center
+        else:
+            room = choice(game.map.rooms[1:-1])
+            pos = find_ent_position(room, ARCHITECTURE_DATA_MERGED['stairs_down'], game)
+        p = gen_architecture(ARCHITECTURE_DATA_MERGED['portal'], *pos)
+        game.entities.append(p)
+
+    # Upward stairs #
+    if game.dlvl > 1:
+        pos = game.map.rooms[0].center
+        s = gen_architecture(ARCHITECTURE_DATA_MERGED['stairs_up'], *pos)
+        game.entities.append(s)
+
+    # Downward Stairs #
+    #room = game.map.rooms[0]
+    room = choice(game.map.rooms[1:-1])
+    pos = find_ent_position(room, ARCHITECTURE_DATA_MERGED['stairs_down'], game)
+    s = gen_architecture(ARCHITECTURE_DATA_MERGED['stairs_down'], *pos)
+    game.entities.append(s)
+
 
 @debug_timer
 def place_doors(game):

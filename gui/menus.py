@@ -173,9 +173,9 @@ def main_menu(game):
         return choice
 
 
-def test_menu(game):
-
-    window = tcod.console.Console(10, 10)
-    window.blit(game.root, 50, 50, 0, 0, 10, 10, key_color=(90,90,90))
-    tcod.console_flush()
-    choice = menu_loop(wait_for=2, sort_by=1, cancel_with_escape=True)
+# def test_menu(game):
+#
+#     window = tcod.console.Console(10, 10)
+#     window.blit(game.root, 50, 50, 0, 0, 10, 10, key_color=(90,90,90))
+#     tcod.console_flush()
+#     choice = menu_loop(wait_for=2, sort_by=1, cancel_with_escape=True)

@@ -10,7 +10,7 @@ from data.data_types import ItemType
 from game import GameState
 from gameobjects.util_functions import entity_at_pos
 from gui.manual import display_manual
-from gui.menus import item_menu, generic_options_menu, item_list_menu, test_menu
+from gui.menus import item_menu, generic_options_menu, item_list_menu
 from debug.menu import debug_menu
 from gui.messages import Message, MessageType, MessageCategory
 from loader_functions.data_loader import save_game
@@ -178,7 +178,7 @@ def process_player_interaction(game, action):
         if items:
             # Option menu is displayed if > 1 item is on the ground
             choice = items[0] if len(items) == 1 else \
-                item_list_menu(player, items, title='Select Item', body='Pick up which item?')
+                item_list_menu(player, items, game, title='Select Item', body='Pick up which item?')
             if choice is not None:
                 pickup_results = player.inventory.add(choice)
                 results.extend(pickup_results)

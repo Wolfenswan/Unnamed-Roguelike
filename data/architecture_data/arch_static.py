@@ -1,3 +1,4 @@
+from components.architecture import Architecture
 from config_files import colors
 from data.data_keys import Key
 from data.data_types import RarityType
@@ -52,5 +53,25 @@ arch_static_data = {
         Key.RARITY: RarityType.UNIQUE,
         Key.RENDERING: RenderOrder.ALWAYS,
         Key.EVERY_TURN_END: ['self.set_random_color([colors.turquoise, colors.crimson, colors.azure, colors.amber])']
-    }
+    },
+    'stairs_down': {
+        Key.NAME: 'Downward Stairs',
+        Key.DESCR: 'TODO Stairs Down',
+        Key.CHAR: '>',
+        Key.COLOR: colors.white,
+        Key.BLOCKS: {BlockLevel.SIGHT: False, BlockLevel.FLOOR: True},
+        Key.RARITY: RarityType.UNIQUE,
+        Key.RENDERING: RenderOrder.ALWAYS,
+        Key.ON_INTERACTION: Architecture.use_stairs
+    },
+    'stairs_up': {
+        Key.NAME: 'Upward Stairs',
+        Key.DESCR: 'TODO Stairs UP',
+        Key.CHAR: '<',
+        Key.COLOR: colors.white,
+        Key.BLOCKS: {BlockLevel.SIGHT: False, BlockLevel.FLOOR: True},
+        Key.RARITY: RarityType.UNIQUE,
+        Key.RENDERING: RenderOrder.ALWAYS,
+        Key.ON_INTERACTION: Architecture.use_stairs
+    },
 }

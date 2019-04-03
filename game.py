@@ -41,6 +41,7 @@ class Game:
         self.combat_log = MessageLog(cfg.MSG_X, cfg.MSG_PANEL2_WIDTH, cfg.MSG_HEIGHT)
 
         self.debug = {
+            'global': debug,
             'map' : debug,
             'invin': debug,
             'ent_info': debug

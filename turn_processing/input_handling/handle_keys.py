@@ -1,6 +1,7 @@
 """ Translates key events into game-related actions """
 
 # TODO Consider using tdl for event handling instead? Might allow using a large dictionary instead of if/elif snake
+import logging
 
 import tcod
 import tcod.event as e
@@ -42,7 +43,7 @@ def handle_keys(key_event, game_state):
     return {}
 
 def handle_keys_legacy(key, game_state):
-    # logging.debug(f'Handling {key}')
+    logging.debug(f'Handling {key}')
 
     # Inputs valid in all game states #
     if key.vk == tcod.KEY_ENTER and key.lalt:

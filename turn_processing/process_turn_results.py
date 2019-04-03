@@ -3,6 +3,8 @@ import tcod
 from game import GameState
 from gameobjects.block_level import BlockLevel
 from gui.messages import Message
+from loader_functions.initialize_game import initialize_map, initialize_objects
+from rendering.fov_functions import initialize_fov
 
 
 def process_turn_results(player_turn_results, game, fov_map):
@@ -12,8 +14,8 @@ def process_turn_results(player_turn_results, game, fov_map):
     results = []
 
     for player_turn_result in player_turn_results:
-        fov_recompute = player_turn_result.get('fov_recompute')
         message = player_turn_result.get('message')
+        fov_recompute = player_turn_result.get('fov_recompute')
         item_added = player_turn_result.get('item_added')
         item_consumed = player_turn_result.get('consumed')
         item_dropped = player_turn_result.get('item_dropped')
@@ -27,6 +29,8 @@ def process_turn_results(player_turn_results, game, fov_map):
         waiting = player_turn_result.get('waiting')
         door_entity = player_turn_result.get('door_toggled')
         dead_entity = player_turn_result.get('dead')
+
+        level_change = player_turn_result.get('level_change')
 
         # debug menu #
         debug_menu_selection = player_turn_result.get('debug_menu_selection')
@@ -72,9 +76,6 @@ def process_turn_results(player_turn_results, game, fov_map):
                 player.fighter.hp += player.fighter.max_hp/10
                 player.fighter.recover(player.fighter.max_stamina / 10)
 
-        if fov_recompute:
-            results.append({'fov_recompute': fov_recompute})
-
         if door_entity is not None:
             # If the player interacted with a door, the fov map is updated)
             tcod.map_set_properties(fov_map, door_entity.x, door_entity.y, not door_entity.blocks.get(BlockLevel.SIGHT, False), not door_entity.blocks.get(BlockLevel.WALK, False))
@@ -88,6 +89,17 @@ def process_turn_results(player_turn_results, game, fov_map):
         if debug_menu_selection is not None:
             game.toggle_cursor((player.x+1,player.y), state=GameState.CURSOR_TARGETING)
             results.append({'debug_spawn': debug_menu_selection})
+
+        if fov_recompute:
+            results.append({'fov_recompute': fov_recompute})
+
+        if level_change is not None:    # Todo refactor into new function
+            game.dlvl += level_change
+            game.entities = [game.player]
+            initialize_map(game)
+            initialize_objects(game)
+            game.player.pos = game.map.rooms[0].center
+            results.append({'fov_reset':True})
 
         # Enable enemy turn if at least one of the results is not None
         filtered_enemy_turn_conditions = list(filter(lambda x: x is not None, enemy_turn_on))
