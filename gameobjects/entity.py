@@ -165,8 +165,8 @@ class Entity:
         extend_descr = self.descr
         col = 'dark_crimson' # TODO All colors are placeholders
         if self.fighter is not None:
-            if self.fighter.active_weapon:
-                extend_descr += f'\n\nIt attacks with %{col}%{self.fighter.active_weapon.item.equipment.attack_type.name.lower()}%% strikes.'
+            # if self.fighter.active_weapon: # TODO add another way to indicate special features of a creatures attack
+            #     extend_descr += f'\n\nIt attacks with %{col}%{self.fighter.active_weapon.item.equipment.attack_type.name.lower()}%% strikes.'
 
             if game.player.fighter.shield:
                 extend_descr += f'\n\nBlocking its attacks will be %{col}%{game.player.fighter.average_chance_to_block(self)}%%.'
@@ -250,9 +250,9 @@ class Entity:
             return False
         return self.active_weapon.type == ItemType.RANGED_WEAPON
 
-    @property
-    def attack_type(self):
-        return self.item.equipment.attack_type if self.item is not None and self.item.equipment is not None else None
+    # @property
+    # def attack_type(self):
+    #     return self.item.equipment.attack_type if self.item is not None and self.item.equipment is not None else None
 
     @property
     def dmg_potential(self):

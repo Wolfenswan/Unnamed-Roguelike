@@ -29,6 +29,7 @@ from data.actor_data.act_skills import skill_generic_charge, skill_generic_slam,
     skill_entangle_timed
 from data.data_keys import Key
 from data.data_types import RarityType
+from data.moveset_data.creature_movesets import moveset_claws_heavy, moveset_mandibles_heavy
 
 spawn_data = {
     'roachling': {
@@ -63,6 +64,7 @@ spawn_data = {
         Key.LOADOUT: {
             Key.EQUIPMENT:{
                 'ins_mandibles':{
+                    Key.FORCED_MOVESET: moveset_mandibles_heavy
                 }
             }
         },
@@ -86,6 +88,7 @@ spawn_data = {
         Key.LOADOUT: {
             Key.EQUIPMENT:{
                 'ins_claws':{
+                    Key.FORCED_MOVESET: moveset_claws_heavy
                 }
             }
         },

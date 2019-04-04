@@ -399,7 +399,7 @@ class Fighter:
             sta_dmg_multipl = self.active_weapon.moveset.modifier(Key.BLOCK_STA_DMG_MULTIPL) # Some weapons afflict a higher stamina damage
             sta_dmg = round((attack_power / 2) * sta_dmg_multipl)
             logging.debug(
-                f'{target.name} block exert multiplied by {sta_dmg_multipl} due to {self.owner.name} attack type {self.active_weapon.attack_type}')
+                f'{target.name} block exert multiplied by {sta_dmg_multipl} due to {self.owner.name} attack mod')
             results.append(target.fighter.exert(sta_dmg, 'block'))
 
             if melee:
@@ -511,7 +511,7 @@ class Fighter:
         if damage <= block_def:
             return True
         elif damage <= block_def * 2:
-            chance = self.block_chance(attacker.active_weapon.attack_type, damage)
+            chance = self.block_chance(attacker.active_weapon, damage)
             if chance > 0 and chance >= randint(0,100):
                 return True
         return False
@@ -523,7 +523,7 @@ class Fighter:
         """
         block_def = self.shield.block_def
         #mod = wp_attacktypes_data[attack_type].get(Key.BLOCK_DEF_MULTIP,1)
-        mod = attacking_weapon.movelist.modifier(Key.BLOCK_DEF_MULTIPL)
+        mod = attacking_weapon.equipment.movelist.modifier(Key.BLOCK_DEF_MULTIPL)
         block_def = round(block_def * mod)
         logging.debug(f'{self.owner.name} block def. multiplied by {mod} due to {attacking_weapon}')
 

@@ -36,6 +36,7 @@ class Key(Enum):
     BARKS = auto()
     BODYTYPES = auto()
     GROUP_SIZE = auto()
+    FORCED_MOVESET = auto()
 
     # Items #
     MATERIAL = auto()

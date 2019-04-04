@@ -280,7 +280,7 @@ def gen_npc_from_data(data:Dict, x:int, y:int, game:Game):
     return npc
 
 
-def gen_item_from_data(data:Dict, x:int, y:int, material=False, condition=False, craftsmanship=False):
+def gen_item_from_data(data:Dict, x:int, y:int, material=False, condition=False, craftsmanship=False, forced_moveset=None):
     material = get_material_data(data, forced=material)
     condition = get_condition_data(forced=condition) if material else {}
     craftsmanship = get_craftsmanship_data(forced=craftsmanship) if material else {}
@@ -328,7 +328,10 @@ def gen_item_from_data(data:Dict, x:int, y:int, material=False, condition=False,
         l_radius = data.get(Key.L_RADIUS)
         two_handed = data.get(Key.TWO_HANDED)
         #attack_type = forced_attacktype if forced_attacktype else data.get(Key.ATTACKTYPE, AttackType.NORMAL)
-        moveset = data.get(Key.MOVESET)
+        if forced_moveset is None:
+            moveset = data.get(Key.MOVESET)
+        else:
+            moveset = forced_moveset
 
         if moveset:
             moveset_component = Moveset(moveset.copy())

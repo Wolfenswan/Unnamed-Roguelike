@@ -83,7 +83,9 @@ class Moveset():
         """ All ways have various modifiers, with data_keys as names. This function allows to retrieve these values
         by passing a data_key name as argument """
         move = self.movelist[self.current_move]
-        mod = move.get(modifier_key, 1)  # Modifier taken from the move itself
+        mod = self.default_values.get(modifier_key, None)   # Check the moves default values first,
+        if mod is None:
+            mod = move.get(modifier_key, 1)  # Modifier taken from the move itself
         logging.debug(f'Moveset({self.owner})-move#{self.current_move}|{modifier_key.name}: {mod}')
         return mod
 
