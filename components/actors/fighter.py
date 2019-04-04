@@ -9,8 +9,8 @@ from components.actors.fighter_util import DamagePercentage, AttributePercentage
 from components.statistics import statistics_updater
 from config_files import colors
 from data.actor_data.act_status_mod import status_modifiers_data
+from data.data_keys import Key
 from data.data_types import ItemType
-from data.item_data.wp_attacktypes import wp_attacktypes_data
 from data.gui_data.gui_fighter import hpdmg_string_data, stadmg_string_data, sta_color_data, stadmg_color_data, \
     sta_string_data, hpdmg_color_data, hp_string_data, hp_color_data
 from gameobjects.block_level import BlockLevel
@@ -142,7 +142,7 @@ class Fighter:
 
         # Moveset modifiers #
         if self.active_weapon is not None:
-            modifiers.append(self.active_weapon.moveset.dmg_multipl)
+            modifiers.append(self.active_weapon.moveset.modifier(Key.DMG_MULTIPL))
 
         # Status effects #
         for state, active in self.effects.items():
@@ -395,11 +395,11 @@ class Fighter:
             blocked = target.fighter.attempt_block(self, attack_power)
 
         if blocked:  # TODO move to own function
-            sta_dmg = round(attack_power / 2) # TODO should attacker also take sta damage?
-            dmg_mod_multipl = wp_attacktypes_data[self.active_weapon.attack_type].get('block_sta_dmg_multipl', 1)
-            sta_dmg = round(sta_dmg * dmg_mod_multipl)
+            # TODO should attacker also take sta damage?
+            sta_dmg_multipl = self.active_weapon.moveset.modifier(Key.BLOCK_STA_DMG_MULTIPL) # Some weapons afflict a higher stamina damage
+            sta_dmg = round((attack_power / 2) * sta_dmg_multipl)
             logging.debug(
-                f'{target.name} block exert multiplied by {dmg_mod_multipl} due to {self.owner.name} attack type {self.active_weapon.attack_type}')
+                f'{target.name} block exert multiplied by {sta_dmg_multipl} due to {self.owner.name} attack type {self.active_weapon.attack_type}')
             results.append(target.fighter.exert(sta_dmg, 'block'))
 
             if melee:
@@ -516,15 +516,16 @@ class Fighter:
                 return True
         return False
 
-    def block_chance(self, attack_type, damage):
+    def block_chance(self, attacking_weapon, damage):
         """
         Returns the chance to block a strike that surpasses an entity's block defense.
         It is possible to block up to the double of maximum block defense.
         """
         block_def = self.shield.block_def
-        mod = wp_attacktypes_data[attack_type].get('block_def_multipl',1)
+        #mod = wp_attacktypes_data[attack_type].get(Key.BLOCK_DEF_MULTIP,1)
+        mod = attacking_weapon.movelist.modifier(Key.BLOCK_DEF_MULTIPL)
         block_def = round(block_def * mod)
-        logging.debug(f'{self.owner.name} block def. multiplied by {mod} due to attack type {attack_type}')
+        logging.debug(f'{self.owner.name} block def. multiplied by {mod} due to {attacking_weapon}')
 
         if block_def > 0:
             return 101 - ((damage - block_def) / block_def * 100)
@@ -538,7 +539,7 @@ class Fighter:
         average = 0
         dmg_range = attacker.fighter.base_dmg_potential
         for dmg in dmg_range:
-            average += self.block_chance(attacker.fighter.active_weapon.item.equipment.attack_type, dmg)
+            average += self.block_chance(attacker.fighter.active_weapon, dmg)
         average /= len(dmg_range)
 
         if debug:

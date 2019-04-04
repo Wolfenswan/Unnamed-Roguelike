@@ -28,7 +28,7 @@ from config_files import colors
 from data.actor_data.act_skills import skill_generic_charge, skill_generic_slam, skill_explode_self, skill_entangle, \
     skill_entangle_timed
 from data.data_keys import Key
-from data.data_types import RarityType, AttackType
+from data.data_types import RarityType
 
 spawn_data = {
     'roachling': {
@@ -36,10 +36,10 @@ spawn_data = {
         Key.CHAR: 'r',
         Key.COLOR: colors.light_amber,
         Key.DESCR: 'Waddling upright like a clumsy child, the twitching antennae and multitude of jittering legs quickly dispell any passing resemblance.',
-        Key.MAX_HP: (2, 6),
+        Key.MAX_HP: (2, 10),
         Key.MAX_STAMINA: (80, 80),
         Key.BASE_ARMOR: (0, 0),
-        Key.BASE_STRENGTH: (4, 4),
+        Key.BASE_STRENGTH: (2, 2),
         Key.LOADOUT: {
             Key.EQUIPMENT:{
                 'ins_mandibles':{}
@@ -59,11 +59,10 @@ spawn_data = {
         Key.MAX_HP: (10, 14),
         Key.MAX_STAMINA: (80, 80),
         Key.BASE_ARMOR: (2, 4),
-        Key.BASE_STRENGTH: (6, 8),
+        Key.BASE_STRENGTH: (4, 4),
         Key.LOADOUT: {
             Key.EQUIPMENT:{
                 'ins_mandibles':{
-                    Key.FORCED_ATTACKTYPE: AttackType.HEAVY
                 }
             }
         },
@@ -87,7 +86,6 @@ spawn_data = {
         Key.LOADOUT: {
             Key.EQUIPMENT:{
                 'ins_claws':{
-                    Key.FORCED_ATTACKTYPE: AttackType.HEAVY
                 }
             }
         },
@@ -158,4 +156,24 @@ spawn_data = {
         Key.DLVLS: (1, 100),
         Key.RARITY: RarityType.UNCOMMON
     },
+    'queen' : {
+        Key.NAME: 'Centipede',
+        Key.CHAR: 'c',
+        Key.COLOR: colors.lighter_lime,
+        Key.DESCR: 'The criss-crossing movement via its plethora of legs masks its impressive length.',
+        Key.MAX_HP: (20, 30),
+        Key.MAX_STAMINA: (100, 100),
+        Key.BASE_ARMOR: (1, 3),
+        Key.BASE_STRENGTH: (3, 5),
+        Key.LOADOUT: {
+            Key.EQUIPMENT: {'ins_mandibles': {}},
+            Key.BACKPACK: {}
+        },
+        Key.AI_BEHAVIOR: Simple,
+        Key.SKILLS: (skill_entangle_timed,),
+        Key.BARKS: ('insect',),
+        Key.GROUP_SIZE: (1, 1),
+        Key.DLVLS: (1, 100),
+        Key.RARITY: RarityType.UNCOMMON
+    }
 }

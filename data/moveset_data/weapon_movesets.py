@@ -1,5 +1,4 @@
 from data.data_keys import Key
-from data.data_types import AttackType
 from map.directions_util import RelativeDirection
 
 col1 = '%dark_orange%'
@@ -22,7 +21,6 @@ moveset_sword = {
         Key.EXERT_MULTIPL: 1.25,
     }
 }
-
 moveset_spear = {
     1: {
        Key.DESCR: f'A {col1}weak stab%% to prepare for further attacks.',
@@ -42,7 +40,6 @@ moveset_spear = {
         Key.EXTEND_ATTACK: [RelativeDirection.BEHIND]
     }
 }
-
 moveset_flail = {
 Key.DEFAULT: {Key.VERBS: ('flails',),},
     1: {
@@ -65,11 +62,9 @@ Key.DEFAULT: {Key.VERBS: ('flails',),},
         Key.VERB: 'crushes',
         Key.DMG_MULTIPL: 1.25,
         Key.EXERT_MULTIPL: 1.25,
-        Key.ATTACKTYPE: AttackType.QUICK,
+        Key.BLOCK_DEF_MULTIPL: 0,
     }
 }
-
-
 moveset_bow = {
     Key.DEFAULT: {Key.VERBS: ('shoots',),},
     1: {
@@ -86,34 +81,4 @@ moveset_bow = {
        Key.DESCR: f"A {col1}devastating head shot%%, aimed right between the eyes.",
         Key.DMG_MULTIPL: 2
     },
-}
-
-
-moveset_mandibles = {
-    Key.DEFAULT: {
-        Key.RANDOM: True,
-        Key.VERBS: ('bites', 'gnaws at'),
-    },
-    1: {},
-    2: {},
-    3: {
-        Key.VERB: 'nibbles at',
-        Key.DMG_MULTIPL: 0.75
-    }
-}
-
-
-moveset_claws = {
-    Key.DEFAULT: {
-        Key.VERBS: ('lashes', 'claws', 'rips','rends'),
-    },
-    1: {}
-}
-
-
-moveset_spit = {
-    Key.DEFAULT: {
-        Key.VERBS: ('spits at', 'discharges saliva at'),
-    },
-    1: {}
 }

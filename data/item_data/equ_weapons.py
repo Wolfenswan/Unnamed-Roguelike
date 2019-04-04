@@ -1,6 +1,6 @@
 from data.data_keys import Key
-from data.data_types import Material, AttackType, RarityType, ItemType
-from data.item_data._movesets import moveset_sword, moveset_spear, moveset_flail, moveset_bow
+from data.data_types import Material, RarityType, ItemType
+from data.moveset_data.weapon_movesets import moveset_sword, moveset_spear, moveset_flail, moveset_bow
 
 default_values = {
     Key.CHAR: '\\',
@@ -16,7 +16,6 @@ equ_weapon_data = {
         Key.MATERIAL: (Material.IRON, Material.STEEL),
         Key.DESCR: 'Kills enemies and cuts bread, what else could one wish for. Just make sure to clean it in between.',
         Key.DMG_POTENTIAL: (4, 6),
-        Key.ATTACKTYPE: AttackType.NORMAL,
         Key.MOVESET: moveset_sword,
         Key.RARITY: RarityType.COMMON
     },
@@ -26,7 +25,6 @@ equ_weapon_data = {
         Key.MATERIAL: (Material.IRON, Material.STEEL),
         Key.DESCR: 'A short and nimble blade.',
         Key.DMG_POTENTIAL: (2, 4),
-        Key.ATTACKTYPE: AttackType.QUICK,
         Key.MOVESET: moveset_sword,
         Key.RARITY: RarityType.COMMON
     },
@@ -38,7 +36,6 @@ equ_weapon_data = {
         Key.CHAR: '|',
         Key.DMG_POTENTIAL: (2,8),
         Key.TWO_HANDED: True,
-        Key.ATTACKTYPE: AttackType.NORMAL,
         Key.MOVESET: moveset_spear,
         Key.RARITY: RarityType.COMMON
     },
@@ -49,7 +46,6 @@ equ_weapon_data = {
         Key.DESCR: 'Swing it round, round like the murder tool it is.',
         Key.CHAR: '?',
         Key.DMG_POTENTIAL: (2,4),
-        Key.ATTACKTYPE: AttackType.NORMAL,
         Key.MOVESET: moveset_flail,
         Key.RARITY: RarityType.COMMON
     },

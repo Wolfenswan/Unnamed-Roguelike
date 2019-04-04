@@ -13,7 +13,7 @@ class Player(Entity):
 
     def __init__(self, name):
 
-        fighter_component = Fighter(60, 120, 0, 4, cfg.FOV_RADIUS)
+        fighter_component = Fighter(40, 100, 0, 4, cfg.FOV_RADIUS)
         inventory_component = Inventory(capacity=26)
 
         super().__init__(0, 0, '@', tcod.white, name, descr='This is you.', is_player=True,

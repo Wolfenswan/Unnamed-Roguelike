@@ -1,3 +1,4 @@
+import logging
 from random import choice, randint
 from typing import List
 
@@ -25,10 +26,6 @@ class Moveset():
     @property
     def moves(self):
         return len(self.movelist.keys())
-
-    @property
-    def dmg_multipl(self):
-        return self.movelist[self.current_move].get(Key.DMG_MULTIPL, 1)
 
     @property
     def exert_multipl(self):
@@ -81,6 +78,14 @@ class Moveset():
 
         if self.current_move > self.moves or reset:
             self.current_move = 1
+
+    def modifier(self, modifier_key):
+        """ All ways have various modifiers, with data_keys as names. This function allows to retrieve these values
+        by passing a data_key name as argument """
+        move = self.movelist[self.current_move]
+        mod = move.get(modifier_key, 1)  # Modifier taken from the move itself
+        logging.debug(f'Moveset({self.owner})-move#{self.current_move}|{modifier_key.name}: {mod}')
+        return mod
 
     @staticmethod
     def get_extra_attack_positions(attacker, target, extra_hits:List):

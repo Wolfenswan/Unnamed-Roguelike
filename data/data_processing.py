@@ -280,7 +280,7 @@ def gen_npc_from_data(data:Dict, x:int, y:int, game:Game):
     return npc
 
 
-def gen_item_from_data(data:Dict, x:int, y:int, material=False, condition=False, craftsmanship=False, forced_attacktype=None):
+def gen_item_from_data(data:Dict, x:int, y:int, material=False, condition=False, craftsmanship=False):
     material = get_material_data(data, forced=material)
     condition = get_condition_data(forced=condition) if material else {}
     craftsmanship = get_craftsmanship_data(forced=craftsmanship) if material else {}
@@ -327,7 +327,7 @@ def gen_item_from_data(data:Dict, x:int, y:int, material=False, condition=False,
         qu_slots = data.get(Key.QU_SLOTS)
         l_radius = data.get(Key.L_RADIUS)
         two_handed = data.get(Key.TWO_HANDED)
-        attack_type = forced_attacktype if forced_attacktype else data.get(Key.ATTACKTYPE)
+        #attack_type = forced_attacktype if forced_attacktype else data.get(Key.ATTACKTYPE, AttackType.NORMAL)
         moveset = data.get(Key.MOVESET)
 
         if moveset:
@@ -337,7 +337,7 @@ def gen_item_from_data(data:Dict, x:int, y:int, material=False, condition=False,
 
         equipment_component = Equipment(equip_to, dmg_potential=dmg_potential, av=av, block_def=block_def, attack_range=attack_range,
                                         qu_slots=qu_slots, l_radius=l_radius, moveset=moveset_component,
-                                        two_handed=two_handed, attack_type=attack_type)
+                                        two_handed=two_handed)
 
     item_component = Item(condition=condition.get(Key.TYPE), craftsmanship=craftsmanship.get(Key.TYPE),
                           useable=useable_component, equipment=equipment_component)

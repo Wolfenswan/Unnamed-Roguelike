@@ -71,9 +71,6 @@ class Item:
             if e_c.attack_range:
                 listing += f'\n\n Attack Range: %{col}%{e_c.attack_range[0]}-{e_c.attack_range[1]}%%'
 
-            if e_c.attack_type:
-                 listing += f'\n\n Attack: %{col}%{e_c.attack_type.name.title()}%%'
-
             if e_c.l_radius:
                  listing += f'\n\n Light Radius: %{col}%{e_c.l_radius}%%'
 
@@ -104,3 +101,8 @@ class Item:
                 listing += f"\n\n Range: %{col}%{u_range[0]}-{u_range[1]}%%"
         
         return listing
+
+    # Convenience #
+    @property
+    def name(self):
+        return self.owner.name

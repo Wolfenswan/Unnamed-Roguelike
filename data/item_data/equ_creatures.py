@@ -1,6 +1,6 @@
 from data.data_keys import Key
-from data.data_types import Material, ItemType, RarityType, AttackType, Element
-from data.item_data._movesets import moveset_mandibles, moveset_claws, moveset_spit
+from data.data_types import Material, ItemType, RarityType, Element
+from data.moveset_data.creature_movesets import moveset_mandibles, moveset_claws, moveset_spit
 
 equ_creature_data = {
     'ins_mandibles': {
@@ -10,7 +10,6 @@ equ_creature_data = {
         Key.EQUIP_TO: 'weapon_arm',
         Key.DMG_POTENTIAL: (4, 8),
         Key.MOVESET: moveset_mandibles,
-        Key.ATTACKTYPE: AttackType.NORMAL,
         Key.RARITY: RarityType.FORBIDDEN,
         Key.CAN_DROP: False # TODO not implemented
     },
@@ -21,7 +20,6 @@ equ_creature_data = {
         Key.EQUIP_TO: 'weapon_arm',
         Key.DMG_POTENTIAL: (6, 6),
         Key.MOVESET: moveset_claws,
-        Key.ATTACKTYPE: AttackType.NORMAL,
         Key.RARITY: RarityType.FORBIDDEN,
         Key.CAN_DROP: False # TODO not implemented
     },
@@ -32,7 +30,6 @@ equ_creature_data = {
         Key.EQUIP_TO: 'weapon_arm',
         Key.DMG_POTENTIAL: (6, 6),
         Key.MOVESET: moveset_spit,
-        Key.ATTACKTYPE: AttackType.NORMAL,
         Key.RARITY: RarityType.FORBIDDEN,
         Key.CAN_DROP: False, # TODO not implemented
         Key.ELEMENT: Element.ACID # TODO not implemented

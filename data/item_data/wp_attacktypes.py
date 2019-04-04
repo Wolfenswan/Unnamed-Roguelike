@@ -1,11 +1,21 @@
-from data.data_types import AttackType
+from data.data_keys import Key
 
-wp_attacktypes_data = {
-    AttackType.NORMAL : {},
-    AttackType.HEAVY: {
-      'block_sta_dmg_multipl': 2
-    },
-    AttackType.QUICK: {
-        'block_def_multipl': 0
-    }
-}
+
+# OBSOLETE! #
+
+# wp_attacktypes_data = {
+#     AttackType.NORMAL : {},
+#     AttackType.HEAVY: {
+#         Key.BLOCK_STA_DMG_MULTIPL: 2
+#     },
+#     AttackType.QUICK: {
+#         Key.BLOCK_DEF_MULTIPL: 0
+#     },
+#     AttackType.PIERCING: {
+#         Key.AV_MULTIPL: 0
+#     },
+#     AttackType.QUICK_PIERCING:{
+#         Key.AV_MULTIPL: 0,
+#         Key.BLOCK_DEF_MULTIPL: 0
+#     }
+# }

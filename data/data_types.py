@@ -73,10 +73,12 @@ class Craftsmanship(Enum):
     LEGENDARY = auto()
 
 
-class AttackType(Enum): # AttackType can either be an attribute of a specific weapon, or a move within a moveset
-    NORMAL = auto() # No special rules apply
-    HEAVY = auto() # increased stress when blocking
-    QUICK = auto() # ignores blocks
+# class AttackType(Enum): # AttackType can either be an attribute of a specific weapon, or a move within a moveset
+#     NORMAL = auto() # No special rules apply
+#     HEAVY = auto() # increased stress when blocking
+#     QUICK = auto() # ignores block
+#     PIERCING = auto() # ignores AV
+#     QUICK_PIERCING = auto() # ignores AV & block
 
 
 class BodyType(Enum):

@@ -59,8 +59,6 @@ class Key(Enum):
     L_RADIUS = auto()
     TWO_HANDED = auto()
     MOVESET = auto()
-    ATTACKTYPE = auto()
-    FORCED_ATTACKTYPE = auto()
 
     # Movesets & Skills #
     DEFAULT = auto()
@@ -85,6 +83,8 @@ class Key(Enum):
     HP_MULTIPL = auto()
     STR_MULTIPL = auto()
     AV_MULTIPL = auto()
+    BLOCK_DEF_MULTIPL = auto()
+    BLOCK_STA_DMG_MULTIPL = auto()
     DMG_MULTIPL = auto()
     DMG_FLAT = auto()
     AV_FLAT = auto()
