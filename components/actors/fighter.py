@@ -34,7 +34,7 @@ class Fighter:
         self.surrounded = Surrounded.FREE
         self.stances = {
             Stance.BLOCKING: False,
-            Stance.DODGING: False
+            Stance.DASHING: False
         }
         self.effects = {
             State.DAZED: False,
@@ -108,8 +108,8 @@ class Fighter:
         return self.stances[Stance.BLOCKING]
 
     @property
-    def is_dodging(self):
-        return self.stances[Stance.DODGING]
+    def is_dashing(self):
+        return self.stances[Stance.DASHING]
 
     @property
     def strength(self):
@@ -200,7 +200,7 @@ class Fighter:
         return block_def
 
     @property
-    def can_dodge(self):
+    def can_dash(self):
         exertion = self.defense * 2
         return self.stamina >= exertion
     
@@ -487,25 +487,25 @@ class Fighter:
         return results
 
 
-    def toggle_dodging(self):
+    def toggle_dashing(self):
         results = []
 
-        if self.is_dodging:
-            results.append({'message': Message('You stop dodging.', type=MessageType.COMBAT_INFO)})
-            self.stances[Stance.DODGING] = False
+        if self.is_dashing:
+            results.append({'message': Message('You stop dashing.', type=MessageType.COMBAT_INFO)})
+            self.stances[Stance.DASHING] = False
         else:
-            results.append({'message': Message('You start dodging.', type=MessageType.COMBAT_INFO)})
-            self.stances[Stance.DODGING] = True
+            results.append({'message': Message('You prepare to dashe.', type=MessageType.COMBAT_INFO)})
+            self.stances[Stance.DASHING] = True
 
         return results
 
 
-    def dodge(self, dx, dy, game):
+    def dash(self, dx, dy, game):
         results = []
 
-        if self.can_dodge:
+        if self.can_dash:
                 animate_move_line(self.owner, dx, dy, 2, game, anim_delay=0.05)
-                results.append(self.exert(self.defense * 2, 'dodge'))
+                results.append(self.exert(self.defense * 2, 'dash'))
         else:
             results.append({'message': Message('You are too exhausted!', type=MessageType.COMBAT_BAD)})
 

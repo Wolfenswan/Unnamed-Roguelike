@@ -76,7 +76,7 @@ E   - shows your (e)quipment
 
 - MOVEMENT MODIFIERS -
 - CTRL + Movement - Interact with an object in the given direction
-- ALT + Movement - Attempt a dodge in the given direction, moving 2 tiles
+- ALT + Movement - Attempt a dash in the given direction, moving 2 tiles
 
 - OTHER ACTIONS -
 ? - Display this manual

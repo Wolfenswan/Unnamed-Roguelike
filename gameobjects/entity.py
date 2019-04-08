@@ -313,7 +313,7 @@ class Entity:
             if self.is_player:
                 self.actionplan.process_queue()
                 # TODO Placeholder for proper stamina management (currently flat 1% recovered)
-                if not self.in_combat(game) and not self.fighter.sta_full and not last_player_action.get('dodge'):
+                if not self.in_combat(game) and not self.fighter.sta_full and not last_player_action.get('dash'):
                     self.fighter.recover(self.fighter.max_stamina / 100)
             for event in self.every_turn_end:
                 eval(event)

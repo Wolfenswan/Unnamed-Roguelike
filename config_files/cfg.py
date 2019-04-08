@@ -26,16 +26,16 @@ ROOM_MAX_SIZE = 15
 ROOM_MIN_SIZE = 4
 
 # NPC SETTINGS #
-MONSTERS_DUNGEON_FACTOR = 4 # total rooms * this
+MONSTERS_DUNGEON_FACTOR = 3 # total rooms * this
 MONSTERS_ROOM_LIMIT = 15 # room width * room height // this
 
 # ITEM SETTINGS #
-ITEMS_DUNGEON_FACTOR = 1 # total rooms * this
+ITEMS_DUNGEON_FACTOR = 0.5 # total rooms * this
 ITEMS_ROOM_LIMIT = 50 # room width * room height // this
 
 # CONTAINER SETTINGS #
 # TODO put in relation to max items?
-CONTAINER_DUNGEON_FACTOR = 2 # total rooms * this
+CONTAINER_DUNGEON_FACTOR = 1 # total rooms * this
 CONTAINER_ROOM_DIVISOR = 30 # room width * room height // this
 
 # STATIC OBJECT SETTINGS #

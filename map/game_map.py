@@ -71,9 +71,10 @@ class GameMap:
         return self.tiles[(x, y)].walkable
 
     def is_wall(self, x, y):
-        tile = self.tiles.get((x,y))
+        tile = self.tiles[(x,y)]
         if tile is None:
             print(f'Checking {(x,y)} is None')
+            return True
         return tile.blocked
 
     def is_blocked(self, x, y, entities_to_consider, filter = (BlockLevel.WALK,)):

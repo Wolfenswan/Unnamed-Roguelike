@@ -16,7 +16,7 @@ def handle_keys(key_event, game_state):
 
     # Inputs valid in all game states #
     key = key_event.sym
-    mod = int(key_event.mod)
+    mod = key_event.mod
 
     # if key.vk == tcod.KEY_ENTER and key.lalt:
     #     # Alt+Enter: toggle full screen
@@ -110,8 +110,8 @@ def handle_player_turn_keys(key):
         return {'toggle_weapon': True}
     elif key_char == keys_dict['block']:
         return {'toggle_block': True}
-    elif key_char == keys_dict['dodge']:
-        return {'toggle_dodge': True}
+    elif key_char == keys_dict['dash']:
+        return {'toggle_dash': True}
     elif key_char == keys_dict['look']:
         return {'toggle_look': True}
     elif key_char == keys_dict['fire']:

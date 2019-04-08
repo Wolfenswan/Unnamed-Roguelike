@@ -93,7 +93,7 @@ def process_player_interaction(game, action):
     show_prepared = action.get('show_prepared')
     # drop_inventory = action.get('drop_inventory')
     # menu_selection = action.get('menu_selection')
-    toggle_dodge = action.get('toggle_dodge')
+    toggle_dash = action.get('toggle_dash')
     toggle_block = action.get('toggle_block')
     toggle_weapon = action.get('toggle_weapon')
 
@@ -107,7 +107,7 @@ def process_player_interaction(game, action):
     if move or interact:
         dx, dy = direction
         destination_x, destination_y = player.x + dx, player.y + dy
-        dodging = player.fighter.is_dodging
+        dashing = player.fighter.is_dashing
 
         if not game_map.is_wall(destination_x, destination_y):
             target = entity_at_pos(game.walk_blocking_ents, destination_x, destination_y)
@@ -119,8 +119,8 @@ def process_player_interaction(game, action):
                 if player.can_attack is False:
                     results.append({'message': Message('You are unable to attack!',
                                                        type=MessageType.COMBAT_BAD)})
-                elif dodging:
-                    Message('PLACEHOLDER: cant dodge into target.', type=MessageType.SYSTEM).add_to_log(game)
+                elif dashing:
+                    Message('PLACEHOLDER: cant dash into target.', type=MessageType.SYSTEM).add_to_log(game)
                 # If a NPC is blocking the way #
                 elif target.fighter:
                     if player.fighter.is_blocking:
@@ -154,8 +154,8 @@ def process_player_interaction(game, action):
                 if player.can_move is False:
                     results.append({'message': Message('You are unable to move!',
                                                        type=MessageType.COMBAT_BAD)})
-                elif dodging:
-                    results.extend(player.fighter.dodge(dx, dy, game))
+                elif dashing:
+                    results.extend(player.fighter.dash(dx, dy, game))
                 else:
                     player.move(dx, dy)
 
@@ -189,17 +189,17 @@ def process_player_interaction(game, action):
     if toggle_block:
         results.extend(player.fighter.toggle_blocking())
 
-    if toggle_dodge:
-        results.extend(player.fighter.toggle_dodging())
+    if toggle_dash:
+        results.extend(player.fighter.toggle_dashing())
 
     # No dodging while blocking possible; disable one or the other, depending on input
-    if player.fighter.is_blocking and player.fighter.is_dodging:
+    if player.fighter.is_blocking and player.fighter.is_dashing:
         if toggle_block:
-            player.fighter.toggle_dodging()
-        elif toggle_dodge:
+            player.fighter.toggle_dashing()
+        elif toggle_dash:
             player.fighter.toggle_blocking()
         else:
-            logging.debug('ERROR: Both blocking and dodging active.')
+            logging.debug('ERROR: Both blocking and dashing active.')
 
 
     if toggle_weapon:

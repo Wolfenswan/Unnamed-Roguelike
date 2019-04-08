@@ -19,7 +19,7 @@ keys_dict = {
     
     # Toggles #
     'block' : 'r',
-    'dodge' : 't',
+    'dash' : 't',
     'look' : 's',
     'fire' : 'f',
 

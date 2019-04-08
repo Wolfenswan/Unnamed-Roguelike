@@ -3,7 +3,7 @@ from typing import Union, Dict
 
 
 class Stance(Enum):
-    DODGING = auto()
+    DASHING = auto()
     BLOCKING = auto()
 
 
