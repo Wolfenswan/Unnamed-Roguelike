@@ -194,7 +194,8 @@ class Entity:
         return extend_descr
 
     def is_visible(self, fov_map):
-        return tcod.map_is_in_fov(fov_map, self.x, self.y)
+        #return tcod.map_is_in_fov(fov_map, self.x, self.y)
+        return fov_map.fov[self.y, self.x]
 
     @property
     def is_corpse(self):

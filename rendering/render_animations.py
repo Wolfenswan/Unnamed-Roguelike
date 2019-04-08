@@ -59,11 +59,7 @@ def animate_projectile(start_x:int, start_y:int, target_x:int, target_y:int, gam
 
     projectile = Entity(start_x, start_y, '*', color, 'Projectile', render_order=RenderOrder.ALWAYS)
     game.entities.append(projectile)
-    if homing:
-        animate_move_to(projectile, target_x, target_y, game, anim_delay = anim_delay, ignore_entities=ignore_entities)
-    else:
-        dx, dy = projectile.direction_to_pos(target_x, target_y)
-        animate_move_line(projectile, dx, dy, distance, game, anim_delay = anim_delay, ignore_entities=True)
+    animate_move_to(projectile, target_x, target_y, game, anim_delay = anim_delay, ignore_entities=ignore_entities)
     game.entities.remove(projectile)
 
 

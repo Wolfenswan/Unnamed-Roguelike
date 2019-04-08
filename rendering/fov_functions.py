@@ -16,8 +16,8 @@ def initialize_fov(game):
 
             ent = entity_at_pos(game.sight_blocking_ents, x, y)
             if ent:
-                fov_map.transparent[y,x] = not game_map.tiles[(x, y)].block_sight
-                fov_map.walkable[y,x] = not game_map.tiles[(x, y)].blocked
+                fov_map.transparent[y,x] = not ent.blocks.get(BlockLevel.SIGHT, False)#game_map.tiles[(x, y)].block_sight
+                fov_map.walkable[y,x] = not ent.blocks.get(BlockLevel.WALK, False)
 
     return fov_map
 

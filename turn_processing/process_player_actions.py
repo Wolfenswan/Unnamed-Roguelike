@@ -319,22 +319,24 @@ def process_cursor_interaction(game, action, targeting_item, debug_spawn):
         dx, dy = direction
         destination_x = cursor.x + dx
         destination_y = cursor.y + dy
-        if tcod.map_is_in_fov(fov_map, destination_x, destination_y):
-            if player.active_weapon_is_ranged and targeting_item is None:
-                if player.distance_to_pos(destination_x, destination_y) in range(*player.active_weapon.attack_range):
+        if fov_map.fov[destination_y, destination_x]:
+            if game.state == GameState.CURSOR_TARGETING:
+                if player.active_weapon_is_ranged and targeting_item is None: # If player is aiming with a ranged weapon
+                    dist = player.distance_to_pos(destination_x, destination_y)
+                    if dist == 0 or dist in range(*player.active_weapon.attack_range):
+                        cursor.try_move(dx, dy, game, ignore_entities=True)
+                elif targeting_item is not None and player.distance_to_pos(destination_x, destination_y) in\
+                        range(*targeting_item.item.useable.on_use_params.get('range', 1)): # If player is aiming with an item
                     cursor.try_move(dx, dy, game, ignore_entities=True)
-            elif targeting_item is not None and player.distance_to_pos(destination_x, destination_y) in\
-                    range(*targeting_item.item.useable.on_use_params.get('range', 1)):
-                cursor.try_move(dx, dy, game, ignore_entities=True)
-            elif targeting_item is None:
+            else:
                 cursor.move(dx, dy)
 
     if confirm:
-        if targeting_item is not None:
+        if targeting_item is not None:  # Using an item
             inv = player.inventory if targeting_item in player.inventory else player.qu_inventory
             item_use_results = inv.use(targeting_item, game, target_pos=cursor.pos)
             results.extend(item_use_results)
-        elif debug_spawn is not None:
+        elif debug_spawn is not None:   # Using the wizard menu
             if debug_spawn in NPC_DATA_MERGED.keys() and not game.map.is_blocked(*cursor.pos, game.blocking_ents):
                 ent = gen_npc_from_data(NPC_DATA_MERGED[debug_spawn], *cursor.pos, game)
                 game.entities.append(ent)
@@ -343,7 +345,7 @@ def process_cursor_interaction(game, action, targeting_item, debug_spawn):
                 game.entities.append(item)
             else:
                 results.append({'message':Message('Illegal position', type=MessageType.SYSTEM)})
-        elif player.active_weapon_is_ranged:
+        elif player.active_weapon_is_ranged:    # Using a ranged weapon
             target = entity_at_pos(game.blocking_ents, *cursor.pos)
             if target is not None and target.fighter is not None:
                 attack_results = player.fighter.attack_setup(target, game)

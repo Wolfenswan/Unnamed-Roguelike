@@ -78,7 +78,8 @@ def process_turn_results(player_turn_results, game, fov_map):
 
         if door_entity is not None:
             # If the player interacted with a door, the fov map is updated)
-            tcod.map_set_properties(fov_map, door_entity.x, door_entity.y, not door_entity.blocks.get(BlockLevel.SIGHT, False), not door_entity.blocks.get(BlockLevel.WALK, False))
+            fov_map.transparent[door_entity.y, door_entity.x] = not door_entity.blocks.get(BlockLevel.SIGHT, False)
+            fov_map.walkable[door_entity.y, door_entity.x] = not door_entity.blocks.get(BlockLevel.WALK, False)
 
         if dead_entity is not None:
             message = dead_entity.fighter.death(game)

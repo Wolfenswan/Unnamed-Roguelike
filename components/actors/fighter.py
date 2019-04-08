@@ -338,13 +338,14 @@ class Fighter:
     # ATTACK RELATED FUNCTIONS #
     ############################
 
-    def attack_setup(self, target, game, dmg_mod_multipl=1, verb:str='hits', ignore_moveset:bool=False, ranged_projectile:bool=True):
+    def attack_setup(self, target, game, dmg_mod_multipl=1, verb:str='hits', ignore_moveset:bool=False, draw_ranged_projectile:bool=True):
         results = []
-        blocked = False
         extra_attacks = []
 
-        melee = True if self.active_weapon.type == ItemType.MELEE_WEAPON else False
+        melee_attack = True if self.active_weapon.type == ItemType.MELEE_WEAPON else False
+        ranged_attack = True if self.active_weapon.type == ItemType.RANGED_WEAPON else False
 
+        # Apply moveset modifers #
         if ignore_moveset:
             attack_power = choice(self.base_dmg_potential) * dmg_mod_multipl
             attack_exertion = attack_power / 3
@@ -360,41 +361,51 @@ class Fighter:
             attack_exertion = attack_power / 3 * self.active_weapon.moveset.exert_multipl
             self.active_weapon.moveset.cycle_moves()
 
-        if not melee:
-            logging.debug(f'{self.owner} is attempting ranged attack at {target}')
-            if not self.owner.free_line_to_ent(target, game):
-                pos_list = line_between_pos(*self.owner.pos, *target.pos)
-                try:
-                    obstacle = next(entity_at_pos(game.blocking_ents, *pos) for pos in pos_list if entity_at_pos(game.blocking_ents, *pos) is not None)
-                    logging.debug(f'{obstacle} is blocking direct los')
-                    if randint(0,1): # TODO can later be modified by skill level, attributes etc.
-                        message = Message(f'PLACEHOLDER: {self.owner.name} hits {obstacle.name} instead of {target.name}!',
-                                          category=MessageCategory.COMBAT,
-                                          type=MessageType.SYSTEM)
-                        results.append({'message': message})
-                        target = obstacle
-                except:
-                    return results
-
-            if ranged_projectile:
-                animate_projectile(*self.owner.pos,*target.pos,game, color=colors.beige) # TODO color can later be modified by weapon/ammo
-
-        logging.debug(f'{self.owner.name} prepares to attack {target.name} with base damage {self.base_dmg_potential},'
-                      f' (modded {self.modded_dmg_potential}) for a power of {attack_power}')
-
+        # Make sure attacker has enough stamina #
         if self.stamina < attack_power / 3:
             message = Message(f'PLACEHOLDER: Attacking without enough Stamina!', category=MessageCategory.COMBAT,
                               type=MessageType.SYSTEM)
             results.append({'message': message})
             return results
 
+        # Ranged attack specific #
+        if ranged_attack:
+            logging.debug(f'{self.owner} is attempting ranged attack at {target}')
+            if not self.owner.free_line_to_ent(target, game): # If the projectile's path to the intended target is obstructed
+                pos_list = line_between_pos(*self.owner.pos, *target.pos, game) # Get a list of all pos between shooter and target
+                try:    # Get the first blocking entity from that list
+                    obstacle = next(entity_at_pos(game.walk_blocking_ents, *pos) for pos in pos_list if entity_at_pos(game.walk_blocking_ents, *pos) is not None)
+                    logging.debug(f'{obstacle} is blocking direct los')
+                    if randint(0,1): # 50% chance that that entity is hit instead
+                        # TODO can later be modified by skill level, attributes etc.
+                        message = Message(f'PLACEHOLDER: {self.owner.name} hits {obstacle.name} instead of {target.name}!',
+                                          category=MessageCategory.COMBAT,
+                                          type=MessageType.SYSTEM)
+                        results.append({'message': message})
+                        if obstacle.fighter is not None:
+                            target = obstacle   # Intended target is switched for obstacle
+                        else:
+                            return results # If the obstacle can't be damaged, end the attack here
+                except:
+                    # TODO I think this is obsolete now?
+                    print('obstruction error')
+                    return results
+
+            if draw_ranged_projectile:
+                animate_projectile(*self.owner.pos,*target.pos,game, color=colors.beige) # TODO color can later be modified by weapon/ammo
+
+        logging.debug(f'{self.owner.name} prepares to attack {target.name} with base damage {self.base_dmg_potential},'
+                      f' (modded {self.modded_dmg_potential}) for a power of {attack_power}')
+
         if target.fighter.stamina <= 0:  # If the target is out of stamina, attack power is doubled
             attack_power *= 2
 
+        # Blocking # TODO move to own function
+        attack_blocked = False
         if target.fighter.is_blocking:
-            blocked = target.fighter.attempt_block(self, attack_power)
+            attack_blocked = target.fighter.attempt_block(self, attack_power)
 
-        if blocked:  # TODO move to own function
+        if attack_blocked:
             # TODO should attacker also take sta damage?
             sta_dmg_multipl = self.active_weapon.moveset.modifier(Key.BLOCK_STA_DMG_MULTIPL) # Some weapons afflict a higher stamina damage
             sta_dmg = round((attack_power / 2) * sta_dmg_multipl)
@@ -402,7 +413,7 @@ class Fighter:
                 f'{target.name} block exert multiplied by {sta_dmg_multipl} due to {self.owner.name} attack mod')
             results.append(target.fighter.exert(sta_dmg, 'block'))
 
-            if melee:
+            if melee_attack:
                 if target.is_player:
                     message = Message(f'You block the attack, dazing the {self.owner.name_with_color}!',
                                       category=MessageCategory.COMBAT, type=MessageType.COMBAT_GOOD)
@@ -418,7 +429,7 @@ class Fighter:
         for attack_pos in extra_attacks:
             extra_target = entity_at_pos(game.npc_ents, *attack_pos)
             if extra_target:
-                results.extend(self.attack_execute(extra_target, attack_power // 2, 'further hits')) # TODO currently flat half damage; can be replaced with moveset-tailored multiplier
+                results.extend(self.attack_execute(extra_target, attack_power // 2, 'further hits')) # TODO currently flat half damage and can't be blocked; can be replaced with moveset-tailored multiplier
 
         self.exert(attack_exertion, 'attack')
 

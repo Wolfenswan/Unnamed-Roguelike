@@ -59,7 +59,7 @@ class BaseAI:
           return results
 
         # First check if the npc can see the player #
-        if tcod.map_is_in_fov(fov_map, npc.x, npc.y):
+        if npc.is_visible(fov_map): #tcod.map_is_in_fov(fov_map, npc.x, npc.y):
 
             # Consider using a skill #
             # TODO might be merged into behavior components later #

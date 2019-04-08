@@ -36,7 +36,7 @@ bodytype_data = {
     },
     'strong_2': {
         Key.TYPE: BodyType.OBESE,
-        Key.HP_MULTIPL: 1.5
+        Key.HP_MULTIPL: 1.75
     },
     'super_1': {
         Key.TYPE: BodyType.GARGANTUAN,

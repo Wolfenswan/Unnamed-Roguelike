@@ -65,7 +65,7 @@ def render_map_centered_on_player(game, con, fov_map, debug=False):
 
 def draw_tile(game, con, fov_map, tile_x, tile_y, screen_x, screen_y, debug=False):
     tile = game.map.tiles[(tile_x, tile_y)]
-    visible = tcod.map_is_in_fov(fov_map, tile_x, tile_y) or debug
+    visible = fov_map.fov[tile_y, tile_x] or debug
 
     if visible:
         color = darken_color_by_fov_distance(game.player, tile.fg_color, tile_x, tile_y, min = 0.3) if not debug else tile.fg_color

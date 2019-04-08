@@ -9,11 +9,16 @@ TESTING:
 - Case1 in Actionplan (existing exclusive plan)
 
 CURRENT
-- Monster generator (destroyable)
-    - different generator for each monster?
-
+- Queen boss monster
+    - lowest level
+- Balancing pass for first release
+    - items much rarer
+    - monsters better spread throughout levels
+        - maybe increase group sizes in lower levels?
 
 UPCOMING
+- Monster generator (destroyable)
+    - different generator for each monster?
 - Ent Placement
     - Implement the 'exclusive' switch to find_end_position to make sure e.g. chests and barrels are on their own
 - Basic Goals

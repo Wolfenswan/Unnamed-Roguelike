@@ -7,6 +7,7 @@ from data.data_types import Material, Condition, Craftsmanship
 from debug.timer import debug_timer
 from gameobjects.entity import Entity
 from gameobjects.player import Player
+from map.entity_placement.place_actors import place_monsters
 from map.entity_placement.place_architecture import place_generic_architecture, place_special_architecture, place_doors
 from map.entity_placement.place_containers import place_containers
 from map.entity_placement.place_items import place_items
@@ -73,6 +74,6 @@ def initialize_objects(game):
     place_containers(game)
     place_doors(game)
     place_items(game)
-    # place_monsters(game)
+    place_monsters(game)
 
 
