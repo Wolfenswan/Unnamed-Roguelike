@@ -41,7 +41,6 @@ class Statistics:
 
     @property
     def sta_change(self):
-        print(self.turn)
         return self.turn['sta_change']
 
     @sta_change.setter
@@ -75,7 +74,6 @@ class Statistics:
     def reset(self, dic):
         """ Statistics.reset() sets all values of the corresponding dict to their respective empty-state. """
         for key in self.int_values:
-            print(key)
             dic[key] = 0
         for key in self.list_values:
             dic[key] = []

@@ -300,7 +300,7 @@ class Entity:
         else:
             return False
 
-    def proc_every_turn(self, last_player_action, game, start=True):
+    def proc_every_turn(self, start=True):
         """
         Things that should every proper turn (after player has done an action that prompts an enemy turn.)
         """

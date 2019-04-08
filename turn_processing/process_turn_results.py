@@ -36,7 +36,7 @@ def process_turn_results(player_turn_results, game, fov_map):
         debug_menu_selection = player_turn_result.get('debug_menu_selection')
 
         # List of results that activate the enemy's turn #
-        enemy_turn_on = [item_added, item_dropped, item_consumed, item_equipped, item_dequipped, item_prepared, weapon_switched, ranged_attack]
+        enemy_turn_on = [item_added, item_dropped, item_consumed, item_equipped, item_dequipped, item_prepared, weapon_switched, ranged_attack, waiting]
 
         if message is not None:
             message.add_to_log(game)
@@ -73,7 +73,7 @@ def process_turn_results(player_turn_results, game, fov_map):
                 game.state = GameState.ENEMY_TURN
             else:
                 # TODO placeholder for regeneration/resting
-                player.fighter.hp += player.fighter.max_hp/10
+                player.fighter.heal(player.fighter.max_hp/10)
                 player.fighter.recover(player.fighter.max_stamina / 10)
 
         if door_entity is not None:

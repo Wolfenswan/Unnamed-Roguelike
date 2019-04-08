@@ -35,8 +35,8 @@ def render_player_panel(game, con, panel_x, panel_y, width, height):
     print_string(con, 1, y, hp_string, color=game.player.fighter.hp_color)
     hp_diff = player.statistics.hp_change
     if hp_diff != 0:
-        col = '%darker_green%+' if hp_diff > 0 else '%darker_red%'
-        print_string(con, len(hp_string)- 2, y, f'({col}{hp_diff}%%)')
+        col = colors.darker_green if hp_diff > 0 else colors.darker_red
+        print_string(con, len(hp_string)- 2, y, f'(%{col}%{hp_diff}%%)')
 
     sta_string = f'STAMINA : %c{player.fighter.stamina}/{player.fighter.max_stamina}%c'
     print_string(con, 1, y+1,  sta_string, color = game.player.fighter.stamina_color)

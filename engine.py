@@ -43,6 +43,7 @@ def game_loop(game):
 
     game.state = GameState.PLAYERS_TURN
     game.previous_state = game.state
+    new_turn = True
     while not tcod.console_is_window_closed():
         # tcod.sys_set_fps(30)
         # tcod.sys_check_for_event(tcod.EVENT_KEY_PRESS, key, '')
@@ -53,6 +54,12 @@ def game_loop(game):
             recompute_fov(game, player.x, player.y)
             fov_recompute = False
         render_all(game, game.fov_map, debug=game.debug['map'])
+
+        if new_turn:
+            game.turn += 1
+            for ent in game.entities:
+                ent.proc_every_turn(start=True)
+            new_turn = False
 
         # TODO new tcod.event system
         # action = False
@@ -86,10 +93,9 @@ def game_loop(game):
                 process_npc_actions(game)
 
                 for ent in game.entities:
-                    ent.proc_every_turn(action, game, start=False)
-                game.turn += 1
-                for ent in game.entities:
-                    ent.proc_every_turn(action, game, start=True)
+                    ent.proc_every_turn(start=False)
+
+                new_turn = True
 
             # Prepare for next turn #
             if processed_turn_results:
