@@ -18,6 +18,11 @@ def statistics_updater(entry, value_idx=1, substract=False):
 
 
 class Statistics:
+    """
+    Statistics contains three dictionaries: turn, level, game.
+    All dictionaries contain various key:value pairs referencing in-game attributes.
+    The values of these pairs are updated as the game progresses.
+    """
     def __init__(self):
         self.int_values = ['hp_change', 'sta_change', 'dmg_done']
         self.list_values = ['killed']
@@ -25,7 +30,7 @@ class Statistics:
         for dic in [self.turn, self.level, self.game]:
             self.reset(dic)
 
-    # Note: All @properties are just convenient ways to directly get and set the current turn statistics
+    # All @properties are just convenient ways to directly get and set the current turn statistics
     @property
     def hp_change(self):
         return self.turn['hp_change']
@@ -36,6 +41,7 @@ class Statistics:
 
     @property
     def sta_change(self):
+        print(self.turn)
         return self.turn['sta_change']
 
     @sta_change.setter
@@ -67,7 +73,9 @@ class Statistics:
             dic[key] += value
 
     def reset(self, dic):
+        """ Statistics.reset() sets all values of the corresponding dict to their respective empty-state. """
         for key in self.int_values:
+            print(key)
             dic[key] = 0
         for key in self.list_values:
             dic[key] = []
