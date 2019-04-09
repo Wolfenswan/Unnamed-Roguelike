@@ -166,16 +166,9 @@ def main_menu(game):
     choice = generic_options_menu(cfg.GAME_NAME, 'Welcome to the Dungeon',
                                     ['Play a new game', 'Continue last game', 'Game Options', 'Quit'], game, cancel_with_escape=False,
                                   sort_by=1)
+    # Choice 0 or 1 are returned to engine.py, prompting a new game or loading a game
     if choice == 2:
         options_menu(game)
         tcod.console_flush()
     else:
         return choice
-
-
-# def test_menu(game):
-#
-#     window = tcod.console.Console(10, 10)
-#     window.blit(game.root, 50, 50, 0, 0, 10, 10, key_color=(90,90,90))
-#     tcod.console_flush()
-#     choice = menu_loop(wait_for=2, sort_by=1, cancel_with_escape=True)

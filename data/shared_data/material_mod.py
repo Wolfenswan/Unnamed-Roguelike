@@ -33,7 +33,7 @@ item_material_data = {
     'steel': {
         Key.TYPE: Material.STEEL,
         Key.COLOR: colors.steel,
-        Key.DMG_FLAT: 2,
+        Key.DMG_FLAT: 1,
         Key.AV_FLAT: 2
     },
 

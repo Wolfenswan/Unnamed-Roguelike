@@ -6,8 +6,8 @@ from data.data_types import Condition, Craftsmanship
 qual_craft_data = {
     'poor_craft': {
         Key.TYPE: Craftsmanship.POOR,
-        Key.DMG_FLAT: -2,
-        Key.AV_FLAT: -2
+        Key.DMG_FLAT: -1,
+        Key.AV_FLAT: -1
     },
     'normal_craft': {
         Key.TYPE: Craftsmanship.NORMAL,
@@ -24,7 +24,7 @@ qual_craft_data = {
     },
 }
 
-# Condition modifiers multiply the value (base stat + material mod + cond modifier) #
+# Condition modifiers multiply the item's primary value (base stat + material mod + cond modifier) #
 
 qual_cond_data = {
     'poor_cond': {

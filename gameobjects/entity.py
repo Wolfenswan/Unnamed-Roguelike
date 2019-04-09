@@ -10,7 +10,7 @@ from config_files import colors
 from components.AI.baseAI import BaseAI
 from components.skills.skillList import SkillList
 from components.actionplan import Actionplan
-from components.actors.fighter_util import State
+from components.actors.fighter_util import State, Stance
 from components.architecture import Architecture
 from components.inventory.inventory import Inventory
 from components.inventory.paperdoll import Paperdoll
@@ -300,7 +300,7 @@ class Entity:
         else:
             return False
 
-    def proc_every_turn(self, start=True):
+    def proc_every_turn(self, game, start=True):
         """
         Things that should every proper turn (after player has done an action that prompts an enemy turn.)
         """
@@ -312,8 +312,8 @@ class Entity:
             if self.is_player:
                 self.actionplan.process_queue()
                 # TODO Placeholder for proper stamina management (currently flat 1% recovered)
-                # if not self.in_combat(game) and not self.fighter.sta_full and not last_player_action.get('dash'):
-                #     self.fighter.recover(self.fighter.max_stamina / 100)
+                if not self.in_combat(game) and not self.fighter.sta_full and not self.fighter.stances.get(Stance.DASHING,False):
+                    self.fighter.recover(self.fighter.max_stamina / 100)
             for event in self.every_turn_end:
                 eval(event)
 

@@ -24,11 +24,12 @@ class Statistics:
     The values of these pairs are updated as the game progresses.
     """
     def __init__(self):
+        # These lists dictate the empty state for each value
         self.int_values = ['hp_change', 'sta_change', 'dmg_done']
         self.list_values = ['killed']
-        self.turn, self.level, self.game = {}, {}, {}
-        for dic in [self.turn, self.level, self.game]:
-            self.reset(dic)
+        self.turn, self.level, self.game = {}, {}, {}  # Initializes empty dictionaries
+        for dic in [self.turn, self.level, self.game]: # Then set each key:value pair to the respective empty-state
+            self.reset(dic) # Reset
 
     # All @properties are just convenient ways to directly get and set the current turn statistics
     @property
@@ -66,6 +67,7 @@ class Statistics:
         self.update_all('killed', value)
 
     def update_all(self, key, value):
+        """ Statistics.update_all() updates the respective key:value pair in each dictionary """
         for dic in [self.turn, self.level, self.game]:
             if isinstance(value, float):
                 value = round(value)

@@ -8,7 +8,6 @@ from data.data_keys import Key
 from data.data_types import Craftsmanship, Condition
 from data.gui_data.cond_strings import cond_name_data
 from data.gui_data.craft_strings import craft_name_data
-from rendering.util_functions import dynamic_wrap
 
 @dataclass
 class Item:
@@ -101,8 +100,3 @@ class Item:
                 listing += f"\n\n Range: %{col}%{u_range[0]}-{u_range[1]}%%"
         
         return listing
-
-    # Convenience #
-    @property
-    def name(self):
-        return self.owner.name

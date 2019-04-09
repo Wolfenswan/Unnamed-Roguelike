@@ -72,9 +72,11 @@ def process_turn_results(player_turn_results, game, fov_map):
                     player.fighter.active_weapon.moveset.cycle_moves(reset=True) # Waiting resets weapon moves
                 game.state = GameState.ENEMY_TURN
             else:
-                # TODO placeholder for regeneration/resting
-                player.fighter.heal(player.fighter.max_hp/10)
-                player.fighter.recover(player.fighter.max_stamina / 10)
+                # TODO placeholder values for regeneration/resting
+                # if not player.fighter.hp_full:
+                #     player.fighter.heal(player.fighter.max_hp/10)
+                if not player.fighter.sta_full:
+                    player.fighter.recover(player.fighter.max_stamina / 10)
 
         if door_entity is not None:
             # If the player interacted with a door, the fov map is updated)

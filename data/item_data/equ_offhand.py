@@ -25,7 +25,7 @@ equ_offhand_data = {
         Key.MATERIAL: (Material.LEATHER, Material.OAK, Material.IRON),
         Key.DESCR: 'A simple, round shield.',
         Key.RARITY: RarityType.COMMON,
-        Key.BLOCK_DEF: 8
+        Key.BLOCK_DEF: 4
     },
     'tower_shield': {
         **default_values,
@@ -33,6 +33,6 @@ equ_offhand_data = {
         Key.MATERIAL: (Material.IRON, Material.STEEL),
         Key.DESCR: 'A large shield, covering most of your upper body.',
         Key.RARITY: RarityType.RARE,
-        Key.BLOCK_DEF: 14
+        Key.BLOCK_DEF: 8
     }
 }

@@ -7,7 +7,7 @@ from dataclasses import dataclass
 from components.actors.fighter_util import DamagePercentage, AttributePercentage, get_gui_data, State, Surrounded, \
     Stance
 from components.statistics import statistics_updater
-from config_files import colors
+from config_files import colors, cfg
 from data.actor_data.act_status_mod import status_modifiers_data
 from data.data_keys import Key
 from data.data_types import ItemType
@@ -201,7 +201,7 @@ class Fighter:
 
     @property
     def can_dash(self):
-        exertion = self.defense * 2
+        exertion = self.defense * cfg.DASH_EXERT_MULTIPL
         return self.stamina >= exertion
     
     @property
@@ -505,7 +505,7 @@ class Fighter:
 
         if self.can_dash:
                 animate_move_line(self.owner, dx, dy, 2, game, anim_delay=0.05)
-                results.append(self.exert(self.defense * 2, 'dash'))
+                results.append(self.exert(self.defense * cfg.DASH_EXERT_MULTIPL, 'dash'))
         else:
             results.append({'message': Message('You are too exhausted!', type=MessageType.COMBAT_BAD)})
 
@@ -534,7 +534,7 @@ class Fighter:
         """
         block_def = self.shield.block_def
         #mod = wp_attacktypes_data[attack_type].get(Key.BLOCK_DEF_MULTIP,1)
-        mod = attacking_weapon.equipment.movelist.modifier(Key.BLOCK_DEF_MULTIPL)
+        mod = attacking_weapon.moveset.modifier(Key.BLOCK_DEF_MULTIPL)
         block_def = round(block_def * mod)
         logging.debug(f'{self.owner.name} block def. multiplied by {mod} due to {attacking_weapon}')
 

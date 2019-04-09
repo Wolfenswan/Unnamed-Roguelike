@@ -5,9 +5,7 @@ import tcod.event
 
 from config_files import cfg
 from game import GameState, Game
-# from gui.menus import generic_options_menu, main_menu
 from gui.menus import main_menu
-# from loader_functions.data_loader import load_game
 from loader_functions.data_loader import load_game
 from loader_functions.initialize_font import initialize_font
 from loader_functions.initialize_game import initialize_game
@@ -58,7 +56,7 @@ def game_loop(game):
         if new_turn:
             game.turn += 1
             for ent in game.entities:
-                ent.proc_every_turn(start=True)
+                ent.proc_every_turn(game, start=True)
             new_turn = False
 
         # TODO new tcod.event system
@@ -93,7 +91,7 @@ def game_loop(game):
                 process_npc_actions(game)
 
                 for ent in game.entities:
-                    ent.proc_every_turn(start=False)
+                    ent.proc_every_turn(game, start=False)
 
                 new_turn = True
 
