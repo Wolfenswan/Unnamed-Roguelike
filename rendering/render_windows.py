@@ -100,10 +100,6 @@ def draw_window(title, body, game, options:Optional[List]=None,
     return window
 
 
-def clear_window(window):
-    pass
-
-
 def render_description_window(game):
     ent = entity_at_pos(game.npc_ents + game.architecture_ents, *game.cursor.pos)
     if ent is not None:

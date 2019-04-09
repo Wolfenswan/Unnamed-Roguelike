@@ -1,3 +1,4 @@
+from data.actor_data.act_special import spawn_data_special
 from data.data_processing import gen_npc_from_data, NPC_DATA_MERGED, ITEM_DATA_MERGED
 from gui.menus import generic_options_menu
 from gui.messages import Message, MessageType, MessageCategory
@@ -5,6 +6,7 @@ from gui.messages import Message, MessageType, MessageCategory
 
 def debug_menu(game):
     results = []
+    npc_data = NPC_DATA_MERGED
     choice = generic_options_menu('Debug Menu', 'Select Debug Option:',
                                   ['Show full map', 'Invincible Player', 'Entity Debug Information', 'Spawn Monster', 'Spawn Item'], game, sort_by=1,
                                   cancel_with_escape=True)
@@ -22,7 +24,7 @@ def debug_menu(game):
                 category=MessageCategory.OBSERVATION).add_to_log(game)
     elif choice == 3:
         # TODO make bodytype selectable
-        options = list(NPC_DATA_MERGED.keys())
+        options = list(npc_data.keys())
         choice= generic_options_menu('Monster Spawning', 'Pick the monster to spawn. Enter to spawn, ESC to cancel.', options, game)
         if choice is not None:
             key = options[choice]

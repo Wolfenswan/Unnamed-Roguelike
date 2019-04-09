@@ -17,6 +17,10 @@ status_modifiers_data = {
         'skip_turn_chance': 0,
         'can_move': False
     },
+    State.IMMOBILE: {
+        'can_move': False
+    },
+
     Surrounded.FREE:{
 
     },

@@ -21,18 +21,17 @@
         Key.RARITY: RarityType.
     }
 """
-from components.AI.behavior.queen import Queen
 from components.AI.behavior.ranged import Ranged
 from components.AI.behavior.simple import Simple
 from components.AI.behavior.swarm import Swarm
 from config_files import colors
 from data.actor_data.act_skills import skill_generic_charge, skill_generic_slam, skill_explode_self, skill_entangle, \
-    skill_entangle_timed
+    skill_entangle_timed, skill_hatch
 from data.data_keys import Key
 from data.data_types import RarityType
 from data.moveset_data.creature_movesets import moveset_claws_heavy, moveset_mandibles_heavy
 
-spawn_data = {
+spawn_data_insects = {
     'roachling': {
         Key.NAME: 'Roachling',
         Key.CHAR: 'r',
@@ -160,24 +159,4 @@ spawn_data = {
         Key.DLVLS: (4, 10),
         Key.RARITY: RarityType.UNCOMMON
     },
-    'queen' : {
-        Key.NAME: 'Insect Queen',
-        Key.CHAR: 'Q',
-        Key.COLOR: colors.purple,
-        Key.DESCR: 'TODO QUEEN.',
-        Key.MAX_HP: (50, 50),
-        Key.MAX_STAMINA: (100, 100),
-        Key.BASE_ARMOR: (5, 5),
-        Key.BASE_STRENGTH: (5, 5),
-        Key.LOADOUT: {
-            Key.EQUIPMENT: {'ins_mandibles': {}},
-            Key.BACKPACK: {}
-        },
-        Key.AI_BEHAVIOR: Queen,
-        Key.SKILLS: (skill_entangle_timed,),
-        Key.BARKS: ('insect',),
-        Key.GROUP_SIZE: (1, 1),
-        Key.DLVLS: (10, 10),
-        Key.RARITY: RarityType.UNIQUE
-    }
 }

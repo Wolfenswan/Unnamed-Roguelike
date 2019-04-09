@@ -7,7 +7,6 @@ from dataclasses import dataclass, field
 
 from config_files import colors
 
-from components.AI.baseAI import BaseAI
 from components.skills.skillList import SkillList
 from components.actionplan import Actionplan
 from components.actors.fighter_util import State, Stance
@@ -23,7 +22,8 @@ from data.gui_data.material_strings import material_name_data
 from data.gui_data.gui_fighter import effects_descr_data
 from game import Game
 from gameobjects.util_functions import entity_at_pos, free_line_between_pos, distance_between_pos
-from map.directions_util import direction_between_pos
+from map.directions_util import direction_between_pos, DIRECTIONS_CIRCLE
+from map.game_map import GameMap
 from rendering.render_order import RenderOrder
 
 @dataclass
@@ -44,8 +44,8 @@ class Entity:
     material: Optional[Material] = None
     bodytype: Optional[BodyType] = None
 
-    fighter : Optional = None # Adding Fighter as Type Hint would cause a circular import
-    ai: Optional[BaseAI] = None
+    fighter : Optional = None
+    ai: Optional = None
     skills: Optional[SkillList] = None
     item: Optional[Item] = None
     inventory: Optional[Inventory] = None
@@ -67,6 +67,8 @@ class Entity:
 
         if self.ai is not None:
             self.ai.owner = self
+            if self.ai.behavior is not None:
+                self.ai.behavior.owner = self
 
         if self.item is not None:
             self.item.owner = self
@@ -164,7 +166,7 @@ class Entity:
     def extended_descr(self, game):
         extend_descr = self.descr
         col = 'dark_crimson' # TODO All colors are placeholders
-        if self.fighter is not None:
+        if self.fighter is not None and self.active_weapon is not None:
             # if self.fighter.active_weapon: # TODO add another way to indicate special features of a creatures attack
             #     extend_descr += f'\n\nIt attacks with %{col}%{self.fighter.active_weapon.item.equipment.attack_type.name.lower()}%% strikes.'
 
@@ -172,20 +174,20 @@ class Entity:
                 extend_descr += f'\n\nBlocking its attacks will be %{col}%{game.player.fighter.average_chance_to_block(self)}%%.'
 
             for effect, active in self.fighter.effects.items():
-                if active:
+                if active and effects_descr_data.get(effect, None) is not None:
                     extend_descr += f'\n\n{self.pronoun.title()} {self.state_verb_present} {effects_descr_data[effect]}'
 
         if self.item:
             extend_descr += self.item.attr_list
 
         if game.debug['ent_info']:
-            if self.fighter:
+            if self.fighter is not None:
                 extend_descr += f'\n\nhp:{self.fighter.hp}/{self.fighter.max_hp}'
                 extend_descr += f'\nav:{self.fighter.defense} (modded:{self.fighter.modded_defense})'
                 extend_descr += f'\ndmg:{self.fighter.base_dmg_potential} (modded:{self.fighter.modded_dmg_potential})'
-                extend_descr += f'\nYour ctb:{game.player.fighter.average_chance_to_block(self, debug=True)}'
-            if self.fighter and self.fighter.active_weapon:
-                extend_descr += f'\n\nwp:{self.fighter.active_weapon.full_name}'
+                if self.active_weapon is not None:
+                    extend_descr += f'\n\nwp:{self.fighter.active_weapon.full_name}'
+                    extend_descr += f'\nYour ctb:{game.player.fighter.average_chance_to_block(self, debug=True)}'
             if self.architecture:
                 ext1 = self.architecture.on_interaction.__name__ if self.architecture.on_interaction else None
                 ext2 = self.architecture.on_collision.__name__ if self.architecture.on_collision else None
@@ -341,6 +343,18 @@ class Entity:
 
     def same_pos_as(self, other_ent):
         return self.pos == other_ent.pos
+
+    def random_free_pos_in_dist(self, game, dist=1):
+        game_map = game.map
+        for steps in range(dist):
+            dirs = DIRECTIONS_CIRCLE
+            while len(dirs) > 0:
+                dir = choice(dirs)
+                pos = (self.x + dir[0] + steps, self.y + dir[1] + steps)
+                if not game_map.is_blocked(*pos, game.walk_blocking_ents):
+                    return pos
+                dirs.remove(dir)
+        return False
 
     def entities_in_distance(self, entities:List, dist:float=1.5):
         """ returns nearby entities in given distance """

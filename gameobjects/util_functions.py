@@ -27,17 +27,23 @@ def line_between_pos(x1:int, y1:int, x2:int, y2:int, inclusive=False):
     :param inclusive: True to include start/end pos
     """
     dist = distance_between_pos(x1, y1, x2, y2)
+    print(x1,y1,x2,y2)
     x, y = x1, y1
     pos_list = []
+    print(pos_list)
+    print(inclusive)
     if inclusive:
         pos_list.append((x,y))
     for s in range(dist):
+        print(pos_list)
         dir = direction_between_pos(x, y, x2, y2)
+        print(dir)
         x += dir[0]
         y += dir[1]
         if (x, y) == (x2, y2) and not inclusive:
             break
         pos_list.append((x,y))
+        print(pos_list)
     return pos_list
 
 

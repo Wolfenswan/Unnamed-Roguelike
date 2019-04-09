@@ -13,7 +13,7 @@ class State(Enum):
     STUNNED = auto()
     ENTANGLED = auto()
     CONFUSED = auto()
-
+    IMMOBILE = auto()
 
 class Surrounded(Enum):
     FREE = auto()

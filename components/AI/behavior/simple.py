@@ -4,7 +4,7 @@ class Simple:
     """
 
     def decide_action(self, target, game):
-        actor = self.owner.owner
+        actor = self.owner
         distance = actor.distance_to_ent(target)
 
         results = []

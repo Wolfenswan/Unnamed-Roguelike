@@ -6,17 +6,17 @@ class Swarm:
     """ Swarming npcs will first check if they have friendlies nearby, before chasing down the player """
 
     def decide_action(self, target, game):
-        actor = self.owner.owner
+        actor = self.owner
         game_map = game.map
         distance = actor.distance_to_ent(target)
         friendlies_nearby = len(actor.entities_in_distance(entities=game.npc_ents, dist=3)) > 0
-        friendlies_near_target = len(target.surrounding_enemies(game.npc_ents)) > 1
+        friendlies_near_target = len(target.surrounding_enemies(game.npc_ents)) >= 1
         friendlies_in_area = len(actor.entities_in_distance(entities=game.npc_ents, dist=actor.fighter.vision)) > 0
 
         results = []
 
         if distance >= 2:
-            # 1. Check: Is Target either surrounded by friendlies or friendlies are next to self #
+            # 1. Check: Is Target either already attacked by friendlies or friendlies are next to self #
             if friendlies_nearby or friendlies_near_target:
                 logging.debug(f'{actor} has friendly nearby and moves to player.')
                 actor.move_astar(target, game)

@@ -134,3 +134,14 @@ class SkillEntangle(BaseSkill):
         results.append({'message': Message(f'The {user.name} wraps itself around {target.name}!', category=MessageCategory.OBSERVATION,
                                            type=MessageType.COMBAT)})
         return results
+
+
+class SkillHatch(BaseSkill):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+    def prepare(self, target:Entity, game:Game, **kwargs):
+        pass
+
+    def execute(self, target:Entity, game:Game, **kwargs):
+        pass

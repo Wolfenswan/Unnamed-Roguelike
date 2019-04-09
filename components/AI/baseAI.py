@@ -1,11 +1,9 @@
 import logging
 from random import randint, choice
-from typing import Union
+from typing import Union, Optional
 
-import tcod
 from dataclasses import dataclass
 
-from components.AI.behavior.queen import Queen
 from components.AI.behavior.ranged import Ranged
 from components.AI.behavior.simple import Simple
 from components.AI.behavior.swarm import Swarm
@@ -16,13 +14,9 @@ from gui.messages import Message
 
 @dataclass
 class BaseAI:
-    behavior : Union[Simple, Swarm, Ranged]
-
-    def __post_init__(self):
-        self.behavior.owner = self
+    behavior : Optional
 
     def take_turn(self, game, fov_map):
-
         results = []
         npc = self.owner
         presence = npc.fighter.effects
@@ -79,7 +73,7 @@ class BaseAI:
 
         # If NPC is hidden from FOV, move randomly #
         # TODO test perfomance impact
-        else:
+        elif npc.can_move:
             dx, dy = randint(-1, 1), randint(-1, 1)
             x, y = npc.x + dx, npc.y + dy
             if not game_map.is_wall(x, y):
@@ -88,6 +82,6 @@ class BaseAI:
         return results
 
 
-    def set_behavior(self, behavior:Union[Simple, Swarm, Ranged, Queen]):
+    def set_behavior(self, behavior):
         self.behavior = behavior
         self.behavior.owner = self

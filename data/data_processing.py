@@ -2,6 +2,8 @@ import logging
 from random import choice, randint
 from typing import Dict
 
+from dataclasses import field
+
 from components.AI.baseAI import BaseAI
 from components.AI.behavior.simple import Simple
 from components.actors.fighter import Fighter
@@ -13,7 +15,8 @@ from components.items.item import Item
 from components.items.moveset import Moveset
 from components.items.useable import Useable
 from config_files import colors
-from data.actor_data.npc_insects import spawn_data
+from data.actor_data.npc_standard import spawn_data_insects
+from data.actor_data.npc_unique import spawn_data_unique
 from data.architecture_data.arch_static import arch_static_data
 from data.architecture_data.arch_containers import arch_containers_data
 from data.data_keys import Key
@@ -34,7 +37,7 @@ from debug.timer import debug_timer
 from game import Game
 from gameobjects.block_level import BlockLevel
 from gameobjects.entity import Entity
-from gameobjects.npc import NPC
+from gameobjects.special_entities import NPC
 from rendering.render_order import RenderOrder
 from rendering.util_functions import multiply_rgb_color
 
@@ -51,7 +54,7 @@ def merge_dictionaries(dicts):
 item_data = [use_potions_data, use_potions_variants_data, use_bombs_data, equ_creature_data, equ_weapon_data, equ_armor_data, equ_offhand_data]
 ITEM_DATA_MERGED = merge_dictionaries(item_data)
 
-npc_data = [spawn_data]
+npc_data = [spawn_data_insects, spawn_data_unique]
 NPC_DATA_MERGED = merge_dictionaries(npc_data)
 
 architecture_data = [arch_static_data]
@@ -244,6 +247,7 @@ def gen_npc_from_data(data:Dict, x:int, y:int, game:Game):
     vision = data.get(Key.BASE_VISION, 8)
     ai_behavior = data.get(Key.AI_BEHAVIOR, Simple)
     skills = data.get(Key.SKILLS, None)
+    default_effects = data.get(Key.EFFECTS, dict())
 
     # Modify values according to bodytype #
     hp_mod_multipl = bodytype.get(Key.HP_MULTIPL, 1)
@@ -254,8 +258,8 @@ def gen_npc_from_data(data:Dict, x:int, y:int, game:Game):
     base_av = round(base_av * av_mod_multipl)
     base_strength = round(base_strength * str_multipl)
 
-    fighter_component = Fighter(hp, stamina, base_av, base_strength, vision)
-    ai_component = BaseAI(behavior=ai_behavior())
+    fighter_component = Fighter(hp, stamina, base_av, base_strength, vision, default_effects)
+    ai_component = BaseAI(behavior=ai_behavior()) if ai_behavior is not None else None
     inventory_component = Inventory(capacity=12)  # Todo Placeholder #
     skills_component = None
     if skills is not None:

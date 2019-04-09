@@ -1,6 +1,6 @@
 from components.actors.fighter_util import State
 from components.skills.skillConditions import SkillCondition
-from components.skills.skills import SkillCharge, SkillSlam, SkillExplodeSelf, SkillEntangle
+from components.skills.skills import SkillCharge, SkillSlam, SkillExplodeSelf, SkillEntangle, SkillHatch
 from data.data_keys import Key
 
 """
@@ -53,3 +53,8 @@ skill_entangle_timed = {
     Key.ON_ACTIVATE_KWARGS: {'delay': 0, 'duration': 5},
     Key.COOLDOWN_LENGTH: 8
     }
+
+skill_hatch = {
+    Key.SKILL: SkillHatch,
+    Key.NAME : 'Hatch',
+}

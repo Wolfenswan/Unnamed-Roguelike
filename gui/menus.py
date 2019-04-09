@@ -5,7 +5,7 @@ import tcod
 from config_files import cfg, colors
 from loader_functions.initialize_font import initialize_font, all_fonts
 from rendering.util_functions import pos_on_screen
-from rendering.render_windows import draw_window, clear_window
+from rendering.render_windows import draw_window
 
 
 def menu_loop(wait_for=None, cancel_with_escape=True, sort_by:Union[int,str]='string'):

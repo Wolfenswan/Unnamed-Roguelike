@@ -10,7 +10,13 @@ TESTING:
 
 CURRENT
 - Queen boss monster
-    - lowest level
+    - spawn in lowest level
+        - either spawn manually or delete from data entries after it has been picked
+    - add second weapon (melee) and allow switching if player is in melee
+    - make eggs hatch (roachlings?)
+        - maybe larva that try to get away but in X turns turn very strong
+    - maybe allow queen to spit eggs instead of ranged attack?
+        - lobbed ranged attack that cant miss?
 - Balancing pass for first release
     - items much rarer
     - monsters better spread throughout levels

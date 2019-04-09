@@ -76,7 +76,7 @@ class Game:
 
     @property
     def npc_ents(self):
-        npc_ents = [v for v in self.fighter_ents if v.ai is not None]
+        npc_ents = [v for v in self.fighter_ents if not v.is_player]
         return npc_ents
 
     @property

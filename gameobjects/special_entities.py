@@ -3,9 +3,28 @@ from random import choice
 
 import tcod
 
+from components.actors.fighter import Fighter
+from components.inventory.inventory import Inventory
+from config_files import colors, cfg
+from data.actor_data.act_special import spawn_data_special
+from data.data_keys import Key
 from game import Game
+from gameobjects.block_level import BlockLevel
 from gameobjects.entity import Entity
 from map.directions_util import DIRECTIONS_CIRCLE
+from rendering.render_order import RenderOrder
+
+
+class Player(Entity):
+    """ Class for the player object """
+
+    def __init__(self, name):
+        fighter_component = Fighter(40, 100, 0, 4, cfg.FOV_RADIUS)
+        inventory_component = Inventory(capacity=26)
+
+        super().__init__(0, 0, '@', tcod.white, name, descr='This is you.', is_player=True,
+                         blocks={BlockLevel.WALK:True}, render_order=RenderOrder.PLAYER,
+                         fighter=fighter_component, inventory=inventory_component)
 
 
 class NPC(Entity):
@@ -109,3 +128,13 @@ class NPC(Entity):
     #         else:
     #             results.append({'message':Message(f'The {self.name} {bark}', type=MessageType.FLUFF, category=MessageCategory.OBSERVATION)})
     #     return results
+
+
+class Egg(Entity):
+    def __init__(self, pos, data_key='egg'):
+        d = spawn_data_special[data_key]
+
+        fighter_component = Fighter(d[Key.MAX_HP], d[Key.MAX_STAMINA], d[Key.BASE_ARMOR], 0, 0, d[Key.EFFECTS])
+        super().__init__(pos[0], pos[1], d[Key.CHAR], d[Key.COLOR], d[Key.NAME], d[Key.DESCR], blocks={BlockLevel.WALK: True},
+                 render_order=RenderOrder.ACTOR,
+                 fighter=fighter_component)

@@ -12,7 +12,7 @@ class Ranged:
     """
 
     def decide_action(self, target, game:Game):
-        actor = self.owner.owner
+        actor = self.owner
         game_map:GameMap = game.map
         distance = actor.distance_to_ent(target)
         free_line = actor.free_line_to_ent(target, game)

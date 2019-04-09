@@ -2,7 +2,7 @@ from random import randint, choice
 
 import logging
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 from components.actors.fighter_util import DamagePercentage, AttributePercentage, get_gui_data, State, Surrounded, \
     Stance
@@ -26,6 +26,7 @@ class Fighter:
     __base_av:int
     __base_strength:int
     __base_vision:int
+    __default_effects:dict = field(default_factory=dict)
 
     def __post_init__(self):
         self.active_weapon = None
@@ -40,8 +41,11 @@ class Fighter:
             State.DAZED: False,
             State.STUNNED: False,
             State.ENTANGLED: False,
-            State.CONFUSED: False
+            State.CONFUSED: False,
+            State.IMMOBILE: False
         }
+        for key in self.effects.keys():
+            self.effects[key] = self.__default_effects.get(key, False)
 
     ##############
     # ATTRIBUTES #
@@ -166,11 +170,12 @@ class Fighter:
     @property
     def defense(self):
         total_defense = self.__base_av
-        for e in self.owner.paperdoll.equipped_items:
-            av = vars(e.item.equipment).get('av')
-            # This extra step is required as av value is set to None for all Equipments during data processing
-            if av:
-                total_defense += av
+        if self.owner.paperdoll is not None:
+            for e in self.owner.paperdoll.equipped_items:
+                av = vars(e.item.equipment).get('av')
+                # This extra step is required as av value is set to None for all Equipments during data processing
+                if av:
+                    total_defense += av
 
         return total_defense
     
@@ -372,7 +377,7 @@ class Fighter:
         if ranged_attack:
             logging.debug(f'{self.owner} is attempting ranged attack at {target}')
             if not self.owner.free_line_to_ent(target, game): # If the projectile's path to the intended target is obstructed
-                pos_list = line_between_pos(*self.owner.pos, *target.pos, game) # Get a list of all pos between shooter and target
+                pos_list = line_between_pos(*self.owner.pos, *target.pos) # Get a list of all pos between shooter and target
                 try:    # Get the first blocking entity from that list
                     obstacle = next(entity_at_pos(game.walk_blocking_ents, *pos) for pos in pos_list if entity_at_pos(game.walk_blocking_ents, *pos) is not None)
                     logging.debug(f'{obstacle} is blocking direct los')
