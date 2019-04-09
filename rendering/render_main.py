@@ -3,6 +3,7 @@ from random import randint
 import tcod
 
 from config_files import cfg as cfg, colors
+from debug.timer import debug_timer
 from game import GameState
 from rendering.fov_functions import darken_color_by_fov_distance
 from rendering.render_order import RenderOrder
@@ -10,7 +11,7 @@ from rendering.render_panels import render_panels
 from rendering.render_windows import render_description_window
 from rendering.util_functions import draw_console_borders, pos_on_screen
 
-
+@debug_timer
 def render_all(game, fov_map, debug=False):
 
     render_map_screen(game, fov_map, debug=debug)
@@ -21,7 +22,7 @@ def render_all(game, fov_map, debug=False):
 
     tcod.console_flush()
 
-
+@debug_timer
 def render_map_screen(game, fov_map, debug=False):
     con = game.map_panel
     entities = game.entities
@@ -43,7 +44,7 @@ def render_map_screen(game, fov_map, debug=False):
     con.blit(game.root, 0, 0, 0, 0, cfg.MAP_SCREEN_WIDTH, cfg.MAP_SCREEN_HEIGHT)
     #tcod.console_blit(con, 0, 0, cfg.MAP_SCREEN_WIDTH, cfg.MAP_SCREEN_HEIGHT, 0, 0, 0)
 
-
+@debug_timer
 def render_map_centered_on_player(game, con, fov_map, debug=False):
 
     game_map = game.map
@@ -78,12 +79,12 @@ def draw_tile(game, con, fov_map, tile_x, tile_y, screen_x, screen_y, debug=Fals
         #if game.state == GameStates.PLAYER_RESTING: # Automap is only displayed outside of combat when actively pausing #
         tcod.console_put_char_ex(con, screen_x, screen_y, tile.char, tile.dark_color, colors.black)
 
+
 def draw_entity(game, con, entity, fov_map, debug=False):
     if entity.render_order != RenderOrder.NONE:
         x, y = pos_on_screen(*entity.pos, game.player)
 
         if debug or entity.is_visible(fov_map) or (entity.render_order == RenderOrder.ALWAYS and game.map.tiles[entity.pos].explored > 0):
-            tcod.console_put_char(con, x, y, entity.char)
             if entity.is_visible(fov_map) and entity is not game.cursor and not debug:
                 color = darken_color_by_fov_distance(game.player, entity.color, entity.x, entity.y, min=0.3)
             elif entity.render_order == RenderOrder.ALWAYS and not debug:
@@ -91,17 +92,5 @@ def draw_entity(game, con, entity, fov_map, debug=False):
             else:
                 color = entity.color
 
-            tcod.console_set_char_foreground(con, x, y, color)
-            if entity.color_bg is not None:
-                tcod.console_set_char_background(con, x, y, entity.color_bg)
-
-
-# Probably obsolete code
-# def clear_entity(con, entity):
-#     # erase the character that represents this object
-#     tcod.console_put_char(con, entity.x, entity.y, ' ', tcod.BKGND_NONE)
-#
-#
-# def clear_all(con, entities):
-#     for entity in entities:
-#         clear_entity(con, entity)
+            bg_color = colors.black if entity.color_bg is None else entity.color_bg
+            tcod.console_put_char_ex(con, x, y, entity.char, color, bg_color)

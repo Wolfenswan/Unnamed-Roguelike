@@ -7,6 +7,7 @@ import tcod
 from config_files import colors
 from data.data_processing import gen_npc_from_data, NPC_DATA_MERGED, ITEM_DATA_MERGED, gen_item_from_data
 from data.data_types import ItemType
+from debug.timer import debug_timer
 from game import GameState
 from gameobjects.util_functions import entity_at_pos
 from gui.manual import display_manual
@@ -16,7 +17,7 @@ from gui.messages import Message, MessageType, MessageCategory
 from loader_functions.data_loader import save_game
 from rendering.render_animations import animate_move_line, animate_projectile
 
-
+@debug_timer
 def process_player_input(action, game, last_turn_results:Optional[Dict]):
     player = game.player
 

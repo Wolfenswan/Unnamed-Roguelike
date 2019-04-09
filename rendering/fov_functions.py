@@ -1,6 +1,7 @@
 import tcod
 
 import config_files.cfg as cfg
+from debug.timer import debug_timer
 from gameobjects.block_level import BlockLevel
 from gameobjects.util_functions import entity_at_pos
 
@@ -21,7 +22,7 @@ def initialize_fov(game):
 
     return fov_map
 
-
+@debug_timer
 def recompute_fov(game, x, y):
 
     algorithm = cfg.FOV_ALGO

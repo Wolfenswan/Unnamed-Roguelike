@@ -80,6 +80,7 @@ def multiply_rgb_color(color, factor_range = (0, 0.25), darken=False):
     color = tcod.Color(*color)
     return color
 
+
 COLOR_WRAP_PATTERN = re.compile(
 r"""
 %{1}            # % indicating beginning of color-code

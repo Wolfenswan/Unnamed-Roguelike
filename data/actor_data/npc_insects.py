@@ -21,6 +21,7 @@
         Key.RARITY: RarityType.
     }
 """
+from components.AI.behavior.queen import Queen
 from components.AI.behavior.ranged import Ranged
 from components.AI.behavior.simple import Simple
 from components.AI.behavior.swarm import Swarm
@@ -49,7 +50,7 @@ spawn_data = {
         Key.AI_BEHAVIOR: Swarm,
         Key.BARKS: ('insect',),
         Key.GROUP_SIZE: (4, 9),
-        Key.DLVLS: (1, 100),
+        Key.DLVLS: (1, 8),
         Key.RARITY: RarityType.COMMON
     },
     'dung_beetle': {
@@ -72,7 +73,7 @@ spawn_data = {
         Key.AI_BEHAVIOR: Simple,
         Key.BARKS: ('insect',),
         Key.GROUP_SIZE: (1, 2),
-        Key.DLVLS: (1, 100),
+        Key.DLVLS: (1, 10),
         Key.RARITY: RarityType.UNCOMMON,
         Key.RARITY_MOD: +5
     },
@@ -96,7 +97,7 @@ spawn_data = {
         Key.AI_BEHAVIOR: Simple,
         Key.BARKS: ('insect',),
         Key.GROUP_SIZE: (1, 1),
-        Key.DLVLS: (1, 100),
+        Key.DLVLS: (6, 10),
         Key.RARITY: RarityType.RARE
     },
     'spitting_beetle' : {
@@ -116,7 +117,7 @@ spawn_data = {
         Key.AI_BEHAVIOR: Ranged,
         Key.BARKS: ('insect',),
         Key.GROUP_SIZE: (1, 3),
-        Key.DLVLS: (1, 100),
+        Key.DLVLS: (2, 10),
         Key.RARITY: RarityType.RARE
     },
     'volatile_larva': {
@@ -136,7 +137,7 @@ spawn_data = {
         Key.SKILLS: (skill_explode_self,),
         Key.BARKS: ('insect',),
         Key.GROUP_SIZE: (1, 1),
-        Key.DLVLS: (1, 100),
+        Key.DLVLS: (4, 10),
         Key.RARITY: RarityType.RARE
     },
     'centipede' : {
@@ -156,27 +157,27 @@ spawn_data = {
         Key.SKILLS: (skill_entangle_timed,),
         Key.BARKS: ('insect',),
         Key.GROUP_SIZE: (1, 1),
-        Key.DLVLS: (1, 100),
+        Key.DLVLS: (4, 10),
         Key.RARITY: RarityType.UNCOMMON
     },
-    # 'queen' : {
-    #     Key.NAME: 'Centipede',
-    #     Key.CHAR: 'c',
-    #     Key.COLOR: colors.lighter_lime,
-    #     Key.DESCR: 'The criss-crossing movement via its plethora of legs masks its impressive length.',
-    #     Key.MAX_HP: (20, 30),
-    #     Key.MAX_STAMINA: (100, 100),
-    #     Key.BASE_ARMOR: (1, 3),
-    #     Key.BASE_STRENGTH: (3, 5),
-    #     Key.LOADOUT: {
-    #         Key.EQUIPMENT: {'ins_mandibles': {}},
-    #         Key.BACKPACK: {}
-    #     },
-    #     Key.AI_BEHAVIOR: Simple,
-    #     Key.SKILLS: (skill_entangle_timed,),
-    #     Key.BARKS: ('insect',),
-    #     Key.GROUP_SIZE: (1, 1),
-    #     Key.DLVLS: (1, 100),
-    #     Key.RARITY: RarityType.UNCOMMON
-    # }
+    'queen' : {
+        Key.NAME: 'Insect Queen',
+        Key.CHAR: 'Q',
+        Key.COLOR: colors.purple,
+        Key.DESCR: 'TODO QUEEN.',
+        Key.MAX_HP: (50, 50),
+        Key.MAX_STAMINA: (100, 100),
+        Key.BASE_ARMOR: (5, 5),
+        Key.BASE_STRENGTH: (5, 5),
+        Key.LOADOUT: {
+            Key.EQUIPMENT: {'ins_mandibles': {}},
+            Key.BACKPACK: {}
+        },
+        Key.AI_BEHAVIOR: Queen,
+        Key.SKILLS: (skill_entangle_timed,),
+        Key.BARKS: ('insect',),
+        Key.GROUP_SIZE: (1, 1),
+        Key.DLVLS: (10, 10),
+        Key.RARITY: RarityType.UNIQUE
+    }
 }

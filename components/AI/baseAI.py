@@ -5,6 +5,7 @@ from typing import Union
 import tcod
 from dataclasses import dataclass
 
+from components.AI.behavior.queen import Queen
 from components.AI.behavior.ranged import Ranged
 from components.AI.behavior.simple import Simple
 from components.AI.behavior.swarm import Swarm
@@ -28,7 +29,7 @@ class BaseAI:
         target = game.player
         game_map = game.map
 
-        logging.debug(f'{npc} is taking turn')
+        #logging.debug(f'{npc} is taking turn')
 
         # free_line = game.map.free_line_between_pos(target.x, target.y, npc.x, npc.y, game)
         # print(free_line)
@@ -73,10 +74,11 @@ class BaseAI:
                         results.extend(skill_results)
                         return results
 
-            # If no skill is available, decide on an action, based on behavior #
+            # If no skill is available or was used, decide on an action, based on behavior #
             results.extend(self.behavior.decide_action(target, game))
 
         # If NPC is hidden from FOV, move randomly #
+        # TODO test perfomance impact
         else:
             dx, dy = randint(-1, 1), randint(-1, 1)
             x, y = npc.x + dx, npc.y + dy
@@ -86,6 +88,6 @@ class BaseAI:
         return results
 
 
-    def set_behavior(self, behavior:Union[Simple, Swarm, Ranged]):
+    def set_behavior(self, behavior:Union[Simple, Swarm, Ranged, Queen]):
         self.behavior = behavior
         self.behavior.owner = self

@@ -1,12 +1,13 @@
 import tcod
 
+from debug.timer import debug_timer
 from game import GameState
 from gameobjects.block_level import BlockLevel
 from gui.messages import Message
 from loader_functions.initialize_game import initialize_map, initialize_objects
 from rendering.fov_functions import initialize_fov
 
-
+@debug_timer
 def process_turn_results(player_turn_results, game, fov_map):
     player = game.player
     entities = game.entities
@@ -90,7 +91,7 @@ def process_turn_results(player_turn_results, game, fov_map):
             message.add_to_log(game)
 
         if debug_menu_selection is not None:
-            game.toggle_cursor((player.x+1,player.y), state=GameState.CURSOR_TARGETING)
+            game.toggle_cursor((player.x+1,player.y), state=GameState.CURSOR_ACTIVE)
             results.append({'debug_spawn': debug_menu_selection})
 
         if fov_recompute:

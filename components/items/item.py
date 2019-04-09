@@ -100,3 +100,8 @@ class Item:
                 listing += f"\n\n Range: %{col}%{u_range[0]}-{u_range[1]}%%"
         
         return listing
+
+    # Convenience #
+    @property
+    def name(self):
+        return self.owner.name

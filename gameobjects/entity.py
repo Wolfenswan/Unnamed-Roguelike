@@ -277,10 +277,10 @@ class Entity:
 
     def move(self, dx, dy):
         # Move the entity by a given amount
-        logging.debug(f'{self} is moving.')
+        #logging.debug(f'{self} is moving.')
         self.x += dx
         self.y += dy
-        logging.debug(f'{self} has moved.')
+        #logging.debug(f'{self} has moved.')
 
     def try_move(self, dx, dy, game, ignore_entities=False, ignore_walls = False):
         """
