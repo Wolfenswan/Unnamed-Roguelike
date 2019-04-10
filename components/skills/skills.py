@@ -1,5 +1,7 @@
 import logging
+from random import randint
 
+from components.AI.behavior.simple import Simple
 from components.actors.fighter_util import State
 from components.skills.baseSkill import BaseSkill
 from config_files import colors
@@ -10,6 +12,7 @@ from gameobjects.util_functions import entity_at_pos
 from gui.messages import Message, MessageType, MessageCategory
 from rendering.render_animations import animate_move_to
 
+# TODO make retrieval of often used arguments DRY
 
 class SkillCharge(BaseSkill):
 
@@ -64,6 +67,8 @@ class SkillSlam(BaseSkill):
         user.color_bg = colors.dark_red
         user.actionplan.add_to_queue(execute_in=delay, planned_function=self.execute,
                                      planned_function_args=(*target.pos, game), fixed=True)
+
+        user.fighter.active_weapon = user.fighter.weapon_melee
         results.append({'message': Message(
             f'The {user.name} raises its {user.fighter.active_weapon.name} high above its head.', category=MessageCategory.OBSERVATION,
             type=MessageType.ALERT)})
@@ -89,8 +94,10 @@ class SkillExplodeSelf(BaseSkill):
 
     def prepare(self, target:Entity, game:Game, **kwargs):
         user = self.owner
-        delay = kwargs['delay']
         results = []
+        delay = kwargs.get('delay', None)
+        if delay is None:
+            delay = randint(kwargs['delay_min'], kwargs['delay_max'])
 
         user.color_bg = colors.dark_red # TODO change main color instead & make it brighter
         user.actionplan.add_to_queue(execute_in=delay, planned_function=self.execute,
@@ -143,7 +150,9 @@ class SkillHatch(BaseSkill):
     def prepare(self, target:Entity, game:Game, **kwargs):
         results = []
         user = self.owner
-        delay = kwargs['delay']
+        delay = kwargs.get('delay',None)
+        if delay is None:
+            delay = randint(kwargs['delay_min'], kwargs['delay_max'])
         user.actionplan.add_to_queue(execute_in=delay, planned_function=self.execute,
                                      planned_function_args=(game), fixed=True, exclusive=True)
         return results
@@ -151,9 +160,22 @@ class SkillHatch(BaseSkill):
     def execute(self, game:Game, **kwargs):
         user = self.owner
         #results.extend(self.owner.fighter.death(game))
-        user.fighter.death(game, blood_color=colors.light_green)
+        game.map.gib_area(user.x, user.y, randint(2,4), user.color_blood, chunks=True)
+        # TODO switch entity stats!
         msg1 = Message(f'{user.address_with_color.title()} hatches!', type=type,
                       category=MessageCategory.OBSERVATION)
-
+        self.create_hatchling()
         results = [{'message': msg1}]
         return results
+
+    def create_hatchling(self):
+        user = self.owner
+        user.char = 'h'
+        user.name = 'Hatchling'
+        user.color = colors.beige
+        user.fighter.max_hp = randint(10, 15)
+        user.fighter.hp = user.fighter.max_hp
+        user.fighter.base_av = 0
+        user.fighter.effects[State.IMMOBILE] = False
+        user.ai.set_behavior(Simple)
+        user.skills = None

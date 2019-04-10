@@ -51,7 +51,7 @@ class Tile:
         if not force:
             self.char = '.' if self.walkable else chr(178)
 
-    def gib(self, char=None, color=colors.corpse):
+    def gib(self, char=None, color=colors.blood_red):
         if char and self.walkable:
             self.char = char
         self.fg_color = color

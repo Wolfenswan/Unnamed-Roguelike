@@ -61,11 +61,22 @@ class GameMap:
         tiles = [tile] + tile.surrounding_tiles(dist = randint(3,15))
         for i, t in enumerate(tiles):
             chance = 100*i/len(tiles)
-            if (150-chance) >= randint(0, 100):
-                t.fg_color = color
-                for t_2 in tile.surrounding_tiles():
-                    if randint(0, 1):
-                        t_2.fg_color = color
+        if (150-chance) >= randint(0, 100):
+            t.fg_color = color
+            for t_2 in tile.surrounding_tiles():
+                if randint(0, 1):
+                    t_2.fg_color = color
+
+
+    def gib_area(self, x, y, dist, color, chunks=False):
+        self.tiles[(x, y)].gib(color=color)
+        print(dist)
+        for i in range(1, dist):
+            c_x, c_y = (randint(x - 1, x + 1), randint(y - 1, y + 1))
+            self.tiles[(c_x, c_y)].gib(color=color)
+            if not self.tiles[(c_x, c_y)].blocked and randint(0, 100) > 85 and chunks:
+                self.tiles[(c_x, c_y)].gib('~', color)
+
 
     def is_floor(self, x, y):
         return self.tiles[(x, y)].walkable
@@ -103,18 +114,25 @@ class GameMap:
                     pos_list.append((x + dx, y + dy))
         return pos_list
 
-    def empty_pos_near_ent(self, ent, game):
-        """ returns list of nearby empty (= walkable and not occupied by blocking object) coordinates """
+    def all_free_pos_near_ent_in_dist(self, ent, game, dist=1, block_level = (BlockLevel.WALK,)):
+        """ returns list of free (by default: only walkable) coordinates in given distance"""
         near_empty_tiles = []
-        # TODO list comprehension candidate
-        # for dx in [-1, 0, 1]:
-        #     for dy in [-1, 0, 1]:
-        #         if not (dx == 0 and dy == 0):
-        for dir in DIRECTIONS_CIRCLE:
-            dx, dy = dir
-            to_x, to_y = ent.x + dx, ent.y + dy
-            if not self.is_blocked(to_x, to_y, game.blocking_ents):
-                near_empty_tiles.append((to_x, to_y))
-
+        for steps in range(dist):
+            for dir in DIRECTIONS_CIRCLE:
+                to_x, to_y = ent.x + dir[0] + steps, ent.y + dir[1] + steps
+                if not self.is_blocked(to_x, to_y, game.walk_blocking_ents, filter=block_level):
+                    near_empty_tiles.append((to_x, to_y))
         return near_empty_tiles
+
+    def all_free_pos_near_ent(self, ent, game, block_level = (BlockLevel.WALK,)):
+        """ returns list of nearby free (by default: only walkable) coordinates """
+        tiles = self.all_free_pos_near_ent_in_dist(ent, game, dist=1, block_level=block_level)
+        return tiles
+
+    def random_free_pos_near_ent(self, ent, game, block_level = (BlockLevel.WALK,)):
+        tiles = self.all_free_pos_near_ent(ent, game, block_level = block_level)
+        if len(tiles) > 0:
+            return choice(tiles)
+        else:
+            return False
 

@@ -3,7 +3,6 @@ from random import choice, randint
 from typing import Dict
 
 from components.AI.baseAI import BaseAI
-from components.AI.behavior.simple import Simple
 from components.actors.fighter import Fighter
 from components.skills.skillList import SkillList
 from components.architecture import Architecture
@@ -28,7 +27,7 @@ from data.item_data.equ_weapons import equ_weapon_data
 from data.item_data.use_bombs import use_bombs_data
 from data.item_data.use_potions import use_potions_data, use_potions_variants_data
 from data.shared_data.quality_mod import qual_cond_data, qual_craft_data
-from data.data_types import GenericType, Condition, BodyType, Material, Craftsmanship
+from data.data_types import GenericType, Condition, BodyType, Material, Craftsmanship, Behavior
 from data.shared_data.material_mod import item_material_data
 from data.gui_data.cond_strings import cond_descr_data
 from debug.timer import debug_timer
@@ -42,12 +41,13 @@ from rendering.util_functions import multiply_rgb_color
 
 # Generate merged data dictionaries #
 item_data = [use_potions_data, use_potions_variants_data, use_bombs_data, equ_creature_data, equ_weapon_data, equ_armor_data, equ_offhand_data]
-ITEM_DATA_MERGED = merge_dictionaries(item_data)
 npc_data = [spawn_data_insects, spawn_data_unique]
-NPC_DATA_MERGED = merge_dictionaries(npc_data)
 architecture_data = [arch_static_data]
-ARCHITECTURE_DATA_MERGED = merge_dictionaries(architecture_data)
 container_data = [arch_containers_data]
+
+NPC_DATA_MERGED = merge_dictionaries(npc_data)
+ITEM_DATA_MERGED = merge_dictionaries(item_data)
+ARCHITECTURE_DATA_MERGED = merge_dictionaries(architecture_data)
 CONTAINER_DATA_MERGED = merge_dictionaries(container_data)
 
 
@@ -187,27 +187,27 @@ def gen_npc_from_data(data:Dict, x:int, y:int, game:Game):
     arguments = (x, y, *get_generic_args(data, randomize_color=True, bodytype=bodytype))
     kwargs = get_generic_kwargs(data, default_render=RenderOrder.ACTOR, default_blocks={BlockLevel.WALK:True})
 
+    # Collect npc-specific data
     hp = randint(*data[Key.MAX_HP])
     stamina = randint(*data[Key.MAX_STAMINA])
     base_av = randint(*data[Key.BASE_ARMOR])
     base_strength = randint(*data[Key.BASE_STRENGTH])
     vision = data.get(Key.BASE_VISION, 8)
-    ai_behavior = data.get(Key.AI_BEHAVIOR, Simple)
+    ai_behavior = data.get(Key.AI_BEHAVIOR, None)
     skills = data.get(Key.SKILLS, None)
     default_effects = data.get(Key.EFFECTS, dict())
+    blood = data.get(Key.COLOR_BLOOD, colors.blood_red)
 
-    # Modify values according to bodytype #
+    # Setup Fighter component
+    # Modify values according to bodytype
     hp_mod_multipl = bodytype.get(Key.HP_MULTIPL, 1)
     str_multipl = bodytype.get(Key.STR_MULTIPL, 1)
     av_mod_multipl = bodytype.get(Key.AV_MULTIPL, 1)
     hp = round(hp * hp_mod_multipl)
-
     base_av = round(base_av * av_mod_multipl)
     base_strength = round(base_strength * str_multipl)
-
     fighter_component = Fighter(hp, stamina, base_av, base_strength, vision, default_effects)
     ai_component = BaseAI(behavior=ai_behavior()) if ai_behavior is not None else None
-    inventory_component = Inventory(capacity=12)  # Todo Placeholder #
     skills_component = None
     if skills is not None:
         skills_component = SkillList()
@@ -217,7 +217,8 @@ def gen_npc_from_data(data:Dict, x:int, y:int, game:Game):
             skill = _data[Key.SKILL](**skill_kwargs) # initialize the Skill, with derived kwargs as arguments
             skills_component.add_skill(skill)
 
-    npc = NPC(*arguments, **kwargs, bodytype=bodytype.get(Key.TYPE), fighter=fighter_component, ai=ai_component,
+    inventory_component = Inventory(capacity=12)  # Todo Placeholder (makes sure NPCs can equip weapons etc.) #
+    npc = NPC(*arguments, **kwargs, bodytype=bodytype.get(Key.TYPE), color_blood=blood, fighter=fighter_component, ai=ai_component,
               skills=skills_component, inventory=inventory_component)
 
     loadout = data.get(Key.LOADOUT)

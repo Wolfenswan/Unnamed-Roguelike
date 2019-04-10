@@ -28,11 +28,17 @@ from config_files import colors
 from data.actor_data.act_skills import skill_generic_charge, skill_generic_slam, skill_explode_self, skill_entangle, \
     skill_entangle_timed, skill_hatch
 from data.data_keys import Key
-from data.data_types import RarityType
+from data.data_types import RarityType, MonsterType
 from data.moveset_data.creature_movesets import moveset_claws_heavy, moveset_mandibles_heavy
+
+_default_values = {
+    Key.COLOR_BLOOD: colors.blood_ins,
+    Key.TYPE : MonsterType.GENERIC
+}
 
 spawn_data_insects = {
     'roachling': {
+        **_default_values,
         Key.NAME: 'Roachling',
         Key.CHAR: 'r',
         Key.COLOR: colors.light_amber,
@@ -53,6 +59,7 @@ spawn_data_insects = {
         Key.RARITY: RarityType.COMMON
     },
     'dung_beetle': {
+        **_default_values,
         Key.NAME: 'Dung Beetle',
         Key.CHAR: 'd',
         Key.COLOR: colors.beige,
@@ -77,6 +84,7 @@ spawn_data_insects = {
         Key.RARITY_MOD: +5
     },
     'Mantis_Ogre' : {
+        **_default_values,
         Key.NAME: 'Mantis Ogre',
         Key.CHAR: 'M',
         Key.COLOR: colors.light_green,
@@ -100,6 +108,7 @@ spawn_data_insects = {
         Key.RARITY: RarityType.RARE
     },
     'spitting_beetle' : {
+        **_default_values,
         Key.NAME: 'Spitting Beetle',
         Key.CHAR: 'b',
         Key.COLOR: colors.light_green,
@@ -120,6 +129,7 @@ spawn_data_insects = {
         Key.RARITY: RarityType.RARE
     },
     'volatile_larva': {
+        **_default_values,
         Key.NAME: 'Volatile Larva',
         Key.CHAR: 'l',
         Key.COLOR: colors.light_flame,
@@ -140,6 +150,7 @@ spawn_data_insects = {
         Key.RARITY: RarityType.RARE
     },
     'centipede' : {
+        **_default_values,
         Key.NAME: 'Centipede',
         Key.CHAR: 'c',
         Key.COLOR: colors.lighter_lime,

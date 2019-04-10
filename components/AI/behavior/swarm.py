@@ -33,7 +33,7 @@ class Swarm:
         else:
             if friendlies_near_target:
                 # TODO should the ability to squeeze past be a skill?
-                pos_list = game_map.empty_pos_near_ent(target, game)
+                pos_list = game_map.all_free_pos_near_ent(target, game)
                 if pos_list:
                     pos = next((pos for pos in pos_list if actor.distance_to_pos(*pos) <= 2), None)
                     if pos:

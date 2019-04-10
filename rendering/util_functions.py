@@ -148,7 +148,7 @@ def print_string(con, x, y, string, color=None, fgcolor=colors.white, bgcolor=co
             if color_code.group(1)[0:5] == 'Color': # if the string is wrapped as %Color(int,int,int)%String%%
                 color_str = eval(color_code.group(1))
             else: # if the string is wrapped as %color_name%String%%
-                color_str = eval(f'colors.{color_code.group(1)}') # Resolve the color-code as a config.colors.py entry: %red%->colors.red
+                color_str = eval(f'colors.{color_code.group(1)}') # Resolve the color-code as a config.colors.py entry: %red%->Color(colors.red)
             if color_coefficient:
                 color_str = tuple(int(color_coefficient * x) for x in color_str)
             new_word = word.replace(color_code.group(), '%c') # Replace the custom color-code with tcod's color-wrappers: %red%word% -> %cword%c

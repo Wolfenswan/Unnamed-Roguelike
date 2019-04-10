@@ -10,6 +10,17 @@ class MonsterType(Enum): # Placeholder at the moment
     GENERIC = auto()
     ELITE = auto()
     LEADER = auto()
+    SUMMON = auto()
+
+
+class Behavior(Enum):
+    # AI #
+    # To avoid circular imports, these simply correspond to existing behavior sets.
+    SIMPLE = auto()
+    RANGED = auto()
+    QUEEN = auto()
+    CONFUSED = auto()
+    SWARM = auto()
 
 
 class ItemType(Enum):

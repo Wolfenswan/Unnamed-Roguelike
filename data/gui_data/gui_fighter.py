@@ -86,8 +86,9 @@ effects_color_data = {
     State.STUNNED: colors.dark_crimson
 }
 
-col = colors.dark_crimson
+col = colors.light_azure
 effects_descr_data = {
     State.DAZED: f'%{col}%dazed%% and acting numbed.',
-    State.STUNNED: f'%{col}%stunned%% and unable to attack.'
+    State.STUNNED: f'%{col}%stunned%% and unable to act.',
+    State.IMMOBILE: f'%{col}%immobile%%.',
 }

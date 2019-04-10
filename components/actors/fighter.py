@@ -23,8 +23,8 @@ from rendering.render_order import RenderOrder
 class Fighter:
     __hp:int
     __stamina:int
-    __base_av:int
-    __base_strength:int
+    base_av:int
+    base_strength:int
     __base_vision:int
     __default_effects:dict = field(default_factory=dict)
 
@@ -117,7 +117,7 @@ class Fighter:
 
     @property
     def strength(self):
-        return self.__base_strength
+        return self.base_strength
 
     @property
     def base_dmg_potential(self):
@@ -169,7 +169,7 @@ class Fighter:
 
     @property
     def defense(self):
-        total_defense = self.__base_av
+        total_defense = self.base_av
         if self.owner.paperdoll is not None:
             for e in self.owner.paperdoll.equipped_items:
                 av = vars(e.item.equipment).get('av')
@@ -347,8 +347,13 @@ class Fighter:
         results = []
         extra_attacks = []
 
-        melee_attack = True if self.active_weapon.type == ItemType.MELEE_WEAPON else False
-        ranged_attack = True if self.active_weapon.type == ItemType.RANGED_WEAPON else False
+        if self.active_weapon is not None:
+            melee_attack = True if self.active_weapon.type == ItemType.MELEE_WEAPON else False
+            ranged_attack = True if self.active_weapon.type == ItemType.RANGED_WEAPON else False
+        else:
+            melee_attack = True
+            ranged_attack = False
+            ignore_moveset = True
 
         # Apply moveset modifers #
         if ignore_moveset:
@@ -359,8 +364,6 @@ class Fighter:
                 move_results = self.active_weapon.moveset.execute(self.owner, target)
                 verb = move_results.get('attack_verb', 'hits')
                 extra_attacks = move_results.get('extra_attacks', [])
-            else:
-                verb = 'pummels'
 
             attack_power = self.dmg_roll * dmg_mod_multipl
             attack_exertion = attack_power / 3 * self.active_weapon.moveset.exert_multipl
@@ -574,9 +577,10 @@ class Fighter:
             else:
                 return 'impossible'
 
-    def death(self, game, blood_color=colors.corpse):
+    def death(self, game):
 
         ent = self.owner
+        blood = colors.blood_red if ent.color_blood is None else ent.color_blood
 
         if game.debug['invin'] and ent.is_player:
             self.hp = self.max_hp
@@ -585,7 +589,7 @@ class Fighter:
         # Strip ent of components and set it as a corpse
         x, y = ent.x, ent.y
         ent.char = '%'
-        ent.color = blood_color
+        ent.color = blood
         ent.bg_color = colors.black
         ent.render_order = RenderOrder.CORPSE
         ent.blocks[BlockLevel.WALK] = False
@@ -597,12 +601,7 @@ class Fighter:
 
         # Create gibs
         # TODO Consider force of impact (amount of damage done beyond 0 hp?) to vary spread
-        game.map.tiles[(x, y)].gib(color=blood_color)
-        for i in range(1, randint(3, 5)):
-            c_x, c_y = (randint(x - 1, x + 1), randint(y - 1, y + 1))
-            game.map.tiles[(c_x, c_y)].gib(color=blood_color)
-            if not game.map.tiles[(c_x,c_y)].blocked and randint(0, 100) > 85:
-                game.map.tiles[(c_x, c_y)].gib('~', color=blood_color)
+        game.map.gib_area(ent.x, ent.y, randint(3,5), blood, chunks=True)
 
         type = MessageType.GOOD if not ent.is_player else MessageType.BAD
         message = Message(f'{ent.address_with_color.title()} {ent.state_verb_present} dead!', type=type, category=MessageCategory.OBSERVATION)

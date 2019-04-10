@@ -16,7 +16,6 @@ class Equipment():
     attack_range: Optional[Tuple]
     l_radius: Optional[int]
     two_handed: Optional[bool]
-    #attack_type: Optional[str] # Todo is this a str?
     moveset: Optional[Moveset]
 
     def __repr__(self):

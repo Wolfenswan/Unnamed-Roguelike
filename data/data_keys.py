@@ -9,6 +9,7 @@ class Key(Enum):
     NAME = auto()
     CHAR = auto()
     COLOR = auto()
+    COLOR_BLOOD = auto()
     DESCR = auto()
     TYPE = auto()
     ELEMENT = auto()
@@ -39,6 +40,7 @@ class Key(Enum):
     BODYTYPES = auto()
     GROUP_SIZE = auto()
     FORCED_MOVESET = auto()
+
 
     # Items #
     MATERIAL = auto()

@@ -17,7 +17,7 @@ class BaseSkill:
     cooldown:int = field(init=False, default=0)
 
     def __str__(self):
-        return f'{self.name}:{id(self)} on {self.owner}.{self.cooldown}/{self.cooldown_length}'
+        return f'{self.name}:{id(self)} on {self.owner}. Cd: {self.cooldown}/{self.cooldown_length}'
 
     def __repr__(self):
         return f'{self.name}:{id(self)}(Owner: {self.owner})'
@@ -34,7 +34,7 @@ class BaseSkill:
         results = []
 
         logging.debug(f'Using {self}.')
-        if self.on_activate_kwargs['delay'] > 0:
+        if self.on_activate_kwargs.get('delay',1) > 0:
             skill_results = self.prepare(*args, **self.on_activate_kwargs)
         else:
             skill_results = self.execute(*args, **self.on_activate_kwargs)

@@ -1,5 +1,6 @@
 import logging
 from random import choice
+from typing import Tuple, Dict
 
 import tcod
 
@@ -8,8 +9,9 @@ from components.actors.fighter import Fighter
 from components.inventory.inventory import Inventory
 from components.skills.skillList import SkillList
 from config_files import colors, cfg
-from data.actor_data.act_special import spawn_data_special
+from data.actor_data.npc_summons import spawn_data_summons
 from data.data_keys import Key
+from data.data_types import MonsterType
 from data.data_util import enum_pairs_to_kwargs
 from game import Game
 from gameobjects.block_level import BlockLevel
@@ -43,17 +45,8 @@ class NPC(Entity):
         blocking_ents = game.walk_blocking_ents
 
         dx, dy = self.direction_to_ent(target)
-        # dx = target_x - self.x
-        # dy = target_y - self.y
-        #distance = self.distance_to_ent(target)
-        # dx = int(round(dx / distance))
-        # dy = int(round(dy / distance))
-        #print(dx, dy, distance)
-
         if not game_map.is_blocked(self.x + dx, self.y + dy, blocking_ents):
             self.move(dx, dy)
-        # if not (game_map.is_wall(self.x + dx, self.y + dy) or
-        #         entity_at_pos(entities, self.x + dx, self.y + dy)):
 
     def move_astar(self, target, game):
         game_map = game.map
@@ -133,12 +126,15 @@ class NPC(Entity):
     #     return results
 
 
-class Egg(Entity):
-    def __init__(self, pos, data_key='egg'):
-        d = spawn_data_special[data_key]
-
-        fighter_component = Fighter(d[Key.MAX_HP], d[Key.MAX_STAMINA], d[Key.BASE_ARMOR], 0, cfg.FOV_RADIUS, d[Key.EFFECTS])
-
+class Summon(NPC):
+    """
+    Summons are special entities, created by other entities during run time.
+    As importing functions from initial data processing is generally not possible due to circular imports, the init
+    does the relevant lifting itself.
+    """
+    def __init__(self, pos:Tuple, data_key:str):
+        d = spawn_data_summons[data_key]
+        fighter_component = Fighter(d[Key.MAX_HP], d[Key.MAX_STAMINA], d[Key.BASE_ARMOR], d[Key.BASE_STRENGTH], cfg.FOV_RADIUS, d[Key.EFFECTS])
         skills_component = None
         skills = d.get(Key.SKILLS, None)
         if skills is not None:
@@ -148,6 +144,6 @@ class Egg(Entity):
                 del skill_kwargs['skill']  # the key words dont need to reference the skill class itself
                 skill = _data[Key.SKILL](**skill_kwargs)  # initialize the Skill, with derived kwargs as arguments
                 skills_component.add_skill(skill)
-        super().__init__(pos[0], pos[1], d[Key.CHAR], d[Key.COLOR], d[Key.NAME], d[Key.DESCR], blocks={BlockLevel.WALK: True},
+        super().__init__(pos[0], pos[1], d[Key.CHAR], d[Key.COLOR], d[Key.NAME], d[Key.DESCR], type=MonsterType.SUMMON, blocks={BlockLevel.WALK: True},
                  render_order=RenderOrder.ACTOR,
-                 fighter=fighter_component, ai=BaseAI(behavior=None), skills=skills_component)
+                 fighter=fighter_component, ai=BaseAI(behavior=None), skills=skills_component, color_blood=d[Key.COLOR_BLOOD],)

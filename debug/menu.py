@@ -1,4 +1,3 @@
-from data.actor_data.act_special import spawn_data_special
 from data.data_processing import gen_npc_from_data, ITEM_DATA_MERGED, NPC_DATA_MERGED
 from gui.menus import generic_options_menu
 from gui.messages import Message, MessageType, MessageCategory

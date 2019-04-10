@@ -2,8 +2,8 @@ import logging
 from random import choice
 from typing import Optional, Union, List, Tuple
 
-import tcod
 from dataclasses import dataclass, field
+from tcod import Color
 
 from config_files import colors
 
@@ -34,7 +34,7 @@ class Entity:
     x : int
     y : int
     char : str
-    color : colors
+    color : Color
     name : str
     descr : str = ''
     type : Union[GenericType, ItemType, MonsterType] = field(default=GenericType.DEFAULT)
@@ -54,7 +54,8 @@ class Entity:
     architecture: Optional[Architecture] = None
 
     is_player: bool = False
-    color_bg : Optional[tuple] = None
+    color_bg : Optional[Color] = None
+    color_blood: Optional[Color] = None
     every_turn_start : Optional[list] = field(default_factory=list)
     every_turn_end : Optional[list] = field(default_factory=list)
 
@@ -94,10 +95,10 @@ class Entity:
     def __repr__(self):
         string = f'{self.name}:{id(self)}'
         if self.pos != (0, 0):
-            string += f'at {self.pos}'
+            string += f'({self.pos})'
         return string
 
-    def __eq__(self, other):
+    def __eq__(self, other): # For some reason entities from the same data set but with different ids are considered equal by default
         return id(self) == id(other)
 
     ###############################
@@ -127,10 +128,6 @@ class Entity:
                 full_name = f'{self.item.prefix} {full_name}'
             if self.item.suffix:
                 full_name += f' {self.item.suffix}'
-
-        # if self.architecture and self.inventory:
-        #     if self.inventory.is_empty:
-        #         full_name += ' (e)'
 
         if self.fighter and self.fighter.hp <= 0:
             full_name += ' remains'
@@ -343,18 +340,6 @@ class Entity:
 
     def same_pos_as(self, other_ent):
         return self.pos == other_ent.pos
-
-    def random_free_pos_in_dist(self, game, dist=1):
-        game_map = game.map
-        for steps in range(dist):
-            dirs = DIRECTIONS_CIRCLE.copy()
-            while len(dirs) > 0:
-                dir = choice(dirs)
-                pos = (self.x + dir[0] + steps, self.y + dir[1] + steps)
-                if not game_map.is_blocked(*pos, game.walk_blocking_ents):
-                    return pos
-                dirs.remove(dir)
-        return False
 
     def entities_in_distance(self, entities:List, dist:float=1.5):
         """ returns nearby entities in given distance """

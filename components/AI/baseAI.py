@@ -4,9 +4,6 @@ from typing import Union, Optional
 
 from dataclasses import dataclass
 
-from components.AI.behavior.ranged import Ranged
-from components.AI.behavior.simple import Simple
-from components.AI.behavior.swarm import Swarm
 from components.actors.fighter_util import State
 from data.actor_data.act_status_mod import status_modifiers_data
 from gui.messages import Message
@@ -14,7 +11,7 @@ from gui.messages import Message
 
 @dataclass
 class BaseAI:
-    behavior : Optional
+    behavior : Optional = None
 
     def take_turn(self, game, fov_map):
         results = []
@@ -82,5 +79,5 @@ class BaseAI:
 
 
     def set_behavior(self, behavior):
-        self.behavior = behavior
-        self.behavior.owner = self
+        self.behavior = behavior()
+        self.behavior.owner = self.owner
