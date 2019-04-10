@@ -177,5 +177,5 @@ class SkillHatch(BaseSkill):
         user.fighter.hp = user.fighter.max_hp
         user.fighter.base_av = 0
         user.fighter.effects[State.IMMOBILE] = False
-        user.ai.set_behavior(Simple)
+        user.ai.set_behavior(Simple())
         user.skills = None

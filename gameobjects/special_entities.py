@@ -146,4 +146,4 @@ class Summon(NPC):
                 skills_component.add_skill(skill)
         super().__init__(pos[0], pos[1], d[Key.CHAR], d[Key.COLOR], d[Key.NAME], d[Key.DESCR], type=MonsterType.SUMMON, blocks={BlockLevel.WALK: True},
                  render_order=RenderOrder.ACTOR,
-                 fighter=fighter_component, ai=BaseAI(behavior=None), skills=skills_component, color_blood=d[Key.COLOR_BLOOD],)
+                 fighter=fighter_component, ai=BaseAI(None), skills=skills_component, color_blood=d[Key.COLOR_BLOOD],)

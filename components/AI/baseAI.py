@@ -79,5 +79,5 @@ class BaseAI:
 
 
     def set_behavior(self, behavior):
-        self.behavior = behavior()
+        self.behavior = behavior
         self.behavior.owner = self.owner

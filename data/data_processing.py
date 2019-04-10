@@ -207,7 +207,7 @@ def gen_npc_from_data(data:Dict, x:int, y:int, game:Game):
     base_av = round(base_av * av_mod_multipl)
     base_strength = round(base_strength * str_multipl)
     fighter_component = Fighter(hp, stamina, base_av, base_strength, vision, default_effects)
-    ai_component = BaseAI(behavior=ai_behavior()) if ai_behavior is not None else None
+    ai_component = BaseAI(ai_behavior()) if ai_behavior is not None else None
     skills_component = None
     if skills is not None:
         skills_component = SkillList()
