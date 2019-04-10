@@ -1,10 +1,13 @@
 from components.actors.fighter_util import State
 from config_files import colors
+from data.actor_data.act_skills import skill_hatch
 from data.data_keys import Key
 from data.data_types import RarityType
 
+# This dictionary is omitted from the merged NPC_SPAWNING array it's purpose is to cover special actors that are
+# not spawned by default but e.g. created by other monsters
 spawn_data_special = {
-    'egg': {    # Only for debug purposes; the actual eggs spawned by the queen are defined in special_entities.py
+    'egg': {
             Key.NAME: 'Egg',
             Key.CHAR: 'e',
             Key.COLOR: colors.beige,
@@ -15,7 +18,6 @@ spawn_data_special = {
             Key.EFFECTS: {
                 State.IMMOBILE: True
             },
-            Key.AI_BEHAVIOR: None,
-            # Key.SKILLS: (skill_hatch),
+            Key.SKILLS: (skill_hatch,),
         }
 }

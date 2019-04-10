@@ -23,10 +23,9 @@ class BaseAI:
         target = game.player
         game_map = game.map
 
-        #logging.debug(f'{npc} is taking turn')
+        logging.debug(f'{npc} is taking turn #{game.turn}')
 
         # free_line = game.map.free_line_between_pos(target.x, target.y, npc.x, npc.y, game)
-        # print(free_line)
 
         # First check if turn is entirely skipped
         if presence[State.STUNNED]:
@@ -55,7 +54,6 @@ class BaseAI:
 
         # First check if the npc can see the player #
         if npc.is_visible(fov_map): #tcod.map_is_in_fov(fov_map, npc.x, npc.y):
-
             # Consider using a skill #
             # TODO might be merged into behavior components later #
             if npc.skills:
@@ -69,7 +67,8 @@ class BaseAI:
                         return results
 
             # If no skill is available or was used, decide on an action, based on behavior #
-            results.extend(self.behavior.decide_action(target, game))
+            if self.behavior is not None:
+                results.extend(self.behavior.decide_action(target, game))
 
         # If NPC is hidden from FOV, move randomly #
         # TODO test perfomance impact

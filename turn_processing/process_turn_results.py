@@ -85,10 +85,9 @@ def process_turn_results(player_turn_results, game, fov_map):
             fov_map.walkable[door_entity.y, door_entity.x] = not door_entity.blocks.get(BlockLevel.WALK, False)
 
         if dead_entity is not None:
-            message = dead_entity.fighter.death(game)
+            dead_entity.fighter.death(game).add_to_log(game)
             if dead_entity.is_player:
                 game.state = GameState.PLAYER_DEAD
-            message.add_to_log(game)
 
         if debug_menu_selection is not None:
             game.toggle_cursor((player.x+1,player.y), state=GameState.CURSOR_ACTIVE)

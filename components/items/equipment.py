@@ -3,6 +3,7 @@ from typing import Optional, Tuple
 from dataclasses import dataclass
 
 from components.items.moveset import Moveset
+from data.data_types import ItemType
 
 
 @dataclass

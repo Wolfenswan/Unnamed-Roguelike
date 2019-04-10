@@ -51,10 +51,10 @@ class Tile:
         if not force:
             self.char = '.' if self.walkable else chr(178)
 
-    def gib(self, char=None):
+    def gib(self, char=None, color=colors.corpse):
         if char and self.walkable:
             self.char = char
-        self.fg_color = colors.corpse
+        self.fg_color = color
 
     def toggle_attributes(self):
         self.blocked = not self.blocked

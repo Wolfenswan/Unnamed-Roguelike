@@ -2,7 +2,8 @@ import logging
 from random import randint, choice
 
 from config_files import cfg
-from data.data_processing import gen_item_from_data, pick_from_data_dict_by_rarity, ITEM_DATA_MERGED
+from data.data_processing import gen_item_from_data, ITEM_DATA_MERGED
+from data.data_util import pick_from_data_dict_by_rarity
 from debug.timer import debug_timer
 from map.entity_placement.util_functions import find_ent_position
 

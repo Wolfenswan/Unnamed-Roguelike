@@ -2,8 +2,6 @@ import logging
 from random import choice, randint
 from typing import Dict
 
-from dataclasses import field
-
 from components.AI.baseAI import BaseAI
 from components.AI.behavior.simple import Simple
 from components.actors.fighter import Fighter
@@ -17,22 +15,22 @@ from components.items.useable import Useable
 from config_files import colors
 from data.actor_data.npc_standard import spawn_data_insects
 from data.actor_data.npc_unique import spawn_data_unique
-from data.architecture_data.arch_static import arch_static_data
 from data.architecture_data.arch_containers import arch_containers_data
+from data.architecture_data.arch_static import arch_static_data
 from data.data_keys import Key
+from data.data_util import pick_from_data_dict_by_rarity, enum_pairs_to_kwargs, merge_dictionaries
+from data.gui_data.craft_strings import craft_descr_data
+from data.actor_data.act_bodytypes import bodytype_data
 from data.item_data.equ_armor import equ_armor_data
 from data.item_data.equ_creatures import equ_creature_data
 from data.item_data.equ_offhand import equ_offhand_data
 from data.item_data.equ_weapons import equ_weapon_data
 from data.item_data.use_bombs import use_bombs_data
-from data.gui_data.craft_strings import craft_descr_data
-from data.actor_data.act_bodytypes import bodytype_data
-from data.shared_data.quality_mod import qual_cond_data, qual_craft_data
-from data.data_types import GenericType, Condition, RarityType, BodyType, Material, Craftsmanship
-from data.shared_data.material_mod import item_material_data
 from data.item_data.use_potions import use_potions_data, use_potions_variants_data
+from data.shared_data.quality_mod import qual_cond_data, qual_craft_data
+from data.data_types import GenericType, Condition, BodyType, Material, Craftsmanship
+from data.shared_data.material_mod import item_material_data
 from data.gui_data.cond_strings import cond_descr_data
-from data.shared_data.rarity_mod import rarity_values
 from debug.timer import debug_timer
 from game import Game
 from gameobjects.block_level import BlockLevel
@@ -42,67 +40,16 @@ from rendering.render_order import RenderOrder
 from rendering.util_functions import multiply_rgb_color
 
 
-def merge_dictionaries(dicts):
-    # Create a super dictionary
-    merged_dict = {}
-    for data in dicts:
-        merged_dict = dict(merged_dict, **data)
-
-    return merged_dict
-
-
+# Generate merged data dictionaries #
 item_data = [use_potions_data, use_potions_variants_data, use_bombs_data, equ_creature_data, equ_weapon_data, equ_armor_data, equ_offhand_data]
 ITEM_DATA_MERGED = merge_dictionaries(item_data)
-
 npc_data = [spawn_data_insects, spawn_data_unique]
 NPC_DATA_MERGED = merge_dictionaries(npc_data)
-
 architecture_data = [arch_static_data]
 ARCHITECTURE_DATA_MERGED = merge_dictionaries(architecture_data)
-
 container_data = [arch_containers_data]
 CONTAINER_DATA_MERGED = merge_dictionaries(container_data)
 
-
-def pick_from_data_dict_by_rarity(dic:Dict, dlvl:int=0):
-    """
-    Picks a random key from the given dictionary items
-
-    The function first creates a mini-dictionary of possible candidates, using two rarity parameters:
-    a) Key.RARITY: the rarity value of the object itself, assigned in the data files
-    b) Key.TYPE: the rarity value of the material, assigned to the object (e.g. steel being rarer than iron)
-
-    Then it randomly picks a key from these candidates using choice()
-
-    :param dict:
-    :type dict: dict
-    :param dlvl:
-    :type dlvl: int
-    :return:
-    :rtype: dict
-    """
-
-    if dlvl > 0:  # Filter possible entries by dungeon levels first
-        dic = {k: v for k, v in dic.items() if dlvl in range(*v.get(Key.DLVLS, (1, 99)))}
-
-    while True:
-        random = randint(0, 100)
-        possible_items = { # Create dictionary of candidates
-            k: v for k, v in dic.items()
-            if rarity_values[v.get(Key.RARITY, RarityType.COMMON)] + v.get(Key.RARITY_MOD, 0) >= random
-            and rarity_values[v.get(Key.TYPE, RarityType.COMMON)] >= random
-        }
-        candidates = list(possible_items.keys())
-        logging.debug(f'Randomly choosing from possible candidates: {candidates}, random value was {random}')
-        if len(candidates) > 0:
-            candidate = choice(candidates)
-            logging.debug(f'Decided on {candidate}')
-            return candidate
-
-def enum_pairs_to_kwargs(dictionary:Dict):
-    # Enum-keys can't be passed as key words, so a temporary dictionary using their names as keys is created
-    # E.g.: Key.NAME -> 'name'
-    return {_k.name.lower(): _v for _k, _v in dictionary}
 
 # Data retrieving functions #
 def get_generic_args(data:Dict, material:Material=None, condition:Condition=None, craftsmanship:Craftsmanship=None, bodytype:BodyType=None, randomize_color:bool=False):
@@ -267,7 +214,7 @@ def gen_npc_from_data(data:Dict, x:int, y:int, game:Game):
         for _data in skills:
             skill_kwargs = enum_pairs_to_kwargs(_data.items()) # Enum-Keys need to be 'translated' into strings
             del skill_kwargs['skill'] # the key words dont need to reference the skill class itself
-            skill = _data[Key.SKILL](**skill_kwargs) # initialize the Skill
+            skill = _data[Key.SKILL](**skill_kwargs) # initialize the Skill, with derived kwargs as arguments
             skills_component.add_skill(skill)
 
     npc = NPC(*arguments, **kwargs, bodytype=bodytype.get(Key.TYPE), fighter=fighter_component, ai=ai_component,

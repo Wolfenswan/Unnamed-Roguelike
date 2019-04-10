@@ -141,7 +141,19 @@ class SkillHatch(BaseSkill):
         super().__init__(**kwargs)
 
     def prepare(self, target:Entity, game:Game, **kwargs):
-        pass
+        results = []
+        user = self.owner
+        delay = kwargs['delay']
+        user.actionplan.add_to_queue(execute_in=delay, planned_function=self.execute,
+                                     planned_function_args=(game), fixed=True, exclusive=True)
+        return results
 
-    def execute(self, target:Entity, game:Game, **kwargs):
-        pass
+    def execute(self, game:Game, **kwargs):
+        user = self.owner
+        #results.extend(self.owner.fighter.death(game))
+        user.fighter.death(game, blood_color=colors.light_green)
+        msg1 = Message(f'{user.address_with_color.title()} hatches!', type=type,
+                      category=MessageCategory.OBSERVATION)
+
+        results = [{'message': msg1}]
+        return results

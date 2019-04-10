@@ -18,7 +18,8 @@ spawn_data_unique = {
             State.IMMOBILE: True
         },
         Key.LOADOUT: {
-            Key.EQUIPMENT: {'ins_ranged': {}},
+            Key.EQUIPMENT: {'ins_ranged': {},
+                            'ins_mandibles': {}},
             Key.BACKPACK: {}
         },
         Key.AI_BEHAVIOR: Queen,

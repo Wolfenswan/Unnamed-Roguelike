@@ -3,11 +3,14 @@ from random import choice
 
 import tcod
 
+from components.AI.baseAI import BaseAI
 from components.actors.fighter import Fighter
 from components.inventory.inventory import Inventory
+from components.skills.skillList import SkillList
 from config_files import colors, cfg
 from data.actor_data.act_special import spawn_data_special
 from data.data_keys import Key
+from data.data_util import enum_pairs_to_kwargs
 from game import Game
 from gameobjects.block_level import BlockLevel
 from gameobjects.entity import Entity
@@ -134,7 +137,17 @@ class Egg(Entity):
     def __init__(self, pos, data_key='egg'):
         d = spawn_data_special[data_key]
 
-        fighter_component = Fighter(d[Key.MAX_HP], d[Key.MAX_STAMINA], d[Key.BASE_ARMOR], 0, 0, d[Key.EFFECTS])
+        fighter_component = Fighter(d[Key.MAX_HP], d[Key.MAX_STAMINA], d[Key.BASE_ARMOR], 0, cfg.FOV_RADIUS, d[Key.EFFECTS])
+
+        skills_component = None
+        skills = d.get(Key.SKILLS, None)
+        if skills is not None:
+            skills_component = SkillList()
+            for _data in skills:
+                skill_kwargs = enum_pairs_to_kwargs(_data.items())  # Enum-Keys need to be 'translated' into strings
+                del skill_kwargs['skill']  # the key words dont need to reference the skill class itself
+                skill = _data[Key.SKILL](**skill_kwargs)  # initialize the Skill, with derived kwargs as arguments
+                skills_component.add_skill(skill)
         super().__init__(pos[0], pos[1], d[Key.CHAR], d[Key.COLOR], d[Key.NAME], d[Key.DESCR], blocks={BlockLevel.WALK: True},
                  render_order=RenderOrder.ACTOR,
-                 fighter=fighter_component)
+                 fighter=fighter_component, ai=BaseAI(behavior=None), skills=skills_component)

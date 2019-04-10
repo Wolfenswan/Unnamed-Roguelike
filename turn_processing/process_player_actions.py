@@ -5,7 +5,7 @@ from typing import List, Optional, Dict
 import tcod
 
 from config_files import colors
-from data.data_processing import gen_npc_from_data, NPC_DATA_MERGED, ITEM_DATA_MERGED, gen_item_from_data
+from data.data_processing import gen_npc_from_data, gen_item_from_data, ITEM_DATA_MERGED, NPC_DATA_MERGED
 from data.data_types import ItemType
 from debug.timer import debug_timer
 from game import GameState

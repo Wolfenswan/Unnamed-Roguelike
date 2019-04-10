@@ -125,7 +125,6 @@ def dynamic_wrap(string, max_width):
         for i, line in enumerate(wrapped):
             for k in codes.keys():
                 if k in line and codes[k] is not None:
-                    logging.debug(f'replacing {k} in {line} with {codes[k]}')
                     line = line.replace(k, codes[k])
                     wrapped[i] = line
                     codes[k] = None # This is a workaround to avoid color coding lines with a partial match after the code has been 'used' as intended

@@ -3,7 +3,8 @@ from random import randint, choice
 
 from config_files import cfg
 from data.architecture_data.arch_doors import arch_doors_data
-from data.data_processing import ARCHITECTURE_DATA_MERGED, pick_from_data_dict_by_rarity, gen_architecture
+from data.data_processing import gen_architecture, ARCHITECTURE_DATA_MERGED
+from data.data_util import pick_from_data_dict_by_rarity
 from debug.timer import debug_timer
 from map.entity_placement.util_functions import find_ent_position
 

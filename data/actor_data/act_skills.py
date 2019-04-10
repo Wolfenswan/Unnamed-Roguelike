@@ -57,4 +57,8 @@ skill_entangle_timed = {
 skill_hatch = {
     Key.SKILL: SkillHatch,
     Key.NAME : 'Hatch',
+    Key.ACTIVATE_CONDITIONS : {SkillCondition.distance_to,},
+    Key.ACTIVATE_CONDITION_KWARGS: {'min_dist': 0, 'max_dist': 8,},
+    Key.ON_ACTIVATE_KWARGS: {'delay':1},
+    Key.COOLDOWN_LENGTH: 1
 }

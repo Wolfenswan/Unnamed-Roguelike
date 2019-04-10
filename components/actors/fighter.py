@@ -574,7 +574,7 @@ class Fighter:
             else:
                 return 'impossible'
 
-    def death(self, game):
+    def death(self, game, blood_color=colors.corpse):
 
         ent = self.owner
 
@@ -585,7 +585,7 @@ class Fighter:
         # Strip ent of components and set it as a corpse
         x, y = ent.x, ent.y
         ent.char = '%'
-        ent.color = colors.corpse
+        ent.color = blood_color
         ent.bg_color = colors.black
         ent.render_order = RenderOrder.CORPSE
         ent.blocks[BlockLevel.WALK] = False
@@ -597,12 +597,12 @@ class Fighter:
 
         # Create gibs
         # TODO Consider force of impact (amount of damage done beyond 0 hp?) to vary spread
-        game.map.tiles[(x, y)].gib()
+        game.map.tiles[(x, y)].gib(color=blood_color)
         for i in range(1, randint(3, 5)):
             c_x, c_y = (randint(x - 1, x + 1), randint(y - 1, y + 1))
-            game.map.tiles[(c_x, c_y)].gib()
+            game.map.tiles[(c_x, c_y)].gib(color=blood_color)
             if not game.map.tiles[(c_x,c_y)].blocked and randint(0, 100) > 85:
-                game.map.tiles[(c_x, c_y)].gib('~')
+                game.map.tiles[(c_x, c_y)].gib('~', color=blood_color)
 
         type = MessageType.GOOD if not ent.is_player else MessageType.BAD
         message = Message(f'{ent.address_with_color.title()} {ent.state_verb_present} dead!', type=type, category=MessageCategory.OBSERVATION)

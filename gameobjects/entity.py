@@ -347,7 +347,7 @@ class Entity:
     def random_free_pos_in_dist(self, game, dist=1):
         game_map = game.map
         for steps in range(dist):
-            dirs = DIRECTIONS_CIRCLE
+            dirs = DIRECTIONS_CIRCLE.copy()
             while len(dirs) > 0:
                 dir = choice(dirs)
                 pos = (self.x + dir[0] + steps, self.y + dir[1] + steps)
