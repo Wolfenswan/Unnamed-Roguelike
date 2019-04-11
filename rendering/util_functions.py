@@ -1,5 +1,5 @@
 import logging
-import regex as re
+import re
 import textwrap
 from random import uniform
 

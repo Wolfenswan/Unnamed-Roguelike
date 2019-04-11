@@ -207,10 +207,10 @@ def render_message_panel(message_log, title, con, panel_x, panel_y, width, heigh
 
 def render_status_panel(game, con, panel_y, width, height):
     setup_console(con, fgcolor=colors.light_gray)
-
-    draw_bar(con, 1, 1, 20, f'{game.player.fighter.hp_string}', int(game.player.fighter.hp), game.player.fighter.max_hp,
+    
+    draw_bar(con, 1, 1, bar_width, f'{game.player.fighter.hp_string}', int(game.player.fighter.hp), game.player.fighter.max_hp,
              game.player.fighter.hp_color, tcod.darkest_red)
-    draw_bar(con, width-21, 1, 20, f'{game.player.fighter.stamina_string}', int(game.player.fighter.stamina), game.player.fighter.max_stamina,
+    draw_bar(con, width-bar_width, 1, 20, f'{game.player.fighter.stamina_string}', int(game.player.fighter.stamina), game.player.fighter.max_stamina,
              game.player.fighter.stamina_color, colors.darkest_blue)
 
     draw_quickslots(con, 0, game)

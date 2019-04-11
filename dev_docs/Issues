@@ -4,3 +4,8 @@
 - after using stairs, lctrl keeps registering as 'pressed' (despite not being pressed)
     - pressing lctrl resets key handling properly
     - change to </> to use stairs?
+- scaling on lower screen sizes needs fixing
+	- tweak scaling calculations
+		- set only total screen-size in cfg (simple multiplier?), derive other values from there
+		- check required min sizes for all panels, scale map panel down as necessary
+	- tweak hp/stamina bar sizes (redundant with player panel. good thing?)
