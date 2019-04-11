@@ -1,0 +1,113 @@
+Technical:
+- If necessary, reduce the amount of module importing in the data files and work towards easier avoidance of circular
+imports
+
+New Concept Ideas:
+Player Skill
+    - TONGUE (Antlion/Chameleon)
+- Monster Generators
+    - specified objects in walls/floors to spawn on non-explored/non-visible tiles
+    - capped by total monster limit
+    - interactable/destroyable? (With specific items?)
+- Health
+    - Instant Heal potions are very rare
+    - Herbs or others can be used outside of combat to promote regeneration(instant heal?)
+    - Bigger wounds > More Herbs used
+    - Maybe add "herbal pouch" similar to Water bag?
+- Water
+    - Carry permanent item to store water
+    - Can be refilled at fresh water sources (fountains)
+    - Can be drunk to restore Stamina
+    - Can be drunk during combat if offhand is free.
+    - % filled indicated on player status panel
+- On Monster Death
+    - Drop Equipped/Carried Items
+    - drop a "loot bag" container instead of individual items to avoid clutter (deleted if empty)
+- AI
+    - Ravenous behavior: Will start consuming corpses in FOV
+- GUI
+    - draw ent description to enemy panel instead of popup?
+
+    - windows can remain open? see options_menu for example
+- MAP
+    - zig-zagging tunnels rather than only v then h or h then v
+- Puzzle-Room
+    - "Paint" with corpses
+
+Existing features:
+Blocking:
+    - Should blocking weapons be implemented?
+        - e.g. dueling dagger
+        - mostly just fluff
+        - All checks currently aim at shield/assume blocking is only possible with shield
+- Containers
+    - Reopen Inventory Window if container is not empty
+- Weapons
+    - add "head-weapon" (mandibles)
+Targeting
+    - add "target pos" to results list (so cursor will show at last target)
+- Fighting
+   - add attack_type to individual moves
+   - Should a block reduce the attacker's stamina by an additional ammount?
+   - can mantis ogre slam friendly fire?
+- Containers
+    - ability to add things to containers
+    - expand filters so they also accept material filters
+    - expand filters to restrict certain levels of craftsmanship/quality?
+Spawning
+    - set spawning chance in relation to dlvl (chance to spawn outside range, lower the further outside range)
+    - alternative dlvls = [(dlvl, weight), (dlvl, weight)] - from dlvl on have that weight
+Animation
+    - secondary console as overlay to only render animation-stuff
+MAP-Generation:
+    - djistraks algo to connect stairs as emergency measure?
+    - rather than one large drunk-walk, have a small drunk-walk for each generated room?
+Options-Window:
+    - switch to sort options next to each other instead of below/on top
+Menus:
+    - Add a 'popup'-switch; if True positioned next to player, else center-screen
+    - Or: Popup-next-to switch: passing an entity causes the popup next to the entity
+    - display items in more than one row (esp. inventory)
+Targeting:
+    - Cursor displays area of effect
+Skills:
+    - verbs defined as list in data (Key.VERBS), then randomly picked from in skill-function
+    - tweak skill usage conditions: pre-defined generic conditions, set as tuple of conditions in skills_data
+- Generation
+    - https://www.reddit.com/r/roguelikedev/comments/2y3rkg/faq_friday_7_loot/
+- play around with torch noise generation from libtcod sample file
+
+OPTIONAL
+Map
+    - river, crosses once through map (maybe with source)
+    - Biomes, different colored floors/walls, different dungeon algos (cave/dungeon) -> use data files
+on-death-trigger
+    - e.g. for entangling enemies: entanglement lasts until enemy is killed
+breaking free
+    - chance to break free from entanglement (compare actor strength? proc every turn with rising chance?)
+equipment screen
+    - display window for each paperdoll extremity
+    - windows only show item name and attributes (but not descr)
+    - selecting an item shows full info
+Fluff
+    - Killing monsters adds to melee_weapon description (blood covered)
+    - weapon counts enemies killed with it
+    - if gibs land on player, armor gets bloodied description
+    - different blood color
+- Smartify font selection:
+        - auto-create font list from parsing folder
+        - set default font in cfg
+        - add list to cfg defining which fonts use the rarer layout
+- Basic Character Selection
+    - Select class
+    - Enter Name (use libtcod name list for random selection)
+- Magic
+    - overcharge system (energy contimatination from inate powers?)
+    - hardly discharges on its own, needs to kill enemies to go faster?
+- Weapons
+    - ranged weapons
+        - blocking as usual?
+        - off-hand ranged melee_weapon like pistol (how to do dual-wield?)
+        - ammo: pouches on belt (optionally for armor?)
+        - quiver: part of backpack (new item!)
+- add "backpack" equipment-item that replaces the default inventory

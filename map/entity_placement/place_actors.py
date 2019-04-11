@@ -20,17 +20,11 @@ def place_monsters(game):
     dlvl = game.dlvl
     game_map = game.map
     rooms = game_map.rooms.copy()
-    possible_spawns = NPC_DATA_MERGED
+    spawn_data = NPC_DATA_MERGED
 
-    # all spawnable actors have a dlvl range, so the spawn_data dictionary is reduced to all spawn-objects where the current dlvl is within this range
-    # possible_spawns = {k: v for k, v in spawn_data.items() if dlvl in v[Key.DLVLS:]}
-    logging.debug('Creating monster for dungeon-level {0} from this list: {1}.'.format(dlvl, possible_spawns))
-
-    #monsters_placed = 0
     max_monsters = int(len(rooms) * cfg.MONSTERS_DUNGEON_FACTOR)
-    #max_monsters = (game_map.width * game_map.height) // cfg.MONSTERS_DUNGEON_DIVISOR
 
-    logging.debug(f'Max allowed: {max_monsters} for {len(rooms)} rooms)')
+    logging.debug(f'Creating actors for dungeon-level {0}. Max. {max_monsters} for {len(rooms)} rooms)')
 
     while len(game.npc_ents) < max_monsters and len(rooms) > 1:
         # monsters are created in all rooms but the first (where the player spawns)
@@ -45,8 +39,8 @@ def place_monsters(game):
             # place up to as many monsters as the settings allow
             m = 0
             while m <= num_of_monsters and len(game.npc_ents) < max_monsters:
-                key= pick_from_data_dict_by_rarity(possible_spawns, dlvl)
-                entry = possible_spawns[key]
+                key= pick_from_data_dict_by_rarity(spawn_data, dlvl)
+                entry = spawn_data[key]
                 group_size = randint(*entry[Key.GROUP_SIZE])
                 for i in range(group_size):
                     logging.debug('Creating monster #{0} of #{1} total.'.format(m + 1, num_of_monsters))

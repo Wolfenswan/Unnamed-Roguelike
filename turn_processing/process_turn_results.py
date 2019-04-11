@@ -71,7 +71,8 @@ def process_turn_results(player_turn_results, game, fov_map):
             if player.in_combat(game):
                 if player.fighter.active_weapon:
                     player.fighter.active_weapon.moveset.cycle_moves(reset=True) # Waiting resets weapon moves
-                game.state = GameState.ENEMY_TURN
+                if not player.fighter.sta_full:
+                    player.fighter.recover(player.fighter.max_stamina / 20)
             else:
                 # TODO placeholder values for regeneration/resting
                 # if not player.fighter.hp_full:
@@ -96,17 +97,17 @@ def process_turn_results(player_turn_results, game, fov_map):
         if fov_recompute:
             results.append({'fov_recompute': fov_recompute})
 
-        if level_change is not None:    # Todo refactor into new function
-            game.dlvl += level_change
-            game.entities = [game.player]
-            initialize_map(game)
-            initialize_objects(game)
-            game.player.pos = game.map.rooms[0].center
-            results.append({'fov_reset':True})
-
         # Enable enemy turn if at least one of the results is not None
         filtered_enemy_turn_conditions = list(filter(lambda x: x is not None, enemy_turn_on))
-        if len(filtered_enemy_turn_conditions) > 0:
+        if level_change is None and len(filtered_enemy_turn_conditions) > 0:
             game.state = GameState.ENEMY_TURN
+
+        if level_change is not None: # TODO consider moving into own function or later into engine.py
+            game.dlvl += level_change
+            game.entities = [game.player] # TODO should perfomance become an issue, properly clean all objects
+            initialize_map(game)
+            game.player.pos = game.map.rooms[0].ranpos(game.map)
+            initialize_objects(game)
+            results.append({'fov_reset':True})
 
     return results

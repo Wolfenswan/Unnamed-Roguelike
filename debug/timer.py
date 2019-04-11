@@ -14,5 +14,7 @@ def debug_timer(function):
             end = time.time()
             logging.debug("{} ran in {}s".format(function.__name__, round(end - start, 2)))
             return result
+        else:
+            return function(*args, **kwargs)
 
     return wrapper

@@ -7,14 +7,12 @@ PEP Reminders
 
 TESTING:
 - Case1 in Actionplan (existing exclusive plan)
+- does using stairs still cause fov crash (because it triggers enemy turn)
 
 CURRENT
 - Queen boss monster
     - spawn in lowest level
         - either spawn manually or delete from data entries after it has been picked
-    - add second weapon (melee) and allow switching if player is in melee
-    - make eggs hatch (roachlings?)
-        - maybe larva that try to get away but in X turns turn very strong
     - maybe allow queen to spit eggs instead of ranged attack?
         - lobbed ranged attack that cant miss?
 - Balancing pass for first release
@@ -23,6 +21,10 @@ CURRENT
         - maybe increase group sizes in lower levels?
 - spawning:
     each level outside given spawning range: -10%(20%?) off 100% chance
+- waiting->interact
+    if standing on same spot as something and not in combat->interact
+- dashing into enemies does slightly higher damage (1.25)? maybe add modifier to moveset/data
+    - or: tackles for 0.5 damage & dazes
 
 UPCOMING
 - Monster generator (destroyable)

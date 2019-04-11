@@ -270,6 +270,9 @@ class Entity:
     def effects(self):
         return self.fighter.effects if self.fighter is not None else None
 
+    def is_active_weapon(self,ent):
+        return self == ent.fighter.active_weapon
+
     ####################
     # ACTION FUNCTIONS #
     ####################

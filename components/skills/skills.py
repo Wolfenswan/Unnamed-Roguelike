@@ -44,7 +44,7 @@ class SkillCharge(BaseSkill):
         missed = animate_move_to(user, tx, ty, game)
 
         if missed is False: # if a wall is hit during the charge, damage the charging entity
-            results.extend(user.fighter.attack_setup(user, game, dmg_mod_multipl=0.5, verb='rams', ignore_moveset=True))
+            results.extend(user.fighter.attack_setup(user, game, dmg_mod_multipl=0.5, verb='hurts', ignore_moveset=True))
         elif not isinstance(missed, bool): # if missed is not bool, another entity was hit
             ent = missed
             if ent.fighter is not None: # if another actor was hit, that actor is damaged

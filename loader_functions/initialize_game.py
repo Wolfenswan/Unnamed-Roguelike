@@ -23,13 +23,11 @@ def initialize_game(game):
 
     initialize_player(game)
     initialize_map(game)
-    initialize_objects(game)
 
     player = game.player
     player.x, player.y = game.map.rooms[0].center
 
-    return game
-
+    initialize_objects(game)
 
 def initialize_player(game):
     # Setup the Player character #
@@ -47,7 +45,7 @@ def initialize_player(game):
                 'belt': {},
                 'round_shield': {}
             },
-            Key.BACKPACK: ('pot_heal', 'bomb_1', 'bomb_1', 'bomb_1', 'torch', 'spear', 'flail', 'bow')
+            Key.BACKPACK: ('pot_heal', 'bomb_1', 'bomb_1', 'torch', 'spear', 'flail', 'bow')
         }
     }
 
@@ -56,6 +54,9 @@ def initialize_player(game):
         item_ent.item.identify()
 
     game.entities.append(player)
+    game.player = player
+    print(player)
+    return player
 
 
 def initialize_map(game):
@@ -64,6 +65,7 @@ def initialize_map(game):
     dwidth = randint(cfg.DUNGEON_MIN_WIDTH, cfg.DUNGEON_MAX_WIDTH)
     dheight = randint(cfg.DUNGEON_MIN_HEIGHT, cfg.DUNGEON_MAX_HEIGHT)
     game.map = GameMap(dwidth, dheight)
+    print(dwidth, dheight, game.map)
     game.map.make_map(game, cfg.ROOM_MIN_SIZE, cfg.ROOM_MAX_SIZE, dwidth, dheight)
 
 
@@ -73,7 +75,7 @@ def initialize_objects(game):
     place_generic_architecture(game)
     place_containers(game)
     place_doors(game)
-    #place_items(game)
-    #place_monsters(game)
+    place_items(game)
+    place_monsters(game)
 
 

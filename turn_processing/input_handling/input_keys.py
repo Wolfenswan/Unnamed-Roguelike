@@ -10,6 +10,9 @@ keys_dict = {
     'vim_ldown' : 'b',
     
     'wait' : '.',
+
+    'down' : '<',
+    'up'   : '>',
     
     # Interaction #
     'get' : 'g',

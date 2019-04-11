@@ -34,6 +34,9 @@ leather = Color(181, 121, 84)
 iron = Color(110, 96, 93)
 steel = Color(106, 108, 112)
 
+# UI #
+panel_stat_active = Color(255, 191, 0)
+panel_stat_inactive = Color(127, 127, 127) # Dark Gray
 
 
 # custom

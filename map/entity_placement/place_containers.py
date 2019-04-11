@@ -3,7 +3,7 @@ from random import choice, randint
 
 from config_files import cfg
 from data.data_keys import Key
-from data.data_processing import gen_architecture, \
+from data.data_processing import gen_architecture_from_data, \
     gen_item_from_data, ITEM_DATA_MERGED, CONTAINER_DATA_MERGED
 from data.data_util import pick_from_data_dict_by_rarity
 from data.data_types import RarityType
@@ -46,7 +46,7 @@ def place_containers(game):
                 # If the container is a blocking object, get a free tile
                 pos = find_ent_position(room, data, game, exclusive=True)
                 if pos:
-                    con = gen_architecture(data, *pos)
+                    con = gen_architecture_from_data(data, *pos)
                     fill_container(con, dlvl, rarity_filter=data[Key.CONTENTS_RARITY], type_filter=data[Key.CONTENTS_TYPE], forced_content=data.get('content_forced'))
                     entities.append(con)
 

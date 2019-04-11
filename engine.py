@@ -125,7 +125,7 @@ if __name__ == '__main__':
         start_game = main_menu(game)
 
         if start_game == 0:
-            game = initialize_game(game)
+            initialize_game(game)
             break
         elif start_game == 1:
             try:
@@ -137,5 +137,6 @@ if __name__ == '__main__':
         elif start_game == 3:
             exit()
 
+    print(game)
     game_loop(game)
 

@@ -3,7 +3,7 @@ from random import randint, choice
 
 from config_files import cfg
 from data.architecture_data.arch_doors import arch_doors_data
-from data.data_processing import gen_architecture, ARCHITECTURE_DATA_MERGED
+from data.data_processing import gen_architecture_from_data, ARCHITECTURE_DATA_MERGED
 from data.data_util import pick_from_data_dict_by_rarity
 from debug.timer import debug_timer
 from map.entity_placement.util_functions import find_ent_position
@@ -33,7 +33,7 @@ def place_generic_architecture(game):
 
             pos = find_ent_position(room, data, game, allow_exits=False)
             if pos:
-                arch = gen_architecture(data, *pos)
+                arch = gen_architecture_from_data(data, *pos)
                 entities.append(arch)
 
 
@@ -42,25 +42,27 @@ def place_special_architecture(game):
     # Portal #
     if game.dlvl == 1:
         if game.turn == 1:
-            pos = game.map.rooms[0].center
+            pos = game.player.pos
         else:
-            room = choice(game.map.rooms[1:-1])
-            pos = find_ent_position(room, ARCHITECTURE_DATA_MERGED['stairs_down'], game)
-        p = gen_architecture(ARCHITECTURE_DATA_MERGED['portal'], *pos)
+            pos = choice(game.map.rooms[1:-1]).ranpos(game.map)
+        p = gen_architecture_from_data(ARCHITECTURE_DATA_MERGED['portal'], *pos)
         game.entities.append(p)
+        game.portal = p
 
     # Upward stairs #
     if game.dlvl > 1:
-        pos = game.map.rooms[0].center
-        s = gen_architecture(ARCHITECTURE_DATA_MERGED['stairs_up'], *pos)
+        pos = game.player.pos
+        s = gen_architecture_from_data(ARCHITECTURE_DATA_MERGED['stairs_up'], *pos)
         game.entities.append(s)
+        game.stairs_up = s
 
     # Downward Stairs #
-    #room = game.map.rooms[0]
-    room = choice(game.map.rooms[1:-1])
-    pos = find_ent_position(room, ARCHITECTURE_DATA_MERGED['stairs_down'], game)
-    s = gen_architecture(ARCHITECTURE_DATA_MERGED['stairs_down'], *pos)
-    game.entities.append(s)
+    if game.dlvl < cfg.DUNGEON_LOWEST_LEVEL:
+        # TODO if player has moved up one level, stairs need to be placed under them
+        pos = choice(game.map.rooms[1:-1]).ranpos(game.map)
+        s = gen_architecture_from_data(ARCHITECTURE_DATA_MERGED['stairs_down'], *pos)
+        game.entities.append(s)
+        game.stairs_down = s
 
 
 @debug_timer
@@ -80,7 +82,7 @@ def place_doors(game):
                 data = possible_objects[key]
 
                 x, y = e
-                door = gen_architecture(data, x, y)
+                door = gen_architecture_from_data(data, x, y)
 
                 if randint(0, 1): # 50% chance door will already be closed (TODO tweak once adding locked doors)
                     door.architecture.on_interaction(None, door, game)

@@ -26,7 +26,7 @@ def pick_from_data_dict_by_rarity(dic:Dict, dlvl:int=0):
     """
 
     if dlvl > 0:  # Filter possible entries by dungeon levels first
-        dic = {k: v for k, v in dic.items() if dlvl in range(*v.get(Key.DLVLS, (1, 99)))}
+        dic = {k: v for k, v in dic.items() if dlvl in range(*v.get(Key.DLVLS, (1, 1000)))}
 
     while True:
         random = randint(0, 100)

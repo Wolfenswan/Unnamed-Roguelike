@@ -5,7 +5,8 @@ from typing import List, Optional, Dict
 import tcod
 
 from config_files import colors
-from data.data_processing import gen_npc_from_data, gen_item_from_data, ITEM_DATA_MERGED, NPC_DATA_MERGED
+from data.data_processing import gen_npc_from_data, gen_item_from_data, ITEM_DATA_MERGED, NPC_DATA_MERGED, \
+    ARCHITECTURE_DATA_MERGED, gen_architecture_from_data
 from data.data_types import ItemType
 from debug.timer import debug_timer
 from game import GameState
@@ -169,8 +170,15 @@ def process_player_interaction(game, action):
 
             game.state = GameState.ENEMY_TURN
 
-    # Passing a turn #
+    # Passing a turn or changing level #
     elif wait:
+        if not player.in_combat(game):
+            if game.stairs_down is not None and player.pos == game.stairs_down.pos:
+                results.append({'level_change': 1})
+            elif game.stairs_up is not None and player.pos == game.stairs_up.pos:
+                results.append({'level_change': -1})
+            elif game.portal is not None and player.pos == game.portal.pos:
+                print('leaving the dungeon')
         results.append({'waiting': True})
 
     # Picking up an item #
@@ -344,6 +352,9 @@ def process_cursor_interaction(game, action, targeting_item, debug_spawn):
             elif debug_spawn in ITEM_DATA_MERGED.keys() and not game.map.is_blocked(*cursor.pos, []):
                 item = gen_item_from_data(ITEM_DATA_MERGED[debug_spawn], *cursor.pos)
                 game.entities.append(item)
+            elif debug_spawn in ARCHITECTURE_DATA_MERGED.keys()  and not game.map.is_blocked(*cursor.pos, []):
+                arch = gen_architecture_from_data(ARCHITECTURE_DATA_MERGED[debug_spawn], *cursor.pos)
+                game.entities.append(arch)
             else:
                 results.append({'message':Message('Illegal position', type=MessageType.SYSTEM)})
         elif player.active_weapon_is_ranged:    # Using a ranged weapon

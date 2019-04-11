@@ -19,13 +19,19 @@ class GameState(Enum):
     ENEMY_TURN = auto()
     PLAYER_DEAD = auto()
 
-
+# Todo dataclass
 class Game:
     def __init__(self, debug=False):
         self.map = None
-        self.cursor = None
         self.dlvl = 1
         self.entities = []
+
+        # Special entities
+        self.player = None # Player also has is_player flat set to True
+        self.cursor = None
+        self.stairs_up = None
+        self.stairs_down = None
+        self.portal = None
 
         # Turn Processing #
         self.turn = 1
@@ -59,11 +65,6 @@ class Game:
             self.previous_state = self.state
             self.state = state
             self.cursor.pos = pos
-
-    @property
-    def player(self):
-        player = next(v for v in self.entities if v.is_player)
-        return player
 
     @property
     def fighter_ents(self):

@@ -1,4 +1,4 @@
-from data.data_processing import gen_npc_from_data, ITEM_DATA_MERGED, NPC_DATA_MERGED
+from data.data_processing import gen_npc_from_data, ITEM_DATA_MERGED, NPC_DATA_MERGED, ARCHITECTURE_DATA_MERGED
 from gui.menus import generic_options_menu
 from gui.messages import Message, MessageType, MessageCategory
 
@@ -7,7 +7,7 @@ def debug_menu(game):
     results = []
     npc_data = NPC_DATA_MERGED
     choice = generic_options_menu('Debug Menu', 'Select Debug Option:',
-                                  ['Show full map', 'Invincible Player', 'Entity Debug Information', 'Spawn Monster', 'Spawn Item'], game, sort_by=1,
+                                  ['Show full map', 'Invincible Player', 'Entity Debug Information', 'Spawn Monster', 'Spawn Item', 'Spawn Object'], game, sort_by=1,
                                   cancel_with_escape=True)
     if choice == 0:
         game.debug['map'] = not game.debug['map']
@@ -34,6 +34,14 @@ def debug_menu(game):
         # TODO split between useable & equipment? split by itemType? (submenus?)
         options = list(ITEM_DATA_MERGED.keys())
         choice = generic_options_menu('Item Spawning',
+                              'Pick the item to spawn. Enter to spawn, ESC to cancel.',
+                                      options, game)
+        if choice is not None:
+            key = options[choice]
+            results.append({'debug_menu_selection': key})
+    elif choice == 5:
+        options = list(ARCHITECTURE_DATA_MERGED.keys())
+        choice = generic_options_menu('Architecture Spawning',
                               'Pick the item to spawn. Enter to spawn, ESC to cancel.',
                                       options, game)
         if choice is not None:

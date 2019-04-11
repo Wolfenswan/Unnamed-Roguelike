@@ -242,6 +242,18 @@ class Fighter:
             return None
 
     @property
+    def inactive_weapon(self):
+        """
+        :return: If two weapons are equipped, returns the inactive one, otherwise None.
+        """
+        if self.weapon_melee is not None and self.weapon_ranged is not None:
+            if self.active_weapon == self.weapon_melee:
+                return self.weapon_ranged
+            else:
+                return self.weapon_melee
+        return None
+
+    @property
     def shield(self):
         """
         :return: Equipment component (NOT entity itself) of currently equipped shield (or parrying weapon).
@@ -396,7 +408,10 @@ class Fighter:
                             return results # If the obstacle can't be damaged, end the attack here
                 except:
                     # TODO I think this is obsolete now?
-                    print('obstruction error')
+                    message = Message(f'PLACEHOLDER: {self.owner.name} hits a wall instead of {target.name}!',
+                                      category=MessageCategory.COMBAT,
+                                      type=MessageType.SYSTEM)
+                    results.append({'message': message})
                     return results
 
             if draw_ranged_projectile:

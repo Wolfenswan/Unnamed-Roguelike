@@ -303,7 +303,7 @@ def gen_item_from_data(data:Dict, x:int, y:int, material=False, condition=False,
     return i
 
 
-def gen_architecture(data:Dict, x:int, y:int):
+def gen_architecture_from_data(data:Dict, x:int, y:int):
     material = get_material_data(data)  # atm material only affects architecture's name and color
     arguments = [x, y, *get_generic_args(data, material=material)]
     kwargs = get_generic_kwargs(data, default_render=RenderOrder.BOTTOM)
