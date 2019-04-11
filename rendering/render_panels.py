@@ -4,17 +4,17 @@ import tcod
 
 from components.actors.fighter_util import Surrounded
 from config_files import colors, cfg as cfg
+from rendering import render_constants as cons
 from game import GameState
 from rendering.util_functions import center_x_for_text, setup_console, print_string, dynamic_wrap
 
-
 def render_panels(game):
 
-    render_player_panel(game, game.top_right_panel, cfg.SIDE_PANEL_X, 0, cfg.SIDE_PANEL_WIDTH,
-                       cfg.PLAYER_PANEL_HEIGHT)
-    render_status_panel(game, game.status_panel, cfg.STATUS_PANEL_Y, cfg.BOTTOM_PANELS_WIDTH, cfg.STATUS_PANEL_HEIGHT)
-    render_object_panel(game, game.lower_right_panel, cfg.SIDE_PANEL_X, cfg.PLAYER_PANEL_HEIGHT + cfg.COMBAT_PANEL_HEIGHT, cfg.SIDE_PANEL_WIDTH,
-                       cfg.OBJECT_PANEL_HEIGHT)
+    render_player_panel(game, game.top_right_panel, con.SIDE_PANEL_X, 0, cfg.SIDE_PANEL_WIDTH,
+                       con.PLAYER_PANEL_HEIGHT)
+    render_status_panel(game, game.status_panel, con.STATUS_PANEL_Y, cfg.BOTTOM_PANELS_WIDTH, cfg.STATUS_PANEL_HEIGHT)
+    render_object_panel(game, game.lower_right_panel, con.SIDE_PANEL_X, cfg.PLAYER_PANEL_HEIGHT + cfg.COMBAT_PANEL_HEIGHT, cfg.SIDE_PANEL_WIDTH,
+                       con.OBJECT_PANEL_HEIGHT)
 
     color = colors.panel_stat_inactive if not game.player.visible_enemies(game.npc_ents, game.fov_map) else colors.dark_red
     render_enemy_panel(game, game.center_right_panel, cfg.SIDE_PANEL_X, cfg.PLAYER_PANEL_HEIGHT, cfg.SIDE_PANEL_WIDTH,
