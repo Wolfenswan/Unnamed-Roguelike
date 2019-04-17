@@ -6,22 +6,21 @@ from components.actors.fighter_util import Surrounded
 from config_files import colors, cfg as cfg
 from rendering import render_constants as cons
 from game import GameState
-from rendering.util_functions import center_x_for_text, setup_console, print_string, dynamic_wrap
+from rendering.util_functions import center_x_for_text, setup_console, print_string, dynamic_wrap, draw_console_borders
+
 
 def render_panels(game):
-
-    render_player_panel(game, game.top_right_panel, con.SIDE_PANEL_X, 0, cfg.SIDE_PANEL_WIDTH,
-                       con.PLAYER_PANEL_HEIGHT)
-    render_status_panel(game, game.status_panel, con.STATUS_PANEL_Y, cfg.BOTTOM_PANELS_WIDTH, cfg.STATUS_PANEL_HEIGHT)
-    render_object_panel(game, game.lower_right_panel, con.SIDE_PANEL_X, cfg.PLAYER_PANEL_HEIGHT + cfg.COMBAT_PANEL_HEIGHT, cfg.SIDE_PANEL_WIDTH,
-                       con.OBJECT_PANEL_HEIGHT)
-
-    color = colors.panel_stat_inactive if not game.player.visible_enemies(game.npc_ents, game.fov_map) else colors.dark_red
-    render_enemy_panel(game, game.center_right_panel, cfg.SIDE_PANEL_X, cfg.PLAYER_PANEL_HEIGHT, cfg.SIDE_PANEL_WIDTH,
-                       cfg.COMBAT_PANEL_HEIGHT, color)
-    render_message_panel(game.combat_log, 'Combat', game.bottom_center_panel, cfg.MSG_PANEL2_X, cfg.BOTTOM_PANELS_Y, cfg.MSG_PANEL2_WIDTH, cfg.BOTTOM_PANELS_HEIGHT, color, game.turn)
-    render_message_panel(game.observation_log, 'Observations', game.bottom_left_panel, 0, cfg.BOTTOM_PANELS_Y,
-                         cfg.MSG_PANEL1_WIDTH, cfg.BOTTOM_PANELS_HEIGHT, colors.panel_stat_inactive, game.turn)
+    render_player_panel(game,game.top_right_panel, cons.SIDE_PANEL_X, 0, cons.SIDE_PANEL_WIDTH,cons.PLAYER_PANEL_HEIGHT)
+    #render_status_panel(game, game.status_panel, cons.STATUS_BAR_Y, cons.BOTTOM_PANEL_WIDTH - 4, cons.STATUS_BAR_HEIGHT)
+    color = colors.dark_gray if not game.player.visible_enemies(game.npc_ents, game.fov_map) else colors.dark_red
+    render_enemy_panel(game, game.center_right_panel, cons.SIDE_PANEL_X, cons.PLAYER_PANEL_HEIGHT, cons.SIDE_PANEL_WIDTH,
+                       cons.COMBAT_PANEL_HEIGHT, color)
+    render_object_panel(game, game.lower_right_panel, cons.SIDE_PANEL_X, cons.PLAYER_PANEL_HEIGHT + cons.COMBAT_PANEL_HEIGHT, cons.SIDE_PANEL_WIDTH,
+                       cons.SIDE_PANEL_HEIGHT)
+    render_message_panel(game.combat_log, 'Combat', game.bottom_center_panel, cons.MSG_PANEL2_X, cons.BOTTOM_PANEL_Y, cons.MSG_PANEL2_WIDTH, cons.BOTTOM_PANEL_HEIGHT, color, game)
+    render_message_panel(game.observation_log, 'Observations', game.bottom_left_panel, 0, cons.BOTTOM_PANEL_Y,
+                         cons.MSG_PANEL1_WIDTH, cons.BOTTOM_PANEL_HEIGHT, colors.panel_stat_inactive, game)
+    #draw_quickslots(game.root, cons.MAP_SCREEN_HEIGHT-2, game)
 
 def render_player_panel(game, con, panel_x, panel_y, width, height):
     setup_console(con, caption='Status', borders=True)
@@ -31,76 +30,78 @@ def render_player_panel(game, con, panel_x, panel_y, width, height):
 
     # Health & Stamina #
     y += 2
-    hp_string = f'HEALTH : %c{player.fighter.hp}/{player.fighter.max_hp}%c'
+    hp_string = f'HIT: %c{player.fighter.hp}/{player.fighter.max_hp}%c'
     print_string(con, 1, y, hp_string, color=game.player.fighter.hp_color)
     hp_diff = player.statistics.hp_change
     if hp_diff != 0:
         col = colors.darker_green if hp_diff > 0 else colors.darker_red
         print_string(con, len(hp_string)- 2, y, f'(%{col}%{hp_diff}%%)')
 
-    sta_string = f'STAMINA : %c{player.fighter.stamina}/{player.fighter.max_stamina}%c'
+    sta_string = f'STA: %c{player.fighter.stamina}/{player.fighter.max_stamina}%c'
     print_string(con, 1, y+1,  sta_string, color = game.player.fighter.stamina_color)
     sta_diff = player.statistics.sta_change
     if sta_diff != 0:
         col = colors.lighter_sea if sta_diff > 0 else colors.darker_sea
         print_string(con, len(sta_string)-2, y+1,  f'(%{col}%{sta_diff}%%)')
 
-    # Equipment-derived stats #
-    y += 2
-    # Defensive Stats #
-    surrounded = player.fighter.surrounded
-    if surrounded == Surrounded.THREATENED:
-        print_string(con, 6, y, '*THREATENED*', color=colors.orange)
-    if surrounded == Surrounded.OVERWHELMED:
-        print_string(con, 6, y, '*OVERWHELMED*', color=colors.red)
-
-    print_string(con, 2, y +1, f'STR: {player.fighter.strength}')
-    color = colors.white if player.fighter.modded_defense >= player.fighter.defense else colors.dark_red
-    print_string(con, 2, y+2, f'DEF: %c{player.fighter.modded_defense}%c', color=color)
-
-    color = colors.panel_stat_active if player.fighter.is_dashing else colors.panel_stat_inactive
-    print_string(con, 10, y + 1, f'DASHING', color=color)
-    #
-    if player.fighter.shield and player.fighter.shield.block_def:
-        col1 = colors.panel_stat_inactive if not player.fighter.is_blocking else colors.panel_stat_active
-        col2 = 'dark_red' if player.fighter.shield.block_def > player.fighter.modded_block_def else f'{col1}'
-        print_string(con, 10, y+2, f'%{col1}%BLOCK:%% %{col2}%{player.fighter.modded_block_def}%%')
-
     # Effects #
+    # TODO can theoretically overflow if there a good number of effects (>6) at once
     y += 2
     x = 2
     for effect, active in player.effects.items():
         if active:
-            print_string(con, x, y + 2, effect.name[0], color=colors.red)
-            x += 2
+            print_string(con, x, y, f'*{effect.name[0]}', color=colors.red)
+            x += 3
+
+    # Equipment-derived stats #
+    y += 1
+    # Defensive Stats #
+    surrounded = player.fighter.surrounded
+    if surrounded == Surrounded.THREATENED:
+        print_string(con, 3, y, '*THREATENED*', color=colors.orange)
+    if surrounded == Surrounded.OVERWHELMED:
+        print_string(con, 3, y, '*OVERWHELMED*', color=colors.red)
+
+    print_string(con, 1, y + 1, f'STR: {player.fighter.strength}')
+    color = colors.white if player.fighter.modded_defense >= player.fighter.defense else colors.dark_red
+    print_string(con, 1, y + 2, f'DEF: %c{player.fighter.modded_defense}%c', color=color)
+
+    color = colors.panel_stat_active if player.fighter.is_dashing else colors.panel_stat_inactive
+    print_string(con, 8, y + 1, f'DASHING', color=color)
+    #
+    if player.fighter.shield and player.fighter.shield.block_def:
+        col1 = colors.panel_stat_inactive if not player.fighter.is_blocking else colors.panel_stat_active
+        col2 = 'dark_red' if player.fighter.shield.block_def > player.fighter.modded_block_def else f'{col1}'
+        print_string(con, 8, y + 2, f'%{col1}%BLOCK:%% %{col2}%{player.fighter.modded_block_def}%%')
 
     # Weapon #
-    y += 2
-
+    y += 4
     if player.fighter.weapon_melee is not None:
         color = colors.panel_stat_active if player.fighter.weapon_melee.is_active_weapon(player) else colors.panel_stat_inactive
-        print_string(con, 1, y + 2, f'%c{player.fighter.weapon_melee.name}%c', color=color)
+        print_string(con, 1, y, f'%c{player.fighter.weapon_melee.name}%c', color=color)
 
     if player.fighter.weapon_ranged is not None:
         color = colors.panel_stat_active if player.fighter.weapon_ranged.is_active_weapon(player) else colors.panel_stat_inactive
         x = 2 + len(player.fighter.weapon_melee.name) if player.fighter.weapon_melee is not None else 1
-        print_string(con, x, y + 2,
+        print_string(con, x, y,
                      f'%c{player.fighter.weapon_ranged.name}%c',
                      color=color)
 
     if player.fighter.active_weapon is not None:
-        print_string(con, 2, y + 3,
-                     f'Attack: {game.player.fighter.active_weapon.moveset.current_move}/{game.player.fighter.active_weapon.moveset.moves}')
-        print_string(con, 2, y+4, f'Damage: {game.player.fighter.modded_dmg_potential[0]}-{game.player.fighter.modded_dmg_potential[-1]}')
+        print_string(con, 2, y+1,
+                     f'ATT: {game.player.fighter.active_weapon.moveset.current_move}/{game.player.fighter.active_weapon.moveset.moves}')
+        print_string(con, 2, y+2, f'DAM: {game.player.fighter.modded_dmg_potential[0]}-{game.player.fighter.modded_dmg_potential[-1]}')
 
-        print_string(con, 2, y+7, f'Targets:')
+
+        # Visualize targets for next attack
+        x = 11
+        print_string(con, x, y+1, f'TAR:')
         for i, line in enumerate(player.fighter.active_weapon.moveset.targets_gui):
-            print_string(con, 10, y+6+i, ''.join(line))
+            print_string(con, x + 4, y+i, ''.join(line))
 
-
-    # Quick Slots #
-    y = 14
-    draw_quickslots(con, y, game)
+    # # Quick Slots #
+    # y = 14
+    # draw_quickslots(con, y, game)
 
     con.blit(game.root, panel_x, panel_y, 0, 0, width, height)
 
@@ -169,24 +170,27 @@ def render_enemy_panel(game, con, panel_x, panel_y, width, height, color):
             tcod.console_put_char_ex(con, 1, y, char, ent.color, tcod.black)
             print_string(con, 3, y, ent.full_name, color = ent.color)
             y += 1
-            tcod.console_put_char_ex(con, 3, y, chr(192), tcod.gray, tcod.black)
+            x = 1
+            tcod.console_put_char_ex(con, x, y, chr(192), tcod.gray, tcod.black)
             tcod.console_set_color_control(tcod.COLCTRL_2, ent.fighter.hp_color, tcod.black)
             tcod.console_set_color_control(tcod.COLCTRL_3, ent.fighter.stamina_color, tcod.black)
             status_line = f'%c{ent.fighter.hp_string.title()}%c|%c{ent.fighter.stamina_string.title()}%c'\
                           % (tcod.COLCTRL_2, tcod.COLCTRL_STOP, tcod.COLCTRL_3, tcod.COLCTRL_STOP)
-            for status, active in ent.fighter.effects.items():
+            for status, active in ent.fighter.effects.items(): # Todo does not consider number of status effects > width of panel
                 if active:
                     status_line += f' %white%{status.name[0]}%%'
 
-            print_string(con, 4, y, f'{status_line}')
+            print_string(con, x+1, y, f'{status_line}')
 
             y += 1
 
     con.blit(game.root, panel_x, panel_y, 0, 0, width, height)
 
 
-def render_message_panel(message_log, title, con, panel_x, panel_y, width, height, color, current_turn):
+def render_message_panel(message_log, title, con, panel_x, panel_y, width, height, color, game):
     setup_console(con, caption=title, borders=True, bordercolor=color)
+
+    current_turn = game.turn
 
     y = 1
     for message in reversed(message_log.messages):
@@ -202,73 +206,74 @@ def render_message_panel(message_log, title, con, panel_x, panel_y, width, heigh
         print_string(con, message_log.x, y, message.text, fgcolor=message.color, color_coefficient=color_coefficient)
         y += 1
 
-    tcod.console_blit(con, 0, 0, width, height, 0, panel_x, panel_y)
+    con.blit(game.root, panel_x, panel_y, 0, 0, width, height)
+    #tcod.console_blit(con, 0, 0, width, height, 0, panel_x, panel_y)
 
 
-def render_status_panel(game, con, panel_y, width, height):
+def render_status_panel(game, con, panel_x, panel_y, width, height):
     setup_console(con, fgcolor=colors.light_gray)
-    
+    draw_console_borders(con, color=colors.dark_gray)
+
+    bar_width = round(width//3)
     draw_bar(con, 1, 1, bar_width, f'{game.player.fighter.hp_string}', int(game.player.fighter.hp), game.player.fighter.max_hp,
              game.player.fighter.hp_color, tcod.darkest_red)
-    draw_bar(con, width-bar_width, 1, 20, f'{game.player.fighter.stamina_string}', int(game.player.fighter.stamina), game.player.fighter.max_stamina,
+    draw_bar(con, width-bar_width-1, 1, bar_width, f'{game.player.fighter.stamina_string}', int(game.player.fighter.stamina), game.player.fighter.max_stamina,
              game.player.fighter.stamina_color, colors.darkest_blue)
 
-    draw_quickslots(con, 0, game)
+    draw_quickslots(con, cons.MSG_PANEL1_WIDTH, 0, game)
 
-    con.blit(game.root, 0, panel_y, 0, 0, width, height)
-    tcod.console_print_frame(con, 0, 0, width, height)
+    con.blit(game.map_panel, panel_x, panel_y, 0, 0, width, height)
+    #tcod.console_print_frame(con, 0, 0, width, height) # TODO can safely be deleted?
 
 
 def draw_bar(panel, x, y, total_width, name, value, maximum, bar_color, back_color):
     bar_width = int(float(value) / maximum * total_width)
 
-    panel.default_bg = back_color
-    #tcod.console_set_default_background(panel, back_color)
-    # TODO panel.rect()
-    tcod.console_rect(panel, x, y, total_width, 1, False, tcod.BKGND_SCREEN)
-
-    panel.default_bg = bar_color
+    panel.draw_rect(x, y, total_width, 1, 0, bg = back_color)
     #tcod.console_set_default_background(panel, bar_color)
     if bar_width > 0:
-        # TODO panel.rect()
-        tcod.console_rect(panel, x, y, bar_width, 1, False, tcod.BKGND_SCREEN)
+        panel.draw_rect(x, y, bar_width, 1, 0, bg = bar_color)
 
     print_string(panel, int(x + total_width / 2), y, f'{name.title()}', alignment = tcod.CENTER, background=tcod.BKGND_NONE)
 
 
-def draw_quickslots(con, y, game):
+def draw_quickslots(con, x, y, game):
 
     player = game.player
 
     total_slots = player.qu_inventory.capacity
     width = 3 * total_slots # every slot needs 3 pixels
-    start_x = cfg.BOTTOM_PANELS_WIDTH // 2 - width // 2
-    #start_x = (cfg.SIDE_PANEL_WIDTH // 2 - width // 2) + 2
+
+    start_x = x - total_slots # cons.BOTTOM_PANEL_WIDTH // 2 - width // 2
+    #start_x = (cons.SIDE_PANEL_WIDTH // 2 - width // 2) + 2
 
     if total_slots > 0:
         o_x = start_x
         o_y = y
-        tcod.console_put_char_ex(con, o_x, o_y, 218, colors.panel_stat_inactive, colors.black)
+        # tcod.console_put_char_ex(con, o_x, o_y, 218, colors.panel_stat_inactive, colors.black)
+        # tcod.console_put_char_ex(con, o_x, o_y + 1, 179, colors.panel_stat_inactive, colors.black)
+        # tcod.console_put_char_ex(con, o_x, o_y + 2, 192, colors.panel_stat_inactive, colors.black)
+        tcod.console_put_char_ex(con, o_x, o_y, 194, colors.panel_stat_inactive, colors.black)
         tcod.console_put_char_ex(con, o_x, o_y + 1, 179, colors.panel_stat_inactive, colors.black)
-        tcod.console_put_char_ex(con, o_x, o_y + 2, 192, colors.panel_stat_inactive, colors.black)
+        tcod.console_put_char_ex(con, o_x, o_y + 2, 193, colors.panel_stat_inactive, colors.black)
         o_x += 1
-        for s in range(1,total_slots):
+        for s in range(0,total_slots):
             tcod.console_put_char_ex(con, o_x, o_y, 196, colors.panel_stat_inactive, colors.black)
+            tcod.console_put_char_ex(con, o_x, o_y + 1, ' ', colors.panel_stat_inactive, colors.black)
             tcod.console_put_char_ex(con, o_x, o_y + 2, 196, colors.panel_stat_inactive, colors.black)
             o_x += 1
+            #if s < total_slots-1:
             tcod.console_put_char_ex(con, o_x, o_y, 194, colors.panel_stat_inactive, colors.black)
             tcod.console_put_char_ex(con, o_x, o_y + 1, 179, colors.panel_stat_inactive, colors.black)
             tcod.console_put_char_ex(con, o_x, o_y + 2, 193, colors.panel_stat_inactive, colors.black)
+            # else:
+            #     tcod.console_put_char_ex(con, o_x, o_y, 191, colors.panel_stat_inactive, colors.black)
+            #     tcod.console_put_char_ex(con, o_x, o_y + 1, 179, colors.panel_stat_inactive, colors.black)
+            #     tcod.console_put_char_ex(con, o_x, o_y + 2, 217, colors.panel_stat_inactive, colors.black)
             o_x += 1
-        tcod.console_put_char_ex(con, o_x, o_y, 196, colors.panel_stat_inactive, colors.black)
-        tcod.console_put_char_ex(con, o_x, o_y + 2, 196, colors.panel_stat_inactive, colors.black)
-        o_x += 1
-        tcod.console_put_char_ex(con, o_x, o_y, 191, colors.panel_stat_inactive, colors.black)
-        tcod.console_put_char_ex(con, o_x, o_y + 1, 179, colors.panel_stat_inactive, colors.black)
-        tcod.console_put_char_ex(con, o_x, o_y + 2, 217, colors.panel_stat_inactive, colors.black)
 
         o_x = start_x + 1
-        for i, item in enumerate(player.qu_inventory):
+        for i, item in enumerate(player.qu_inventory): # Draw icons into slots
             tcod.console_put_char_ex(con, o_x, y, f'{i+1}', colors.white, colors.black)
             tcod.console_put_char_ex(con, o_x, y+1, f'{item.char}', item.color, colors.black)
             o_x += 2

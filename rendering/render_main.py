@@ -7,9 +7,10 @@ from debug.timer import debug_timer
 from game import GameState
 from rendering.fov_functions import darken_color_by_fov_distance
 from rendering.render_order import RenderOrder
-from rendering.render_panels import render_panels
+from rendering.render_panels import render_panels, draw_quickslots, render_status_panel
 from rendering.render_windows import render_description_window
 from rendering.util_functions import draw_console_borders, pos_on_screen
+from rendering import render_constants as cons
 
 @debug_timer
 def render_all(game, fov_map, debug=False):
@@ -39,10 +40,15 @@ def render_map_screen(game, fov_map, debug=False):
     if game.state in [GameState.CURSOR_ACTIVE, GameState.CURSOR_TARGETING]:
         draw_entity(game, con, game.cursor, fov_map, debug=debug)
 
-    draw_console_borders(con ,color=colors.white)
+
+
+    draw_console_borders(con, color=colors.white)
+    render_status_panel(game, game.status_panel, 0, cons.STATUS_BAR_Y, cons.BOTTOM_PANEL_WIDTH ,
+                        cons.STATUS_BAR_HEIGHT)
+
     #game.con.blit(game.map_panel, width=cfg.MAP_SCREEN_WIDTH, height=cfg.MAP_SCREEN_HEIGHT)
-    con.blit(game.root, 0, 0, 0, 0, cfg.MAP_SCREEN_WIDTH, cfg.MAP_SCREEN_HEIGHT)
-    #tcod.console_blit(con, 0, 0, cfg.MAP_SCREEN_WIDTH, cfg.MAP_SCREEN_HEIGHT, 0, 0, 0)
+    con.blit(game.root, 0, 0, 0, 0, cons.MAP_SCREEN_WIDTH, cons.MAP_SCREEN_HEIGHT)
+    #tcod.console_blit(con, 0, 0, cons.MAP_SCREEN_WIDTH, cons.MAP_SCREEN_HEIGHT, 0, 0, 0)
 
 @debug_timer
 def render_map_centered_on_player(game, con, fov_map, debug=False):
@@ -52,11 +58,13 @@ def render_map_centered_on_player(game, con, fov_map, debug=False):
     px, py = player.x, player.y
 
     # get the ranges for all possible map coordinates, using the player's coordinates as center
-    render_range_x = list(range(px - cfg.MAP_SCREEN_WIDTH // 2, px + cfg.MAP_SCREEN_WIDTH // 2))
-    render_range_y = list(range(py - cfg.MAP_SCREEN_HEIGHT // 2, py + cfg.MAP_SCREEN_HEIGHT // 2))
+    render_range_x = list(range(px - cons.MAP_SCREEN_WIDTH // 2, px + cons.MAP_SCREEN_WIDTH // 2))
+    render_range_y = list(range(py - cons.MAP_SCREEN_HEIGHT // 2, py + cons.MAP_SCREEN_HEIGHT // 2))
 
-    for screen_y in range(cfg.MAP_SCREEN_HEIGHT):
-       for screen_x in range(cfg.MAP_SCREEN_WIDTH):
+    for screen_y in range(cons.MAP_SCREEN_HEIGHT):
+       for screen_x in range(cons.MAP_SCREEN_WIDTH):
+            if screen_x == len(render_range_x) or screen_y == len(render_range_y):
+                break
             tile_x = render_range_x[screen_x]
             tile_y = render_range_y[screen_y]
 

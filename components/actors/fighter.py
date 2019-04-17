@@ -517,7 +517,7 @@ class Fighter:
             results.append({'message': Message('You stop dashing.', type=MessageType.COMBAT_INFO)})
             self.stances[Stance.DASHING] = False
         else:
-            results.append({'message': Message('You prepare to dashe.', type=MessageType.COMBAT_INFO)})
+            results.append({'message': Message('You prepare to dash.', type=MessageType.COMBAT_INFO)})
             self.stances[Stance.DASHING] = True
 
         return results
@@ -595,6 +595,7 @@ class Fighter:
     def death(self, game):
 
         ent = self.owner
+        ent_old_color = ent.color
         blood = colors.blood_red if ent.color_blood is None else ent.color_blood
 
         if game.debug['invin'] and ent.is_player:
@@ -619,6 +620,6 @@ class Fighter:
         game.map.gib_area(ent.x, ent.y, randint(3,5), blood, chunks=True)
 
         type = MessageType.GOOD if not ent.is_player else MessageType.BAD
-        message = Message(f'{ent.address_with_color.title()} {ent.state_verb_present} dead!', type=type, category=MessageCategory.OBSERVATION)
+        message = Message(f'The %{ent_old_color}%{ent.name}%% {ent.state_verb_present} dead!', type=type, category=MessageCategory.OBSERVATION)
 
         return message

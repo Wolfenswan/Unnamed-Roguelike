@@ -7,6 +7,7 @@ import tcod
 from tcod import Color
 
 from config_files import colors, cfg as cfg
+from rendering import render_constants as cons
 
 
 def center_x_for_text(width, text, padding=0):
@@ -65,8 +66,8 @@ def pos_on_screen(x, y, player):
     Returns coordinate on the visible screen, in relation to the player
 
     """
-    x = max(cfg.MAP_SCREEN_WIDTH // 2 + (x - player.x), 0)
-    y = max(cfg.MAP_SCREEN_HEIGHT // 2 + (y - player.y), 0)
+    x = max(cons.MAP_SCREEN_WIDTH // 2 + (x - player.x), 0)
+    y = max(cons.MAP_SCREEN_HEIGHT // 2 + (y - player.y), 0)
 
     return x, y
 

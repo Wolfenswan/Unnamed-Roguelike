@@ -2,39 +2,8 @@ Technical:
 - If necessary, reduce the amount of module importing in the data files and work towards easier avoidance of circular
 imports
 
-New Concept Ideas:
-Player Skill
-    - TONGUE (Antlion/Chameleon)
-- Monster Generators
-    - specified objects in walls/floors to spawn on non-explored/non-visible tiles
-    - capped by total monster limit
-    - interactable/destroyable? (With specific items?)
-- Health
-    - Instant Heal potions are very rare
-    - Herbs or others can be used outside of combat to promote regeneration(instant heal?)
-    - Bigger wounds > More Herbs used
-    - Maybe add "herbal pouch" similar to Water bag?
-- Water
-    - Carry permanent item to store water
-    - Can be refilled at fresh water sources (fountains)
-    - Can be drunk to restore Stamina
-    - Can be drunk during combat if offhand is free.
-    - % filled indicated on player status panel
-- On Monster Death
-    - Drop Equipped/Carried Items
-    - drop a "loot bag" container instead of individual items to avoid clutter (deleted if empty)
-- AI
-    - Ravenous behavior: Will start consuming corpses in FOV
-- GUI
-    - draw ent description to enemy panel instead of popup?
-
-    - windows can remain open? see options_menu for example
-- MAP
-    - zig-zagging tunnels rather than only v then h or h then v
-- Puzzle-Room
-    - "Paint" with corpses
-
 Existing features:
+
 Blocking:
     - Should blocking weapons be implemented?
         - e.g. dueling dagger
@@ -111,3 +80,36 @@ Fluff
         - ammo: pouches on belt (optionally for armor?)
         - quiver: part of backpack (new item!)
 - add "backpack" equipment-item that replaces the default inventory
+
+
+New Concept Ideas:
+Player Skills
+    - if sticking with animal concept, sth. like a tongue attack (chameleon? ant-lion?)
+- Monster Generators
+    - specified objects in walls/floors to spawn on non-explored/non-visible tiles
+    - capped by total monster limit
+    - interactable/destroyable? (With specific items?)
+- Health
+    - Instant Heal potions are very rare
+    - Herbs or others can be used outside of combat to promote regeneration(instant heal?)
+    - Bigger wounds > More Herbs used
+    - Maybe add "herbal pouch" similar to Water bag?
+- Water
+    - Carry permanent item to store water
+    - Can be refilled at fresh water sources (fountains)
+    - Can be drunk to restore Stamina
+    - Can be drunk during combat if offhand is free.
+    - % filled indicated on player status panel
+- On Monster Death
+    - Drop Equipped/Carried Items
+    - drop a "loot bag" container instead of individual items to avoid clutter (deleted if empty)
+- AI
+    - Ravenous behavior: Will start consuming corpses in FOV
+- GUI
+    - draw ent description to enemy panel instead of popup?
+
+    - windows can remain open? see options_menu for example
+- MAP
+    - zig-zagging tunnels rather than only v then h or h then v
+- Puzzle-Room
+    - "Paint" with corpses

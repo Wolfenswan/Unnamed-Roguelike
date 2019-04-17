@@ -10,6 +10,11 @@ TESTING:
 - does using stairs still cause fov crash (because it triggers enemy turn)
 
 CURRENT
+- tweak panel sizes
+    - move status bar into map screen (like qu)
+    - maybe set directly on border, render after map_panel has border, add ASCII symbols to better merge it into border
+    - experiment with top->down bars?
+    - transparency instead of black background if possible (problematic as some bg color in status panel is required for bars/usability etc.)
 - Queen boss monster
     - spawn in lowest level
         - either spawn manually or delete from data entries after it has been picked
@@ -25,6 +30,10 @@ CURRENT
     if standing on same spot as something and not in combat->interact
 - dashing into enemies does slightly higher damage (1.25)? maybe add modifier to moveset/data
     - or: tackles for 0.5 damage & dazes
+- clear message when effect is applied to player:
+    - You are ENTANGLED (w. color)
+- unify references to player:
+    - either NAME or YOU
 
 UPCOMING
 - Monster generator (destroyable)

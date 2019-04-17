@@ -70,7 +70,6 @@ class GameMap:
 
     def gib_area(self, x, y, dist, color, chunks=False):
         self.tiles[(x, y)].gib(color=color)
-        print(dist)
         for i in range(1, dist):
             c_x, c_y = (randint(x - 1, x + 1), randint(y - 1, y + 1))
             self.tiles[(c_x, c_y)].gib(color=color)
@@ -82,9 +81,8 @@ class GameMap:
         return self.tiles[(x, y)].walkable
 
     def is_wall(self, x, y):
-        tile = self.tiles[(x,y)]
+        tile = self.tiles.get((x,y), None)
         if tile is None:
-            print(f'Checking {(x,y)} is None')
             return True
         return tile.blocked
 

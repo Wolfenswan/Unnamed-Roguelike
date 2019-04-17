@@ -1,6 +1,7 @@
 from enum import Enum, auto
 
 from config_files import cfg, colors
+from rendering import render_constants as cons
 from gameobjects.block_level import BlockLevel
 from gui.messages import MessageLog
 
@@ -43,8 +44,8 @@ class Game:
         self.root = None
         self.fov_map = None
         self.bottom_panel = None
-        self.observation_log = MessageLog(cfg.MSG_X, cfg.MSG_PANEL1_WIDTH, cfg.MSG_HEIGHT)
-        self.combat_log = MessageLog(cfg.MSG_X, cfg.MSG_PANEL2_WIDTH, cfg.MSG_HEIGHT)
+        self.observation_log = MessageLog(cons.MSG_X, cons.MSG_PANEL1_WIDTH, cons.MSG_HEIGHT)
+        self.combat_log = MessageLog(cons.MSG_X, cons.MSG_PANEL2_WIDTH, cons.MSG_HEIGHT)
 
         self.debug = {
             'global': debug,

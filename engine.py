@@ -137,6 +137,5 @@ if __name__ == '__main__':
         elif start_game == 3:
             exit()
 
-    print(game)
     game_loop(game)
 
