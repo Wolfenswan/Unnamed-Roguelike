@@ -1,6 +1,7 @@
 Technical:
 - If necessary, reduce the amount of module importing in the data files and work towards easier avoidance of circular
 imports
+- optional: https://github.com/gamechanger/schemer for dict-validation
 
 Existing features:
 

@@ -17,9 +17,9 @@ def render_panels(game):
                        cons.COMBAT_PANEL_HEIGHT, color)
     render_object_panel(game, game.lower_right_panel, cons.SIDE_PANEL_X, cons.PLAYER_PANEL_HEIGHT + cons.COMBAT_PANEL_HEIGHT, cons.SIDE_PANEL_WIDTH,
                        cons.SIDE_PANEL_HEIGHT)
-    render_message_panel(game.combat_log, 'Combat', game.bottom_center_panel, cons.MSG_PANEL2_X, cons.BOTTOM_PANEL_Y, cons.MSG_PANEL2_WIDTH, cons.BOTTOM_PANEL_HEIGHT, color, game)
+    render_message_panel(game.combat_log, 'Combat', game.bottom_center_panel, cons.MSG_PANEL2_X, cons.BOTTOM_PANEL_Y, cons.MSG_PANEL2_WIDTH, cons.BOTTOM_PANEL_HEIGHT,  game)
     render_message_panel(game.observation_log, 'Observations', game.bottom_left_panel, 0, cons.BOTTOM_PANEL_Y,
-                         cons.MSG_PANEL1_WIDTH, cons.BOTTOM_PANEL_HEIGHT, colors.panel_stat_inactive, game)
+                         cons.MSG_PANEL1_WIDTH, cons.BOTTOM_PANEL_HEIGHT, game)
     #draw_quickslots(game.root, cons.MAP_SCREEN_HEIGHT-2, game)
 
 def render_player_panel(game, con, panel_x, panel_y, width, height):
@@ -66,22 +66,22 @@ def render_player_panel(game, con, panel_x, panel_y, width, height):
     color = colors.white if player.fighter.modded_defense >= player.fighter.defense else colors.dark_red
     print_string(con, 1, y + 2, f'DEF: %c{player.fighter.modded_defense}%c', color=color)
 
-    color = colors.panel_stat_active if player.fighter.is_dashing else colors.panel_stat_inactive
+    color = colors.panel_stat_active if player.fighter.is_dashing else colors.panel_inactive
     print_string(con, 8, y + 1, f'DASHING', color=color)
     #
     if player.fighter.shield and player.fighter.shield.block_def:
-        col1 = colors.panel_stat_inactive if not player.fighter.is_blocking else colors.panel_stat_active
+        col1 = colors.panel_inactive if not player.fighter.is_blocking else colors.panel_stat_active
         col2 = 'dark_red' if player.fighter.shield.block_def > player.fighter.modded_block_def else f'{col1}'
         print_string(con, 8, y + 2, f'%{col1}%BLOCK:%% %{col2}%{player.fighter.modded_block_def}%%')
 
     # Weapon #
     y += 4
     if player.fighter.weapon_melee is not None:
-        color = colors.panel_stat_active if player.fighter.weapon_melee.is_active_weapon(player) else colors.panel_stat_inactive
+        color = colors.panel_stat_active if player.fighter.weapon_melee.is_active_weapon(player) else colors.panel_inactive
         print_string(con, 1, y, f'%c{player.fighter.weapon_melee.name}%c', color=color)
 
     if player.fighter.weapon_ranged is not None:
-        color = colors.panel_stat_active if player.fighter.weapon_ranged.is_active_weapon(player) else colors.panel_stat_inactive
+        color = colors.panel_stat_active if player.fighter.weapon_ranged.is_active_weapon(player) else colors.panel_inactive
         x = 2 + len(player.fighter.weapon_melee.name) if player.fighter.weapon_melee is not None else 1
         print_string(con, x, y,
                      f'%c{player.fighter.weapon_ranged.name}%c',
@@ -187,8 +187,8 @@ def render_enemy_panel(game, con, panel_x, panel_y, width, height, color):
     con.blit(game.root, panel_x, panel_y, 0, 0, width, height)
 
 
-def render_message_panel(message_log, title, con, panel_x, panel_y, width, height, color, game):
-    setup_console(con, caption=title, borders=True, bordercolor=color)
+def render_message_panel(message_log, title, con, panel_x, panel_y, width, height, game):
+    setup_console(con, caption=title, borders=True)
 
     current_turn = game.turn
 
@@ -222,6 +222,8 @@ def render_status_panel(game, con, panel_x, panel_y, width, height):
 
     draw_quickslots(con, cons.MSG_PANEL1_WIDTH, 0, game)
 
+    tcod.console_put_char_ex(con, 0, 0, 195, colors.dark_gray, colors.black)
+    tcod.console_put_char_ex(con, width-1, 0, 180, colors.dark_gray, colors.black)
     con.blit(game.map_panel, panel_x, panel_y, 0, 0, width, height)
     #tcod.console_print_frame(con, 0, 0, width, height) # TODO can safely be deleted?
 
@@ -240,36 +242,37 @@ def draw_bar(panel, x, y, total_width, name, value, maximum, bar_color, back_col
 def draw_quickslots(con, x, y, game):
 
     player = game.player
+    color = colors.white #colors.panel_inactive
 
     total_slots = player.qu_inventory.capacity
     width = 3 * total_slots # every slot needs 3 pixels
 
     start_x = x - total_slots # cons.BOTTOM_PANEL_WIDTH // 2 - width // 2
     #start_x = (cons.SIDE_PANEL_WIDTH // 2 - width // 2) + 2
-
+    
     if total_slots > 0:
         o_x = start_x
         o_y = y
-        # tcod.console_put_char_ex(con, o_x, o_y, 218, colors.panel_stat_inactive, colors.black)
-        # tcod.console_put_char_ex(con, o_x, o_y + 1, 179, colors.panel_stat_inactive, colors.black)
-        # tcod.console_put_char_ex(con, o_x, o_y + 2, 192, colors.panel_stat_inactive, colors.black)
-        tcod.console_put_char_ex(con, o_x, o_y, 194, colors.panel_stat_inactive, colors.black)
-        tcod.console_put_char_ex(con, o_x, o_y + 1, 179, colors.panel_stat_inactive, colors.black)
-        tcod.console_put_char_ex(con, o_x, o_y + 2, 193, colors.panel_stat_inactive, colors.black)
+        # tcod.console_put_char_ex(con, o_x, o_y, 218, color, colors.black)
+        # tcod.console_put_char_ex(con, o_x, o_y + 1, 179, color, colors.black)
+        # tcod.console_put_char_ex(con, o_x, o_y + 2, 192, color, colors.black)
+        tcod.console_put_char_ex(con, o_x, o_y, 194, color, colors.black)
+        tcod.console_put_char_ex(con, o_x, o_y + 1, 179, color, colors.black)
+        tcod.console_put_char_ex(con, o_x, o_y + 2, 193, color, colors.black)
         o_x += 1
         for s in range(0,total_slots):
-            tcod.console_put_char_ex(con, o_x, o_y, 196, colors.panel_stat_inactive, colors.black)
-            tcod.console_put_char_ex(con, o_x, o_y + 1, ' ', colors.panel_stat_inactive, colors.black)
-            tcod.console_put_char_ex(con, o_x, o_y + 2, 196, colors.panel_stat_inactive, colors.black)
+            tcod.console_put_char_ex(con, o_x, o_y, 196, color, colors.black)
+            tcod.console_put_char_ex(con, o_x, o_y + 1, ' ', color, colors.black)
+            tcod.console_put_char_ex(con, o_x, o_y + 2, 196, color, colors.black)
             o_x += 1
             #if s < total_slots-1:
-            tcod.console_put_char_ex(con, o_x, o_y, 194, colors.panel_stat_inactive, colors.black)
-            tcod.console_put_char_ex(con, o_x, o_y + 1, 179, colors.panel_stat_inactive, colors.black)
-            tcod.console_put_char_ex(con, o_x, o_y + 2, 193, colors.panel_stat_inactive, colors.black)
+            tcod.console_put_char_ex(con, o_x, o_y, 194, color, colors.black)
+            tcod.console_put_char_ex(con, o_x, o_y + 1, 179, color, colors.black)
+            tcod.console_put_char_ex(con, o_x, o_y + 2, 193, color, colors.black)
             # else:
-            #     tcod.console_put_char_ex(con, o_x, o_y, 191, colors.panel_stat_inactive, colors.black)
-            #     tcod.console_put_char_ex(con, o_x, o_y + 1, 179, colors.panel_stat_inactive, colors.black)
-            #     tcod.console_put_char_ex(con, o_x, o_y + 2, 217, colors.panel_stat_inactive, colors.black)
+            #     tcod.console_put_char_ex(con, o_x, o_y, 191, color, colors.black)
+            #     tcod.console_put_char_ex(con, o_x, o_y + 1, 179, color, colors.black)
+            #     tcod.console_put_char_ex(con, o_x, o_y + 2, 217, color, colors.black)
             o_x += 1
 
         o_x = start_x + 1
