@@ -10,7 +10,6 @@ TESTING:
 - does using stairs still cause fov crash (because it triggers enemy turn)
 
 CURRENT
-- Items reducing light radius (e.g. Full Helmet)
 - Balancing pass for first release
     - items much rarer
     - monsters better spread throughout levels
@@ -24,8 +23,7 @@ CURRENT
     - You are ENTANGLED (w. color)
 - unify references to player:
     - either NAME or YOU
-- new spawning functions: create_uniques:
-    - create separate dictionary containing all items/npcs with UNIQUE rarity
+- new spawning functions: create_unique:
     - check each level change if uniques can be spawned
     - remove spawned uniques from dictionary
 - Queen boss monster

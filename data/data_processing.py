@@ -12,8 +12,8 @@ from components.items.item import Item
 from components.items.moveset import Moveset
 from components.items.useable import Useable
 from config_files import colors
-from data.actor_data.npc_standard import spawn_data_insects
-from data.actor_data.npc_unique import spawn_data_unique
+from data.actor_data.npc_standard import npc_data_insects
+from data.actor_data.npc_unique import npc_data_unique
 from data.architecture_data.arch_containers import arch_containers_data
 from data.architecture_data.arch_static import arch_static_data
 from data.data_keys import Key
@@ -23,11 +23,12 @@ from data.actor_data.act_bodytypes import bodytype_data
 from data.item_data.equ_armor import equ_armor_data
 from data.item_data.equ_creatures import equ_creature_data
 from data.item_data.equ_offhand import equ_offhand_data
+from data.item_data.equ_unique import equ_unique_data
 from data.item_data.equ_weapons import equ_weapon_data
 from data.item_data.use_bombs import use_bombs_data
 from data.item_data.use_potions import use_potions_data, use_potions_variants_data
 from data.shared_data.quality_mod import qual_cond_data, qual_craft_data
-from data.data_types import GenericType, Condition, BodyType, Material, Craftsmanship, Behavior
+from data.data_types import GenericType, Condition, BodyType, Material, Craftsmanship
 from data.shared_data.material_mod import item_material_data
 from data.gui_data.cond_strings import cond_descr_data
 from debug.timer import debug_timer
@@ -39,17 +40,12 @@ from rendering.render_order import RenderOrder
 from rendering.util_functions import multiply_rgb_color
 
 
-# Generate merged data dictionaries #
-item_data = [use_potions_data, use_potions_variants_data, use_bombs_data, equ_creature_data, equ_weapon_data, equ_armor_data, equ_offhand_data]
-npc_data = [spawn_data_insects, spawn_data_unique]
-architecture_data = [arch_static_data]
-container_data = [arch_containers_data]
-
-NPC_DATA_MERGED = merge_dictionaries(npc_data)
-ITEM_DATA_MERGED = merge_dictionaries(item_data)
-ARCHITECTURE_DATA_MERGED = merge_dictionaries(architecture_data)
-CONTAINER_DATA_MERGED = merge_dictionaries(container_data)
-
+# Generate main data dictionaries #
+NPC_DATA = merge_dictionaries([npc_data_insects])
+ITEM_DATA = merge_dictionaries([use_potions_data, use_potions_variants_data, use_bombs_data, equ_creature_data, equ_weapon_data, equ_armor_data, equ_offhand_data])
+ARCHITECTURE_DATA = arch_static_data
+CONTAINER_DATA = arch_containers_data
+UNIQUE_DATA = merge_dictionaries([npc_data_unique, equ_unique_data])
 
 # Data retrieving functions #
 def get_generic_args(data:Dict, material:Material=None, condition:Condition=None, craftsmanship:Craftsmanship=None, bodytype:BodyType=None, randomize_color:bool=False):
@@ -116,6 +112,7 @@ def get_generic_args(data:Dict, material:Material=None, condition:Condition=None
             color = multiply_rgb_color(color, factor_range=(0.6, 0.6), darken=False)
 
     return (char, color, name, descr, ent_type)
+
 
 def get_generic_kwargs(data:Dict, default_render:RenderOrder=RenderOrder.BOTTOM, default_blocks:Dict=None):
     blocks = data.get(Key.BLOCKS, default_blocks)
@@ -333,9 +330,11 @@ def gen_loadout(actor:Entity, loadout:Dict, game:Game):
 
     for key in equipment.keys():
         kwargs = enum_pairs_to_kwargs(equipment[key].items())
-        item = gen_item_from_data(ITEM_DATA_MERGED.get(key), 0, 0, **kwargs)
+        item = gen_item_from_data(ITEM_DATA.get(key), 0, 0, **kwargs)
         actor.paperdoll.equip(item, game)
 
     for i in backpack:
-        item = gen_item_from_data(ITEM_DATA_MERGED.get(i), 0, 0)
+        item = gen_item_from_data(ITEM_DATA.get(i), 0, 0)
         actor.inventory.add(item)
+        
+        

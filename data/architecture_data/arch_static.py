@@ -50,7 +50,7 @@ arch_static_data = {
         Key.CHAR: '0',
         Key.COLOR: colors.turquoise,
         Key.BLOCKS: {BlockLevel.SIGHT:True, BlockLevel.FLOOR:True},
-        Key.RARITY: RarityType.UNIQUE,
+        Key.RARITY: RarityType.FORBIDDEN,
         Key.RENDERING: RenderOrder.ALWAYS,
         Key.EVERY_TURN_END: ['self.set_random_color([colors.turquoise, colors.crimson, colors.azure, colors.amber])']
     },
@@ -60,7 +60,7 @@ arch_static_data = {
         Key.CHAR: '>',
         Key.COLOR: colors.white,
         Key.BLOCKS: {BlockLevel.SIGHT: False, BlockLevel.FLOOR: True},
-        Key.RARITY: RarityType.UNIQUE,
+        Key.RARITY: RarityType.FORBIDDEN,
         Key.RENDERING: RenderOrder.ALWAYS,
         #Key.ON_INTERACTION: Architecture.change_level
     },
@@ -70,7 +70,7 @@ arch_static_data = {
         Key.CHAR: '<',
         Key.COLOR: colors.white,
         Key.BLOCKS: {BlockLevel.SIGHT: False, BlockLevel.FLOOR: True},
-        Key.RARITY: RarityType.UNIQUE,
+        Key.RARITY: RarityType.FORBIDDEN,
         Key.RENDERING: RenderOrder.ALWAYS,
         #Key.ON_INTERACTION: Architecture.change_level
     },

@@ -46,6 +46,17 @@ equ_armor_data = {
         Key.EQUIP_TO: 'head',
         Key.AV: 1
     },
+    'full_helmet': {
+        **default_values,
+        Key.NAME: 'Full Helmet',
+        Key.MATERIAL: (Material.IRON, Material.STEEL),
+        Key.DESCR: 'A large, inflexible helmet.',
+        Key.RARITY: RarityType.UNCOMMON,
+        Key.CHAR: '(',
+        Key.EQUIP_TO: 'head',
+        Key.AV: 2,
+        Key.L_RADIUS: -1,
+    },
     'belt': {
         **default_values,
         Key.NAME: 'Belt',

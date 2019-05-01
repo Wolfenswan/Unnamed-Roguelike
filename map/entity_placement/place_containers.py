@@ -4,7 +4,7 @@ from random import choice, randint
 from config_files import cfg
 from data.data_keys import Key
 from data.data_processing import gen_architecture_from_data, \
-    gen_item_from_data, ITEM_DATA_MERGED, CONTAINER_DATA_MERGED
+    gen_item_from_data, ITEM_DATA, CONTAINER_DATA
 from data.data_util import filter_data_dict
 from data.data_types import RarityType
 from debug.timer import debug_timer
@@ -17,7 +17,7 @@ def place_containers(game):
     game_map = game.map
     entities = game.entities
     rooms = game_map.rooms.copy()
-    possible_objects = CONTAINER_DATA_MERGED
+    possible_objects = CONTAINER_DATA
     max_containers = int(len(rooms) * cfg.CONTAINER_DUNGEON_FACTOR)
 
     while len(game.container_ents) < max_containers and len(rooms) > 0:
@@ -72,12 +72,12 @@ def fill_container(container, dlvl, rarity_filter=None, type_filter=None, forced
 
     if forced_content:
         for i in forced_content:
-            item = gen_item_from_data(ITEM_DATA_MERGED.get(i), 0, 0)
+            item = gen_item_from_data(ITEM_DATA.get(i), 0, 0)
             container.inventory.add(item)
             if container.inventory.is_full:
                 break
     else:
-        possible_items = {k: v for k, v in ITEM_DATA_MERGED.items() if
+        possible_items = {k: v for k, v in ITEM_DATA.items() if
                           dlvl in range(*v.get(Key.DLVLS, (1, 99)))
                           and v.get(Key.TYPE) in type_filter
                           and v.get(Key.RARITY, RarityType.COMMON) in rarity_filter}

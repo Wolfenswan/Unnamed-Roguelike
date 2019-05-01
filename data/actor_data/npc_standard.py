@@ -36,7 +36,7 @@ _default_values = {
     Key.TYPE : MonsterType.GENERIC
 }
 
-spawn_data_insects = {
+npc_data_insects = {
     'roachling': {
         **_default_values,
         Key.NAME: 'Roachling',

@@ -3,7 +3,7 @@ from random import randint, choice
 
 from config_files import cfg
 from data.architecture_data.arch_doors import arch_doors_data
-from data.data_processing import gen_architecture_from_data, ARCHITECTURE_DATA_MERGED
+from data.data_processing import gen_architecture_from_data, ARCHITECTURE_DATA
 from data.data_util import filter_data_dict
 from debug.timer import debug_timer
 from map.entity_placement.util_functions import find_ent_position
@@ -15,7 +15,7 @@ def place_generic_architecture(game):
     game_map = game.map
     entities = game.entities
     rooms = game_map.rooms.copy()
-    possible_objects = ARCHITECTURE_DATA_MERGED
+    possible_objects = ARCHITECTURE_DATA
 
     logging.debug(f'Placing architecture in {len(rooms)} rooms')
 
@@ -45,14 +45,14 @@ def place_special_architecture(game):
             pos = game.player.pos
         else:
             pos = choice(game.map.rooms[1:-1]).ranpos(game.map)
-        p = gen_architecture_from_data(ARCHITECTURE_DATA_MERGED['portal'], *pos)
+        p = gen_architecture_from_data(ARCHITECTURE_DATA['portal'], *pos)
         game.entities.append(p)
         game.portal = p
 
     # Upward stairs #
     if game.dlvl > 1:
         pos = game.player.pos
-        s = gen_architecture_from_data(ARCHITECTURE_DATA_MERGED['stairs_up'], *pos)
+        s = gen_architecture_from_data(ARCHITECTURE_DATA['stairs_up'], *pos)
         game.entities.append(s)
         game.stairs_up = s
 
@@ -60,7 +60,7 @@ def place_special_architecture(game):
     if game.dlvl < cfg.DUNGEON_LOWEST_LEVEL:
         # TODO if player has moved up one level, stairs need to be placed under them
         pos = choice(game.map.rooms[1:-1]).ranpos(game.map)
-        s = gen_architecture_from_data(ARCHITECTURE_DATA_MERGED['stairs_down'], *pos)
+        s = gen_architecture_from_data(ARCHITECTURE_DATA['stairs_down'], *pos)
         game.entities.append(s)
         game.stairs_down = s
 

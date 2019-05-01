@@ -5,8 +5,9 @@ from typing import List, Optional, Dict
 import tcod
 
 from config_files import colors
-from data.data_processing import gen_npc_from_data, gen_item_from_data, ITEM_DATA_MERGED, NPC_DATA_MERGED, \
-    ARCHITECTURE_DATA_MERGED, gen_architecture_from_data
+from data.data_processing import gen_npc_from_data, gen_item_from_data, ITEM_DATA, NPC_DATA, \
+    ARCHITECTURE_DATA, gen_architecture_from_data, UNIQUE_DATA
+from map.entity_placement.util_functions import gen_entity_at_pos
 from data.data_types import ItemType
 from debug.timer import debug_timer
 from game import GameState
@@ -345,17 +346,9 @@ def process_cursor_interaction(game, action, targeting_item, debug_spawn):
             inv = player.inventory if targeting_item in player.inventory else player.qu_inventory
             item_use_results = inv.use(targeting_item, game, target_pos=cursor.pos)
             results.extend(item_use_results)
-        elif debug_spawn is not None:   # Using the wizard menu
-            if debug_spawn in NPC_DATA_MERGED.keys() and not game.map.is_blocked(*cursor.pos, game.blocking_ents):
-                ent = gen_npc_from_data(NPC_DATA_MERGED[debug_spawn], *cursor.pos, game)
-                game.entities.append(ent)
-            elif debug_spawn in ITEM_DATA_MERGED.keys() and not game.map.is_blocked(*cursor.pos, []):
-                item = gen_item_from_data(ITEM_DATA_MERGED[debug_spawn], *cursor.pos)
-                game.entities.append(item)
-            elif debug_spawn in ARCHITECTURE_DATA_MERGED.keys()  and not game.map.is_blocked(*cursor.pos, []):
-                arch = gen_architecture_from_data(ARCHITECTURE_DATA_MERGED[debug_spawn], *cursor.pos)
-                game.entities.append(arch)
-            else:
+        elif debug_spawn is not None:   # DEBUG MENU #
+            success = gen_entity_at_pos(debug_spawn, cursor.pos, game)
+            if not success:
                 results.append({'message':Message('Illegal position', type=MessageType.SYSTEM)})
         elif player.active_weapon_is_ranged:    # Using a ranged weapon
             target = entity_at_pos(game.blocking_ents, *cursor.pos)

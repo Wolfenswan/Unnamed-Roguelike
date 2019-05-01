@@ -5,7 +5,7 @@ from data.actor_data.act_skills import skill_generic_slam, skill_hatch
 from data.data_keys import Key
 from data.data_types import RarityType
 
-spawn_data_unique = {
+npc_data_unique = {
     'queen': {
         Key.NAME: 'Insect Queen',
         Key.CHAR: 'Q',

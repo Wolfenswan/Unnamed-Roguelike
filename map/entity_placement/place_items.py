@@ -2,7 +2,7 @@ import logging
 from random import randint, choice
 
 from config_files import cfg
-from data.data_processing import gen_item_from_data, ITEM_DATA_MERGED
+from data.data_processing import gen_item_from_data, ITEM_DATA
 from data.data_util import filter_data_dict
 from debug.timer import debug_timer
 from map.entity_placement.util_functions import find_ent_position
@@ -14,7 +14,7 @@ def place_items(game):
     dlvl = game.dlvl
     game_map = game.map
     rooms = game_map.rooms.copy()
-    possible_items = ITEM_DATA_MERGED
+    possible_items = ITEM_DATA
 
     # first, remove all items that can't be spawned on the current level
     #possible_items = {k: v for k, v in ITEM_DATA_MERGED.items() if dlvl in v.get(Key.DLVLS:,[0,99])}
