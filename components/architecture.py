@@ -15,10 +15,15 @@ class Architecture:
 
     @staticmethod
     def change_level(interacting_ent, arch_entity, game):
-        if arch_entity.char == '>':
+        results = []
+        if interacting_ent.pos != arch_entity.pos:
+            results = [{'message': Message(f'You need to be on top of the %{arch_entity.color}%{arch_entity.name.title()}%%.', category=MessageCategory.OBSERVATION)}]
+        elif arch_entity.char == '<':
             results = [{'level_change': 1},]
-        else:
+        elif arch_entity.char == '>':
             results = [{'level_change': -1},]
+        elif arch_entity.char == '0':
+            results =[{'message': Message(f'PLACEHOLDER: You leave the Dungeon.', category=MessageCategory.SYSTEM)}]
         return results
 
 

@@ -52,7 +52,8 @@ arch_static_data = {
         Key.BLOCKS: {BlockLevel.SIGHT:True, BlockLevel.FLOOR:True},
         Key.RARITY: RarityType.FORBIDDEN,
         Key.RENDERING: RenderOrder.ALWAYS,
-        Key.EVERY_TURN_END: ['self.set_random_color([colors.turquoise, colors.crimson, colors.azure, colors.amber])']
+        Key.EVERY_TURN_END: ['self.set_random_color([colors.turquoise, colors.crimson, colors.azure, colors.amber])'],
+        Key.ON_INTERACTION: Architecture.change_level
     },
     'stairs_down': {
         Key.NAME: 'Downward Stairs',
@@ -62,7 +63,7 @@ arch_static_data = {
         Key.BLOCKS: {BlockLevel.SIGHT: False, BlockLevel.FLOOR: True},
         Key.RARITY: RarityType.FORBIDDEN,
         Key.RENDERING: RenderOrder.ALWAYS,
-        #Key.ON_INTERACTION: Architecture.change_level
+        Key.ON_INTERACTION: Architecture.change_level
     },
     'stairs_up': {
         Key.NAME: 'Upward Stairs',
@@ -72,6 +73,6 @@ arch_static_data = {
         Key.BLOCKS: {BlockLevel.SIGHT: False, BlockLevel.FLOOR: True},
         Key.RARITY: RarityType.FORBIDDEN,
         Key.RENDERING: RenderOrder.ALWAYS,
-        #Key.ON_INTERACTION: Architecture.change_level
+        Key.ON_INTERACTION: Architecture.change_level
     },
 }

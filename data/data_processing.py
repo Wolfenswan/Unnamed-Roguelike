@@ -47,6 +47,7 @@ ARCHITECTURE_DATA = arch_static_data
 CONTAINER_DATA = arch_containers_data
 UNIQUE_DATA = merge_dictionaries([npc_data_unique, equ_unique_data])
 
+
 # Data retrieving functions #
 def get_generic_args(data:Dict, material:Material=None, condition:Condition=None, craftsmanship:Craftsmanship=None, bodytype:BodyType=None, randomize_color:bool=False):
     """

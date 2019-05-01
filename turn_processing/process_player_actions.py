@@ -171,16 +171,16 @@ def process_player_interaction(game, action):
 
             game.state = GameState.ENEMY_TURN
 
-    # Passing a turn or changing level #
+
+    # Passing a turn or interacting #
     elif wait:
-        if not player.in_combat(game):
-            if game.stairs_down is not None and player.pos == game.stairs_down.pos:
-                results.append({'level_change': 1})
-            elif game.stairs_up is not None and player.pos == game.stairs_up.pos:
-                results.append({'level_change': -1})
-            elif game.portal is not None and player.pos == game.portal.pos:
-                print('leaving the dungeon')
+        if not player.in_combat(game): # outside combat, interact with item under player
+            target = entity_at_pos(game.interactable_ents, *player.pos)
+            if target is not None:
+                interaction_results = target.architecture.on_interaction(player, target, game)
+                results.extend(interaction_results)
         results.append({'waiting': True})
+
 
     # Picking up an item #
     elif pickup:
