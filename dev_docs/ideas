@@ -2,6 +2,7 @@ Technical:
 - If necessary, reduce the amount of module importing in the data files and work towards easier avoidance of circular
 imports
 - optional: https://github.com/gamechanger/schemer for dict-validation
+- list-matrix & rotation: https://docs.scipy.org/doc/numpy-1.14.0/reference/generated/numpy.rot90.html
 
 Existing features:
 

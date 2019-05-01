@@ -45,7 +45,7 @@ def initialize_player(game):
                 'belt': {},
                 'round_shield': {}
             },
-            Key.BACKPACK: ('pot_heal', 'bomb_1', 'bomb_1', 'torch', 'spear', 'flail', 'bow')
+            Key.BACKPACK: ('pot_heal', 'bomb_1', 'bomb_1', 'torch', 'spear', 'flail', 'bow', 'vest')
         }
     }
 
@@ -74,6 +74,6 @@ def initialize_objects(game):
     place_containers(game)
     # place_doors(game)
     # place_items(game)
-    # place_monsters(game)
+    place_monsters(game)
 
 

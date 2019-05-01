@@ -3,7 +3,7 @@ from random import randint, choice
 
 from config_files import cfg
 from data.data_processing import gen_item_from_data, ITEM_DATA_MERGED
-from data.data_util import pick_from_data_dict_by_rarity
+from data.data_util import filter_data_dict
 from debug.timer import debug_timer
 from map.entity_placement.util_functions import find_ent_position
 
@@ -35,7 +35,7 @@ def place_items(game):
             for i in range(num_of_items):
                 logging.debug('Creating item #{0} of #{1} total.'.format(i + 1, num_of_items))
 
-                key = pick_from_data_dict_by_rarity(possible_items, dlvl)
+                key = filter_data_dict(possible_items, dlvl)
                 data = possible_items[key]
                 #i_key = pick_item_from_data_dict(possible_items, dlvl)
 

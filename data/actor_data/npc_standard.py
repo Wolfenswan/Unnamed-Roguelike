@@ -104,7 +104,7 @@ spawn_data_insects = {
         Key.AI_BEHAVIOR: Simple,
         Key.BARKS: ('insect',),
         Key.GROUP_SIZE: (1, 1),
-        Key.DLVLS: (6, 10),
+        Key.DLVLS: (7, 10),
         Key.RARITY: RarityType.RARE
     },
     'spitting_beetle' : {
@@ -125,7 +125,7 @@ spawn_data_insects = {
         Key.AI_BEHAVIOR: Ranged,
         Key.BARKS: ('insect',),
         Key.GROUP_SIZE: (1, 3),
-        Key.DLVLS: (2, 10),
+        Key.DLVLS: (3, 10),
         Key.RARITY: RarityType.RARE
     },
     'volatile_larva': {
@@ -146,7 +146,7 @@ spawn_data_insects = {
         Key.SKILLS: (skill_explode_self,),
         Key.BARKS: ('insect',),
         Key.GROUP_SIZE: (1, 1),
-        Key.DLVLS: (4, 10),
+        Key.DLVLS: (5, 10),
         Key.RARITY: RarityType.RARE
     },
     'centipede' : {
@@ -167,7 +167,7 @@ spawn_data_insects = {
         Key.SKILLS: (skill_entangle_timed,),
         Key.BARKS: ('insect',),
         Key.GROUP_SIZE: (1, 1),
-        Key.DLVLS: (4, 10),
+        Key.DLVLS: (5, 10),
         Key.RARITY: RarityType.UNCOMMON
     },
 }

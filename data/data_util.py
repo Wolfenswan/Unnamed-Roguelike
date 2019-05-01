@@ -7,7 +7,7 @@ from data.data_types import RarityType
 from data.shared_data.rarity_mod import rarity_values
 
 
-def pick_from_data_dict_by_rarity(dic:Dict, dlvl:int=0):
+def filter_data_dict(dic:Dict, dlvl:int=0):
     """
     Picks a random key from the given dictionary items
 
@@ -26,7 +26,10 @@ def pick_from_data_dict_by_rarity(dic:Dict, dlvl:int=0):
     """
 
     if dlvl > 0:  # Filter possible entries by dungeon levels first
-        dic = {k: v for k, v in dic.items() if dlvl in range(*v.get(Key.DLVLS, (1, 1000)))}
+        dic = {
+            k: v for k, v in dic.items()
+            if dlvl_check(dlvl, v)
+        }
 
     while True:
         random = randint(0, 100)
@@ -41,6 +44,30 @@ def pick_from_data_dict_by_rarity(dic:Dict, dlvl:int=0):
             candidate = choice(candidates)
             logging.debug(f'Decided on {candidate}')
             return candidate
+
+
+def dlvl_check(dlvl, data, factor=25):
+    """
+    Checks spawn chance for given data-entry in the given dungeon-level. Each level below/above their spawn range, there's
+    a 25% less chance to spawn.
+    Returns True or False. Data with UNIQUE rarity can only spawn within their dungeon-level-range.
+    """
+    dlvls = data.get(Key.DLVLS, (1, 1000))
+
+    if dlvl in range(*dlvls):
+        return True
+
+    if data.get(Key.RARITY, RarityType.COMMON) == RarityType.UNIQUE:
+        return False
+
+    chance = -1
+    if dlvl not in range(*dlvls):
+        if dlvl < dlvls[0] and dlvls[0] - dlvl <= 6:
+            chance = max(1,100 - (dlvls[0] - dlvl) * factor)
+        elif dlvl > dlvls[1] and dlvl - dlvls[1] <= 6:
+            chance = max(1,100 - (dlvl - dlvls[1]) * factor)
+
+    return chance >= randint(0,100)
 
 
 def enum_pairs_to_kwargs(dictionary:Dict):

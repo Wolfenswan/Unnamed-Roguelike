@@ -53,7 +53,7 @@ Key.DEFAULT: {Key.VERBS: ('flails',),},
         Key.EXTEND_ATTACK: [RelativeDirection.RIGHT, RelativeDirection.LEFT, RelativeDirection.LEFT_BACK]
     },
     3: {
-       Key.DESCR: f"A {col1}standard swing%%, using the weapon's full potential.",
+        Key.DESCR: f"A {col1}standard swing%%, using the weapon's full potential.",
         Key.DMG_MULTIPL: 1,
         Key.EXTEND_ATTACK: [RelativeDirection.RIGHT, RelativeDirection.LEFT, RelativeDirection.LEFT_BACK]
     },

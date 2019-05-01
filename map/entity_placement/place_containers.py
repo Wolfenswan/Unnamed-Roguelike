@@ -5,7 +5,7 @@ from config_files import cfg
 from data.data_keys import Key
 from data.data_processing import gen_architecture_from_data, \
     gen_item_from_data, ITEM_DATA_MERGED, CONTAINER_DATA_MERGED
-from data.data_util import pick_from_data_dict_by_rarity
+from data.data_util import filter_data_dict
 from data.data_types import RarityType
 from debug.timer import debug_timer
 from map.entity_placement.util_functions import find_ent_position
@@ -35,7 +35,7 @@ def place_containers(game):
             for i in range(num_of_containers):
                 logging.debug('Creating item #{0} of #{1} total.'.format(containers + 1, num_of_containers))
 
-                key = pick_from_data_dict_by_rarity(possible_objects, dlvl)
+                key = filter_data_dict(possible_objects, dlvl)
                 data = possible_objects[key]
 
                 # Check if new container would exceed total limit
@@ -84,7 +84,7 @@ def fill_container(container, dlvl, rarity_filter=None, type_filter=None, forced
         num_of_items = randint(0, container.inventory.capacity)
         logging.debug(f'Creating {num_of_items} items (max: {container.inventory.capacity})')
         for i in range(num_of_items):
-            key = pick_from_data_dict_by_rarity(possible_items, dlvl)
+            key = filter_data_dict(possible_items, dlvl)
             data = possible_items[key]
             item = gen_item_from_data(data, 0, 0)
             container.inventory.add(item)

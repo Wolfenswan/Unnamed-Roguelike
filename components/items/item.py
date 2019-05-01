@@ -61,6 +61,9 @@ class Item:
             if e_c.av:
                  listing += f'\n\n Armor: %{col}%{e_c.av}%%'
 
+            if e_c.qu_slots:
+                 listing += f'\n\n Pockets: %{col}%{e_c.qu_slots}%%'
+
             if e_c.block_def:
                  listing += f'\n\n Armor (Blocking): %{col}%{e_c.block_def}%%'
 

@@ -17,7 +17,7 @@ from data.actor_data.npc_unique import spawn_data_unique
 from data.architecture_data.arch_containers import arch_containers_data
 from data.architecture_data.arch_static import arch_static_data
 from data.data_keys import Key
-from data.data_util import pick_from_data_dict_by_rarity, enum_pairs_to_kwargs, merge_dictionaries
+from data.data_util import filter_data_dict, enum_pairs_to_kwargs, merge_dictionaries
 from data.gui_data.craft_strings import craft_descr_data
 from data.actor_data.act_bodytypes import bodytype_data
 from data.item_data.equ_armor import equ_armor_data
@@ -138,7 +138,7 @@ def get_material_data(data:Dict, forced:bool=False):
         materials = {k: v for k, v in item_material_data.items() if v[Key.TYPE] in forced}
     material = {}
     if materials:
-        key = pick_from_data_dict_by_rarity(materials)
+        key = filter_data_dict(materials)
         material = materials[key]
     return material
 
@@ -149,7 +149,7 @@ def get_condition_data(forced:bool=False):
     Forced can be set to a Condition Enum member to return the respective material.
     """
     dic = qual_cond_data if not forced else {k: v for k, v in qual_cond_data.items() if v[Key.TYPE] in forced}
-    key = pick_from_data_dict_by_rarity(dic)
+    key = filter_data_dict(dic)
     condition = qual_cond_data[key]
     return condition
 
@@ -160,7 +160,7 @@ def get_craftsmanship_data(forced:bool=False):
     Forced can be set to a Craftsmanship Enum member to return the respective material.
     """
     dic = qual_craft_data if not forced else {k: v for k, v in qual_craft_data.items() if v[Key.TYPE] in forced}
-    key = pick_from_data_dict_by_rarity(dic)
+    key = filter_data_dict(dic)
     craftsmanship = qual_craft_data[key]
     return craftsmanship
 
@@ -173,7 +173,7 @@ def get_bodytype_data(data:Dict, forced:bool=False):
     else:
         dic = bodytype_data
 
-    key = pick_from_data_dict_by_rarity(dic)
+    key = filter_data_dict(dic)
     bodytype = dic[key]
 
     return bodytype
@@ -224,7 +224,7 @@ def gen_npc_from_data(data:Dict, x:int, y:int, game:Game):
     loadout = data.get(Key.LOADOUT)
     loadouts = data.get(Key.LOADOUTS)
     if loadouts is not None:
-        loadout = pick_from_data_dict_by_rarity(loadouts, game.dlvl)
+        loadout = filter_data_dict(loadouts, game.dlvl)
         gen_loadout(npc, loadouts[loadout], game)
     else:
         gen_loadout(npc, loadout, game)

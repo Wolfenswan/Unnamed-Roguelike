@@ -10,25 +10,29 @@ TESTING:
 - does using stairs still cause fov crash (because it triggers enemy turn)
 
 CURRENT
-- Queen boss monster
-    - spawn in lowest level
-        - either spawn manually or delete from data entries after it has been picked
-    - maybe allow queen to spit eggs instead of ranged attack?
-        - lobbed ranged attack that cant miss?
+- Items reducing light radius (e.g. Full Helmet)
 - Balancing pass for first release
     - items much rarer
     - monsters better spread throughout levels
         - maybe increase group sizes in lower levels?
-- spawning:
-    each level outside given spawning range: -10%(20%?) off 100% chance
 - waiting->interact
     if standing on same spot as something and not in combat->interact
 - dashing into enemies does slightly higher damage (1.25)? maybe add modifier to moveset/data
-    - or: tackles for 0.5 damage & dazes
+    - or: tackles for 0.5 damage & dazes if damage > 0
+- attacking while blocking: shield slam (low damage but chance to daze/stun/push)
 - clear message when effect is applied to player:
     - You are ENTANGLED (w. color)
 - unify references to player:
     - either NAME or YOU
+- new spawning functions: create_uniques:
+    - create separate dictionary containing all items/npcs with UNIQUE rarity
+    - check each level change if uniques can be spawned
+    - remove spawned uniques from dictionary
+- Queen boss monster
+    - maybe allow queen to spit eggs instead of ranged attack?
+        - lobbed ranged attack that cant miss?
+    - set end state after defeating
+    - show final screen after exiting through portal
 
 UPCOMING
 - Monster generator (destroyable)

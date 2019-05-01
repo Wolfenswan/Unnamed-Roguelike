@@ -7,7 +7,7 @@ from config_files import cfg
 #from data.actor_data.test_spawns import spawn_data
 from data.data_keys import Key
 from data.data_processing import gen_npc_from_data, NPC_DATA_MERGED
-from data.data_util import pick_from_data_dict_by_rarity
+from data.data_util import filter_data_dict, dlvl_check
 from debug.timer import debug_timer
 from gameobjects.block_level import BlockLevel
 from map.entity_placement.util_functions import find_ent_position
@@ -20,8 +20,15 @@ def place_monsters(game):
     dlvl = game.dlvl
     game_map = game.map
     rooms = game_map.rooms.copy()
+    # for k, v in NPC_DATA_MERGED.items():
+    #     print(v[Key.NAME])
+    #     print(v.get(Key.DLVLS, (1, 1000)))
+    #     print(dlvl_chance(dlvl, v) >= randint(0,100))
+    # spawn_data = {
+    #     k: v for k, v in NPC_DATA_MERGED.items()
+    #     if dlvl_check(dlvl, v)
+    # }
     spawn_data = NPC_DATA_MERGED
-
     max_monsters = int(len(rooms) * cfg.MONSTERS_DUNGEON_FACTOR)
 
     logging.debug(f'Creating actors for dungeon-level {0}. Max. {max_monsters} for {len(rooms)} rooms)')
@@ -39,7 +46,7 @@ def place_monsters(game):
             # place up to as many monsters as the settings allow
             m = 0
             while m <= num_of_monsters and len(game.npc_ents) < max_monsters:
-                key= pick_from_data_dict_by_rarity(spawn_data, dlvl)
+                key = filter_data_dict(spawn_data, dlvl)
                 entry = spawn_data[key]
                 group_size = randint(*entry[Key.GROUP_SIZE])
                 for i in range(group_size):

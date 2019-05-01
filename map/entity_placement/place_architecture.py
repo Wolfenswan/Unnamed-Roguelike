@@ -4,7 +4,7 @@ from random import randint, choice
 from config_files import cfg
 from data.architecture_data.arch_doors import arch_doors_data
 from data.data_processing import gen_architecture_from_data, ARCHITECTURE_DATA_MERGED
-from data.data_util import pick_from_data_dict_by_rarity
+from data.data_util import filter_data_dict
 from debug.timer import debug_timer
 from map.entity_placement.util_functions import find_ent_position
 
@@ -28,7 +28,7 @@ def place_generic_architecture(game):
         #logging.debug(f'Placing {num_to_place} staticobjects in {rooms} (Max: {max_in_room})')
 
         for i in range(num_to_place):
-            key = pick_from_data_dict_by_rarity(possible_objects, dlvl)
+            key = filter_data_dict(possible_objects, dlvl)
             data = possible_objects[key]
 
             pos = find_ent_position(room, data, game, allow_exits=False)
@@ -78,7 +78,7 @@ def place_doors(game):
         for e in exits:
             if randint(0,100) <= 75:
 
-                key = pick_from_data_dict_by_rarity(possible_objects, dlvl)
+                key = filter_data_dict(possible_objects, dlvl)
                 data = possible_objects[key]
 
                 x, y = e
