@@ -9,3 +9,4 @@
 		- set only total screen-size in cfg (simple multiplier?), derive other values from there
 		- check required min sizes for all panels, scale map panel down as necessary
 	- tweak hp/stamina bar sizes (redundant with player panel. good thing?)
+- line breaks break colorization (workaround would be color-wrapping each word individually)

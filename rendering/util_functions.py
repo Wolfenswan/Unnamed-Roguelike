@@ -100,6 +100,8 @@ def dynamic_wrap(string, max_width):
     """
     This function makes sure that textwrap.wrap() does ignore formatting strings
     such as %c and %color% when wrapping words.
+
+    # Todo line breaks through color-wrapped words break colorization (workaround would be color-wrapping each word individually)
     """
 
     codes = {}

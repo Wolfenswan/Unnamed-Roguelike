@@ -1,6 +1,6 @@
 from gameobjects.block_level import BlockLevel
 from gui.menus import item_list_menu
-from gui.messages import Message, MessageCategory
+from gui.messages import Message, MessageCategory, MessageType
 
 
 class Architecture:
@@ -10,20 +10,20 @@ class Architecture:
 
     @staticmethod
     def blocks_info(interacting_ent, arch_entity, game):
-        return [{'message': Message(f'A {arch_entity.name} blocks your way.', category=MessageCategory.OBSERVATION)}]
+        return [{'message': Message(f'{arch_entity.address_color.title()} blocks your way.', category=MessageCategory.OBSERVATION)}]
 
 
     @staticmethod
     def change_level(interacting_ent, arch_entity, game):
         results = []
         if interacting_ent.pos != arch_entity.pos:
-            results = [{'message': Message(f'You need to be on top of the %{arch_entity.color}%{arch_entity.name.title()}%%.', category=MessageCategory.OBSERVATION)}]
+            results = [{'message': Message(f'{interacting_ent.address_color.title()} need to be on top of {arch_entity.address_color}.', category=MessageCategory.OBSERVATION)}]
         elif arch_entity.char == '<':
             results = [{'level_change': 1},]
         elif arch_entity.char == '>':
             results = [{'level_change': -1},]
         elif arch_entity.char == '0':
-            results =[{'message': Message(f'PLACEHOLDER: You leave the Dungeon.', category=MessageCategory.SYSTEM)}]
+            results =[{'message': Message(f'PLACEHOLDER: You leave the Dungeon.', category=MessageCategory.OBSERVATION, type=MessageType.SYSTEM)}]
         return results
 
 
@@ -55,17 +55,17 @@ class Architecture:
         # TODO locks & traps
         # display chest_contents
         if container_ent.inventory.is_empty:
-            results.append({'message':Message(f'The {container_ent.name} is empty.', category=MessageCategory.OBSERVATION)})
+            results.append({'message':Message(f'{container_ent.address_color.title()} is empty.', category=MessageCategory.OBSERVATION)})
             # TODO ability to put things into container
         else:
             selection = item_list_menu(container_ent, container_ent.inventory, game, title=f'{container_ent.name}')
             if selection:
                 if not interacting_ent.inventory.is_full:
-                    results.append({'message':Message(f'You take the {selection.name} from the {container_ent.name}.', category=MessageCategory.OBSERVATION)})
+                    results.append({'message':Message(f'{interacting_ent.address_color.title()} take {selection.address_color} from {container_ent.address_color}.', category=MessageCategory.OBSERVATION)})
                     container_ent.inventory.remove(selection)
                     interacting_ent.inventory.add(selection)
                 else:
-                    results.append({'message':Message(f'Your inventory is full.', category=MessageCategory.OBSERVATION)})
+                    results.append({'message':Message(f'{interacting_ent.possessive_color.title()} inventory is full.', category=MessageCategory.OBSERVATION)})
 
         if container_ent.inventory.is_empty and not '(e)' in container_ent.name:
             container_ent.name += ' (e)'
@@ -75,6 +75,7 @@ class Architecture:
 
     @staticmethod
     def smash_object(interacting_ent, object_ent, game):
+        message = f'{interacting_ent.address_color.title()} smash {object_ent.address_color}.'
         object_ent.char = '%'
         object_ent.color *= 0.3
         object_ent.blocks[BlockLevel.WALK] = False
@@ -86,4 +87,4 @@ class Architecture:
                 i.x, i.y = object_ent.x, object_ent.y
                 game.entities.append(i)
         
-        return [{'message': Message(f'You smash a {object_ent.name.title()}.', category=MessageCategory.OBSERVATION)}]
+        return [{'message': Message(message, category=MessageCategory.OBSERVATION)}]

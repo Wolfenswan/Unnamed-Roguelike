@@ -438,10 +438,10 @@ class Fighter:
 
             if melee_attack:
                 if target.is_player:
-                    message = Message(f'You block the attack, dazing the {self.owner.name_with_color}!',
+                    message = Message(f'{target.owner.address_color.title()} block the attack, dazing the {self.owner.name_color}!',
                                       category=MessageCategory.COMBAT, type=MessageType.COMBAT_GOOD)
                 else:
-                    message = Message(f'The {self.owner.name_with_color} blocks your attack, dazing you!',
+                    message = Message(f'{self.owner.address_color.title()} blocks your attack, dazing {target.owner.address_color}!',
                                       category=MessageCategory.COMBAT, type=MessageType.COMBAT_BAD)
 
                 self.set_effect(State.DAZED, True, 1)
@@ -466,14 +466,14 @@ class Fighter:
         if target == self.owner:
             target_string = 'itself'
         else:
-            target_string = target.address_with_color
+            target_string = target.address_color
 
         if damage > 0:
             msg_type = MessageType.COMBAT_BAD if target.is_player else MessageType.COMBAT_INFO
             atk_dmg_string = target.fighter.hpdmg_string(damage)
             col = target.fighter.hpdmg_color(damage)
             results.append({'message': Message(
-                f'{self.owner.name_with_color} {attack_string} {target_string}, {choice(hpdmg_string_data["verbs"])} %{col}%{atk_dmg_string}%% damage.', category=MessageCategory.COMBAT, type=msg_type)})
+                f'{self.owner.name_color} {attack_string} {target_string}, {choice(hpdmg_string_data["verbs"])} %{col}%{atk_dmg_string}%% damage.', category=MessageCategory.COMBAT, type=msg_type)})
             results.extend(target.fighter.take_damage(damage))
 
             # STATISTICS
@@ -484,7 +484,7 @@ class Fighter:
         else:
             msg_type = MessageType.COMBAT_BAD if not target.is_player else MessageType.COMBAT_GOOD
             results.append(
-                {'message': Message(f'{self.owner.name_with_color} {attack_string} {target_string} but can not pierce armor.', category=MessageCategory.COMBAT, type=msg_type)})
+                {'message': Message(f'{self.owner.name_color} {attack_string} {target_string} but can not pierce armor.', category=MessageCategory.COMBAT, type=msg_type)})
             results.append(target.fighter.exert(power, 'armor deflection'))
 
         logging.debug(
@@ -499,13 +499,13 @@ class Fighter:
         results = []
 
         if self.is_blocking:
-            results.append({'message': Message('You stop blocking.', type=MessageType.COMBAT_INFO)})
+            results.append({'message': Message(f'{self.owner.address_color.title()} stop blocking.', type=MessageType.COMBAT_INFO)})
             self.stances[Stance.BLOCKING] = False
         elif self.shield:
-            results.append({'message': Message(f'You ready your {self.shield.name}.', type=MessageType.COMBAT_INFO)})
+            results.append({'message': Message(f'{self.owner.address_color.title()} ready your {self.shield.name}.', type=MessageType.COMBAT_INFO)})
             self.stances[Stance.BLOCKING] = True
         else:
-            results.append({'message': Message('You need a shield to block.', type=MessageType.COMBAT_INFO)})
+            results.append({'message': Message(f'{self.owner.address_color.title()} need a shield to block.', type=MessageType.COMBAT_INFO)})
 
         return results
 
@@ -514,10 +514,10 @@ class Fighter:
         results = []
 
         if self.is_dashing:
-            results.append({'message': Message('You stop dashing.', type=MessageType.COMBAT_INFO)})
+            results.append({'message': Message(f'{self.owner.address_color.title()} stop dashing.', type=MessageType.COMBAT_INFO)})
             self.stances[Stance.DASHING] = False
         else:
-            results.append({'message': Message('You prepare to dash.', type=MessageType.COMBAT_INFO)})
+            results.append({'message': Message(f'{self.owner.address_color.title()} prepare to dash.', type=MessageType.COMBAT_INFO)})
             self.stances[Stance.DASHING] = True
 
         return results
@@ -530,7 +530,7 @@ class Fighter:
                 animate_move_line(self.owner, dx, dy, 2, game, anim_delay=0.05)
                 results.append(self.exert(self.defense * cfg.DASH_EXERT_MULTIPL, 'dash'))
         else:
-            results.append({'message': Message('You are too exhausted!', type=MessageType.COMBAT_BAD)})
+            results.append({'message': Message(f'{self.owner.address_color.title()} are too exhausted!', type=MessageType.COMBAT_BAD)})
 
         return results
 

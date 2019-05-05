@@ -14,8 +14,6 @@ CURRENT
     - items much rarer
     - monsters better spread throughout levels
         - maybe increase group sizes in lower levels?
-- waiting->interact
-    if standing on same spot as something and not in combat->interact
 - dashing into enemies does slightly higher damage (1.25)? maybe add modifier to moveset/data
     - or: tackles for 0.5 damage & dazes if damage > 0
 - attacking while blocking: shield slam (low damage but chance to daze/stun/push)
@@ -33,6 +31,7 @@ CURRENT
     - show final screen after exiting through portal
 
 UPCOMING
+- (e) for empty containers should be dynamic and not added to the name itself
 - Monster generator (destroyable)
     - different generator for each monster?
 - Ent Placement

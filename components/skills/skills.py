@@ -162,8 +162,8 @@ class SkillHatch(BaseSkill):
         #results.extend(self.owner.fighter.death(game))
         game.map.gib_area(user.x, user.y, randint(2,4), user.color_blood, chunks=True)
         # TODO switch entity stats!
-        msg1 = Message(f'{user.address_with_color.title()} hatches!', type=type,
-                      category=MessageCategory.OBSERVATION)
+        msg1 = Message(f'{user.address_color.title()} hatches!', type=type,
+                       category=MessageCategory.OBSERVATION)
         self.create_hatchling()
         results = [{'message': msg1}]
         return results

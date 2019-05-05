@@ -137,8 +137,8 @@ class Entity:
         return full_name.title()
 
     @property
-    def name_with_color(self):
-        return f'%{self.color}%{self.name}%%'
+    def name_color(self):
+        return f'%{self.color}%{self.name.title()}%%'
 
     @property
     def pronoun(self):
@@ -149,8 +149,12 @@ class Entity:
         return f'the {self.name}' if not self.is_player else 'you'
 
     @property
-    def address_with_color(self):
-        return f'%{self.color}%{self.address}%%'
+    def address_color(self):
+        return f'the %{self.color}%{self.name}%%' if not self.is_player else f'%{self.color}%you%%'
+
+    @property
+    def possessive(self):
+        return f'{self.address}\'s' if not self.is_player else 'your'
 
     @property
     def state_verb_present(self):
@@ -159,6 +163,19 @@ class Entity:
     @property
     def state_verb_past(self):
         return 'was' if not self.is_player else 'were'
+
+    # def extended_name(self, address=True, possessive=False, title=False, colorize=True):
+    #     if address:
+    #         name = f'{self.address}'
+    #     if possessive:
+    #         name = f'{self.possessive}'
+    #     else:
+    #         name = self.name
+    #     if title:
+    #         name = name.title()
+    #     if colorize:
+    #         name = f'%{self.color}%{name}%%'
+    #     return name
 
     def extended_descr(self, game):
         extend_descr = self.descr
