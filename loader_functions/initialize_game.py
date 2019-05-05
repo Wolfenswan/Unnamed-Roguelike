@@ -61,8 +61,8 @@ def initialize_player(game):
 def initialize_map(game):
 
     # Setup the game map #
-    dwidth = randint(cfg.DUNGEON_MIN_WIDTH, cfg.DUNGEON_MAX_WIDTH)
-    dheight = randint(cfg.DUNGEON_MIN_HEIGHT, cfg.DUNGEON_MAX_HEIGHT)
+    dwidth = randint(round(cfg.DUNGEON_MIN_WIDTH), round(cfg.DUNGEON_MAX_WIDTH))
+    dheight = randint(round(cfg.DUNGEON_MIN_HEIGHT), round(cfg.DUNGEON_MAX_HEIGHT))
     game.map = GameMap(dwidth, dheight)
     game.map.make_map(game, cfg.ROOM_MIN_SIZE, cfg.ROOM_MAX_SIZE, dwidth, dheight)
 
@@ -71,7 +71,7 @@ def initialize_objects(game):
     # Add the good stuff #
     place_special_architecture(game)
     place_generic_architecture(game)
-    place_containers(game)
+    # place_containers(game)
     # place_doors(game)
     # place_items(game)
     # place_monsters(game)

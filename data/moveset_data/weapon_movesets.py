@@ -6,17 +6,17 @@ col1 = '%dark_orange%'
 moveset_sword = {
     1: {
        Key.DESCR: f'A {col1}swing%% from right to left, doing full damage.',
-        Key.VERB: 'swings at',
+        Key.VERB: 'strike',
     },
     2: {
        Key.DESCR: f'A slightly {col1}weaker slash%% from the down left.',
-        Key.VERB: 'slashes',
+        Key.VERB: 'slash',
         Key.DMG_MULTIPL: 0.8,
         Key.EXERT_MULTIPL: 0.8,
     },
     3: {
        Key.DESCR: f'A {col1}forceful stab%% towards the enemies center.',
-        Key.VERB: 'stabs',
+        Key.VERB: 'stab',
         Key.DMG_MULTIPL: 1.25,
         Key.EXERT_MULTIPL: 1.25,
     }
@@ -24,17 +24,17 @@ moveset_sword = {
 moveset_spear = {
     1: {
        Key.DESCR: f'A {col1}weak stab%% to prepare for further attacks.',
-        Key.VERB: 'pokes',
+        Key.VERB: 'poke',
         Key.DMG_MULTIPL: 0.75,
         Key.EXERT_MULTIPL: 0.75,
     },
     2: {
        Key.DESCR: f"An {col1}standard thrust%%, using the weapon's full potential.",
-        Key.VERB: 'thrusts at'
+        Key.VERB: 'thrust at'
     },
     3: {
        Key.DESCR: f'A {col1}powerful thrust%%, piercing the target and hitting something behind it.',
-        Key.VERB: 'forcefully thrusts through',
+        Key.VERB: 'forcefully thrust',
         Key.DMG_MULTIPL: 1.25,
         Key.EXERT_MULTIPL: 1.25,
         Key.EXTEND_ATTACK: [RelativeDirection.BEHIND]
@@ -59,14 +59,14 @@ Key.DEFAULT: {Key.VERBS: ('flails',),},
     },
     4: {
        Key.DESCR: f"A final {col1}overhead crush%% on a single head, ignoring shields.",
-        Key.VERB: 'crushes',
+        Key.VERB: 'crush',
         Key.DMG_MULTIPL: 1.25,
         Key.EXERT_MULTIPL: 1.25,
         Key.BLOCK_DEF_MULTIPL: 0,
     }
 }
 moveset_bow = {
-    Key.DEFAULT: {Key.VERBS: ('shoots',),},
+    Key.DEFAULT: {Key.VERBS: ('shoot',),},
     1: {
        Key.DESCR: f"A quick but {col1}weaker draw%% to gauge the distance to the target.",
         Key.DMG_MULTIPL: 0.5

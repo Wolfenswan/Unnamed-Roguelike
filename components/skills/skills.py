@@ -2,7 +2,7 @@ import logging
 from random import randint
 
 from components.AI.behavior.simple import Simple
-from components.actors.fighter_util import State
+from components.combat.fighter_util import State
 from components.skills.baseSkill import BaseSkill
 from config_files import colors
 from game import Game
@@ -44,14 +44,14 @@ class SkillCharge(BaseSkill):
         missed = animate_move_to(user, tx, ty, game)
 
         if missed is False: # if a wall is hit during the charge, damage the charging entity
-            results.extend(user.fighter.attack_setup(user, game, dmg_mod_multipl=0.5, verb='hurts', ignore_moveset=True))
+            results.extend(user.f.attack_setup(user, game, dmg_mod_multipl=0.5, verb='hurts', ignore_moveset=True))
         elif not isinstance(missed, bool): # if missed is not bool, another entity was hit
             ent = missed
             if ent.fighter is not None: # if another actor was hit, that actor is damaged
-                results.extend(user.fighter.attack_setup(ent, game, dmg_mod_multipl=2, verb='gores', ignore_moveset=True))
+                results.extend(user.f.attack_setup(ent, game, dmg_mod_multipl=2, verb='gores', ignore_moveset=True))
             elif ent.architecture is not None: # if architecture was hit, user damages itself
                 results.extend(
-                    user.fighter.attack_setup(user, game, dmg_mod_multipl=0.5, verb='rams', ignore_moveset=True))
+                    user.f.attack_setup(user, game, dmg_mod_multipl=0.5, verb='rams', ignore_moveset=True))
         return results
 
 
@@ -68,9 +68,9 @@ class SkillSlam(BaseSkill):
         user.actionplan.add_to_queue(execute_in=delay, planned_function=self.execute,
                                      planned_function_args=(*target.pos, game), fixed=True)
 
-        user.fighter.active_weapon = user.fighter.weapon_melee
+        user.f.active_weapon = user.f.weapon_melee
         results.append({'message': Message(
-            f'The {user.name} raises its {user.fighter.active_weapon.name} high above its head.', category=MessageCategory.OBSERVATION,
+            f'The {user.name} raises its {user.f.active_weapon.name} high above its head.', category=MessageCategory.OBSERVATION,
             type=MessageType.ALERT)})
         return results
 
@@ -84,7 +84,7 @@ class SkillSlam(BaseSkill):
         hit = entity_at_pos(game.fighter_ents,tx, ty)
         if hit:
             if hit.fighter:
-                results.extend(user.fighter.attack_setup(hit, game, dmg_mod_multipl=2, verb='slams', ignore_moveset=True))
+                results.extend(user.f.attack_setup(hit, game, dmg_mod_multipl=2, verb='slams', ignore_moveset=True))
         return results
 
 
@@ -113,8 +113,8 @@ class SkillExplodeSelf(BaseSkill):
         self.owner.color_bg = None  # Reset the entities bg-color, which the skill preparation had changed
 
         results.extend(Effect.explosion(game=game, target_pos=self.owner.pos, **self.on_activate_kwargs))
-        if self.owner.fighter.hp > 0:
-            self.owner.fighter.death(game)
+        if self.owner.f.hp > 0:
+            self.owner.f.death(game)
 
         return results
 
@@ -137,7 +137,7 @@ class SkillEntangle(BaseSkill):
         results = []
         user = self.owner
         duration = kwargs.get('duration',0)
-        target.fighter.set_effect(State.ENTANGLED, True, duration)
+        target.f.set_effect(State.ENTANGLED, True, duration)
         results.append({'message': Message(f'The {user.name} wraps itself around {target.name}!', category=MessageCategory.OBSERVATION,
                                            type=MessageType.COMBAT)})
         return results
@@ -159,7 +159,7 @@ class SkillHatch(BaseSkill):
 
     def execute(self, game:Game, **kwargs):
         user = self.owner
-        #results.extend(self.owner.fighter.death(game))
+        #results.extend(self.owner.f.death(game))
         game.map.gib_area(user.x, user.y, randint(2,4), user.color_blood, chunks=True)
         # TODO switch entity stats!
         msg1 = Message(f'{user.address_color.title()} hatches!', type=type,
@@ -173,9 +173,9 @@ class SkillHatch(BaseSkill):
         user.char = 'h'
         user.name = 'Hatchling'
         user.color = colors.beige
-        user.fighter.max_hp = randint(10, 15)
-        user.fighter.hp = user.fighter.max_hp
-        user.fighter.base_av = 0
-        user.fighter.effects[State.IMMOBILE] = False
+        user.f.max_hp = randint(10, 15)
+        user.f.hp = user.f.max_hp
+        user.f.base_av = 0
+        user.f.effects[State.IMMOBILE] = False
         user.ai.set_behavior(Simple())
         user.skills = None

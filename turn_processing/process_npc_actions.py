@@ -8,7 +8,7 @@ def process_npc_actions(game):
     for entity in move_order:
         if entity.ai:
             enemy_turn_results = entity.ai.take_turn(game, game.fov_map)
-            player.fighter.surrounded = player.fighter.check_surrounded(game) # Set the player's surrounded value accordingly
+            player.f.surrounded = player.f.check_surrounded(game) # Set the player's surrounded value accordingly
 
             for enemy_turn_result in enemy_turn_results:
                 message = enemy_turn_result.get('message')
@@ -18,7 +18,7 @@ def process_npc_actions(game):
                     message.add_to_log(game)
 
                 if dead_entity:
-                    dead_entity.fighter.death(game).add_to_log(game)
+                    dead_entity.f.death(game).add_to_log(game)
                     if dead_entity.is_player and not game.debug['invin']:
                         game.state = GameState.PLAYER_DEAD
 

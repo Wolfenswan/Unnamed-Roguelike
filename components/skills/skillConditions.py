@@ -11,7 +11,7 @@ class SkillCondition:
     def can_see_target(**kwargs):
         actor = kwargs.get('actor')
         target = kwargs.get('target')
-        return actor.distance_to_ent(target) <= actor.fighter.vision
+        return actor.distance_to_ent(target) <= actor.f.vision
 
     @staticmethod
     def free_line_to_target(**kwargs):

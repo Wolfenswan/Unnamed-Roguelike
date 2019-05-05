@@ -69,16 +69,16 @@ def process_turn_results(player_turn_results, game, fov_map):
 
         if waiting:
             if player.in_combat(game):
-                if player.fighter.active_weapon:
-                    player.fighter.active_weapon.moveset.cycle_moves(reset=True) # Waiting resets weapon moves
-                if not player.fighter.sta_full:
-                    player.fighter.recover(player.fighter.max_stamina / 20)
+                if player.f.active_weapon:
+                    player.f.active_weapon.moveset.cycle_moves(reset=True) # Waiting resets weapon moves
+                if not player.f.sta_full:
+                    player.f.recover(player.f.max_stamina / 20)
             else:
                 # TODO placeholder values for regeneration/resting
-                # if not player.fighter.hp_full:
-                #     player.fighter.heal(player.fighter.max_hp/10)
-                if not player.fighter.sta_full:
-                    player.fighter.recover(player.fighter.max_stamina / 10)
+                # if not player.f.hp_full:
+                #     player.f.heal(player.f.max_hp/10)
+                if not player.f.sta_full:
+                    player.f.recover(player.f.max_stamina / 10)
 
         if door_entity is not None:
             # If the player interacted with a door, the fov map is updated)
@@ -86,7 +86,7 @@ def process_turn_results(player_turn_results, game, fov_map):
             fov_map.walkable[door_entity.y, door_entity.x] = not door_entity.blocks.get(BlockLevel.WALK, False)
 
         if dead_entity is not None:
-            dead_entity.fighter.death(game).add_to_log(game)
+            dead_entity.f.death(game).add_to_log(game)
             if dead_entity.is_player:
                 game.state = GameState.PLAYER_DEAD
 

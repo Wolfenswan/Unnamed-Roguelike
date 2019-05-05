@@ -27,7 +27,7 @@ def recompute_fov(game, x, y):
 
     algorithm = cfg.FOV_ALGO
     light_walls = cfg.FOV_LIGHT_WALLS
-    radius = game.player.fighter.vision
+    radius = game.player.f.vision
 
     game.fov_map.compute_fov(x, y, radius, light_walls, algorithm)
 
@@ -50,7 +50,7 @@ def darken_color_by_fov_distance(ent, color, x, y, randomness = 0, min=0.1):
     :rtype: tuple
     """
 
-    color_coefficient = 1 - ent.distance_to_pos(x, y)/ent.fighter.vision #+ random.uniform(0, randomness)
+    color_coefficient = 1 - ent.distance_to_pos(x, y)/ent.f.vision #+ random.uniform(0, randomness)
 
     if color_coefficient > 1:
         color_coefficient = 1

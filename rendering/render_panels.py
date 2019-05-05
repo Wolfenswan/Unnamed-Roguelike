@@ -2,7 +2,7 @@
 
 import tcod
 
-from components.actors.fighter_util import Surrounded
+from components.combat.fighter_util import Surrounded
 from config_files import colors, cfg as cfg
 from rendering import render_constants as cons
 from game import GameState
@@ -30,15 +30,15 @@ def render_player_panel(game, con, panel_x, panel_y, width, height):
 
     # Health & Stamina #
     y += 2
-    hp_string = f'HIT: %c{player.fighter.hp}/{player.fighter.max_hp}%c'
-    print_string(con, 1, y, hp_string, color=game.player.fighter.hp_color)
+    hp_string = f'HIT: %c{player.f.hp}/{player.f.max_hp}%c'
+    print_string(con, 1, y, hp_string, color=game.player.f.hp_color)
     hp_diff = player.statistics.hp_change
     if hp_diff != 0:
         col = colors.darker_green if hp_diff > 0 else colors.darker_red
         print_string(con, len(hp_string)- 2, y, f'(%{col}%{hp_diff}%%)')
 
-    sta_string = f'STA: %c{player.fighter.stamina}/{player.fighter.max_stamina}%c'
-    print_string(con, 1, y+1,  sta_string, color = game.player.fighter.stamina_color)
+    sta_string = f'STA: %c{player.f.stamina}/{player.f.max_stamina}%c'
+    print_string(con, 1, y+1,  sta_string, color = game.player.f.stamina_color)
     sta_diff = player.statistics.sta_change
     if sta_diff != 0:
         col = colors.lighter_sea if sta_diff > 0 else colors.darker_sea
@@ -56,47 +56,47 @@ def render_player_panel(game, con, panel_x, panel_y, width, height):
     # Equipment-derived stats #
     y += 1
     # Defensive Stats #
-    surrounded = player.fighter.surrounded
+    surrounded = player.f.surrounded
     if surrounded == Surrounded.THREATENED:
         print_string(con, 3, y, '*THREATENED*', color=colors.orange)
     if surrounded == Surrounded.OVERWHELMED:
         print_string(con, 3, y, '*OVERWHELMED*', color=colors.red)
 
-    print_string(con, 1, y + 1, f'STR: {player.fighter.strength}')
-    color = colors.white if player.fighter.modded_defense >= player.fighter.defense else colors.dark_red
-    print_string(con, 1, y + 2, f'DEF: %c{player.fighter.modded_defense}%c', color=color)
+    print_string(con, 1, y + 1, f'STR: {player.f.strength}')
+    color = colors.white if player.f.modded_defense >= player.f.defense else colors.dark_red
+    print_string(con, 1, y + 2, f'DEF: %c{player.f.modded_defense}%c', color=color)
 
-    color = colors.panel_stat_active if player.fighter.is_dashing else colors.panel_inactive
-    print_string(con, 8, y + 1, f'DASHING', color=color)
+    color = colors.panel_stat_active if player.f.is_dashing else colors.panel_inactive
+    print_string(con, 9, y + 1, f'DASHING', color=color)
     #
-    if player.fighter.shield and player.fighter.shield.block_def:
-        col1 = colors.panel_inactive if not player.fighter.is_blocking else colors.panel_stat_active
-        col2 = 'dark_red' if player.fighter.shield.block_def > player.fighter.modded_block_def else f'{col1}'
-        print_string(con, 8, y + 2, f'%{col1}%BLOCK:%% %{col2}%{player.fighter.modded_block_def}%%')
+    if player.f.shield and player.f.shield.block_def:
+        col1 = colors.panel_inactive if not player.f.is_blocking else colors.panel_stat_active
+        col2 = 'dark_red' if player.f.shield.block_def > player.f.modded_block_def else f'{col1}'
+        print_string(con, 9, y + 2, f'%{col1}%BLOCK:%% %{col2}%{player.f.modded_block_def}%%')
 
     # Weapon #
     y += 4
-    if player.fighter.weapon_melee is not None:
-        color = colors.panel_stat_active if player.fighter.weapon_melee.is_active_weapon(player) else colors.panel_inactive
-        print_string(con, 1, y, f'%c{player.fighter.weapon_melee.name}%c', color=color)
+    if player.f.weapon_melee is not None:
+        color = colors.panel_stat_active if player.f.weapon_melee.is_active_weapon(player) else colors.panel_inactive
+        print_string(con, 1, y, f'%c{player.f.weapon_melee.name}%c', color=color)
 
-    if player.fighter.weapon_ranged is not None:
-        color = colors.panel_stat_active if player.fighter.weapon_ranged.is_active_weapon(player) else colors.panel_inactive
-        x = 2 + len(player.fighter.weapon_melee.name) if player.fighter.weapon_melee is not None else 1
+    if player.f.weapon_ranged is not None:
+        color = colors.panel_stat_active if player.f.weapon_ranged.is_active_weapon(player) else colors.panel_inactive
+        x = 2 + len(player.f.weapon_melee.name) if player.f.weapon_melee is not None else 1
         print_string(con, x, y,
-                     f'%c{player.fighter.weapon_ranged.name}%c',
+                     f'%c{player.f.weapon_ranged.name}%c',
                      color=color)
 
-    if player.fighter.active_weapon is not None:
+    if player.f.active_weapon is not None:
         print_string(con, 2, y+1,
-                     f'ATT: {game.player.fighter.active_weapon.moveset.current_move}/{game.player.fighter.active_weapon.moveset.moves}')
-        print_string(con, 2, y+2, f'DAM: {game.player.fighter.modded_dmg_potential[0]}-{game.player.fighter.modded_dmg_potential[-1]}')
+                     f'ATT: {game.player.f.active_weapon.moveset.current_move}/{game.player.f.active_weapon.moveset.moves}')
+        print_string(con, 2, y+2, f'DAM: {game.player.f.modded_dmg_potential[0]}-{game.player.f.modded_dmg_potential[-1]}')
 
 
         # Visualize targets for next attack
         x = 11
         print_string(con, x, y+1, f'TAR:')
-        for i, line in enumerate(player.fighter.active_weapon.moveset.targets_gui):
+        for i, line in enumerate(player.f.active_weapon.moveset.targets_gui):
             print_string(con, x + 4, y+i, ''.join(line))
 
     # # Quick Slots #
@@ -146,8 +146,8 @@ def render_enemy_panel(game, con, panel_x, panel_y, width, height, color):
     setup_console(con, caption='Enemies', borders=True, bordercolor=color)
     
     # check for monsters in FOV
-    spotted = [ent for ent in game.npc_ents if ent.is_visible(game.fov_map) and ent.fighter.hp > 0]
-    #spotted = [ent for ent in game.entities if ent.ai and ent.fighter.hp > 0 and ent.is_visible(game.fov_map)]
+    spotted = [ent for ent in game.npc_ents if ent.is_visible(game.fov_map) and ent.f.hp > 0]
+    #spotted = [ent for ent in game.entities if ent.ai and ent.f.hp > 0 and ent.is_visible(game.fov_map)]
 
     if len(spotted):
         spotted.sort(key=game.player.distance_to_ent)  # sort the spotted array by distance to player
@@ -172,11 +172,11 @@ def render_enemy_panel(game, con, panel_x, panel_y, width, height, color):
             y += 1
             x = 1
             tcod.console_put_char_ex(con, x, y, chr(192), tcod.gray, tcod.black)
-            tcod.console_set_color_control(tcod.COLCTRL_2, ent.fighter.hp_color, tcod.black)
-            tcod.console_set_color_control(tcod.COLCTRL_3, ent.fighter.stamina_color, tcod.black)
-            status_line = f'%c{ent.fighter.hp_string.title()}%c|%c{ent.fighter.stamina_string.title()}%c'\
+            tcod.console_set_color_control(tcod.COLCTRL_2, ent.f.hp_color, tcod.black)
+            tcod.console_set_color_control(tcod.COLCTRL_3, ent.f.stamina_color, tcod.black)
+            status_line = f'%c{ent.f.hp_string.title()}%c|%c{ent.f.stamina_string.title()}%c'\
                           % (tcod.COLCTRL_2, tcod.COLCTRL_STOP, tcod.COLCTRL_3, tcod.COLCTRL_STOP)
-            for status, active in ent.fighter.effects.items(): # Todo does not consider number of status effects > width of panel
+            for status, active in ent.f.effects.items(): # Todo does not consider number of status effects > width of panel
                 if active:
                     status_line += f' %white%{status.name[0]}%%'
 
@@ -215,10 +215,10 @@ def render_status_panel(game, con, panel_x, panel_y, width, height):
     draw_console_borders(con, color=colors.dark_gray)
 
     bar_width = round(width//3)
-    draw_bar(con, 1, 1, bar_width, f'{game.player.fighter.hp_string}', int(game.player.fighter.hp), game.player.fighter.max_hp,
-             game.player.fighter.hp_color, tcod.darkest_red)
-    draw_bar(con, width-bar_width-1, 1, bar_width, f'{game.player.fighter.stamina_string}', int(game.player.fighter.stamina), game.player.fighter.max_stamina,
-             game.player.fighter.stamina_color, colors.darkest_blue)
+    draw_bar(con, 1, 1, bar_width, f'{game.player.f.hp_string}', int(game.player.f.hp), game.player.f.max_hp,
+             game.player.f.hp_color, tcod.darkest_red)
+    draw_bar(con, width-bar_width-1, 1, bar_width, f'{game.player.f.stamina_string}', int(game.player.f.stamina), game.player.f.max_stamina,
+             game.player.f.stamina_color, colors.darkest_blue)
 
     draw_quickslots(con, cons.MSG_PANEL1_WIDTH, 0, game)
 

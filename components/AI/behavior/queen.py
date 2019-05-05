@@ -15,7 +15,7 @@ class Queen:
         # free_line = actor.free_line_to_ent(target, game)
         enough_friendlies_nearby = len(actor.entities_in_distance(entities=game.npc_ents, dist=3)) >= 3
         enough_friendlies_near_target = len(target.surrounding_enemies(game.npc_ents)) >= 1
-        # enough_friendlies_in_area = len(actor.entities_in_distance(entities=game.npc_ents, dist=actor.fighter.vision)) >= 5
+        # enough_friendlies_in_area = len(actor.entities_in_distance(entities=game.npc_ents, dist=actor.f.vision)) >= 5
 
         results = []
 
@@ -40,10 +40,10 @@ class Queen:
 
         # With a 20% chance or if no egg was laid, proceed to attack directly
         if distance >= 2:   # First select the according weapon for the range
-            actor.fighter.active_weapon = actor.fighter.weapon_ranged
+            actor.f.active_weapon = actor.f.weapon_ranged
         else:
-            actor.fighter.active_weapon = actor.fighter.weapon_melee
+            actor.f.active_weapon = actor.f.weapon_melee
 
-        results.extend(actor.fighter.attack_setup(target, game))
+        results.extend(actor.f.attack_setup(target, game))
 
         return results

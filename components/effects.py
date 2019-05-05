@@ -16,9 +16,9 @@ class Effect:
         results = []
 
         results.append({'message': Message(
-            f'The {string} causes %{affected_ent.fighter.hpdmg_color(amount)}%{affected_ent.fighter.hpdmg_string(amount)}%% damage to {affected_ent.address}!',
+            f'The {string} causes %{affected_ent.f.hpdmg_color(amount)}%{affected_ent.f.hpdmg_string(amount)}%% damage to {affected_ent.address}!',
             category=MessageCategory.COMBAT, type=MessageType.COMBAT_INFO)})
-        results.extend(affected_ent.fighter.take_damage(amount))
+        results.extend(affected_ent.f.take_damage(amount))
 
         return results
 
@@ -31,11 +31,11 @@ class Effect:
 
         results = []
 
-        if not affected_ent.fighter.hp_full:
+        if not affected_ent.f.hp_full:
             results.append({'message': Message(
-                f'{affected_ent.name} heals for {affected_ent.fighter.hpdmg_string(amount)} effect!',
+                f'{affected_ent.name} heals for {affected_ent.f.hpdmg_string(amount)} effect!',
                 category=MessageCategory.OBSERVATION, type=MessageType.COMBAT_INFO)})
-            affected_ent.fighter.heal(amount)
+            affected_ent.f.heal(amount)
         else:
             results.append({'message': Message(f'{affected_ent.pronoun.title()} {affected_ent.state_verb_past} already at full health.')})
 

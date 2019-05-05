@@ -1,7 +1,7 @@
 from data.data_types import BodyType
 
 entity_descr_color_data = {
-    'presenc': 'yellow'
+    'effect': 'yellow'
 }
 
 bodytype_name_data = {

@@ -64,7 +64,7 @@ def process_player_input(action, game, last_turn_results:Optional[Dict]):
         if game.state in (GameState.SHOW_INVENTORY, GameState.SHOW_QU_INVENTORY, GameState.CURSOR_ACTIVE, GameState.CURSOR_TARGETING):
             game.state = GameState.PLAYERS_TURN
         else:
-            if player.fighter.hp > 0:
+            if player.f.hp > 0:
                 #test_menu(game)
                 choice = generic_options_menu('Quit Game', 'Do you want to quit the game?', ['Save & Quit', 'Just Quit'], game, sort_by=1, cancel_with_escape=True)
                 if choice == 0:
@@ -110,7 +110,8 @@ def process_player_interaction(game, action):
     if move or interact:
         dx, dy = direction
         destination_x, destination_y = player.x + dx, player.y + dy
-        dashing = player.fighter.is_dashing
+        blocking = player.f.is_blocking
+        dashing = player.f.is_dashing
 
         if not game_map.is_wall(destination_x, destination_y):
             target = entity_at_pos(game.walk_blocking_ents, destination_x, destination_y)
@@ -122,21 +123,22 @@ def process_player_interaction(game, action):
                 if player.can_attack is False:
                     results.append({'message': Message('You are unable to attack!',
                                                        type=MessageType.COMBAT_BAD)})
-                elif dashing:
-                    Message('PLACEHOLDER: cant dash into target.', type=MessageType.SYSTEM).add_to_log(game)
                 # If a NPC is blocking the way #
                 elif target.fighter:
-                    if player.fighter.is_blocking:
+                    if blocking:
                         results.append({'message': Message('PLACEHOLDER: cant attack while blocking.',
                                                                 type=MessageType.SYSTEM)})
+                    elif dashing:
+                        results.append({'message': Message('PLACEHOLDER: cant tackle adjacent target.',
+                                                           type=MessageType.SYSTEM)})
                     else:
                         if player.active_weapon_is_ranged:  # TODO should attacking in melee with a ranged weapon incur penalties or be disabled?
-                            attack_results = player.fighter.attack_setup(target, game, dmg_mod_multipl=0.2,
+                            attack_results = player.f.attack_setup(target, game, dmg_mod_multipl=0.2,
                                                                          ignore_moveset=True)
                             results.append({'message': Message(
                                 'PLACEHOLDER: attacking with ranged weapon in melee.', type=MessageType.SYSTEM)})
                         else:
-                            attack_results = player.fighter.attack_setup(target, game)
+                            attack_results = player.f.attack_setup(target, game)
 
                         results.extend(attack_results)
                 # If a static object is blocking the way #
@@ -158,7 +160,7 @@ def process_player_interaction(game, action):
                     results.append({'message': Message('You are unable to move!',
                                                        type=MessageType.COMBAT_BAD)})
                 elif dashing:
-                    results.extend(player.fighter.dash(dx, dy, game))
+                    results.extend(player.f.dash(dx, dy, game))
                 else:
                     player.move(dx, dy)
 
@@ -166,8 +168,8 @@ def process_player_interaction(game, action):
 
             if not target or not target.fighter:
                 # Movement other than fighting resets the current moveset
-                if player.fighter.active_weapon is not None:
-                    player.fighter.active_weapon.moveset.cycle_moves(reset=True)
+                if player.f.active_weapon is not None:
+                    player.f.active_weapon.moveset.cycle_moves(reset=True)
 
             game.state = GameState.ENEMY_TURN
 
@@ -197,23 +199,23 @@ def process_player_interaction(game, action):
 
     # Combat related #
     if toggle_block:
-        results.extend(player.fighter.toggle_blocking())
+        results.extend(player.f.toggle_blocking())
 
     if toggle_dash:
-        results.extend(player.fighter.toggle_dashing())
+        results.extend(player.f.toggle_dashing())
 
     # No dodging while blocking possible; disable one or the other, depending on input
-    if player.fighter.is_blocking and player.fighter.is_dashing:
+    if player.f.is_blocking and player.f.is_dashing:
         if toggle_block:
-            player.fighter.toggle_dashing()
+            player.f.toggle_dashing()
         elif toggle_dash:
-            player.fighter.toggle_blocking()
+            player.f.toggle_blocking()
         else:
             logging.debug('ERROR: Both blocking and dashing active.')
 
 
     if toggle_weapon:
-        new_weapon = player.fighter.toggle_weapon()
+        new_weapon = player.f.toggle_weapon()
         results.append({'weapon_switched': new_weapon})
 
 
@@ -353,7 +355,7 @@ def process_cursor_interaction(game, action, targeting_item, debug_spawn):
         elif player.active_weapon_is_ranged:    # Using a ranged weapon
             target = entity_at_pos(game.blocking_ents, *cursor.pos)
             if target is not None and target.fighter is not None:
-                attack_results = player.fighter.attack_setup(target, game)
+                attack_results = player.f.attack_setup(target, game)
                 results.extend(attack_results)
             else:
                 animate_projectile(*player.pos, *cursor.pos, game, color=colors.beige) # TODO ranged projectile color can later differ by weapon/ammo type

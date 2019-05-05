@@ -12,6 +12,6 @@ class Simple:
         if distance >= 2:
             actor.move_astar(target, game)
         else:
-            results.extend(actor.fighter.attack_setup(target, game))
+            results.extend(actor.f.attack_setup(target, game))
 
         return results

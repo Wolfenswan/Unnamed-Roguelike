@@ -1,5 +1,5 @@
 from components.AI.behavior.simple import Simple
-from components.actors.fighter_util import State
+from components.combat.fighter_util import State
 from config_files import colors
 from data.actor_data.act_skills import skill_hatch
 from data.data_keys import Key

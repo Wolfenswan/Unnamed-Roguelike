@@ -29,6 +29,7 @@ def animate_move_line(ent, dx:int, dy:int, steps:int, game:Game, ignore_entities
             render_animation(game, anim_delay)
         else:
             return move_attempt
+    return True
 
 
 def animate_move_to(ent, tx:int, ty:int, game:Game, ignore_entities=False, anim_delay = 0.05):

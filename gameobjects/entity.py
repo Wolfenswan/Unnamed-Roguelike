@@ -9,7 +9,7 @@ from config_files import colors
 
 from components.skills.skillList import SkillList
 from components.actionplan import Actionplan
-from components.actors.fighter_util import State, Stance
+from components.combat.fighter_util import State, Stance
 from components.architecture import Architecture
 from components.inventory.inventory import Inventory
 from components.inventory.paperdoll import Paperdoll
@@ -64,7 +64,7 @@ class Entity:
         self.statistics = Statistics()
 
         if self.fighter is not None:
-            self.fighter.owner = self
+            self.f.owner = self
 
         if self.ai is not None:
             self.ai.owner = self
@@ -129,65 +129,24 @@ class Entity:
             if self.item.suffix:
                 full_name += f' {self.item.suffix}'
 
-        if self.fighter and self.fighter.hp <= 0:
+        if self.fighter and self.f.hp <= 0:
             full_name += ' remains'
 
         # TODO doors (open & unlocked)
 
         return full_name.title()
 
-    @property
-    def name_color(self):
-        return f'%{self.color}%{self.name.title()}%%'
-
-    @property
-    def pronoun(self):
-        return 'it' if not self.is_player else 'you'
-
-    @property
-    def address(self):
-        return f'the {self.name}' if not self.is_player else 'you'
-
-    @property
-    def address_color(self):
-        return f'the %{self.color}%{self.name}%%' if not self.is_player else f'%{self.color}%you%%'
-
-    @property
-    def possessive(self):
-        return f'{self.address}\'s' if not self.is_player else 'your'
-
-    @property
-    def state_verb_present(self):
-        return 'is' if not self.is_player else 'are'
-
-    @property
-    def state_verb_past(self):
-        return 'was' if not self.is_player else 'were'
-
-    # def extended_name(self, address=True, possessive=False, title=False, colorize=True):
-    #     if address:
-    #         name = f'{self.address}'
-    #     if possessive:
-    #         name = f'{self.possessive}'
-    #     else:
-    #         name = self.name
-    #     if title:
-    #         name = name.title()
-    #     if colorize:
-    #         name = f'%{self.color}%{name}%%'
-    #     return name
-
     def extended_descr(self, game):
         extend_descr = self.descr
         col = 'dark_crimson' # TODO All colors are placeholders
         if self.fighter is not None and self.active_weapon is not None:
-            # if self.fighter.active_weapon: # TODO add another way to indicate special features of a creatures attack
-            #     extend_descr += f'\n\nIt attacks with %{col}%{self.fighter.active_weapon.item.equipment.attack_type.name.lower()}%% strikes.'
+            # if self.f.active_weapon: # TODO add another way to indicate special features of a creatures attack
+            #     extend_descr += f'\n\nIt attacks with %{col}%{self.f.active_weapon.item.equipment.attack_type.name.lower()}%% strikes.'
 
-            if game.player.fighter.shield:
-                extend_descr += f'\n\nBlocking its attacks will be %{col}%{game.player.fighter.average_chance_to_block(self)}%%.'
+            if game.player.f.shield:
+                extend_descr += f'\n\nBlocking its attacks will be %{col}%{game.player.f.average_chance_to_block(self)}%%.'
 
-            for effect, active in self.fighter.effects.items():
+            for effect, active in self.f.effects.items():
                 if active and effects_descr_data.get(effect, None) is not None:
                     extend_descr += f'\n\n{self.pronoun.title()} {self.state_verb_present} {effects_descr_data[effect]}'
 
@@ -196,12 +155,12 @@ class Entity:
 
         if game.debug['ent_info']:
             if self.fighter is not None:
-                extend_descr += f'\n\nhp:{self.fighter.hp}/{self.fighter.max_hp}'
-                extend_descr += f'\nav:{self.fighter.defense} (modded:{self.fighter.modded_defense})'
-                extend_descr += f'\ndmg:{self.fighter.base_dmg_potential} (modded:{self.fighter.modded_dmg_potential})'
+                extend_descr += f'\n\nhp:{self.f.hp}/{self.f.max_hp}'
+                extend_descr += f'\nav:{self.f.defense} (modded:{self.f.modded_defense})'
+                extend_descr += f'\ndmg:{self.f.base_dmg_potential} (modded:{self.f.modded_dmg_potential})'
                 if self.active_weapon is not None:
-                    extend_descr += f'\n\nwp:{self.fighter.active_weapon.full_name}'
-                    extend_descr += f'\nYour ctb:{game.player.fighter.average_chance_to_block(self, debug=True)}'
+                    extend_descr += f'\n\nwp:{self.f.active_weapon.full_name}'
+                    extend_descr += f'\nYour ctb:{game.player.f.average_chance_to_block(self, debug=True)}'
             if self.architecture:
                 ext1 = self.architecture.on_interaction.__name__ if self.architecture.on_interaction else None
                 ext2 = self.architecture.on_collision.__name__ if self.architecture.on_collision else None
@@ -215,7 +174,7 @@ class Entity:
 
     @property
     def is_corpse(self):
-        return self.fighter.hp <= 0 if self.fighter else False
+        return self.f.hp <= 0 if self.fighter else False
 
     @property
     def can_move(self):
@@ -253,7 +212,7 @@ class Entity:
 
     @property
     def active_weapon(self):
-        return self.fighter.active_weapon if self.fighter is not None else None
+        return self.f.active_weapon if self.fighter is not None else None
 
     @property
     def active_weapon_is_melee(self):
@@ -285,10 +244,10 @@ class Entity:
 
     @property
     def effects(self):
-        return self.fighter.effects if self.fighter is not None else None
+        return self.f.effects if self.fighter is not None else None
 
     def is_active_weapon(self,ent):
-        return self == ent.fighter.active_weapon
+        return self == ent.f.active_weapon
 
     ####################
     # ACTION FUNCTIONS #
@@ -331,8 +290,8 @@ class Entity:
             if self.is_player:
                 self.actionplan.process_queue()
                 # TODO Placeholder for proper stamina management (currently flat 1% recovered)
-                if not self.in_combat(game) and not self.fighter.sta_full and not self.fighter.stances.get(Stance.DASHING,False):
-                    self.fighter.recover(self.fighter.max_stamina / 100)
+                if not self.in_combat(game) and not self.f.sta_full and not self.f.stances.get(Stance.DASHING,False):
+                    self.f.recover(self.f.max_stamina / 100)
             for event in self.every_turn_end:
                 eval(event)
 
@@ -386,6 +345,63 @@ class Entity:
         return ents
 
     def visible_enemies(self, hostile_entities, fov_map): # NOTE: Only relevant for player at the moment.
-        enemies_in_distance = self.enemies_in_distance(hostile_entities, dist=self.fighter.vision)
+        enemies_in_distance = self.enemies_in_distance(hostile_entities, dist=self.f.vision)
         visible_enemies = [ent for ent in enemies_in_distance if ent.is_visible(fov_map)]
         return visible_enemies
+
+    ########################
+    # COMPONENT SHORTHANDS #
+    ########################
+
+    @property
+    def f(self):
+        return self.fighter
+
+    @property
+    def i(self):
+        return self.item
+
+    ################
+    # GUI HELPERS #
+    ###############
+
+    @property
+    def name_color(self):
+        return f'%{self.color}%{self.name.title()}%%'
+
+    @property
+    def pronoun(self):
+        return 'it' if not self.is_player else 'you'
+
+    @property
+    def address(self):
+        return f'the {self.name}' if not self.is_player else 'you'
+
+    @property
+    def address_color(self):
+        return f'the %{self.color}%{self.name}%%' if not self.is_player else f'%{self.color}%you%%'
+
+    @property
+    def possessive(self):
+        return f'{self.address}\'s' if not self.is_player else 'your'
+
+    @property
+    def state_verb_present(self):
+        return self.verb_declination('is')
+
+    @property
+    def state_verb_past(self):
+        return self.verb_declination('was')
+
+    def verb_declination(self, verb):
+        if verb == 'is':
+            if self.is_player:
+                verb = 'are'
+        elif verb == 'was':
+            if self.is_player:
+                verb = 'were'
+        elif not self.is_player:
+            if verb[-1] == 'o' or verb[-2:] in ['sh', 'ch', 'tch', 'x', 'z', 'ss'] or (
+                    verb[-1] == 'y' and not verb[-2] in ['a', 'e', 'i', 'o', 'u']):
+                verb += 'es'
+        return verb

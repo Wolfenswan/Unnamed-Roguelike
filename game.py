@@ -74,7 +74,7 @@ class Game:
 
     @property
     def alive_ents(self):
-        return [v for v in self.fighter_ents if v.fighter.hp > 0]
+        return [v for v in self.fighter_ents if v.f.hp > 0]
 
     @property
     def npc_ents(self):

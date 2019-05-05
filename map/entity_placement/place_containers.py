@@ -78,7 +78,7 @@ def fill_container(container, dlvl, rarity_filter=None, type_filter=None, forced
                 break
     else:
         possible_items = {k: v for k, v in ITEM_DATA.items() if
-                          dlvl in range(*v.get(Key.DLVLS, (1, 99)))
+                          dlvl in range(*v.get(Key.DLVLS, (1, 99))) # TODO use dlvl_check()
                           and v.get(Key.TYPE) in type_filter
                           and v.get(Key.RARITY, RarityType.COMMON) in rarity_filter}
         num_of_items = randint(0, container.inventory.capacity)

@@ -10,17 +10,19 @@ TESTING:
 - does using stairs still cause fov crash (because it triggers enemy turn)
 
 CURRENT
-- Balancing pass for first release
-    - items much rarer
-    - monsters better spread throughout levels
-        - maybe increase group sizes in lower levels?
 - dashing into enemies does slightly higher damage (1.25)? maybe add modifier to moveset/data
     - or: tackles for 0.5 damage & dazes if damage > 0
-- attacking while blocking: shield slam (low damage but chance to daze/stun/push)
+    - make tackle() an extension of dash()
+        - that will make sure any target is hit if it's in distance
+        - maybe make targets in distance <1 too close to tackle?
+        - check if move is interrupted, then tackle target if it's fighter
+- Tweak Dungeon generation
+    - less empty space
+- Balancing pass for first release
+    - monsters better spread throughout levels
+        - maybe increase group sizes in deeper levels?
 - clear message when effect is applied to player:
     - You are ENTANGLED (w. color)
-- unify references to player:
-    - either NAME or YOU
 - new spawning functions: create_unique:
     - check each level change if uniques can be spawned
     - remove spawned uniques from dictionary
@@ -31,6 +33,9 @@ CURRENT
     - show final screen after exiting through portal
 
 UPCOMING
+- attacking while blocking: shield slam (low damage but chance to daze/stun/push)
+    - pushes enemies 1 space away and stuns them for 1 turn (prevents them from closing the gap right away)
+    - no damage, only compare STR values? (maybe use shield DEF value as bonus to STR?)
 - (e) for empty containers should be dynamic and not added to the name itself
 - Monster generator (destroyable)
     - different generator for each monster?

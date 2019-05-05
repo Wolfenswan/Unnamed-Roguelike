@@ -1,4 +1,4 @@
-from components.actors.fighter_util import DamagePercentage, AttributePercentage, State
+from components.combat.fighter_util import DamagePercentage, AttributePercentage, State
 from config_files import colors
 
 # HEALTH #

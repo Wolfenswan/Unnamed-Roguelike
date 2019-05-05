@@ -1,4 +1,4 @@
-from components.actors.fighter_util import State, Surrounded
+from components.combat.fighter_util import State, Surrounded
 
 status_modifiers_data = {
     State.DAZED: {

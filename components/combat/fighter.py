@@ -4,7 +4,7 @@ import logging
 
 from dataclasses import dataclass, field
 
-from components.actors.fighter_util import DamagePercentage, AttributePercentage, get_gui_data, State, Surrounded, \
+from components.combat.fighter_util import DamagePercentage, AttributePercentage, get_gui_data, State, Surrounded, \
     Stance
 from components.statistics import statistics_updater
 from config_files import colors, cfg
@@ -15,7 +15,7 @@ from data.gui_data.gui_fighter import hpdmg_string_data, stadmg_string_data, sta
     sta_string_data, hpdmg_color_data, hp_string_data, hp_color_data
 from gameobjects.block_level import BlockLevel
 from gameobjects.util_functions import entity_at_pos, line_between_pos
-from gui.messages import Message, MessageType, MessageCategory
+from gui.messages import Message as M, MessageType, MessageCategory
 from rendering.render_animations import animate_projectile, animate_move_line
 from rendering.render_order import RenderOrder
 
@@ -324,7 +324,7 @@ class Fighter:
         if self.owner.is_player:
             sta_dmg_string = self.stadmg_string(amount)
             col = self.stadmg_color(amount)
-            message = Message(f'%white%You%% {string} for %{col}%{sta_dmg_string}%% exertion.',
+            message = M(f'{self.owner.address_color.title()} {string} for %{col}%{sta_dmg_string}%% exertion.',
                               category=MessageCategory.OBSERVATION, type=MessageType.COMBAT_INFO)
             return {'message': message}
         return {}
@@ -335,6 +335,8 @@ class Fighter:
             self.owner.actionplan.add_to_queue(execute_in=duration,
                                                planned_function=self.set_effect,
                                                planned_function_args=(state, False))
+        message = M(f'{self.owner.address_color.title()} {self.owner.state_verb_present}{" no longer " if not value else " "}{state.name}!', category=MessageCategory.OBSERVATION)
+        return [{'message': message}]
 
     def toggle_weapon(self):
         if (self.weapon_melee is not None and self.weapon_ranged is not None):
@@ -355,7 +357,7 @@ class Fighter:
     # ATTACK RELATED FUNCTIONS #
     ############################
 
-    def attack_setup(self, target, game, dmg_mod_multipl=1, verb:str='hits', ignore_moveset:bool=False, draw_ranged_projectile:bool=True):
+    def attack_setup(self, target, game, dmg_mod_multipl:float=1, verb:str='hit', ignore_moveset:bool=False, draw_ranged_projectile:bool=True):
         results = []
         extra_attacks = []
 
@@ -374,7 +376,7 @@ class Fighter:
         else:
             if self.active_weapon is not None:
                 move_results = self.active_weapon.moveset.execute(self.owner, target)
-                verb = move_results.get('attack_verb', 'hits')
+                verb = move_results.get('attack_verb', verb)
                 extra_attacks = move_results.get('extra_attacks', [])
 
             attack_power = self.dmg_roll * dmg_mod_multipl
@@ -383,7 +385,7 @@ class Fighter:
 
         # Make sure attacker has enough stamina #
         if self.stamina < attack_power / 3:
-            message = Message(f'PLACEHOLDER: Attacking without enough Stamina!', category=MessageCategory.COMBAT,
+            message = M(f'PLACEHOLDER: Attacking without enough Stamina!', category=MessageCategory.COMBAT,
                               type=MessageType.SYSTEM)
             results.append({'message': message})
             return results
@@ -398,7 +400,7 @@ class Fighter:
                     logging.debug(f'{obstacle} is blocking direct los')
                     if randint(0,1): # 50% chance that that entity is hit instead
                         # TODO can later be modified by skill level, attributes etc.
-                        message = Message(f'PLACEHOLDER: {self.owner.name} hits {obstacle.name} instead of {target.name}!',
+                        message = M(f'PLACEHOLDER: {self.owner.name} hits {obstacle.name} instead of {target.name}!',
                                           category=MessageCategory.COMBAT,
                                           type=MessageType.SYSTEM)
                         results.append({'message': message})
@@ -408,7 +410,7 @@ class Fighter:
                             return results # If the obstacle can't be damaged, end the attack here
                 except:
                     # TODO I think this is obsolete now?
-                    message = Message(f'PLACEHOLDER: {self.owner.name} hits a wall instead of {target.name}!',
+                    message = M(f'PLACEHOLDER: {self.owner.name} hits a wall instead of {target.name}!',
                                       category=MessageCategory.COMBAT,
                                       type=MessageType.SYSTEM)
                     results.append({'message': message})
@@ -420,13 +422,13 @@ class Fighter:
         logging.debug(f'{self.owner.name} prepares to attack {target.name} with base damage {self.base_dmg_potential},'
                       f' (modded {self.modded_dmg_potential}) for a power of {attack_power}')
 
-        if target.fighter.stamina <= 0:  # If the target is out of stamina, attack power is doubled
+        if target.f.stamina <= 0:  # If the target is out of stamina, attack power is doubled
             attack_power *= 2
 
-        # Blocking # TODO move to own function
+        # Blocking #
         attack_blocked = False
-        if target.fighter.is_blocking:
-            attack_blocked = target.fighter.attempt_block(self, attack_power)
+        if target.f.is_blocking:
+            attack_blocked = target.f.attempt_block(self, attack_power)
 
         if attack_blocked:
             # TODO should attacker also take sta damage?
@@ -434,25 +436,25 @@ class Fighter:
             sta_dmg = round((attack_power / 2) * sta_dmg_multipl)
             logging.debug(
                 f'{target.name} block exert multiplied by {sta_dmg_multipl} due to {self.owner.name} attack mod')
-            results.append(target.fighter.exert(sta_dmg, 'block'))
+            results.append(target.f.exert(sta_dmg, 'block'))
 
             if melee_attack:
                 if target.is_player:
-                    message = Message(f'{target.owner.address_color.title()} block the attack, dazing the {self.owner.name_color}!',
+                    message = M(f'{target.address_color.title()} block the attack, dazing the {self.owner.name_color}!',
                                       category=MessageCategory.COMBAT, type=MessageType.COMBAT_GOOD)
                 else:
-                    message = Message(f'{self.owner.address_color.title()} blocks your attack, dazing {target.owner.address_color}!',
+                    message = M(f'{self.owner.address_color.title()} blocks your attack, dazing {target.owner.address_color}!',
                                       category=MessageCategory.COMBAT, type=MessageType.COMBAT_BAD)
-
                 self.set_effect(State.DAZED, True, 1)
                 results.append({'message': message})
         else:
-            results.extend(self.attack_execute(target, attack_power, verb))
+            attack_string = self.owner.verb_declination(verb)
+            results.extend(self.attack_execute(target, attack_power, attack_string))
 
         for attack_pos in extra_attacks:
             extra_target = entity_at_pos(game.npc_ents, *attack_pos)
             if extra_target:
-                results.extend(self.attack_execute(extra_target, attack_power // 2, 'further hits')) # TODO currently flat half damage and can't be blocked; can be replaced with moveset-tailored multiplier
+                results.extend(self.attack_execute(extra_target, attack_power // 2, 'also hit')) # TODO currently flat half damage and can't be blocked; can be replaced with moveset-tailored multiplier
 
         self.exert(attack_exertion, 'attack')
 
@@ -461,35 +463,43 @@ class Fighter:
     def attack_execute(self, target, power, attack_string):
         results = []
 
-        damage = round(power - (target.fighter.modded_defense))
+        damage = round(power - (target.f.modded_defense))
 
         if target == self.owner:
-            target_string = 'itself'
+            target_string = 'itself' if not target.is_player else 'yourself'
         else:
             target_string = target.address_color
 
         if damage > 0:
             msg_type = MessageType.COMBAT_BAD if target.is_player else MessageType.COMBAT_INFO
-            atk_dmg_string = target.fighter.hpdmg_string(damage)
-            col = target.fighter.hpdmg_color(damage)
-            results.append({'message': Message(
-                f'{self.owner.name_color} {attack_string} {target_string}, {choice(hpdmg_string_data["verbs"])} %{col}%{atk_dmg_string}%% damage.', category=MessageCategory.COMBAT, type=msg_type)})
-            results.extend(target.fighter.take_damage(damage))
+            atk_dmg_string = target.f.hpdmg_string(damage)
+            col = target.f.hpdmg_color(damage)
+            results.append({'message': M(
+                f'{self.owner.address_color.title()} {attack_string} {target_string}, {choice(hpdmg_string_data["verbs"])} %{col}%{atk_dmg_string}%% damage.', category=MessageCategory.COMBAT, type=msg_type)})
+            results.extend(target.f.take_damage(damage))
 
             # STATISTICS
             self.owner.statistics.dmg_done += damage
-            if target.fighter.hp <= 0:
+            if target.f.hp <= 0:
                 self.owner.statistics.killed += [target.name]
 
         else:
             msg_type = MessageType.COMBAT_BAD if not target.is_player else MessageType.COMBAT_GOOD
             results.append(
-                {'message': Message(f'{self.owner.name_color} {attack_string} {target_string} but can not pierce armor.', category=MessageCategory.COMBAT, type=msg_type)})
-            results.append(target.fighter.exert(power, 'armor deflection'))
+                {'message': M(f'{self.owner.address_color.title()} {attack_string} {target_string} but can not pierce armor.', category=MessageCategory.COMBAT, type=msg_type)})
+            results.append(target.f.exert(power, 'armor deflection'))
 
         logging.debug(
-            f'{self.owner.name.title()} attacks {target.name.title()} with {power} power against {target.fighter.defense} defense for {damage} damage. Target has {target.fighter.stamina} stamina left.)')
+            f'{self.owner.name.title()} attacks {target.name.title()} with {power} power against {target.f.defense} defense for {damage} damage. Target has {target.f.stamina} stamina left.)')
         return results
+
+    def tackle(self, target, game, multipl:float=0.5):
+        result = []
+        t_hp = target.f.hp
+        result.extend(self.attack_setup(target, game, dmg_mod_multipl=multipl, verb='tackle', ignore_moveset=True))
+        if target.f.hp < t_hp:
+            result.extend(target.f.set_effect(State.DAZED, True, 2))
+        return result
 
     #############################
     # DEFENSE RELATED FUNCTIONS #
@@ -499,13 +509,13 @@ class Fighter:
         results = []
 
         if self.is_blocking:
-            results.append({'message': Message(f'{self.owner.address_color.title()} stop blocking.', type=MessageType.COMBAT_INFO)})
+            results.append({'message': M(f'{self.owner.address_color.title()} stop blocking.', type=MessageType.COMBAT_INFO)})
             self.stances[Stance.BLOCKING] = False
         elif self.shield:
-            results.append({'message': Message(f'{self.owner.address_color.title()} ready your {self.shield.name}.', type=MessageType.COMBAT_INFO)})
+            results.append({'message': M(f'{self.owner.address_color.title()} ready your {self.shield.name}.', type=MessageType.COMBAT_INFO)})
             self.stances[Stance.BLOCKING] = True
         else:
-            results.append({'message': Message(f'{self.owner.address_color.title()} need a shield to block.', type=MessageType.COMBAT_INFO)})
+            results.append({'message': M(f'{self.owner.address_color.title()} need a shield to block.', type=MessageType.COMBAT_INFO)})
 
         return results
 
@@ -514,23 +524,27 @@ class Fighter:
         results = []
 
         if self.is_dashing:
-            results.append({'message': Message(f'{self.owner.address_color.title()} stop dashing.', type=MessageType.COMBAT_INFO)})
+            results.append({'message': M(f'{self.owner.address_color.title()} stop dashing.', type=MessageType.COMBAT_INFO)})
             self.stances[Stance.DASHING] = False
         else:
-            results.append({'message': Message(f'{self.owner.address_color.title()} prepare to dash.', type=MessageType.COMBAT_INFO)})
+            results.append({'message': M(f'{self.owner.address_color.title()} prepare to dash.', type=MessageType.COMBAT_INFO)})
             self.stances[Stance.DASHING] = True
 
         return results
 
 
-    def dash(self, dx, dy, game):
+    def dash(self, dx, dy, game, distance:int=2):
         results = []
 
         if self.can_dash:
-                animate_move_line(self.owner, dx, dy, 2, game, anim_delay=0.05)
+                moved = animate_move_line(self.owner, dx, dy, distance, game, anim_delay=0.05)
                 results.append(self.exert(self.defense * cfg.DASH_EXERT_MULTIPL, 'dash'))
+                if moved is not True and not isinstance(moved, bool): # If dash was stopped by another entity, proceed to tackle
+                    target = moved
+                    if target.f is not None:
+                        results.extend(self.tackle(target, game))
         else:
-            results.append({'message': Message(f'{self.owner.address_color.title()} are too exhausted!', type=MessageType.COMBAT_BAD)})
+            results.append({'message': M(f'{self.owner.address_color.title()} are too exhausted!', type=MessageType.COMBAT_BAD)})
 
         return results
 
@@ -549,6 +563,7 @@ class Fighter:
             if chance > 0 and chance >= randint(0,100):
                 return True
         return False
+
 
     def block_chance(self, attacking_weapon, damage):
         """
@@ -571,9 +586,9 @@ class Fighter:
         Utility function for debug information and an entities description window.
         """
         average = 0
-        dmg_range = attacker.fighter.base_dmg_potential
+        dmg_range = attacker.f.base_dmg_potential
         for dmg in dmg_range:
-            average += self.block_chance(attacker.fighter.active_weapon, dmg)
+            average += self.block_chance(attacker.f.active_weapon, dmg)
         average /= len(dmg_range)
 
         if debug:
@@ -600,10 +615,10 @@ class Fighter:
 
         if game.debug['invin'] and ent.is_player:
             self.hp = self.max_hp
-            return Message(f'Invincibility enabled')
+            return M(f'Invincibility enabled')
 
         # Strip ent of components and set it as a corpse
-        x, y = ent.x, ent.y
+        # x, y = ent.x, ent.y
         ent.char = '%'
         ent.color = blood
         ent.bg_color = colors.black
@@ -620,6 +635,6 @@ class Fighter:
         game.map.gib_area(ent.x, ent.y, randint(3,5), blood, chunks=True)
 
         type = MessageType.GOOD if not ent.is_player else MessageType.BAD
-        message = Message(f'The %{ent_old_color}%{ent.name}%% {ent.state_verb_present} dead!', type=type, category=MessageCategory.OBSERVATION)
+        message = M(f'The %{ent_old_color}%{ent.name}%% {ent.state_verb_present} dead!', type=type, category=MessageCategory.OBSERVATION)
 
         return message

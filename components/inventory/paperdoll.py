@@ -78,8 +78,8 @@ class Paperdoll:
             if qu_slots:
                 self.owner.qu_inventory.capacity += qu_slots
 
-            if self.owner.fighter.active_weapon is None: # If there is no active weapon, set the new weapon as active #
-                self.owner.fighter.active_weapon = item_ent
+            if self.owner.f.active_weapon is None: # If there is no active weapon, set the new weapon as active #
+                self.owner.f.active_weapon = item_ent
 
             results.append({'item_equipped': item_ent, 'message': Message(f'You equip the {item_ent.name}')})
 
@@ -100,12 +100,12 @@ class Paperdoll:
                 self.owner.qu_inventory.capacity -= qu_slots
 
             # Disable active weapon if necessary
-            if equipped_item == self.owner.fighter.active_weapon:
-                self.owner.fighter.active_weapon = None
+            if equipped_item == self.owner.f.active_weapon:
+                self.owner.f.active_weapon = None
 
             # Disable blocking if necessary
-            if self.owner.fighter.is_blocking and e_type == 'shield':
-                self.owner.fighter.is_blocking = False
+            if self.owner.f.is_blocking and e_type == 'shield':
+                self.owner.f.is_blocking = False
 
             setattr(extremity, e_type, None)
             self.owner.inventory.add(equipped_item)

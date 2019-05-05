@@ -5,7 +5,7 @@ from typing import Tuple, Dict
 import tcod
 
 from components.AI.baseAI import BaseAI
-from components.actors.fighter import Fighter
+from components.combat.fighter import Fighter
 from components.inventory.inventory import Inventory
 from components.skills.skillList import SkillList
 from config_files import colors, cfg
@@ -86,7 +86,7 @@ class NPC(Entity):
                 # Set self's coordinates to the next path tile
                 logging.debug(f'{self} is A*-moving.')
                 if target.pos == (x,y): # At some edge-cases NPCs might attempt a* movement when they are adjacent to the target
-                    self.fighter.attack_setup(target, game)
+                    self.f.attack_setup(target, game)
                 else:
                     self.x, self.y = x, y
                 logging.debug(f'{self} finished A*-moving.')

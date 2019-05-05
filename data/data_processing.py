@@ -3,7 +3,7 @@ from random import choice, randint
 from typing import Dict
 
 from components.AI.baseAI import BaseAI
-from components.actors.fighter import Fighter
+from components.combat.fighter import Fighter
 from components.skills.skillList import SkillList
 from components.architecture import Architecture
 from components.inventory.inventory import Inventory

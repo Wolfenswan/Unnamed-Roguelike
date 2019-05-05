@@ -11,7 +11,7 @@ class Swarm:
         distance = actor.distance_to_ent(target)
         friendlies_nearby = len(actor.entities_in_distance(entities=game.npc_ents, dist=3)) > 0
         friendlies_near_target = len(target.surrounding_enemies(game.npc_ents)) >= 1
-        friendlies_in_area = len(actor.entities_in_distance(entities=game.npc_ents, dist=actor.fighter.vision)) > 0
+        friendlies_in_area = len(actor.entities_in_distance(entities=game.npc_ents, dist=actor.f.vision)) > 0
 
         results = []
 
@@ -22,7 +22,7 @@ class Swarm:
                 actor.move_astar(target, game)
             # 2. Check: Are friendlies in vision range? #
             elif friendlies_in_area:
-                nearest_ent = actor.entities_in_distance(dist=actor.fighter.vision, entities=game.npc_ents)[0]
+                nearest_ent = actor.entities_in_distance(dist=actor.f.vision, entities=game.npc_ents)[0]
                 logging.debug(f'{actor} is moving to friendly.')
                 actor.move_astar(nearest_ent, game)
 
@@ -45,7 +45,7 @@ class Swarm:
                             actor.x, actor.y = pos
 
                 # Swarmer may attack after moving around the target
-                attack_results = actor.fighter.attack_setup(target, game)
+                attack_results = actor.f.attack_setup(target, game)
                 results.extend(attack_results)
             else:
                 actor.move_away_from(target, game)
