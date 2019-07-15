@@ -404,4 +404,6 @@ class Entity:
             if verb[-1] == 'o' or verb[-2:] in ['sh', 'ch', 'tch', 'x', 'z', 'ss'] or (
                     verb[-1] == 'y' and not verb[-2] in ['a', 'e', 'i', 'o', 'u']):
                 verb += 'es'
+            else:
+                verb += 's'
         return verb

@@ -329,7 +329,7 @@ class Fighter:
             return {'message': message}
         return {}
 
-    def set_effect(self, state:State, value:bool, duration:int=0):
+    def set_effect(self, state:State, value:bool=True, duration:int=0):
         self.effects[state] = value
         if duration > 0: # If duration > 0, set a plan to disable the current presence in n turns
             self.owner.actionplan.add_to_queue(execute_in=duration,

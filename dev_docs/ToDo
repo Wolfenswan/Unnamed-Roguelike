@@ -1,13 +1,6 @@
-PEP Reminders
-- @classmethod when interacting with the class itself
-- use else after for loop if loop is supposed to be interrupted by break or return
-- use zip() when iterating through two lists
-- f'' supports evaluations: f'{True if 0 > 10 else False'}' -> False
-- isinstance() when checking type
-
 TESTING:
 - Case1 in Actionplan (existing exclusive plan)
-- does using stairs still cause fov crash (because it triggers enemy turn)
+- does using stairs still cause fov crash (as it triggers enemy turn)
 
 CURRENT
 - dashing into enemies does slightly higher damage (1.25)? maybe add modifier to moveset/data

@@ -1,0 +1,6 @@
+PEP Reminders
+- @classmethod when interacting with the class itself
+- use else after for loop if loop is supposed to be interrupted by break or return
+- use zip() when iterating through two lists
+- f'' supports evaluations: f'{True if 0 > 10 else False'}' -> False
+- isinstance() when checking type
