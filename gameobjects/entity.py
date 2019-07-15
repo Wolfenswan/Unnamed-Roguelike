@@ -49,11 +49,11 @@ class Entity:
     skills: Optional[SkillList] = None
     item: Optional[Item] = None
     inventory: Optional[Inventory] = None
-    paperdoll = None
-    qu_inventory = None
+    paperdoll: Optional[Paperdoll] = None
+    qu_inventory: Optional[Inventory] = None
     architecture: Optional[Architecture] = None
 
-    is_player: bool = False
+    is_player: Optional[bool] = False
     color_bg : Optional[Color] = None
     color_blood: Optional[Color] = None
     every_turn_start : Optional[list] = field(default_factory=list)
@@ -116,6 +116,10 @@ class Entity:
 
     @property
     def full_name(self):
+        """
+        :return: Entity's name + relevant adjectives.
+        :rtype: str
+        """
         full_name = self.name
         if self.material:
             full_name = f'{material_name_data[self.material]} {self.name}'
@@ -137,6 +141,13 @@ class Entity:
         return full_name.title()
 
     def extended_descr(self, game):
+        """
+
+        :param game: global game entity
+        :type game: Game
+        :return: Entity's formatted description, including dynamic information depending on player stats.
+        :rtype: str
+        """
         extend_descr = self.descr
         col = 'dark_crimson' # TODO All colors are placeholders
         if self.fighter is not None and self.active_weapon is not None:
@@ -169,7 +180,6 @@ class Entity:
         return extend_descr
 
     def is_visible(self, fov_map):
-        #return tcod.map_is_in_fov(fov_map, self.x, self.y)
         return fov_map.fov[self.y, self.x]
 
     @property
@@ -360,6 +370,14 @@ class Entity:
     @property
     def i(self):
         return self.item
+
+    @property
+    def inv(self):
+        return self.inventory
+
+    @property
+    def qu(self):
+        return self.qu_inventory
 
     ################
     # GUI HELPERS #

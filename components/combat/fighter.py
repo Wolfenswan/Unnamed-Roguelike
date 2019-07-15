@@ -27,6 +27,7 @@ class Fighter:
     base_strength:int
     __base_vision:int
     __default_effects:dict = field(default_factory=dict)
+    owner = None  # owner is set by the Entity initializing the component
 
     def __post_init__(self):
         self.active_weapon = None
