@@ -43,10 +43,10 @@ npc_data_insects = {
         Key.CHAR: 'r',
         Key.COLOR: colors.light_amber,
         Key.DESCR: 'Waddling upright like a clumsy child, the twitching antennae and multitude of jittering legs quickly dispell any passing resemblance.',
-        Key.MAX_HP: (2, 8),
+        Key.MAX_HP: (2, 6),
         Key.MAX_STAMINA: (40, 40),
         Key.BASE_ARMOR: (0, 0),
-        Key.BASE_STRENGTH: (2, 2),
+        Key.BASE_STRENGTH: (1, 2),
         Key.LOADOUT: {
             Key.EQUIPMENT:{
                 'ins_mandibles':{}
@@ -54,7 +54,7 @@ npc_data_insects = {
         },
         Key.AI_BEHAVIOR: Swarm,
         Key.BARKS: ('insect',),
-        Key.GROUP_SIZE: (4, 9),
+        Key.GROUP_SIZE: (4, 12),
         Key.DLVLS: (1, 8),
         Key.RARITY: RarityType.COMMON
     },
@@ -64,10 +64,10 @@ npc_data_insects = {
         Key.CHAR: 'd',
         Key.COLOR: colors.beige,
         Key.DESCR: "There is something uniquely unsettling about a giant beetle acting like an agitated bull. It's also the size of one, if you were wondering.",
-        Key.MAX_HP: (10, 14),
+        Key.MAX_HP: (10, 16),
         Key.MAX_STAMINA: (80, 80),
         Key.BASE_ARMOR: (1, 3),
-        Key.BASE_STRENGTH: (3, 6),
+        Key.BASE_STRENGTH: (3, 5),
         Key.LOADOUT: {
             Key.EQUIPMENT:{
                 'ins_mandibles':{
@@ -78,20 +78,20 @@ npc_data_insects = {
         Key.SKILLS: (skill_generic_charge,),
         Key.AI_BEHAVIOR: Simple,
         Key.BARKS: ('insect',),
-        Key.GROUP_SIZE: (1, 2),
+        Key.GROUP_SIZE: (1, 3),
         Key.DLVLS: (1, 10),
         Key.RARITY: RarityType.UNCOMMON,
         Key.RARITY_MOD: +5
     },
-    'Mantis_Ogre' : {
+    'mantis_ogre' : {
         **_default_values,
         Key.NAME: 'Mantis Ogre',
         Key.CHAR: 'M',
         Key.COLOR: colors.light_green,
         Key.DESCR: "Certainly not praying, the elongated frame of these creatures belies the power of their claws.",
-        Key.MAX_HP: (20, 28),
+        Key.MAX_HP: (20, 32),
         Key.MAX_STAMINA: (100, 100),
-        Key.BASE_ARMOR: (2, 4),
+        Key.BASE_ARMOR: (2, 5),
         Key.BASE_STRENGTH: (6, 8),
         Key.LOADOUT: {
             Key.EQUIPMENT:{
@@ -103,7 +103,7 @@ npc_data_insects = {
         Key.SKILLS: (skill_generic_slam,),
         Key.AI_BEHAVIOR: Simple,
         Key.BARKS: ('insect',),
-        Key.GROUP_SIZE: (1, 1),
+        Key.GROUP_SIZE: (1, 2),
         Key.DLVLS: (7, 10),
         Key.RARITY: RarityType.RARE
     },
@@ -157,8 +157,8 @@ npc_data_insects = {
         Key.DESCR: 'The criss-crossing movement via its plethora of legs masks its impressive length.',
         Key.MAX_HP: (20,30),
         Key.MAX_STAMINA: (80,80),
-        Key.BASE_ARMOR: (0,3),
-        Key.BASE_STRENGTH: (2,4),
+        Key.BASE_ARMOR: (0,4),
+        Key.BASE_STRENGTH: (2,5),
         Key.LOADOUT: {
             Key.EQUIPMENT:{'ins_mandibles':{}},
             Key.BACKPACK:{}

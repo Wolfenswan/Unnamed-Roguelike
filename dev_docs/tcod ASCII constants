@@ -1,6 +1,6 @@
 2.2.7. ASCII constants
 
-Some useful graphic characters in the terminal.bmp font. For the python version, remove TCOD_ from the constants. C# and Lua is in parenthesis :
+Some useful graphic characters in the terminal.bmp font. For the python version, remove TCOD_ from the cfg. C# and Lua is in parenthesis :
 Single line walls:
 TCOD_CHAR_HLINE=196 (HorzLine)
 TCOD_CHAR_VLINE=179 (VertLine)

@@ -69,7 +69,7 @@ moveset_bow = {
     Key.DEFAULT: {Key.VERBS: ('shoot',),},
     1: {
        Key.DESCR: f"A quick but {col1}weaker draw%% to gauge the distance to the target.",
-        Key.DMG_MULTIPL: 0.5
+       Key.DMG_MULTIPL: 0.5
     },
     2: {
        Key.DESCR: f"A {col1}standard draw%%, likely hitting the torso.",

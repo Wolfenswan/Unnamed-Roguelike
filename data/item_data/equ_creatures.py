@@ -18,7 +18,7 @@ equ_creature_data = {
         Key.MATERIAL: (Material.CHITIN,),
         Key.TYPE: ItemType.MELEE_WEAPON,
         Key.EQUIP_TO: 'weapon_arm',
-        Key.DMG_POTENTIAL: (6, 6),
+        Key.DMG_POTENTIAL: (4, 6),
         Key.MOVESET: moveset_claws,
         Key.RARITY: RarityType.FORBIDDEN,
         Key.CAN_DROP: False # TODO not implemented

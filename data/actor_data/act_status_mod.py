@@ -21,9 +21,7 @@ status_modifiers_data = {
         'can_move': False
     },
 
-    Surrounded.FREE:{
-
-    },
+    Surrounded.FREE:{},
     Surrounded.THREATENED: {
         'av_multipl': 0.8
     },

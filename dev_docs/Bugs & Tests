@@ -1,0 +1,6 @@
+TESTING:
+- Case1 in Actionplan (existing exclusive plan)
+- does using stairs still cause fov-related crash (when triggering enemy turn)
+
+BUGS
+- wall_arch can cover same spot (e.g. lichen & chains); feature?

@@ -13,7 +13,7 @@ use_bombs_data = {
         Key.CHAR: BOMB_CHAR,
         Key.COLOR: colors.dark_gray,
         Key.ON_USE: explosion_targeted,
-        Key.ON_USE_PARAMS: {'pwr': (8,15), 'radius': 3, 'range': (1,5)},
+        Key.ON_USE_PARAMS: {'pwr': (8,15), 'radius': 3, 'range': (1,6)},
         Key.RARITY: RarityType.UNCOMMON,
         Key.RARITY_MOD: -5,
         Key.DLVLS: (1, 99)

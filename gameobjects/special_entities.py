@@ -1,19 +1,20 @@
 import logging
-from random import choice
+from random import choice, randint
 from typing import Tuple, Dict
 
 import tcod
 
+from config_files import cfg
+from game import Game
 from components.AI.baseAI import BaseAI
 from components.combat.fighter import Fighter
 from components.inventory.inventory import Inventory
 from components.skills.skillList import SkillList
-from config_files import colors, cfg
 from data.actor_data.npc_summons import spawn_data_summons
 from data.data_keys import Key
+from data.actor_data import act_classes
 from data.data_types import MonsterType
 from data.data_util import enum_pairs_to_kwargs
-from game import Game
 from gameobjects.block_level import BlockLevel
 from gameobjects.entity import Entity
 from map.directions_util import DIRECTIONS_CIRCLE
@@ -23,8 +24,13 @@ from rendering.render_order import RenderOrder
 class Player(Entity):
     """ Class for the player object """
 
-    def __init__(self, name):
-        fighter_component = Fighter(40, 100, 0, 4, cfg.FOV_RADIUS)
+    def __init__(self, name, p_class='generic'):
+        data = act_classes.classes_data[p_class]
+        hp = randint(*data[Key.MAX_HP])
+        stamina = randint(*data[Key.MAX_STAMINA])
+        armor = randint(*data[Key.BASE_ARMOR])
+        str = randint(*data[Key.BASE_STRENGTH])
+        fighter_component = Fighter(hp, stamina, armor, str, cfg.FOV_RADIUS)
         inventory_component = Inventory(capacity=26)
 
         super().__init__(0, 0, '@', tcod.white, name, descr='This is you.', is_player=True,

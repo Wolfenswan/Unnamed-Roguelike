@@ -6,7 +6,7 @@ from random import uniform
 import tcod
 from tcod import Color
 
-from config_files import colors, cfg as cfg
+from config_files import colors
 from rendering import render_constants as cons
 
 

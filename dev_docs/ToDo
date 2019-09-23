@@ -1,31 +1,24 @@
-TESTING:
-- Case1 in Actionplan (existing exclusive plan)
-- does using stairs still cause fov crash (as it triggers enemy turn)
-
 CURRENT
-- dashing into enemies does slightly higher damage (1.25)? maybe add modifier to moveset/data
-    - or: tackles for 0.5 damage & dazes if damage > 0
-    - make tackle() an extension of dash()
-        - that will make sure any target is hit if it's in distance
-        - maybe make targets in distance <1 too close to tackle?
-        - check if move is interrupted, then tackle target if it's fighter
 - Tweak Dungeon generation
     - less empty space
-- Balancing pass for first release
-    - monsters better spread throughout levels
-        - maybe increase group sizes in deeper levels?
-- clear message when effect is applied to player:
-    - You are ENTANGLED (w. color)
 - new spawning functions: create_unique:
     - check each level change if uniques can be spawned
     - remove spawned uniques from dictionary
+- Balancing pass for first release
+    - chaff monsters much weaker
+    - monsters better spread throughout levels
+        - maybe increase group sizes in deeper levels?
 - Queen boss monster
     - maybe allow queen to spit eggs instead of ranged attack?
         - lobbed ranged attack that cant miss?
     - set end state after defeating
     - show final screen after exiting through portal
+- new mob:
+    - spawner (mount/hole etc.)
 
 UPCOMING
+- various randomized prefix for architecture
+    - e.g. decaying, crumbling, old etc.
 - attacking while blocking: shield slam (low damage but chance to daze/stun/push)
     - pushes enemies 1 space away and stuns them for 1 turn (prevents them from closing the gap right away)
     - no damage, only compare STR values? (maybe use shield DEF value as bonus to STR?)
@@ -45,6 +38,8 @@ UPCOMING
     - add a randomized aspect when deciding on a cooled down skill
     - add a smart check to make sure no exclusive skills exist at the same delay (??)
 - Enemies:
+    - Skitter:
+        - move skill; gives enemies a chance to move past occupied spots (i.e. get behind player)
     - Smash-attack:
         - Throws 1 spot back (x-tra damage if thrown against wall?)
         - Stuns/Dazes for 1 turn?
@@ -62,15 +57,20 @@ UPCOMING
         - Dynamic scrolling, instead of predefined pages
     Menus
         - allow pages in menus, change via left/right or up/down
-- new static object: steel fence with portcullis halving a room
+- new static object: steel fence with portcullis parting a room
     - does block walk but not sight/projectile
 Light sources
     - add light_source component to entity
     - if range of light_source is in player's FOV, add that area to FOV
+COMBAT
+    - reduce ranged damage if enemies are nearby
+        - new fighter attr. hindered? similar to surrounded but modifies dmg
 Movesets
     - atm further targets take flat half damage (add new modifier to moveset)
     - new weapon: bo-dachi or similar (hits front & back, twirls)
     - new weapon: two-hander
+    - new weapon: scythe (reaps r-l, l-r (v.l. dmg), overhead)
+    - Ravenous behavior: Will start consuming corpses in FOV
 Dungeon
     - map generation takes dlvl into account (dungeon only, dungeon + caves etc., biomes etc)
     - entity placement takes dlvl into account (chance for stronger mobs etc.)

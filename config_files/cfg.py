@@ -2,8 +2,8 @@
 """ Constant variables """
 import tcod
 
-DEBUG = False
-GAME_NAME = 'RoguelikeTutReloaded'
+DEBUG = True
+GAME_NAME = 'The Hive'
 
 # DISPLAY SETTINGS
 SCREEN_WIDTH = 84

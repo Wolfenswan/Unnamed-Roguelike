@@ -15,19 +15,10 @@ Blocking:
     - Reopen Inventory Window if container is not empty
 - Weapons
     - add "head-weapon" (mandibles)
-Targeting
-    - add "target pos" to results list (so cursor will show at last target)
-- Fighting
-   - add attack_type to individual moves
-   - Should a block reduce the attacker's stamina by an additional ammount?
-   - can mantis ogre slam friendly fire?
 - Containers
     - ability to add things to containers
     - expand filters so they also accept material filters
     - expand filters to restrict certain levels of craftsmanship/quality?
-Spawning
-    - set spawning chance in relation to dlvl (chance to spawn outside range, lower the further outside range)
-    - alternative dlvls = [(dlvl, weight), (dlvl, weight)] - from dlvl on have that weight
 Animation
     - secondary console as overlay to only render animation-stuff
 MAP-Generation:
@@ -41,10 +32,7 @@ Menus:
     - display items in more than one row (esp. inventory)
 Targeting:
     - Cursor displays area of effect
-Skills:
-    - verbs defined as list in data (Key.VERBS), then randomly picked from in skill-function
-    - tweak skill usage conditions: pre-defined generic conditions, set as tuple of conditions in skills_data
-- Generation
+- Loot Generation
     - https://www.reddit.com/r/roguelikedev/comments/2y3rkg/faq_friday_7_loot/
 - play around with torch noise generation from libtcod sample file
 
@@ -105,8 +93,7 @@ Player Skills
 - On Monster Death
     - Drop Equipped/Carried Items
     - drop a "loot bag" container instead of individual items to avoid clutter (deleted if empty)
-- AI
-    - Ravenous behavior: Will start consuming corpses in FOV
+
 - GUI
     - draw ent description to enemy panel instead of popup?
 

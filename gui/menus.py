@@ -131,7 +131,7 @@ def item_menu(item_ent, game):
         options.append('(D)rop')
         wait_for.append('d')
 
-    width = min(len(body), round(cfg.SCREEN_WIDTH//2.5))
+    width = min(len(body), round(cfg.SCREEN_WIDTH // 2.5))
     draw_window(title, body, game, options=options, window_x=x, window_y=y, sort_by=None, forced_width=width, title_color=item_ent.color)
 
     choice = menu_loop(wait_for=wait_for)
@@ -148,8 +148,8 @@ def options_menu(game):
     elif choice == 1:
         available_fonts = all_fonts()
         font_id = generic_options_menu('Font Selection', f'Default font:\n{cfg.FONT_DEFAULT.capitalize()}',
-                                      available_fonts, game,
-                                      sort_by=1)
+                                       available_fonts, game,
+                                       sort_by=1)
         if font_id is not None:
             initialize_font(available_fonts[font_id])
     elif choice == 2:
@@ -164,7 +164,7 @@ def options_menu(game):
 
 def main_menu(game):
     choice = generic_options_menu(cfg.GAME_NAME, 'Welcome to the Dungeon',
-                                    ['Play a new game', 'Continue last game', 'Game Options', 'Quit'], game, cancel_with_escape=False,
+                                  ['Play a new game', 'Continue last game', 'Game Options', 'Quit'], game, cancel_with_escape=False,
                                   sort_by=1)
     # Choice 0 or 1 are returned to engine.py, prompting a new game or loading a game
     if choice == 2:

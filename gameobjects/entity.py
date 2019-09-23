@@ -359,6 +359,9 @@ class Entity:
         visible_enemies = [ent for ent in enemies_in_distance if ent.is_visible(fov_map)]
         return visible_enemies
 
+    def nearby_enemies_count(self,game):
+        return len(self.surrounding_enemies(game.npc_ents))
+
     ########################
     # COMPONENT SHORTHANDS #
     ########################

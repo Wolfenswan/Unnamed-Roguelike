@@ -49,6 +49,7 @@ class Architecture:
 
         return results
 
+
     @staticmethod
     def open_container(interacting_ent, container_ent, game):
         results = []
@@ -72,6 +73,7 @@ class Architecture:
             container_ent.descr += '\n\nIt is empty.'
 
         return results
+
 
     @staticmethod
     def smash_object(interacting_ent, object_ent, game):

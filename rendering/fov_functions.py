@@ -1,6 +1,6 @@
 import tcod
 
-import config_files.cfg as cfg
+from config_files import cfg
 from debug.timer import debug_timer
 from gameobjects.block_level import BlockLevel
 from gameobjects.util_functions import entity_at_pos

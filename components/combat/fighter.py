@@ -266,7 +266,7 @@ class Fighter:
             return None
 
     def check_surrounded(self, game):
-        nearby_enemies = len(self.owner.surrounding_enemies(game.npc_ents))
+        nearby_enemies = self.owner.nearby_enemies_count(game)
         if nearby_enemies < 3:
             return Surrounded.FREE
         elif nearby_enemies < 5:
@@ -330,14 +330,14 @@ class Fighter:
             return {'message': message}
         return {}
 
-    def set_effect(self, state:State, value:bool=True, duration:int=0):
+    def set_effect(self, state:State, value:bool=True, duration:int=0, msg=True):
         self.effects[state] = value
         if duration > 0: # If duration > 0, set a plan to disable the current presence in n turns
             self.owner.actionplan.add_to_queue(execute_in=duration,
                                                planned_function=self.set_effect,
                                                planned_function_args=(state, False))
-        message = M(f'{self.owner.address_color.title()} {self.owner.state_verb_present}{" no longer " if not value else " "}{state.name}!', category=MessageCategory.OBSERVATION)
-        return [{'message': message}]
+        message = M(f'{self.owner.address_color.title()} {self.owner.state_verb_present}{" no longer " if not value else " "}{state.name}!', category=MessageCategory.COMBAT)
+        return [{'message': message}] if msg else []
 
     def toggle_weapon(self):
         if (self.weapon_melee is not None and self.weapon_ranged is not None):
@@ -400,7 +400,7 @@ class Fighter:
                     obstacle = next(entity_at_pos(game.walk_blocking_ents, *pos) for pos in pos_list if entity_at_pos(game.walk_blocking_ents, *pos) is not None)
                     logging.debug(f'{obstacle} is blocking direct los')
                     if randint(0,1): # 50% chance that that entity is hit instead
-                        # TODO can later be modified by skill level, attributes etc.
+                        # TODO chance will later be modified by skill level, attributes etc.
                         message = M(f'PLACEHOLDER: {self.owner.name} hits {obstacle.name} instead of {target.name}!',
                                           category=MessageCategory.COMBAT,
                                           type=MessageType.SYSTEM)
@@ -418,7 +418,7 @@ class Fighter:
                     return results
 
             if draw_ranged_projectile:
-                animate_projectile(*self.owner.pos,*target.pos,game, color=colors.beige) # TODO color can later be modified by weapon/ammo
+                animate_projectile(*self.owner.pos,*target.pos,game, color=colors.beige) # TODO color and projectile can later be modified by weapon/ammo
 
         logging.debug(f'{self.owner.name} prepares to attack {target.name} with base damage {self.base_dmg_potential},'
                       f' (modded {self.modded_dmg_potential}) for a power of {attack_power}')
@@ -494,12 +494,12 @@ class Fighter:
             f'{self.owner.name.title()} attacks {target.name.title()} with {power} power against {target.f.defense} defense for {damage} damage. Target has {target.f.stamina} stamina left.)')
         return results
 
-    def tackle(self, target, game, multipl:float=0.5):
+    def tackle(self, target, game, multipl:float=0.5, duration=2):
         result = []
         t_hp = target.f.hp
         result.extend(self.attack_setup(target, game, dmg_mod_multipl=multipl, verb='tackle', ignore_moveset=True))
-        if target.f.hp < t_hp:
-            result.extend(target.f.set_effect(State.DAZED, True, 2))
+        if target.f.hp < t_hp: # if target lost hp, daze it
+            result.extend(target.f.set_effect(State.DAZED, True, duration))
         return result
 
     #############################
@@ -571,6 +571,8 @@ class Fighter:
         Returns the chance to block a strike that surpasses an entity's block defense.
         It is possible to block up to the double of maximum block defense.
         """
+        if self.shield is None:
+            return 0
         block_def = self.shield.block_def
         #mod = wp_attacktypes_data[attack_type].get(Key.BLOCK_DEF_MULTIP,1)
         mod = attacking_weapon.moveset.modifier(Key.BLOCK_DEF_MULTIPL)

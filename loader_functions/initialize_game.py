@@ -1,6 +1,7 @@
 from random import randint
 
-from config_files import cfg, colors
+from config_files import cfg
+from config_files import colors
 from data.data_keys import Key
 from data.data_processing import gen_loadout
 from data.data_types import Material, Condition, Craftsmanship

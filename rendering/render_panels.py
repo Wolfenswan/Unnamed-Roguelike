@@ -3,24 +3,24 @@
 import tcod
 
 from components.combat.fighter_util import Surrounded
-from config_files import colors, cfg as cfg
-from rendering import render_constants as cons
+from config_files import colors
+from rendering import render_constants as r_cons
 from game import GameState
 from rendering.util_functions import center_x_for_text, setup_console, print_string, dynamic_wrap, draw_console_borders
 
 
 def render_panels(game):
-    render_player_panel(game,game.top_right_panel, cons.SIDE_PANEL_X, 0, cons.SIDE_PANEL_WIDTH,cons.PLAYER_PANEL_HEIGHT)
-    #render_status_panel(game, game.status_panel, cons.STATUS_BAR_Y, cons.BOTTOM_PANEL_WIDTH - 4, cons.STATUS_BAR_HEIGHT)
+    render_player_panel(game,game.top_right_panel, r_cons.SIDE_PANEL_X, 0, r_cons.SIDE_PANEL_WIDTH, r_cons.PLAYER_PANEL_HEIGHT)
+    #render_status_panel(game, game.status_panel, r_cons.STATUS_BAR_Y, r_cons.BOTTOM_PANEL_WIDTH - 4, r_cons.STATUS_BAR_HEIGHT)
     color = colors.dark_gray if not game.player.visible_enemies(game.npc_ents, game.fov_map) else colors.dark_red
-    render_enemy_panel(game, game.center_right_panel, cons.SIDE_PANEL_X, cons.PLAYER_PANEL_HEIGHT, cons.SIDE_PANEL_WIDTH,
-                       cons.COMBAT_PANEL_HEIGHT, color)
-    render_object_panel(game, game.lower_right_panel, cons.SIDE_PANEL_X, cons.PLAYER_PANEL_HEIGHT + cons.COMBAT_PANEL_HEIGHT, cons.SIDE_PANEL_WIDTH,
-                       cons.SIDE_PANEL_HEIGHT)
-    render_message_panel(game.combat_log, 'Combat', game.bottom_center_panel, cons.MSG_PANEL2_X, cons.BOTTOM_PANEL_Y, cons.MSG_PANEL2_WIDTH, cons.BOTTOM_PANEL_HEIGHT,  game)
-    render_message_panel(game.observation_log, 'Observations', game.bottom_left_panel, 0, cons.BOTTOM_PANEL_Y,
-                         cons.MSG_PANEL1_WIDTH, cons.BOTTOM_PANEL_HEIGHT, game)
-    #draw_quickslots(game.root, cons.MAP_SCREEN_HEIGHT-2, game)
+    render_enemy_panel(game, game.center_right_panel, r_cons.SIDE_PANEL_X, r_cons.PLAYER_PANEL_HEIGHT, r_cons.SIDE_PANEL_WIDTH,
+                       r_cons.COMBAT_PANEL_HEIGHT, color)
+    render_object_panel(game, game.lower_right_panel, r_cons.SIDE_PANEL_X, r_cons.PLAYER_PANEL_HEIGHT + r_cons.COMBAT_PANEL_HEIGHT, r_cons.SIDE_PANEL_WIDTH,
+                       r_cons.SIDE_PANEL_HEIGHT)
+    render_message_panel(game.combat_log, 'Combat', game.bottom_center_panel, r_cons.MSG_PANEL2_X, r_cons.BOTTOM_PANEL_Y, r_cons.MSG_PANEL2_WIDTH, r_cons.BOTTOM_PANEL_HEIGHT,  game)
+    render_message_panel(game.observation_log, 'Observations', game.bottom_left_panel, 0, r_cons.BOTTOM_PANEL_Y,
+                         r_cons.MSG_PANEL1_WIDTH, r_cons.BOTTOM_PANEL_HEIGHT, game)
+    #draw_quickslots(game.root, r_cons.MAP_SCREEN_HEIGHT-2, game)
 
 def render_player_panel(game, con, panel_x, panel_y, width, height):
     setup_console(con, caption='Status', borders=True)
@@ -220,7 +220,7 @@ def render_status_panel(game, con, panel_x, panel_y, width, height):
     draw_bar(con, width-bar_width-1, 1, bar_width, f'{game.player.f.stamina_string}', int(game.player.f.stamina), game.player.f.max_stamina,
              game.player.f.stamina_color, colors.darkest_blue)
 
-    draw_quickslots(con, cons.MSG_PANEL1_WIDTH, 0, game)
+    draw_quickslots(con, r_cons.MSG_PANEL1_WIDTH, 0, game)
 
     tcod.console_put_char_ex(con, 0, 0, 195, colors.dark_gray, colors.black)
     tcod.console_put_char_ex(con, width-1, 0, 180, colors.dark_gray, colors.black)
@@ -247,7 +247,7 @@ def draw_quickslots(con, x, y, game):
     total_slots = player.qu_inventory.capacity
     width = 3 * total_slots # every slot needs 3 pixels
 
-    start_x = x - total_slots # cons.BOTTOM_PANEL_WIDTH // 2 - width // 2
+    start_x = x - total_slots # r_cons.BOTTOM_PANEL_WIDTH // 2 - width // 2
     #start_x = (cons.SIDE_PANEL_WIDTH // 2 - width // 2) + 2
     
     if total_slots > 0:

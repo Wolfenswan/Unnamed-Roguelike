@@ -138,9 +138,10 @@ class SkillEntangle(BaseSkill):
         results = []
         user = self.owner
         duration = kwargs.get('duration',0)
-        target.f.set_effect(State.ENTANGLED, True, duration)
+        results.extend(target.f.set_effect(State.ENTANGLED, True, duration))
         results.append({'message': Message(f'The {user.name} wraps itself around {target.name}!', category=MessageCategory.OBSERVATION,
                                            type=MessageType.COMBAT)})
+
         return results
 
 
@@ -170,6 +171,7 @@ class SkillHatch(BaseSkill):
         return results
 
     def create_hatchling(self):
+        """ Unfortunately importing from data files would result in a circular import """
         user = self.owner
         user.char = 'h'
         user.name = 'Hatchling'
