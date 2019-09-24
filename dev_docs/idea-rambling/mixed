@@ -4,18 +4,16 @@ imports
 - optional: https://github.com/gamechanger/schemer for dict-validation
 - list-matrix & rotation: https://docs.scipy.org/doc/numpy-1.14.0/reference/generated/numpy.rot90.html
 
-Existing features:
 
-Blocking:
-    - Should blocking weapons be implemented?
-        - e.g. dueling dagger
-        - mostly just fluff
-        - All checks currently aim at shield/assume blocking is only possible with shield
+Architecture
+- various randomized prefix for architecture
+    - e.g. decaying, crumbling, old etc.
 - Containers
     - Reopen Inventory Window if container is not empty
 - Weapons
     - add "head-weapon" (mandibles)
 - Containers
+    - (e) for empty containers should be dynamic and not added to the name itself
     - ability to add things to containers
     - expand filters so they also accept material filters
     - expand filters to restrict certain levels of craftsmanship/quality?
@@ -37,9 +35,6 @@ Targeting:
 - play around with torch noise generation from libtcod sample file
 
 OPTIONAL
-Map
-    - river, crosses once through map (maybe with source)
-    - Biomes, different colored floors/walls, different dungeon algos (cave/dungeon) -> use data files
 on-death-trigger
     - e.g. for entangling enemies: entanglement lasts until enemy is killed
 breaking free
@@ -75,10 +70,6 @@ Fluff
 New Concept Ideas:
 Player Skills
     - if sticking with animal concept, sth. like a tongue attack (chameleon? ant-lion?)
-- Monster Generators
-    - specified objects in walls/floors to spawn on non-explored/non-visible tiles
-    - capped by total monster limit
-    - interactable/destroyable? (With specific items?)
 - Health
     - Instant Heal potions are very rare
     - Herbs or others can be used outside of combat to promote regeneration(instant heal?)
@@ -90,15 +81,6 @@ Player Skills
     - Can be drunk to restore Stamina
     - Can be drunk during combat if offhand is free.
     - % filled indicated on player status panel
-- On Monster Death
-    - Drop Equipped/Carried Items
-    - drop a "loot bag" container instead of individual items to avoid clutter (deleted if empty)
-
 - GUI
     - draw ent description to enemy panel instead of popup?
-
     - windows can remain open? see options_menu for example
-- MAP
-    - zig-zagging tunnels rather than only v then h or h then v
-- Puzzle-Room
-    - "Paint" with corpses

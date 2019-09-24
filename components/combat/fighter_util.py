@@ -20,6 +20,10 @@ class Surrounded(Enum):
     THREATENED = auto()
     OVERWHELMED = auto()
 
+# class Hindered(Enum):
+#     FREE = auto()
+#     OBSTRUCTED = auto()
+#     BLOCKED = auto()
 
 class AttributePercentage(Enum):
     FULL = 100

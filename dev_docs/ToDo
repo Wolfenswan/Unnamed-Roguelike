@@ -1,55 +1,38 @@
 CURRENT
 - Tweak Dungeon generation
     - less empty space
-- new spawning functions: create_unique:
-    - check each level change if uniques can be spawned
-    - remove spawned uniques from dictionary
+x new spawning functions: create_unique:
+    x check each level change if uniques can be spawned
+    x remove spawned uniques from dictionary
 - Balancing pass for first release
     - chaff monsters much weaker
     - monsters better spread throughout levels
-        - maybe increase group sizes in deeper levels?
+
 - Queen boss monster
     - maybe allow queen to spit eggs instead of ranged attack?
         - lobbed ranged attack that cant miss?
     - set end state after defeating
     - show final screen after exiting through portal
-- new mob:
-    - spawner (mount/hole etc.)
-
-UPCOMING
-- various randomized prefix for architecture
-    - e.g. decaying, crumbling, old etc.
-- attacking while blocking: shield slam (low damage but chance to daze/stun/push)
-    - pushes enemies 1 space away and stuns them for 1 turn (prevents them from closing the gap right away)
-    - no damage, only compare STR values? (maybe use shield DEF value as bonus to STR?)
-- (e) for empty containers should be dynamic and not added to the name itself
-- Monster generator (destroyable)
-    - different generator for each monster?
-- Ent Placement
-    - Implement the 'exclusive' switch to find_end_position to make sure e.g. chests and barrels are on their own
-- Basic Goals
+    - Basic Goals
     - Generate "goal architecture" (at the lowest level?) (pre-fab rooms later)
         - needs to be destroyed with black powder bomb
-    - Queen Boss (immobile, but ranged attack? lays eggs?)
-        - randomized special ability (e.g. shield to protect from bombs)
+            - maybe protected by queen/boss?
     - Items to retrieve (take up spot in inventory)
     - has to return to portal?
+
+UPCOMING
+COMBAT
+    - reduce ranged damage if enemies are nearby
+        -> new fighter attr. "hindered" similar to surrounded but modifies dmg
+            - needs to be displayed in GUI
+        -> or simpler: no ranged possible when enemy nearby?
+            - not ideal for some ranged weapons; then again neither would be hindered
+                - in that case (future!) probably best to apply special rules
+- Ent Placement
+    - Implement the 'exclusive' switch to find_end_position to make sure e.g. chests and barrels are on their own
 - AI Skill
-    - add a randomized aspect when deciding on a cooled down skill
-    - add a smart check to make sure no exclusive skills exist at the same delay (??)
-- Enemies:
-    - Skitter:
-        - move skill; gives enemies a chance to move past occupied spots (i.e. get behind player)
-    - Smash-attack:
-        - Throws 1 spot back (x-tra damage if thrown against wall?)
-        - Stuns/Dazes for 1 turn?
-        - maybe make seperate throw attack
-    - "Suicide": Maybe also add a charge ability, only to be used after its set to explode?
-        - add new skill condition: other skill on cooldown/no other skill available
-    - "Bombardier" (lobs grenade-like projectile)
-    - "Cone": Attacks with cone (can teamkill etc.) (Fire ant?)
-    - "Louse": Same as roach, but makes a simple 'hop' every few turns (essentially teleporting 2 steps, can jump over others)
-    - "creepy crawlies": cover the floor, need to targeted with fire or AoE
+    x add a randomized aspect when deciding on cooled down skill(s) (35% to ignore skills for now)
+    - give skills a weight to prefer one over the other
 - GUI work
     - messages displaying same information should be merged (using counters: 'x2')
     - Highlight "you" in messages with white color
@@ -62,15 +45,7 @@ UPCOMING
 Light sources
     - add light_source component to entity
     - if range of light_source is in player's FOV, add that area to FOV
-COMBAT
-    - reduce ranged damage if enemies are nearby
-        - new fighter attr. hindered? similar to surrounded but modifies dmg
-Movesets
-    - atm further targets take flat half damage (add new modifier to moveset)
-    - new weapon: bo-dachi or similar (hits front & back, twirls)
-    - new weapon: two-hander
-    - new weapon: scythe (reaps r-l, l-r (v.l. dmg), overhead)
-    - Ravenous behavior: Will start consuming corpses in FOV
+
 Dungeon
     - map generation takes dlvl into account (dungeon only, dungeon + caves etc., biomes etc)
     - entity placement takes dlvl into account (chance for stronger mobs etc.)

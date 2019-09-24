@@ -7,7 +7,7 @@ from config_files import cfg
 #from data.actor_data.test_spawns import spawn_data
 from data.data_keys import Key
 from data.data_processing import gen_npc_from_data, NPC_DATA
-from data.data_util import filter_data_dict, dlvl_check
+from data.data_util import filter_data_dict, dlvl_filter
 from debug.timer import debug_timer
 from gameobjects.block_level import BlockLevel
 from map.entity_placement.util_functions import find_ent_position
@@ -19,7 +19,7 @@ def place_monsters(game):
 
     dlvl = game.dlvl
     game_map = game.map
-    rooms = game_map.rooms.copy()
+    rooms = game_map.rooms.copy() # rooms is copied in order to avoid overwriting the map.rooms attribute
     spawn_data = NPC_DATA
     max_monsters = int(len(rooms) * cfg.MONSTERS_DUNGEON_FACTOR)
 

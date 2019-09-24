@@ -1,0 +1,28 @@
+# General #
+ - increase group sizes in deeper levels?
+ - Monster Generators
+    - specified objects in walls/floors to spawn on non-explored/non-visible tiles
+    - capped by total monster limit
+    - interactable/destroyable? (With specific items?)
+- On Monster Death
+    - Drop Equipped/Carried Items
+    - drop a "loot bag" container instead of individual items to avoid clutter (deleted if empty)
+
+# Skills #
+- Skitter:
+    - move skill; gives enemies a chance to move past occupied spots (i.e. get behind player)
+- Smash-attack:
+    - Throws 1 spot back (x-tra damage if thrown against wall?)
+    - Stuns/Dazes for 1 turn?
+    - maybe make seperate throw attack
+- "Suicide": Maybe also add a charge ability, only to be used after its set to explode?
+    - add new skill condition: other skill on cooldown/no other skill available
+- "Bombardier" (lobs grenade-like projectile)
+- "Cone": Attacks with cone (can teamkill etc.) (Fire ant?)
+
+# AI #
+- Ravenous behavior: Will start consuming corpses in FOV
+
+# Mob types #
+- "Louse": Same as roach, but makes a simple 'hop' every few turns (essentially teleporting 2 steps, can jump over others)
+- "creepy crawlies": cover the floor, need to targeted with fire or AoE

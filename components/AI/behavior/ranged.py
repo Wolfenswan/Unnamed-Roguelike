@@ -24,17 +24,19 @@ class Ranged:
         if distance <= 2:
             logging.debug(f'{actor} moves away from target, as distance({distance}) is too small')
             actor.move_away_from(target, game)
-        elif distance * randint(1, 4) <= 4: # Small chance the actor might try to get away further
+            # TODO if move is not possible switch to melee weapon and attack
+        elif distance >= 2 and randint(0,100) <= 25: # 25% chance the actor might try to get away further, even if outside melee range
             logging.debug(f'{actor} moves away from target, after randomized distance({distance}) is under 4')
             actor.move_away_from(target, game)
-        elif not free_line: # Entity will try to establish a clear line of sight to the target
+        elif not free_line: # If no clear LOS was found, entity will try to establish a clear line of sight to the target
             logging.debug(f'{actor} would attack but has no clear line to target')
             surrounding_pos = game_map.surrounding_pos(*actor.pos, dist=2)
             valid_pos = [pos for pos in surrounding_pos if not game_map.is_blocked(*pos, game.blocking_ents) and\
                         distance_between_pos(*pos, *target.pos) > 2\
                         and free_line_between_pos(*pos, *target.pos, game)]
             if len(valid_pos) > 0:
-                pos = choice(valid_pos) # TODO an additional filter could be added to make sure a free line between actor and possible new pos exists
+                pos = choice(valid_pos)
+                # TODO an additional filter could be added to make sure a free line between actor and possible new pos exists
                 logging.debug(f'{actor} is trying to move to {pos} to get a clear line to target')
                 moved = actor.try_move(*actor.direction_to_pos(*pos), game)
                 if moved is False: # if a pos was found but movement failed, attack anyway
@@ -43,7 +45,7 @@ class Ranged:
             else: # if no pos with LOS was found nearby, attack anyway
                 logging.debug(f'{actor} has not found a pos nearby with clear line to target, attacking')
                 results.extend(actor.f.attack_setup(target, game))
-        else: # if distance is good and free los established, attack
+        else: # if distance is good and free los established, simply attack
             logging.debug(f'{actor} has clear line to target, attacking')
             results.extend(actor.f.attack_setup(target, game))
 

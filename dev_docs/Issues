@@ -1,6 +1,0 @@
-- menus dont close when exited -> overlapping menus
-- containers can be placed on doors -> doors are displayed above barrel
-- after using stairs, lctrl keeps registering as 'pressed' (despite not being pressed)
-    - pressing lctrl resets key handling properly
-    - change to </> to use stairs?
-- line breaks break colorization (workaround would be color-wrapping each word individually)

@@ -10,8 +10,8 @@ rarity_values = {
     RarityType.RARE: 50,
     RarityType.EXOTIC: 30,
     RarityType.LEGENDARY: 10,
-    RarityType.UNIQUE: -1,
-    RarityType.FORBIDDEN: -1,
+    RarityType.UNIQUE: -1,      # Wont be spawned from generic placement functions, only through place_uniques or direct call of create-functions
+    RarityType.FORBIDDEN: -1,   # Functionally identical to UNIQUE, exists only to distinguish the purpose of both
 
     ItemType.USEABLE: 100,
     ItemType.MISC: 80,
@@ -43,7 +43,7 @@ rarity_values = {
     Craftsmanship.POOR: 80,
     Craftsmanship.NORMAL: 100,
     Craftsmanship.GOOD: 50,
-    Craftsmanship.LEGENDARY: 10,
+    Craftsmanship.LEGENDARY: 5,
 
     BodyType.NORMAL: 100,
     BodyType.SCRAWNY: 50,

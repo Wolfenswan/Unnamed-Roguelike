@@ -136,6 +136,9 @@ class Entity:
         if self.fighter and self.f.hp <= 0:
             full_name += ' remains'
 
+        # if self.architecture and self.inventory and self.inventory.is_empty:
+        #     full_name += '(e)'
+
         # TODO doors (open & unlocked)
 
         return full_name.title()

@@ -13,9 +13,21 @@ use_bombs_data = {
         Key.CHAR: BOMB_CHAR,
         Key.COLOR: colors.dark_gray,
         Key.ON_USE: explosion_targeted,
-        Key.ON_USE_PARAMS: {'pwr': (8,15), 'radius': 3, 'range': (1,6)},
+        Key.ON_USE_PARAMS: {'pwr': (6,10), 'radius': 3, 'range': (1,6)},
         Key.RARITY: RarityType.UNCOMMON,
         Key.RARITY_MOD: -5,
+        Key.DLVLS: (1, 99)
+    },
+    'bomb_2': {
+        Key.NAME: 'Cherry Bomb',
+        Key.DESCR: 'TODO Cherry Bomb.',
+        Key.TYPE: ItemType.USEABLE,
+        Key.CHAR: BOMB_CHAR,
+        Key.COLOR: colors.dark_red,
+        Key.ON_USE: explosion_targeted,
+        Key.ON_USE_PARAMS: {'pwr': (4,6), 'radius': 2, 'range': (1,8)},
+        Key.RARITY: RarityType.COMMON,
+        Key.RARITY_MOD: 0,
         Key.DLVLS: (1, 99)
     }
 }

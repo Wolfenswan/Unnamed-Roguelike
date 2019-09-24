@@ -1,0 +1,6 @@
+- comb-like rooms
+- zig-zagging tunnels rather than only v then h or h then v
+- Puzzle-Room
+- "Paint" with corpses
+- river, crosses once through map (maybe with source)
+- Biomes, different colored floors/walls, different dungeon algos (cave/dungeon) -> use data files

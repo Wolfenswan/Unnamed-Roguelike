@@ -20,6 +20,8 @@ class BaseAI:
         target = game.player
         game_map = game.map
 
+        ignore_skills_chance = 35 # chance to ignore available skills and move/attack regularly
+
         logging.debug(f'{npc} is taking turn #{game.turn}')
 
         # free_line = game.map.free_line_between_pos(target.x, target.y, npc.x, npc.y, game)
@@ -57,7 +59,7 @@ class BaseAI:
                 # TODO might be merged into behavior components later #
                 if npc.skills:
                     npc.skills.cooldown()
-                    if npc.skills.available:
+                    if npc.skills.available and randint(0,100) >= ignore_skills_chance:
                         possible_skills = npc.skills.active(target, game)
                         if possible_skills:
                             skill = choice(possible_skills)
@@ -79,6 +81,15 @@ class BaseAI:
 
         return results
 
+    def pick_weapon(self, enemy):
+        """ Switches to either ranged or melee weapon, depending on target distance """
+        actor = self.owner
+        distance = actor.distance_to_ent(enemy)
+
+        if distance >= 2 and actor.f.weapon_ranged is not None:
+            actor.f.active_weapon = actor.f.weapon_ranged
+        elif actor.f.weapon_melee is not None:
+            actor.f.active_weapon = actor.f.weapon_melee
 
     def set_behavior(self, behavior):
         self.behavior = behavior

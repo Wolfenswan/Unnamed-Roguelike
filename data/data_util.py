@@ -11,63 +11,68 @@ def filter_data_dict(dic:Dict, dlvl:int=0):
     """
     Picks a random key from the given dictionary items
 
-    The function first creates a mini-dictionary of possible candidates, using two rarity parameters:
+    The function first creates a sub-dictionary of possible candidates, using the possible range of dungeon levels and
+    two rarity parameters:
     a) Key.RARITY: the rarity value of the object itself, assigned in the data files
     b) Key.TYPE: the rarity value of the material, assigned to the object (e.g. steel being rarer than iron)
 
     Then it randomly picks a key from these candidates using choice()
 
-    :param dict:
+    :param dict: data dictionary
     :type dict: dict
-    :param dlvl:
+    :param dlvl: the dungeon level to consider (0: ignore dungeon level)
     :type dlvl: int
-    :return:
-    :rtype: dict
+    :return: key referring to a data-entry
+    :rtype: str
     """
-
     if dlvl > 0:  # Filter possible entries by dungeon levels first
         dic = {
-            k: v for k, v in dic.items()
-            if dlvl_check(dlvl, v)
+            k: v for k, v in dic.items() if dlvl_filter(dlvl, v)
         }
 
-    while True:
-        random = randint(0, 100)
-        possible_items = { # Create dictionary of candidates
-            k: v for k, v in dic.items()
-            if rarity_values[v.get(Key.RARITY, RarityType.COMMON)] + v.get(Key.RARITY_MOD, 0) >= random
-            and rarity_values[v.get(Key.TYPE, RarityType.COMMON)] >= random
-        }
-        candidates = list(possible_items.keys())
-        logging.debug(f'Randomly choosing from possible candidates: {candidates}, random value was {random}')
-        if len(candidates) > 0:
-            candidate = choice(candidates)
-            logging.debug(f'Decided on {candidate}')
-            return candidate
+    if len(dic) > 0:
+        while True:
+            random = randint(0, 100)
+            possible_items = {
+                # Create merged dictionary of candidates, checking against both their own rarity
+                # and the rarity of their types
+                k: v for k, v in dic.items()
+                if rarity_values[v.get(Key.RARITY, RarityType.COMMON)] + v.get(Key.RARITY_MOD, 0) >= random
+                and rarity_values[v.get(Key.TYPE, RarityType.COMMON)] >= random
+            }
+            candidates = list(possible_items.keys())
+            logging.debug(f'Filtered candidates with random chance: {random}. Result: {candidates}')
+            if len(candidates) > 0:
+                candidate = choice(candidates)
+                logging.debug(f'Decided on {candidate}')
+                return candidate
+
+    logging.error(f'Data-dictionary had length of 0 after initial dlvl-filter.')
 
 
-def dlvl_check(dlvl, data, factor=25):
+def dlvl_filter(dlvl, data, factor=25):
     """
-    Checks spawn chance for given data-entry in the given dungeon-level. Each level below/above their spawn range, there's
-    a 25% less chance to spawn.
-    Returns True or False. Data with UNIQUE rarity can only spawn within their dungeon-level-range.
+    Checks spawn chance for given data-entry in the given dungeon-level.
+    Each level outside their spawn range reduces the spawn chance by 25%.
+    Returns True or False.
     """
-    dlvls = data.get(Key.DLVLS, (1, 1000))
+    dlvls = data.get(Key.DLVLS, (0, 1000))
 
-    if dlvl in range(*dlvls):
+    if dlvl in inclusive_range(*dlvls):
         return True
 
-    if data.get(Key.RARITY, RarityType.COMMON) == RarityType.UNIQUE:
-        return False
+    # if data.get(Key.RARITY, RarityType.COMMON) == RarityType.UNIQUE:
+    #     return False
 
     chance = -1
-    if dlvl not in range(*dlvls):
-        if dlvl < dlvls[0] and dlvls[0] - dlvl <= 6:
-            chance = max(1,100 - (dlvls[0] - dlvl) * factor)
-        elif dlvl > dlvls[1] and dlvl - dlvls[1] <= 6:
-            chance = max(1,100 - (dlvl - dlvls[1]) * factor)
+    if factor >= 0 and dlvl not in inclusive_range(*dlvls):
+        diff = (dlvls[0] - dlvl, dlvl - dlvls[1])
+        if dlvl < dlvls[0] and diff[0] <= 5:
+            chance = max(1,100 - diff[0] * factor)
+        elif dlvl > dlvls[1] and diff[1] <= 5:
+            chance = max(1,100 - diff[1] * factor)
 
-    return chance >= randint(0,100)
+    return chance > randint(0,100)
 
 
 def enum_pairs_to_kwargs(dictionary:Dict):
@@ -84,4 +89,8 @@ def merge_dictionaries(dicts):
 
     return merged_dict
 
+
+def inclusive_range(x, y):
+    """ Returns a range from x to y including y """
+    return range(x, y+1)
 

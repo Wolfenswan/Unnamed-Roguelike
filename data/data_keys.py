@@ -6,20 +6,21 @@ All data entries refer to members of the Key class as dictionary keys.
 
 class Key(Enum):
     # Generic #
-    NAME = auto()
-    CHAR = auto()
-    COLOR = auto()
-    COLOR_BLOOD = auto()
-    DESCR = auto()
-    TYPE = auto()
-    ELEMENT = auto()
-    BLOCKS = auto()
-    RENDERING = auto()
-    DLVLS = auto()
-    RARITY = auto()
-    RARITY_MOD = auto()
-    EVERY_TURN_START = auto()
-    EVERY_TURN_END = auto()
+    NAME = auto()               # entity's name
+    CHAR = auto()               # character to display the entity with
+    COLOR = auto()              # color of the entity when rendered
+    COLOR_BLOOD = auto()        # blood color of the entity
+    DESCR = auto()              # entity description
+    TYPE = auto()               # generic key used whenever entities need to be distinguished by a type (e.g. itemtype or bodytpe)
+    ELEMENT = auto()            # UNUSED
+    BLOCKS = auto()             # blocking level of the entity
+    RENDERING = auto()          # rendering level of the entity
+    DLVLS = auto()              # inclusive range in which the entity can be created. by default entities can spawn up to 4 lvls outsider their range (25% less chance each step)
+    RARITY = auto()             # general RarityType of the item
+    RARITY_MOD = auto()         # modifier applied to overall rarity value
+    UNIQUE_CHANCE = auto()      # Only for RarityType.UNIQUE items: chance the unique will spawn, even within its dlvl range
+    EVERY_TURN_START = auto()   # function to run for ent on turn start
+    EVERY_TURN_END = auto()     # function to run for ent on turn end
 
     # Actors #
     MAX_HP = auto()

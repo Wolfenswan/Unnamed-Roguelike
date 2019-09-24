@@ -1,0 +1,16 @@
+# General
+   - add attack_type to individual moves
+   - Should a block reduce the attacker's stamina by an additional ammount?
+# Targeting
+    - add "target pos" to results list (so cursor will show at last target)
+# Blocking:
+    - blocking weapons?
+        - e.g. dueling dagger
+        - mostly just fluff
+        - All checks currently aim at shield/assume blocking is only possible with shield
+    - attacking while blocking: shield slam (low damage but chance to daze/stun/push)
+        - pushes enemies 1 space away and stuns them for 1 turn (prevents them from closing the gap right away)
+        - no damage, only compare STR values? (maybe use shield DEF value as bonus to STR?)
+
+# Movesets
+- atm further targets take flat half damage (add new modifier to moveset)

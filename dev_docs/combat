@@ -1,5 +1,0 @@
-# General
-   - add attack_type to individual moves
-   - Should a block reduce the attacker's stamina by an additional ammount?
-# Targeting
-    - add "target pos" to results list (so cursor will show at last target)

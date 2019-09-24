@@ -12,6 +12,7 @@ from map.entity_placement.place_actors import place_monsters
 from map.entity_placement.place_architecture import place_generic_architecture, place_special_architecture, place_doors
 from map.entity_placement.place_containers import place_containers
 from map.entity_placement.place_items import place_items
+from map.entity_placement.place_uniques import place_uniques
 from map.game_map import GameMap
 from rendering.render_order import RenderOrder
 
@@ -71,10 +72,11 @@ def initialize_map(game):
 def initialize_objects(game):
     # Add the good stuff #
     place_special_architecture(game)
-    place_generic_architecture(game)
-    # place_containers(game)
-    # place_doors(game)
-    # place_items(game)
+    place_uniques(game)
     # place_monsters(game)
+    # place_containers(game)
+    # place_items(game)
+    # place_generic_architecture(game)
+    # place_doors(game)
 
 
