@@ -41,10 +41,10 @@ def filter_data_dict(dic:Dict, dlvl:int=0):
                 and rarity_values[v.get(Key.TYPE, RarityType.COMMON)] >= random
             }
             candidates = list(possible_items.keys())
-            logging.debug(f'Filtered candidates with random chance: {random}. Result: {candidates}')
+            #logging.debug(f'Filtered candidates with random chance: {random}. Result: {candidates}')
             if len(candidates) > 0:
                 candidate = choice(candidates)
-                logging.debug(f'Decided on {candidate}')
+                #logging.debug(f'Decided on {candidate}')
                 return candidate
 
     logging.error(f'Data-dictionary had length of 0 after initial dlvl-filter.')

@@ -89,7 +89,7 @@ def render_player_panel(game, con, panel_x, panel_y, width, height):
 
     if player.f.active_weapon is not None:
         print_string(con, 2, y+1,
-                     f'ATT: {game.player.f.active_weapon.moveset.current_move}/{game.player.f.active_weapon.moveset.moves}')
+                     f'ATK: {game.player.f.active_weapon.moveset.current_move}/{game.player.f.active_weapon.moveset.moves}')
         print_string(con, 2, y+2, f'DAM: {game.player.f.modded_dmg_potential[0]}-{game.player.f.modded_dmg_potential[-1]}')
 
 

@@ -102,7 +102,7 @@ def process_turn_results(player_turn_results, game, fov_map):
         if level_change is None and len(filtered_enemy_turn_conditions) > 0:
             game.state = GameState.ENEMY_TURN
 
-        if level_change is not None: # TODO consider moving into own function or later into engine.py
+        if level_change is not None: # TODO consider moving into own function or into engine.py
             game.dlvl += level_change
             game.entities = [game.player] # TODO should perfomance become an issue, properly clean all objects
             initialize_map(game)

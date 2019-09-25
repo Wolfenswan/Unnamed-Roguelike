@@ -8,7 +8,8 @@ from config_files import colors
 from gameobjects.block_level import BlockLevel
 from gameobjects.util_functions import distance_between_pos
 from map.directions_util import DIRECTIONS_CIRCLE
-from map.map_algo import Tunneling, DrunkWalk
+from map.algorithms import Tunneling, DrunkWalk
+from map.rooms import Rect
 from map.tile import Tile
 
 @dataclass
@@ -34,39 +35,63 @@ class GameMap:
     def wall_tiles(self):
         return [tile for tile in self.tiles.values() if tile.blocked]
 
-    def make_map(self, game, room_min_size, room_max_size, map_width, map_height):
+    def create_map(self, game, room_min_size, room_max_size, map_width, map_height):
 
         max_rooms = int((map_width / room_min_size) + (map_height / room_min_size))
-        # TODO placeholder for later implementation
+        self.create_rooms(max_rooms, room_min_size, room_max_size, map_width, map_height)
+        Tunneling.create_tunnels(self, randomize=True, drunk_chance=50)
+
+        # Fill the rest of the map with a pathfinding algorithm
         # algo = choice([Tunneling, DrunkWalk])
         # algo.make_map(game, max_rooms, room_min_size, room_max_size, map_width, map_height)
-        DrunkWalk().make_map(game, max_rooms, room_min_size, room_max_size, map_width, map_height)
-        #Tunneling().make_map(game, max_rooms, room_min_size, room_max_size, map_width, map_height)
+        #DrunkWalk().make_map(self, map_width, map_height)
+        #Tunneling().make_map(self)
 
         blocked_rooms = [r for r in self.rooms if len(r.exits(self)) == 0]
         if len(blocked_rooms) > 0:
-            logging.debug(f'Blocked room fail safe activated for {len(blocked_rooms)} rooms: {blocked_rooms}')
-            Tunneling.create_tunnels(self, room_list = blocked_rooms, randomize=True) # safety measure
+            logging.warning(f'Blocked room fail safe activated for {len(blocked_rooms)} rooms: {blocked_rooms}')
+            Tunneling().create_tunnels(self, room_list = blocked_rooms, randomize=True)
 
-        for i in range(randint(5,10)):
+        for i in range(randint(6,15)):
             color = choice([colors.clay, colors.granite])
-            self.color_area(color)
+            self.color_random_area(color)
 
+    def create_rooms(self, max_rooms, room_min_size, room_max_size, map_width, map_height):
+        for r in range(max_rooms):
+            # random width and height
+            w = randint(room_min_size, room_max_size)
+            h = randint(room_min_size, room_max_size)
+            # random position without going out of the boundaries of the map
+            x = randint(0, map_width - w - 1)
+            y = randint(0, map_height - h - 1)
 
-    def color_area(self, color):
+            # "Rect" class makes rectangles easier to work with
+            new_room = Rect(x, y, w, h)
+
+            # run through the other rooms and see if they intersect with this one
+            for other_room in self.rooms:
+                if new_room.intersect(other_room):
+                    break
+            else:
+                # this means there are no intersections, so this room is valid
+                # "paint" it to the map's tiles
+                new_room.create(self)
+                # finally, append the new room to the list
+                self.rooms.append(new_room)
+
+    def color_random_area(self, color):
         """ Simple function to colorize an area of the map to emulate Biomes """
-        rand_x = randint(2, self.width - 2)
-        rand_y = randint(2, self.height - 2)
+        rand_x, rand_y = randint(2, self.width - 2), randint(2, self.height - 2)
         tile = self.tiles[rand_x, rand_y]
-        tiles = [tile] + tile.surrounding_tiles(dist = randint(3,15))
+        tiles = [tile] + tile.surrounding_tiles(dist = randint(4,10))
         for i, t in enumerate(tiles):
-            chance = 100*i/len(tiles)
-        if (150-chance) >= randint(0, 100):
-            t.fg_color = color
-            for t_2 in tile.surrounding_tiles():
-                if randint(0, 1):
-                    t_2.fg_color = color
-
+            chance = (100 - t.distance_to_tile(tiles[0])*8) + randint(0,20)
+            print(tiles[0].distance_to_tile(t),chance)
+            if (chance) >= randint(0, 100):
+                t.fg_color = color
+                # for t_2 in tile.surrounding_tiles():
+                #     if randint(0, 100) <= 75:
+                #         t_2.fg_color = color
 
     def gib_area(self, x, y, dist, color, chunks=False):
         self.tiles[(x, y)].gib(color=color)
@@ -75,7 +100,6 @@ class GameMap:
             self.tiles[(c_x, c_y)].gib(color=color)
             if not self.tiles[(c_x, c_y)].blocked and randint(0, 100) > 85 and chunks:
                 self.tiles[(c_x, c_y)].gib('~', color)
-
 
     def is_floor(self, x, y):
         return self.tiles[(x, y)].walkable

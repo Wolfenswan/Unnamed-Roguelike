@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 
 from config_files import colors
+from gameobjects.util_functions import distance_between_pos
 from rendering.util_functions import multiply_rgb_color
 
 @dataclass
@@ -47,13 +48,15 @@ class Tile:
         color = multiply_rgb_color(self.fg_color, factor_range=(0.85, 0.85), darken=True)
         return color
 
-    def set_char(self, force=None):
-        if not force:
+    def set_char(self, char=None):
+        if not char:
             self.char = '.' if self.walkable else chr(178)
+        else:
+            self.char = char
 
     def gib(self, char=None, color=colors.blood_red):
         if char and self.walkable:
-            self.char = char
+            self.set_char(char=char)
         self.fg_color = color
 
     def toggle_attributes(self):
@@ -76,8 +79,12 @@ class Tile:
     def surrounding_tiles(self, dist = 1):
         game_map = self.owner
         tiles = []
-        for dx in range(-dist, dist):
-            for dy in range(-dist, dist):
-                if not (dx == 0 and dy == 0) and game_map.tiles.get((self.x + dx, self.y + dy)):
-                    tiles += [game_map.tiles[self.x + dx, self.y + dy]]
+        for i in range(1, dist):
+            for dx in range(-i, i):
+                for dy in range(-i, i):
+                    if not (dx == 0 and dy == 0) and game_map.tiles.get((self.x + dx, self.y + dy)):
+                        tiles += [game_map.tiles[self.x + dx, self.y + dy]]
         return tiles
+
+    def distance_to_tile(self, other_tile):
+        return distance_between_pos(*self.pos, *other_tile.pos)

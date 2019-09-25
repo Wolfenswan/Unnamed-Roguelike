@@ -1,4 +1,4 @@
-from random import choice
+from random import choice, randint
 
 from dataclasses import dataclass
 
@@ -21,16 +21,18 @@ class Rect:
             for x in range(self.x1, self.x2):
                 self.pos_list.append((x, y))
 
-    def create_room(self, game_map):
+    def create(self, game_map, fuzzy=5):
         # go through the tiles in the rectangle and make them passable
+        # fuzzy is the chance for the tile to remain a wall
         for x in range(self.x1 + 1, self.x2):
             for y in range(self.y1 + 1, self.y2):
-                game_map.tiles[(x,y)].set_attributes(floor=True)
+                if randint(0,100) >= fuzzy:
+                    game_map.tiles[(x,y)].set_attributes(floor=True)
 
-    def intersect(self, other):
+    def intersect(self, other_rect):
         # returns true if this rectangle intersects with another one
-        return (self.x1 <= other.x2 and self.x2 >= other.x1 and
-                self.y1 <= other.y2 and self.y2 >= other.y1)
+        return (self.x1 <= other_rect.x2 and self.x2 >= other_rect.x1 and
+                self.y1 <= other_rect.y2 and self.y2 >= other_rect.y1)
 
     def ranpos(self, game_map, floor = True):
         """
@@ -68,7 +70,6 @@ class Rect:
 
         return free_tiles
 
-    @debug_timer
     def exits(self, game_map, max_width = 3, set_attr = True):
         """
         :return: room exits

@@ -1,13 +1,13 @@
 CURRENT
 - Tweak Dungeon generation
-    - less empty space
-x new spawning functions: create_unique:
-    x check each level change if uniques can be spawned
-    x remove spawned uniques from dictionary
+    x less empty space
+    x play around with other algos (messy BSP?)
+    - ideally should be a mix between dungeon & tunnels
+        - options dungeon (only tunnels & square rooms), caves (only drunk walk), mines (mix of both)
+    - use drunk_tunneling to color areas
 - Balancing pass for first release
     - chaff monsters much weaker
     - monsters better spread throughout levels
-
 - Queen boss monster
     - maybe allow queen to spit eggs instead of ranged attack?
         - lobbed ranged attack that cant miss?
@@ -45,10 +45,3 @@ COMBAT
 Light sources
     - add light_source component to entity
     - if range of light_source is in player's FOV, add that area to FOV
-
-Dungeon
-    - map generation takes dlvl into account (dungeon only, dungeon + caves etc., biomes etc)
-    - entity placement takes dlvl into account (chance for stronger mobs etc.)
-
-
-- Github issue Hexadecimal
