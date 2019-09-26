@@ -47,7 +47,7 @@ def initialize_player(game):
                 'belt': {},
                 'round_shield': {}
             },
-            Key.BACKPACK: ('pot_heal', 'bomb_1', 'bomb_1', 'torch', 'spear', 'flail', 'bow', 'vest', 'full_helmet')
+            Key.BACKPACK: ('pot_heal', 'bomb_1', 'net_1', 'torch', 'spear', 'flail', 'bow', 'vest', 'full_helmet')
         }
     }
 
@@ -66,17 +66,17 @@ def initialize_map(game):
     dwidth = randint(round(cfg.DUNGEON_MIN_WIDTH), round(cfg.DUNGEON_MAX_WIDTH))
     dheight = randint(round(cfg.DUNGEON_MIN_HEIGHT), round(cfg.DUNGEON_MAX_HEIGHT))
     game.map = GameMap(dwidth, dheight)
-    game.map.create_map(game, cfg.ROOM_MIN_SIZE, cfg.ROOM_MAX_SIZE, dwidth, dheight)
+    game.map.create_map(cfg.ROOM_MIN_SIZE, cfg.ROOM_MAX_SIZE)
 
 
 def initialize_objects(game):
     # Add the good stuff #
     place_special_architecture(game)
     place_uniques(game)
-    place_monsters(game)
+    # place_monsters(game)
     place_containers(game)
     place_items(game)
-    place_generic_architecture(game)
-    place_doors(game)
+    # place_generic_architecture(game)
+    # place_doors(game)
 
 

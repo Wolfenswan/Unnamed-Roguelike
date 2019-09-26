@@ -1,4 +1,5 @@
 import logging
+from functools import wraps
 from random import choice
 from typing import Optional, Union, List, Tuple
 
@@ -191,14 +192,11 @@ class Entity:
 
     @property
     def can_move(self):
-        if self.fighter:
-            for state, active in self.effects.items():
-                if active and status_modifiers_data[state].get('can_move', True) is False:
-                    return False
-            else: # for...else applies if the for loop finished without breaking
-                return True
-        else:   # TODO are there any entities that are not fighters but can move?
-            return False
+        for state, active in self.effects.items():
+            if active and status_modifiers_data[state].get('can_move', True) is False:
+                return False
+        else: # for...else triggers if the for loop finished without breaking
+            return True
 
     @property
     def can_attack(self):
@@ -266,30 +264,53 @@ class Entity:
     # ACTION FUNCTIONS #
     ####################
 
-    def move(self, dx, dy):
-        # Move the entity by a given amount
-        #logging.debug(f'{self} is moving.')
-        self.x += dx
-        self.y += dy
-        #logging.debug(f'{self} has moved.')
-
-    def try_move(self, dx, dy, game, ignore_entities=False, ignore_walls = False):
-        """
-        Attempts to move the entity in the given direction.
-        Returns True on successful move.
-        Returns False if wall blocks movement.
-        Returns Entity if entity blocks movement.
-        """
-        dest_x, dest_y = self.x + dx, self.y + dy
-        if not game.map.is_wall(dest_x, dest_y) or ignore_walls:
-            blocked = entity_at_pos(game.walk_blocking_ents, dest_x, dest_y)
-            if blocked and not ignore_entities:
-                return blocked
-            else:
-                self.move(dx, dy)
-                return True
+    def move(self, dx, dy, absolute=False):
+        # Move the entity i
+        if not absolute:
+            self.x += dx
+            self.y += dy
         else:
+            self.x, self.y = dx, dy
+
+    def try_move(self, dx:int, dy:int, game:Game, ignore_entities:bool=False, ignore_walls:bool= False, absolute:bool=False):
+        """
+        Attempts to move the entity in the given direction or to the given coordinates.
+        Returns True on successful move.
+        Returns False if wall blocks movement or entity is unable to move due to effects.
+        Returns Entity if entity blocks movement.
+
+        :param dx:
+        :type dx: int
+        :param dy:
+        :type dy: int
+        :param game:
+        :type game: Game
+        :param ignore_entities: Whether to ignore blocking entities when checking for movement.
+        :type ignore_entities: bool
+        :param ignore_walls: Whether to ignore walls when checking for movement.
+        :type ignore_walls: bool
+        :param absolute: Whether dx&dy denote directions or a x/y coordinates on the grid
+        :type absolute: bool
+        :return:
+        :rtype: bool
+        """
+        if not self.can_move:
             return False
+
+        if not absolute:
+            dest_x, dest_y = self.x + dx, self.y + dy
+        else:
+            dest_x, dest_y = dx, dy
+
+        if game.map.is_wall(dest_x, dest_y) and not ignore_walls:
+            return False
+
+        blocked = entity_at_pos(game.walk_blocking_ents, dest_x, dest_y)
+        if blocked and not ignore_entities:
+            return blocked
+
+        self.move(dx, dy, absolute=absolute)
+        return True
 
     def proc_every_turn(self, game, start=True):
         """

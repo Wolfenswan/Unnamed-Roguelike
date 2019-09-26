@@ -27,7 +27,7 @@ def filter_data_dict(dic:Dict, dlvl:int=0):
     """
 
     if len(dic) == 0:
-        logging.error(f'Data-dictionary has length of 0.')
+        logging.warning(f'Was passed Data-dictionary with length of 0.')
         return None
 
     if dlvl > 0:  # Filter possible entries by dungeon levels first
@@ -52,7 +52,7 @@ def filter_data_dict(dic:Dict, dlvl:int=0):
                 logging.debug(f'Decided on {candidate}')
                 return candidate
 
-    logging.error(f'Data-dictionary had length of 0 after initial dlvl-filter.')
+    logging.warning(f'Data-dictionary had length of 0 after initial dlvl-filter.')
 
 
 def dlvl_filter(dlvl, data, factor=25):

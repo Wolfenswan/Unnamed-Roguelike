@@ -50,10 +50,11 @@ class Key(Enum):
     CAN_DROP = auto()
 
     # Useables #
-    ON_USE = auto()
+    ON_USE_EFFECT = auto()
+    ON_USE_PROJECTILE = auto()
     ON_USE_MSG = auto()
     ON_USE_PARAMS = auto()
-    CHARGES = auto()
+    ON_USE_CHARGES = auto()
 
     # Equipment #
     EQUIP_TO = auto()

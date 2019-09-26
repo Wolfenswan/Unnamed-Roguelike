@@ -213,7 +213,7 @@ def process_player_interaction(game, action):
     # Quick use handling #
     if quick_use_idx and quick_use_idx <= len(player.qu_inventory):
         quick_use_item = player.qu_inventory[quick_use_idx - 1]  # -1 as the idx is passed as a number key
-        qu_results = player.qu_inventory.use(quick_use_item, game, entities=entities, fov_map=fov_map)
+        qu_results = player.qu_inventory.use(quick_use_item, game)
         results.extend(qu_results)
 
     # Inventory display #
@@ -338,7 +338,7 @@ def process_cursor_interaction(game, action, targeting_item, debug_spawn):
                 cursor.move(dx, dy)
 
     if confirm:
-        if targeting_item is not None:  # Using an item
+        if targeting_item is not None:  # Targeting with an item
             inv = player.inventory if targeting_item in player.inventory else player.qu_inventory
             item_use_results = inv.use(targeting_item, game, target_pos=cursor.pos)
             results.extend(item_use_results)

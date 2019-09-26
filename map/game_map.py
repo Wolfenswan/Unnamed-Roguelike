@@ -33,10 +33,11 @@ class GameMap:
     def wall_tiles(self):
         return [tile for tile in self.tiles.values() if tile.blocked]
 
-    def create_map(self, game, room_min_size, room_max_size, map_width, map_height):
+    def create_map(self, room_min_size, room_max_size):
 
+        map_width, map_height = self.width, self.height
         max_rooms = int((map_width / room_min_size) + (map_height / room_min_size))
-        self.create_rooms(max_rooms, room_min_size, room_max_size, map_width, map_height)
+        self.create_rooms(max_rooms, room_min_size, room_max_size, map_width, map_height, fuzzy=10)
         Tunneling.create_tunnels(self, randomize=True, drunk_chance=50)
 
         # Fill the rest of the map with a pathfinding algorithm
@@ -54,7 +55,7 @@ class GameMap:
             color = choice([colors.clay, colors.granite])
             self.color_random_area(color)
 
-    def create_rooms(self, max_rooms, room_min_size, room_max_size, map_width, map_height):
+    def create_rooms(self, max_rooms, room_min_size, room_max_size, map_width, map_height, fuzzy=-1):
         for r in range(max_rooms):
             # random width and height
             w = randint(room_min_size, room_max_size)
@@ -73,7 +74,7 @@ class GameMap:
             else:
                 # this means there are no intersections, so this room is valid
                 # "paint" it to the map's tiles
-                new_room.create(self)
+                new_room.create(self, fuzzy=fuzzy)
                 # finally, append the new room to the list
                 self.rooms.append(new_room)
 

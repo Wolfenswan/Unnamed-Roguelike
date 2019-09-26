@@ -6,7 +6,7 @@ GAME_NAME = 'The Hive'
 DEBUG = {
     'no_intro' : True,
     'invincibility': True,
-    'reveal_map': False,
+    'reveal_map': True,
     'detailed_ent_info': True,
 }
 LOGGING = {

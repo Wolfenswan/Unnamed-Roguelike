@@ -20,7 +20,7 @@ class Tunneling:
 
                 dest_x, dest_y = dest_r.center
 
-                if randint(0,100) <= drunk_chance:
+                if randint(0,100) > drunk_chance:
                     if randint(0, 1):
                         Tunneling.h_tunnel(game_map, x, dest_x, y)
                         Tunneling.v_tunnel(game_map, y, dest_y, dest_x)

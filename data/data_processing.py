@@ -25,8 +25,8 @@ from data.item_data.equ_creatures import equ_creature_data
 from data.item_data.equ_offhand import equ_offhand_data
 from data.item_data.equ_unique import equ_unique_data
 from data.item_data.equ_weapons import equ_weapon_data
-from data.item_data.use_bombs import use_bombs_data
-from data.item_data.use_potions import use_potions_data, use_potions_variants_data
+from data.item_data.use_targeted import use_throw_data
+from data.item_data.use_self import use_potions_data, use_potions_variants_data
 from data.shared_data.quality_mod import qual_cond_data, qual_craft_data
 from data.data_types import GenericType, Condition, BodyType, Material, Craftsmanship
 from data.shared_data.material_mod import item_material_data
@@ -42,7 +42,7 @@ from rendering.util_functions import multiply_rgb_color
 
 # Generate main data dictionaries #
 NPC_DATA = merge_dictionaries([npc_data_insects])
-ITEM_DATA = merge_dictionaries([use_potions_data, use_potions_variants_data, use_bombs_data, equ_creature_data, equ_weapon_data, equ_armor_data, equ_offhand_data])
+ITEM_DATA = merge_dictionaries([use_potions_data, use_potions_variants_data, use_throw_data, equ_creature_data, equ_weapon_data, equ_armor_data, equ_offhand_data])
 ARCHITECTURE_DATA = arch_static_data
 CONTAINER_DATA = arch_containers_data
 UNIQUE_DATA = merge_dictionaries([npc_data_unique, equ_unique_data])
@@ -238,16 +238,17 @@ def gen_item_from_data(data:Dict, x:int, y:int, material=False, condition=False,
     arguments = [x, y, *get_generic_args(data, material=material, condition=condition, craftsmanship=craftsmanship)]
     kwargs = get_generic_kwargs(data, default_render=RenderOrder.ITEM)
 
-    on_use = data.get(Key.ON_USE)
+    on_use = data.get(Key.ON_USE_EFFECT)
     equip_to = data.get(Key.EQUIP_TO)
 
     useable_component = None
     if on_use is not None:
         #targeted = data.get('targeted', False)
-        on_use_msg = data.get(Key.ON_USE_MSG, '')
-        charges = data.get(Key.CHARGES, 1)
+        msg = data.get(Key.ON_USE_MSG, '')
+        charges = data.get(Key.ON_USE_CHARGES, 1)
+        projectile = data.get(Key.ON_USE_PROJECTILE)
         params = data[Key.ON_USE_PARAMS]
-        useable_component = Useable(on_use_effect = on_use, on_use_msg=on_use_msg, charges=charges, on_use_params=params)
+        useable_component = Useable(on_use_effect = on_use, on_use_msg=msg, projectile=projectile, charges=charges, on_use_params=params)
 
     equipment_component = None
     if equip_to is not None:

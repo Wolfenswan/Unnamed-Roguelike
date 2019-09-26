@@ -53,7 +53,7 @@ class Inventory:
         results = []
 
         useable = item_entity.item.useable
-        item_use_results = useable.use(self.owner, game, **kwargs)
+        item_use_results = useable.use(game, user=self.owner, **kwargs)
 
         for item_use_result in item_use_results:
             if item_use_result.get('consumed'):

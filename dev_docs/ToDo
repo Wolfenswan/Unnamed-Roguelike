@@ -21,6 +21,7 @@ CURRENT
     - has to return to portal?
 
 UPCOMING
+- bombs/projectiles exploding after n turns
 COMBAT
     - reduce ranged damage if enemies are nearby
         -> new fighter attr. "hindered" similar to surrounded but modifies dmg

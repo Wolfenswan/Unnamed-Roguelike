@@ -5,16 +5,20 @@ These dictionaries serve as reference to apply effects to useable items or skill
 """
 
 # TODO Key Enum
-heal = {
+generic_projectile = {
+        'targeted': True,
+        'on_execution': Effect.projectile,
+}
+
+heal_self = {
         'effect_name': 'heal',
         'on_execution': Effect.direct_heal
 }
 
 
 heal_targeted = {
-        **heal,
-        'targeted': True,
-        'on_execution': Effect.projectile,
+        **heal_self,
+        **generic_projectile,
         'on_proj_hit': Effect.direct_heal
 }
 
@@ -29,7 +33,7 @@ dmg_targeted = {
 
 explosion = {
         'effect_name': 'explosion',
-        'effect_verb': 'burns',
+        'effect_verbs': ['burns'],
         'on_execution': Effect.explosion,
         'on_expl_hit': Effect.direct_damage
 }
@@ -37,7 +41,20 @@ explosion = {
 
 explosion_targeted = {
         **explosion,
-        'targeted' : True,
-        'on_execution': Effect.projectile,
+        **generic_projectile,
         'on_proj_hit': Effect.explosion
+}
+
+
+entangle = {
+        'effect_name' : 'entangle',
+        'effect_verbs': ['entangles','wraps'],
+        'on_execution': Effect.entangle,
+}
+
+
+entangle_targeted = {
+        **entangle,
+        **generic_projectile,
+        'on_proj_hit': Effect.entangle,
 }

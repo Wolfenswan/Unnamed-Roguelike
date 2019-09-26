@@ -1,4 +1,4 @@
-from components.AI.behavior.simple import Simple
+from components.AI.behavior.simple_melee import Simple
 from components.combat.fighter_util import State
 from config_files import colors
 from data.actor_data.act_skills import skill_hatch

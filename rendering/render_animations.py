@@ -48,7 +48,7 @@ def animate_move_to(ent, tx:int, ty:int, game:Game, ignore_entities=False, anim_
     return True
 
 
-def animate_projectile(start_x:int, start_y:int, target_x:int, target_y:int, game:Game, forced_distance:int=0, homing=True, ignore_entities=True, anim_delay = 0.05, color=colors.flame):
+def animate_projectile(start_x:int, start_y:int, target_x:int, target_y:int, game:Game, forced_distance:int=0, homing=True, ignore_entities=True, anim_delay = 0.05, char='*', color=colors.flame):
     """
     Creates a temporary projectile and animates its movement from start position to target position.
 
@@ -58,7 +58,7 @@ def animate_projectile(start_x:int, start_y:int, target_x:int, target_y:int, gam
 
     distance = forced_distance if forced_distance > 0 else distance_between_pos(start_x, start_y, target_x, target_y)
 
-    projectile = Entity(start_x, start_y, '*', color, 'Projectile', render_order=RenderOrder.ALWAYS)
+    projectile = Entity(start_x, start_y, char, color, 'Projectile', render_order=RenderOrder.ALWAYS)
     game.entities.append(projectile)
     animate_move_to(projectile, target_x, target_y, game, anim_delay = anim_delay, ignore_entities=ignore_entities)
     game.entities.remove(projectile)

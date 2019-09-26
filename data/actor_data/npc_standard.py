@@ -21,8 +21,8 @@
         Key.RARITY: RarityType.
     }
 """
-from components.AI.behavior.ranged import Ranged
-from components.AI.behavior.simple import Simple
+from components.AI.behavior.simple_ranged import Ranged
+from components.AI.behavior.simple_melee import Simple
 from components.AI.behavior.swarm import Swarm
 from config_files import colors
 from data.actor_data.act_skills import skill_generic_charge, skill_generic_slam, skill_explode_self, skill_entangle, \

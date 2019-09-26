@@ -2,7 +2,7 @@ from config_files import colors
 from data.data_keys import Key
 from data.data_types import ItemType
 from data.data_types import RarityType
-from data.shared_data.effect_combinations import heal
+from data.shared_data.effect_combinations import heal_self
 
 POTION_CHAR = '!'
 
@@ -13,7 +13,7 @@ use_potions_data = {
         Key.TYPE: ItemType.USEABLE,
         Key.CHAR: POTION_CHAR,
         Key.COLOR: colors.amber,
-        Key.ON_USE: heal,
+        Key.ON_USE_EFFECT: heal_self,
         Key.ON_USE_MSG: 'You enjoy a pot of honey.', # TODO various messages
         Key.ON_USE_PARAMS: {'pwr': (6, 10)},
         Key.RARITY: RarityType.COMMON,

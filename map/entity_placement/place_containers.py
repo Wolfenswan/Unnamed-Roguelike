@@ -84,7 +84,7 @@ def fill_container(container, dlvl, rarity_filter=None, type_filter=None, forced
         logging.debug(f'Creating {num_of_items} items (Capacity: {container.inventory.capacity})')
         for i in range(num_of_items):
             key = filter_data_dict(possible_items, dlvl)
-            print(key)
-            data = possible_items[key]
-            item = gen_item_from_data(data, 0, 0)
-            container.inventory.add(item)
+            if key is not None:
+                data = possible_items[key]
+                item = gen_item_from_data(data, 0, 0)
+                container.inventory.add(item)

@@ -47,14 +47,16 @@ class NPC(Entity):
         #self.barks = kwargs.get('barks')
 
     def move_towards(self, target, game):
+
         game_map = game.map
         blocking_ents = game.walk_blocking_ents
 
         dx, dy = self.direction_to_ent(target)
         if not game_map.is_blocked(self.x + dx, self.y + dy, blocking_ents):
-            self.move(dx, dy)
+            self.try_move(dx, dy, game)
 
     def move_astar(self, target, game):
+
         game_map = game.map
         blocking_ents = game.walk_blocking_ents
 
@@ -94,7 +96,7 @@ class NPC(Entity):
                 if target.pos == (x,y): # At some edge-cases NPCs might attempt a* movement when they are adjacent to the target
                     self.f.attack_setup(target, game)
                 else:
-                    self.x, self.y = x, y
+                    self.try_move(x, y, game, absolute=True)
                 logging.debug(f'{self} finished A*-moving.')
 
         else:
@@ -106,8 +108,8 @@ class NPC(Entity):
     def move_away_from(self, target: Entity, game: Game):
         """ Move Entity away from intended target """
 
-        # loop through available directions and pick the first that is at least one square from the player
-        # loop does not check for walls, so an entity can back up into walls (and thus fail/be cornered)
+        # loop through available directions and pick one that is at least one square from the player
+        # loop does not check for walls by design, so an entity can back up into walls (and thus fail/be cornered)
         dir_list = []
         for dir in DIRECTIONS_CIRCLE:
             flee_pos = (self.x + dir[0], self.y + dir[1])

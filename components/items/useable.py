@@ -11,13 +11,14 @@ class Useable:
     on_use_effect : Dict = field(default_factory = dict)
     on_use_msg : str = ''
     on_use_params : Dict = field(default_factory = dict)
+    projectile : str = '*'
     charges : int = 1
 
     def __post_init__(self):
         self.on_use_function : Callable = self.on_use_effect.get('on_execution')
         self.targeted : bool = self.on_use_effect.get('targeted', False)
 
-    def use(self, user, game, **kwargs):
+    def use(self, game, user, **kwargs):
 
         item_entity = self.owner.owner
         results = []
@@ -28,7 +29,7 @@ class Useable:
             if self.targeted and not game.state in [GameState.CURSOR_ACTIVE, GameState.CURSOR_TARGETING]:
                 results.append({'targeting': item_entity,'message': Message('Move the cursor over the intended target, press Enter to confirm.')})
             else:
-                item_use_results = self.on_use_function(game=game, user=user, used_item=item_entity, **kwargs, **self.on_use_params, **self.on_use_effect)
+                item_use_results = self.on_use_function(game=game, user=user, used_item=item_entity, projectile=self.projectile, **kwargs, **self.on_use_params, **self.on_use_effect)
                 if self.on_use_msg:
                     item_use_results.append({'message': Message(self.on_use_msg)})
                 results.extend(item_use_results)
