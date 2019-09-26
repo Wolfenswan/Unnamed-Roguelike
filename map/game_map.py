@@ -1,12 +1,10 @@
 import logging
-from cmath import sqrt
 from random import choice, randint
 
 from dataclasses import dataclass
 
 from config_files import colors
 from gameobjects.block_level import BlockLevel
-from gameobjects.util_functions import distance_between_pos
 from map.directions_util import DIRECTIONS_CIRCLE
 from map.algorithms import Tunneling, DrunkWalk
 from map.rooms import Rect
@@ -50,7 +48,7 @@ class GameMap:
         blocked_rooms = [r for r in self.rooms if len(r.exits(self)) == 0]
         if len(blocked_rooms) > 0:
             logging.warning(f'Blocked room fail safe activated for {len(blocked_rooms)} rooms: {blocked_rooms}')
-            Tunneling().create_tunnels(self, room_list = blocked_rooms, randomize=True)
+            Tunneling.create_tunnels(self, room_list = blocked_rooms, randomize=True)
 
         for i in range(randint(6,15)):
             color = choice([colors.clay, colors.granite])
@@ -86,7 +84,6 @@ class GameMap:
         tiles = [tile] + tile.surrounding_tiles(dist = randint(4,10))
         for i, t in enumerate(tiles):
             chance = (100 - t.distance_to_tile(tiles[0])*8) + randint(0,20)
-            print(tiles[0].distance_to_tile(t),chance)
             if (chance) >= randint(0, 100):
                 t.fg_color = color
                 # for t_2 in tile.surrounding_tiles():

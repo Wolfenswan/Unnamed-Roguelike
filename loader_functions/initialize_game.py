@@ -19,7 +19,7 @@ from rendering.render_order import RenderOrder
 
 @debug_timer
 def initialize_game(game):
-    # Create cursor and the generic projectile entity
+    game.turn = 1
     game.cursor = Entity(0, 0, 'X', colors.white, 'Cursor', render_order=RenderOrder.CURSOR)
     game.projectile = Entity(0, 0, '*', colors.white, 'Projectile', render_order=RenderOrder.NONE)
 
@@ -55,7 +55,7 @@ def initialize_player(game):
     for item_ent in player.inventory.items + player.paperdoll.equipped_items:
         item_ent.item.identify()
 
-    game.entities.append(player)
+    game.entities = [player]
     game.player = player
     return player
 
@@ -73,10 +73,10 @@ def initialize_objects(game):
     # Add the good stuff #
     place_special_architecture(game)
     place_uniques(game)
-    # place_monsters(game)
-    # place_containers(game)
-    # place_items(game)
-    # place_generic_architecture(game)
-    # place_doors(game)
+    place_monsters(game)
+    place_containers(game)
+    place_items(game)
+    place_generic_architecture(game)
+    place_doors(game)
 
 

@@ -5,7 +5,7 @@ from data.data_keys import Key
 from data.data_processing import UNIQUE_DATA, gen_npc_from_data, gen_item_from_data
 from data.data_util import dlvl_filter
 from debug.timer import debug_timer
-from map.entity_placement.util_functions import find_ent_position
+from map.entity_placement.util_functions import find_ent_position, gen_entity_at_pos
 
 
 @debug_timer
@@ -29,16 +29,10 @@ def place_uniques(game):
     if len(possible_spawns) > 0:
         logging.debug(f'Placing unique objects: {possible_spawns}.')
         for k, data in possible_spawns.items():
-            ent = None
             room = choice(rooms[1:])
             pos = find_ent_position(room, data, game)
+            ent = gen_entity_at_pos(data, *pos, game)
 
-            if data.get(Key.AI_BEHAVIOR, False) and pos:
-                ent = gen_npc_from_data(data, *pos, game)
-            elif data.get(Key.ON_USE, False) or data.get(Key.EQUIP_TO, False):
-                ent = gen_item_from_data(data, *pos)
-
-            if ent is not None:
-                game.entities.append(ent)
+            if ent:
                 del spawn_data[k] # As UNIQUE_DATA wasn't copied, this affects the global dictionary as well
                 logging.debug(f'Created unique {ent} at {pos} in {room}.')

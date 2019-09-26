@@ -104,6 +104,9 @@ def dynamic_wrap(string, max_width):
     # Todo line breaks through color-wrapped words break colorization (workaround would be color-wrapping each word individually)
     """
 
+    if len(string) == 0:
+        return []
+
     codes = {}
     color_coded_words = COLOR_WRAP_PATTERN.findall(string)
     for coded_string in color_coded_words:
@@ -115,6 +118,7 @@ def dynamic_wrap(string, max_width):
 
     # Split the string at pre-defined line-breaks to preserve indentation.
     split_str = string.split('\n')
+    print(split_str)
     wrapped = []
     # Create a textwrap-list, using the new string without color-wrappers
     for sub_str in split_str:

@@ -14,7 +14,7 @@ from rendering.render_order import RenderOrder
 
 
 def render_animation(game:Game, anim_delay:float):
-    render_map_screen(game, game.fov_map, debug=game.debug['map'])
+    render_map_screen(game, game.fov_map, debug=game.debug['reveal_map'])
     tcod.console_flush()
     time.sleep(anim_delay)
 

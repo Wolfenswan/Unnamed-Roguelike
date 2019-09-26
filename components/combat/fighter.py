@@ -513,7 +513,7 @@ class Fighter:
             results.append({'message': M(f'{self.owner.address_color.title()} stop blocking.', type=MessageType.COMBAT_INFO)})
             self.stances[Stance.BLOCKING] = False
         elif self.shield:
-            results.append({'message': M(f'{self.owner.address_color.title()} ready your {self.shield.name}.', type=MessageType.COMBAT_INFO)})
+            results.append({'message': M(f'{self.owner.address_color.title()} ready your %{self.shield.color}%{self.shield.name}%%.', type=MessageType.COMBAT_INFO)})
             self.stances[Stance.BLOCKING] = True
         else:
             results.append({'message': M(f'{self.owner.address_color.title()} need a shield to block.', type=MessageType.COMBAT_INFO)})
@@ -616,7 +616,7 @@ class Fighter:
         ent_old_color = ent.color
         blood = colors.blood_red if ent.color_blood is None else ent.color_blood
 
-        if game.debug['invin'] and ent.is_player:
+        if game.debug['invincibility'] and ent.is_player:
             self.hp = self.max_hp
             return M(f'Invincibility enabled')
 

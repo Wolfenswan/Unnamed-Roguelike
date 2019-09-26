@@ -33,8 +33,8 @@ def process_turn_results(player_turn_results, game, fov_map):
 
         level_change = player_turn_result.get('level_change')
 
-        # debug menu #
-        debug_menu_selection = player_turn_result.get('debug_menu_selection')
+        # spawn menu #
+        spawn_menu_selection = player_turn_result.get('spawn_menu_selection')
 
         # List of results that activate the enemy's turn #
         enemy_turn_on = [item_added, item_dropped, item_consumed, item_equipped, item_dequipped, item_prepared, weapon_switched, ranged_attack, waiting]
@@ -90,9 +90,9 @@ def process_turn_results(player_turn_results, game, fov_map):
             if dead_entity.is_player:
                 game.state = GameState.PLAYER_DEAD
 
-        if debug_menu_selection is not None:
+        if spawn_menu_selection is not None:
             game.toggle_cursor((player.x+1,player.y), state=GameState.CURSOR_ACTIVE)
-            results.append({'debug_spawn': debug_menu_selection})
+            results.append({'debug_spawn': spawn_menu_selection})
 
         if fov_recompute:
             results.append({'fov_recompute': fov_recompute})

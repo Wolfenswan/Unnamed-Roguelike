@@ -2,8 +2,17 @@
 """ Constant variables """
 import tcod
 
-DEBUG = True
 GAME_NAME = 'The Hive'
+DEBUG = {
+    'no_intro' : True,
+    'invincibility': True,
+    'reveal_map': False,
+    'detailed_ent_info': True,
+}
+LOGGING = {
+    'debug': True,
+    'runtime': True,
+}
 
 # DISPLAY SETTINGS
 SCREEN_WIDTH = 84
@@ -42,7 +51,7 @@ CONTAINER_ROOM_DIVISOR = 30 # room width * room height // this
 SOBJECTS_ROOM_DIVISOR = 10  # room width * room height // this
 
 # Interaction
-DASH_EXERT_MULTIPL = 3 # Total AV * this
+DASH_EXERT_MULTIPL = 2.5 # Total AV * this
 
 # FOV
 FOV_ALGO = tcod.FOV_SHADOW

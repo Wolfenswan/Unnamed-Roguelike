@@ -8,7 +8,6 @@ class Stance(Enum):
 
 
 class State(Enum):
-    #NORMAL = auto()
     DAZED = auto()
     STUNNED = auto()
     ENTANGLED = auto()
@@ -30,7 +29,7 @@ class AttributePercentage(Enum):
     THREE_QUARTER = 75
     HALF = 50
     ONE_QUARTER = 25
-    VERY_LOW = 1
+    VERY_LOW = 5
     EMPTY = 0
 
 
@@ -48,7 +47,6 @@ def get_gui_data(percentage:float, dictionary:Dict, category: Union[AttributePer
     Given a percentage value and a dictionary from gui_fighter containing strings or colors, this returns the adequate
     value to display the fighter's status in the GUI.
     """
-
     for enum in list(category):
         if enum.value <= percentage:
             value = dictionary[enum]

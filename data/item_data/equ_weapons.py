@@ -14,7 +14,7 @@ equ_weapon_data = {
         **default_values,
         Key.NAME: 'sword',
         Key.MATERIAL: (Material.IRON, Material.STEEL),
-        Key.DESCR: 'Kills enemies and cuts bread, what else could one wish for. Just make sure to clean it in between.',
+        Key.DESCR: 'Kills enemies and cuts bread. Just make sure to clean it in between.',
         Key.DMG_POTENTIAL: (4, 6),
         Key.MOVESET: moveset_sword,
         Key.RARITY: RarityType.COMMON

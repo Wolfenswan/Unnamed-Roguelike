@@ -43,7 +43,7 @@ class Inventory:
         else:
             results.append({
                 'item_added': item,
-                'message': Message(f'You pick up the {item.name}.', category=MessageCategory.OBSERVATION)
+                'message': Message(f'You pick up the %{item.color}%{item.name}%%.', category=MessageCategory.OBSERVATION)
             })
             self.items.append(item)
 

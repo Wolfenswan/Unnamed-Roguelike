@@ -5,19 +5,15 @@ from typing import List, Optional, Dict
 import tcod
 
 from config_files import colors
-from data.data_processing import gen_npc_from_data, gen_item_from_data, ITEM_DATA, NPC_DATA, \
-    ARCHITECTURE_DATA, gen_architecture_from_data, UNIQUE_DATA
 from map.entity_placement.util_functions import gen_entity_at_pos
-from data.data_types import ItemType
 from debug.timer import debug_timer
 from game import GameState
 from gameobjects.util_functions import entity_at_pos
 from gui.manual import display_manual
-from gui.menus import item_menu, generic_options_menu, item_list_menu
-from debug.menu import debug_menu
+from gui.menus import item_menu, item_list_menu, ingame_menu, debug_menu
+from debug.spawn_menu import spawn_menu
 from gui.messages import Message, MessageType, MessageCategory
-from loader_functions.data_loader import save_game
-from rendering.render_animations import animate_move_line, animate_projectile
+from rendering.render_animations import animate_projectile
 
 @debug_timer
 def process_player_input(action, game, last_turn_results:Optional[Dict]):
@@ -64,15 +60,8 @@ def process_player_input(action, game, last_turn_results:Optional[Dict]):
         if game.state in (GameState.SHOW_INVENTORY, GameState.SHOW_QU_INVENTORY, GameState.CURSOR_ACTIVE, GameState.CURSOR_TARGETING):
             game.state = GameState.PLAYERS_TURN
         else:
-            if player.f.hp > 0:
-                #test_menu(game)
-                choice = generic_options_menu('Quit Game', 'Do you want to quit the game?', ['Save & Quit', 'Just Quit'], game, sort_by=1, cancel_with_escape=True)
-                if choice == 0:
-                    save_game(game)
-                    return False
-                elif choice == 1:
-                    return False
-            else:
+            continue_game = ingame_menu(game, can_save = player.f.hp > 0)
+            if continue_game is False:
                 return False
 
     if fullscreen:
@@ -81,7 +70,6 @@ def process_player_input(action, game, last_turn_results:Optional[Dict]):
     return turn_results
 
 def process_player_interaction(game, action):
-    debug = action.get('debug')
     manual = action.get('manual')
     move = action.get('move')
     # dodge = action.get('dodge')
@@ -104,6 +92,9 @@ def process_player_interaction(game, action):
     game_map = game.map
     entities = game.entities
     fov_map = game.fov_map
+
+    debug = action.get('debug')
+    spawn = action.get('spawn')
 
     results = []
 
@@ -253,8 +244,11 @@ def process_player_interaction(game, action):
     if manual:
         display_manual()
 
+    if spawn:
+        results.extend(spawn_menu(game))
+
     if debug:
-        results.extend(debug_menu(game))
+        debug_menu(game, clear=False)
 
     return results
 

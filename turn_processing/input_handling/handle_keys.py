@@ -54,7 +54,9 @@ def handle_keys_legacy(key, game_state):
         return {'exit': True}
     elif chr(key.c) == keys_dict['manual'] and key.shift:
         return {'manual': True}
-    elif chr(key.c) == keys_dict['debug'] and key.lalt:
+    elif chr(key.c) == keys_dict['spawn'] and key.lalt:
+        return {'spawn': True}
+    elif chr(key.c) == keys_dict['debug'] and key.lctrl:
         return {'debug': True}
 
 

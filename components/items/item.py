@@ -1,5 +1,6 @@
 from typing import Optional
 
+import tcod
 from dataclasses import dataclass
 
 from components.items.equipment import Equipment
@@ -80,7 +81,7 @@ class Item:
                 listing += f'\n\nThis weapon utilizes %orange%{e_c.moveset.moves} attacks%%:'
                 for k, v in e_c.moveset.movelist.items():
                     if v.get(Key.DESCR) is not None:
-                        listing += f'\n%orange%({k})%% {v.get(Key.DESCR)}'
+                        listing += f'\n%orange%{k}:%% {v.get(Key.DESCR)}'
 
         if self.useable:
             u_c = self.useable

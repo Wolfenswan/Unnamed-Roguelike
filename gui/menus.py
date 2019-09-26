@@ -3,6 +3,7 @@ from typing import Union
 import tcod
 
 from config_files import cfg, colors
+from loader_functions.data_loader import save_game
 from loader_functions.initialize_font import initialize_font, all_fonts
 from rendering.util_functions import pos_on_screen
 from rendering.render_windows import draw_window
@@ -47,8 +48,8 @@ def menu_loop(wait_for=None, cancel_with_escape=True, sort_by:Union[int,str]='st
                 return key.vk
 
 
-def generic_options_menu(title:str, body:str, options:list, game, sort_by:Union[str, int]='str', cancel_with_escape=True):
-    window = draw_window(title, body, game, options, show_cancel_option=cancel_with_escape, sort_by=sort_by)
+def generic_options_menu(title:str, body:str, options:list, game, sort_by:Union[str, int]='str', cancel_with_escape=True, clear_screen=False):
+    window = draw_window(title, body, game, options, show_cancel_option=cancel_with_escape, sort_by=sort_by, clear_screen=clear_screen)
 
     choice = menu_loop(wait_for=len(options), sort_by=sort_by, cancel_with_escape=cancel_with_escape)
 
@@ -141,34 +142,64 @@ def item_menu(item_ent, game):
 
 def options_menu(game):
     choice = generic_options_menu('Game Options', '',
-                                  ['Toggle Fullscreen', 'Change Font', f'{"Disable" if game.debug else "Enable"} Debug [TBA]'], game,
-                                  sort_by=1)
+                                  ['Toggle Fullscreen', 'Change Font', f'Configure Debug Options'], game,
+                                  sort_by=1, clear_screen=True)
     if choice == 0:
         tcod.console_set_fullscreen(not tcod.console_is_fullscreen())
     elif choice == 1:
         available_fonts = all_fonts()
         font_id = generic_options_menu('Font Selection', f'Default font:\n{cfg.FONT_DEFAULT.capitalize()}',
                                        available_fonts, game,
-                                       sort_by=1)
+                                       sort_by=1, clear_screen=True)
         if font_id is not None:
             initialize_font(available_fonts[font_id])
     elif choice == 2:
-        pass
-        # game.debug = not game.debug
+        debug_menu(game, clear=True)
 
-    # Unless menus was exited with ESC, the menu remains open
+    # Unless menu was exited with ESC, the menu remains open
     if choice is not None:
-        tcod.console_flush()
         options_menu(game)
+
+
+def debug_menu(game, clear=False):
+    options = []
+    for k, v in game.debug.items():
+        options.append(f'{"Enable" if v is False else "Disable"} {k.replace("_"," ").title()}')
+    choice = generic_options_menu('Debug Options','' , options, game, sort_by=1, clear_screen=clear)
+
+    if choice in range(0,len(options)):
+        key = list(game.debug)[choice]
+        game.debug[key] = not game.debug[key]
+
+    if choice is not None:
+        debug_menu(game, clear=clear)
 
 
 def main_menu(game):
     choice = generic_options_menu(cfg.GAME_NAME, 'Welcome to the Dungeon',
                                   ['Play a new game', 'Continue last game', 'Game Options', 'Quit'], game, cancel_with_escape=False,
-                                  sort_by=1)
+                                  sort_by=1, clear_screen=True)
     # Choice 0 or 1 are returned to engine.py, prompting a new game or loading a game
     if choice == 2:
         options_menu(game)
-        tcod.console_flush()
     else:
         return choice
+
+
+def ingame_menu(game, can_save=True):
+    title = cfg.GAME_NAME
+    body = f'You are on level {game.dlvl} at turn {game.turn}.' # TODO expand
+    options = ['Show Options']
+    if can_save:
+        options.extend(['Save & Quit','Just Quit'])
+    else:
+        options.append('Quit to Title')
+    choice = generic_options_menu(title, body, options, game,
+                              sort_by=1, cancel_with_escape=True)
+    if choice == 0:
+        options_menu(game)
+    elif choice in [1,2]:
+        if can_save:
+            save_game(game)
+        return False
+    return True

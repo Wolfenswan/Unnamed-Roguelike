@@ -5,6 +5,12 @@ imports
 - list-matrix & rotation: https://docs.scipy.org/doc/numpy-1.14.0/reference/generated/numpy.rot90.html
 
 
+# INVENTORY #
+- filter inventory with arrow keys
+    - next to INVENTORY title: < ALL >
+    - categories ALL/WPN/ARM/USE
+
+
 Architecture
 - various randomized prefix for architecture
     - e.g. decaying, crumbling, old etc.

@@ -45,7 +45,7 @@ def render_player_panel(game, con, panel_x, panel_y, width, height):
         print_string(con, len(sta_string)-2, y+1,  f'(%{col}%{sta_diff}%%)')
 
     # Effects #
-    # TODO can theoretically overflow if there a good number of effects (>6) at once
+    # TODO can theoretically overflow if there a large number of effects (>6) at once
     y += 2
     x = 2
     for effect, active in player.effects.items():

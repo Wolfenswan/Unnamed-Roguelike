@@ -19,7 +19,7 @@ def process_npc_actions(game):
 
                 if dead_entity:
                     dead_entity.f.death(game).add_to_log(game)
-                    if dead_entity.is_player and not game.debug['invin']:
+                    if dead_entity.is_player and not game.debug['invincibility']:
                         game.state = GameState.PLAYER_DEAD
 
                     if game.state == GameState.PLAYER_DEAD:

@@ -28,7 +28,8 @@ keys_dict = {
 
     # general #
     'manual' : 'ß',
-    'debug' : 'ß',
+    'spawn' : 'ß',
+    'debug' : 'ß'
 }
 
 # class Input(Enum):

@@ -51,5 +51,6 @@ def gen_entity_at_pos(data, pos, game:Game):
             ent = gen_item_from_data(UNIQUE_DATA[data], *pos)
     else:
         return False
+
     game.entities.append(ent)
     return ent

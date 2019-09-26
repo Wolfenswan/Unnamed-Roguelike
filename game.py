@@ -22,7 +22,7 @@ class GameState(Enum):
 
 # Todo dataclass
 class Game:
-    def __init__(self, debug=False):
+    def __init__(self, debug=dict):
         self.map = None
         self.dlvl = 1
         self.entities = []
@@ -47,12 +47,7 @@ class Game:
         self.observation_log = MessageLog(cons.MSG_X, cons.MSG_PANEL1_WIDTH, cons.MSG_HEIGHT)
         self.combat_log = MessageLog(cons.MSG_X, cons.MSG_PANEL2_WIDTH, cons.MSG_HEIGHT)
 
-        self.debug = {
-            'global': debug,
-            'map' : debug,
-            'invin': debug,
-            'ent_info': debug
-        }
+        self.debug = debug
 
     def toggle_cursor(self, pos=(0,0), state=GameState.CURSOR_ACTIVE):
         if state == GameState.CURSOR_TARGETING:

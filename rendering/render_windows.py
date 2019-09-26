@@ -25,9 +25,12 @@ def set_window_on_screen(window_x, window_y, width, height):
 
 def draw_window(title, body, game, options:Optional[List]=None,
                 window_x:Optional[int]=None, window_y:Optional[int]=None, padding_x:Optional[int]=2, padding_y:Optional[int]=2,
-                sort_by = 'str', show_cancel_option=True, forced_width:Optional[int]=None, title_color=colors.white, options_colors=None, clear=True):
+                sort_by = 'str', show_cancel_option=True, forced_width:Optional[int]=None, title_color=colors.white, options_colors=None, clear_screen=False):
 
     cancel_string = '<ESC TO CANCEL>'
+
+    if clear_screen:
+        game.root.clear()
 
     if options is None:
         options  = []
@@ -45,30 +48,31 @@ def draw_window(title, body, game, options:Optional[List]=None,
         if longest_string in options:
             width += 4 # This accounts for the listing points (e.g. (1) <option>)
 
-    body_wrapped = dynamic_wrap(body, width - padding_x * 2)
+    body_wrapped = dynamic_wrap(body, width - padding_x * 2) #if body != '' else []
 
     # Calculate window height #
-    height = padding_y * 2
-    body_height = len(body_wrapped) if len(body_wrapped) else 0
-    if body_height:
-        height += body_height
+    height = padding_y * 2 + len(body_wrapped)
     if options:
-        height += len(options) + padding_y
+        height += len(options)
+        if body_wrapped:
+            height += 1 # gap between body-text and options
 
     # Create the window #
     window = tcod.console.Console(width, height)
 
     # Print the body to the window #
     y = padding_y
-    for i, line in enumerate(body_wrapped):
-        print_string(window, padding_x, y, line)
-        y += 1
-        if line.count('\n') > 0:
+    if body_wrapped:
+        for i, line in enumerate(body_wrapped):
+            print_string(window, padding_x, y, line)
             y += 1
+            if line.count('\n') > 0:
+                y += 1
+        if options:
+            y += 1 # add a gap between body and options, if body exists
 
     # Print options to the window #
     if options:
-        y += padding_y
         letter_index = ord('a')
         for i, option in enumerate(options):
             if isinstance(sort_by, str):

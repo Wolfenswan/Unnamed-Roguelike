@@ -34,9 +34,9 @@ def game_loop(game):
 
     game.fov_map = initialize_fov(game)
     recompute_fov(game, player.x, player.y)
-    render_all(game, game.fov_map, debug=game.debug['map'])
+    render_all(game, game.fov_map, debug=game.debug['reveal_map'])
 
-    if game.turn == 1 and game.debug['global'] is False:
+    if game.turn == 1 and not game.debug['no_intro']:
         play_intro(game)
 
     game.state = GameState.PLAYERS_TURN
@@ -51,7 +51,7 @@ def game_loop(game):
         if fov_recompute or fov_reset:
             recompute_fov(game, player.x, player.y)
             fov_recompute = False
-        render_all(game, game.fov_map, debug=game.debug['map'])
+        render_all(game, game.fov_map, debug=game.debug['reveal_map'])
 
         if new_turn:
             game.turn += 1
@@ -116,26 +116,29 @@ def game_loop(game):
 
 
 if __name__ == '__main__':
-    initialize_logging(debugging=cfg.DEBUG)
+    initialize_logging(debugging=cfg.LOGGING['debug'])
     game = Game(debug=cfg.DEBUG)
     initialize_font()
     initialize_window(game)
 
-    while True:
-        start_game = main_menu(game)
-
-        if start_game == 0:
-            initialize_game(game)
-            break
-        elif start_game == 1:
-            try:
-                game = load_game()
+    while True: # outer loop ensures the game exists to main menu first
+        while True:
+            start_game = main_menu(game)
+            if start_game == 0:
+                initialize_game(game)
+                # TODO ask for confirmation if savegame exists
                 break
-            except:
-                # TODO show a file loading error popup
+            elif start_game == 1:
+                try:
+                    game = load_game()
+                    initialize_window(game) # consoles need to be reinitialized
+                    break
+                except:
+                    # TODO show a file loading error popup
+                    exit()
+            elif start_game == 3:
                 exit()
-        elif start_game == 3:
-            exit()
 
-    game_loop(game)
+        game_loop(game)
+        game.root.clear() # reset the screen for the main menu
 

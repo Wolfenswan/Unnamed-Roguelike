@@ -167,7 +167,7 @@ class Entity:
         if self.item:
             extend_descr += self.item.attr_list
 
-        if game.debug['ent_info']:
+        if game.debug['detailed_ent_info']:
             if self.fighter is not None:
                 extend_descr += f'\n\nhp:{self.f.hp}/{self.f.max_hp}'
                 extend_descr += f'\nav:{self.f.defense} (modded:{self.f.modded_defense})'
