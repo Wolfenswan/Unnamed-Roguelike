@@ -1,6 +1,8 @@
 from data.data_processing import ITEM_DATA, NPC_DATA, ARCHITECTURE_DATA, UNIQUE_DATA
 from gui.menus import generic_options_menu
 
+# spawn_menu resides in its own module due to the amount of imports it requires;
+# putting it in the general menu-module would require extensive refactoring
 
 def spawn_menu(game):
     results = []

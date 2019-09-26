@@ -78,13 +78,13 @@ def fill_container(container, dlvl, rarity_filter=None, type_filter=None, forced
                 break
     else:
         possible_items = {k: v for k, v in ITEM_DATA.items() if
-                          dlvl in range(*v.get(Key.DLVLS, (1, 99))) # TODO use dlvl_check()
-                          and v.get(Key.TYPE) in type_filter
+                          v.get(Key.TYPE) in type_filter
                           and v.get(Key.RARITY, RarityType.COMMON) in rarity_filter}
         num_of_items = randint(0, container.inventory.capacity)
-        logging.debug(f'Creating {num_of_items} items (max: {container.inventory.capacity})')
+        logging.debug(f'Creating {num_of_items} items (Capacity: {container.inventory.capacity})')
         for i in range(num_of_items):
             key = filter_data_dict(possible_items, dlvl)
+            print(key)
             data = possible_items[key]
             item = gen_item_from_data(data, 0, 0)
             container.inventory.add(item)

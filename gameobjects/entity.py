@@ -158,7 +158,7 @@ class Entity:
             #     extend_descr += f'\n\nIt attacks with %{col}%{self.f.active_weapon.item.equipment.attack_type.name.lower()}%% strikes.'
 
             if game.player.f.shield:
-                extend_descr += f'\n\nBlocking its attacks will be %{col}%{game.player.f.average_chance_to_block(self)}%%.'
+                extend_descr += f'\n\nBlocking its attacks is\n %{col}%{game.player.f.average_chance_to_block(self)}%%.'
 
             for effect, active in self.f.effects.items():
                 if active and effects_descr_data.get(effect, None) is not None:

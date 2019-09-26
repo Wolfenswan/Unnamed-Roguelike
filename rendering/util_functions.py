@@ -118,7 +118,6 @@ def dynamic_wrap(string, max_width):
 
     # Split the string at pre-defined line-breaks to preserve indentation.
     split_str = string.split('\n')
-    print(split_str)
     wrapped = []
     # Create a textwrap-list, using the new string without color-wrappers
     for sub_str in split_str:
