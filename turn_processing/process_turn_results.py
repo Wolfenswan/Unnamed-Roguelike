@@ -56,7 +56,6 @@ def process_turn_results(player_turn_results, game, fov_map):
             nearest_ent = player.nearest_entity(game.npc_ents, max_dist=targeting.item.useable.on_use_params.get('range',(1,1))[1])
             pos = nearest_ent.pos if nearest_ent is not None else player.pos
             game.toggle_cursor(pos, state= GameState.CURSOR_TARGETING)
-            # results['cursor'] = {'pos':pos,'state':GameState.CURSOR_TARGETING}
             results['targeting_item']= targeting
 
         if targeting_cancelled:
@@ -96,7 +95,6 @@ def process_turn_results(player_turn_results, game, fov_map):
 
         # Enable enemy turn if at least one of the results is not None
         filtered_enemy_turn_conditions = list(filter(lambda x: x is not None, enemy_turn_on))
-        print(level_change, filtered_enemy_turn_conditions, level_change is None and len(filtered_enemy_turn_conditions) > 0)
         if len(filtered_enemy_turn_conditions) > 0:
             game.state = GameState.NPC_TURN
 
@@ -106,5 +104,4 @@ def process_turn_results(player_turn_results, game, fov_map):
             results['level_change'] = level_change
             results['fov_reset'] = True
 
-    print('r',results)
     return results

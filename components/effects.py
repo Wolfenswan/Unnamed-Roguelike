@@ -28,12 +28,18 @@ class Effect:
         return results
 
     @staticmethod
-    def direct_heal(target = None, **kwargs):
+    def direct_heal(**kwargs):
+        target = kwargs.get('target')
+        if target is None:
+            target = kwargs.get('user')
         percentage = kwargs.get('percentage', False)
+        print(percentage)
         if not percentage:
             amount = randint(*kwargs.get('pwr'))
         else:
             amount = target.f.max_hp/100 * randint(*kwargs.get('pwr'))
+
+        print(amount)
 
         if target is None:
             target = kwargs.get('user')

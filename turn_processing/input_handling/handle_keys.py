@@ -56,6 +56,8 @@ def handle_keys_legacy(key, game_state):
         return {'manual': True}
     elif chr(key.c) == keys_dict['spawn'] and key.lalt:
         return {'spawn': True}
+    elif chr(key.c) == keys_dict['map']:
+        return {'toggle_map': True}
     elif chr(key.c) == keys_dict['debug'] and key.lctrl:
         return {'debug': True}
 
@@ -122,8 +124,6 @@ def handle_player_turn_keys(key):
         return {'toggle_look': True}
     elif key_char == keys_dict['fire']:
         return {'toggle_fire': True}
-    elif key_char == keys_dict['map']:
-        return {'toggle_map': True}
 
     # Item & Inventory Interaction #
     if key_char == keys_dict['get']:

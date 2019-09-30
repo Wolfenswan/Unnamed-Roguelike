@@ -92,9 +92,12 @@ class Item:
             if u_c.on_use_params.get('pwr') is not None:
                 pwr = u_c.on_use_params.get('pwr')
                 if isinstance(pwr, int):
-                    listing += f"\n\n Power: %{col}%{pwr}%%"
+                    listing += f"\n\n Power: %{col}%{pwr}"
                 else:
-                    listing += f"\n\n Power: %{col}%{pwr[0]}-{pwr[1]}%%"
+                    listing += f"\n\n Power: %{col}%{pwr[0]}-{pwr[1]}"
+                if u_c.on_use_params.get('percentage'):
+                    listing += '(pct.)'
+                listing += '%%'
 
             if u_c.on_use_params.get('radius') is not None:
                 listing += f"\n\n Range: %{col}%{u_c.on_use_params.get('radius')}%%"

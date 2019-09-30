@@ -41,7 +41,6 @@ def process_player_input(action, game, last_turn_results:Optional[Dict]):
 
     # Cursor Movement & Targeting #
     if game.state in [GameState.CURSOR_ACTIVE, GameState.CURSOR_TARGETING]:
-        print('1')
         turn_results.extend(process_cursor_interaction(game, action, targeting_item, debug_spawn))
 
     if toggle_look:
@@ -55,9 +54,15 @@ def process_player_input(action, game, last_turn_results:Optional[Dict]):
         else:
             turn_results.append({'message': Message('PLACEHOLDER: Need ranged weapon to fire.', type=MessageType.SYSTEM)})
 
+    if toggle_map:
+        if game.state == GameState.SHOW_MAP:
+            exit = True
+        else:
+            game.state = GameState.SHOW_MAP
+
     # Other #
     if exit:
-        if game.state in (GameState.SHOW_INVENTORY, GameState.SHOW_QU_INVENTORY, GameState.CURSOR_ACTIVE, GameState.CURSOR_TARGETING):
+        if game.state in (GameState.SHOW_INVENTORY, GameState.SHOW_QU_INVENTORY, GameState.CURSOR_ACTIVE, GameState.CURSOR_TARGETING, GameState.SHOW_MAP):
             game.state = GameState.PLAYERS_TURN
         else:
             continue_game = ingame_menu(game, can_save = player.f.hp > 0)
@@ -322,14 +327,11 @@ def process_cursor_interaction(game, action, targeting_item, debug_spawn):
     confirm = action.get('confirm')
 
     if move:
-        print('2')
         dx, dy = direction
         destination_x = cursor.x + dx
         destination_y = cursor.y + dy
         if fov_map.fov[destination_y, destination_x]:
-            print('3')
             if game.state == GameState.CURSOR_TARGETING:
-                print('4', targeting_item)
                 if player.active_weapon_is_ranged and targeting_item is None: # If player is aiming with a ranged weapon
                     dist = player.distance_to_pos(destination_x, destination_y)
                     if dist == 0 or dist in range(*player.active_weapon.attack_range):

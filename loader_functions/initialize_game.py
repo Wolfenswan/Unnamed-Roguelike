@@ -1,3 +1,4 @@
+import logging
 from random import randint, choice
 
 from config_files import cfg
@@ -15,35 +16,32 @@ from map.entity_placement.place_items import place_items
 from map.entity_placement.place_uniques import place_uniques
 from map.game_map import GameMap
 from rendering.render_order import RenderOrder
-from rendering.util_functions import print_string
 
 
 @debug_timer
-def initialize_game(game):
+def initialize_game(player_name, game):
     game.turn = 1
     game.cursor = Entity(0, 0, 'X', colors.white, 'Cursor', render_order=RenderOrder.CURSOR)
     game.projectile = Entity(0, 0, '*', colors.white, 'Projectile', render_order=RenderOrder.NONE)
 
-    initialize_player(game)
-    initialize_map(game)
+    player = initialize_player(player_name)
+    map = initialize_map(game)
 
-    player = game.player
-    player.x, player.y = game.map.rooms[0].center
+    game.entities = [player]
+    game.player = player
+    player.x, player.y = map.rooms[0].center
 
     initialize_objects(game)
 
-def initialize_player(game):
+def initialize_player(name):
     # Setup the Player character #
-    p_data = act_classes.classes_data['generic']
-    player = Player('Player', p_data)
-
+    p_data = act_classes.classes_data['generic'] # TODO replace with proper class selection
+    player = Player(name, p_data)
     loadout = choice(list(p_data[Key.LOADOUTS].values()))
     gen_loadout(player, loadout)
     for item_ent in player.inventory.items + player.paperdoll.equipped_items:
         item_ent.item.identify()
 
-    game.entities = [player]
-    game.player = player
     return player
 
 
@@ -56,6 +54,7 @@ def initialize_map(game):
     game.map.create_map(cfg.ROOM_MIN_SIZE, cfg.ROOM_MAX_SIZE)
 
     return game.map
+
 
 def initialize_objects(game):
     # Add the good stuff #
@@ -71,3 +70,11 @@ def initialize_objects(game):
         place_doors(game)
 
 
+def initialize_level(level_change, game):
+    if type(level_change) is not int:
+        logging.error(f"level_change value is not integer: {level_change}")
+    game.dlvl += level_change
+    game.entities = [game.player]
+    map = initialize_map(game)
+    game.player.pos = map.rooms[0].ranpos(map)
+    initialize_objects(game)

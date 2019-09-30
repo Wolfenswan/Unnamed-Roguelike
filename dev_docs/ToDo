@@ -1,9 +1,5 @@
 CURRENT
-- fix level change FOV crash
-    - move level_change functionality into engine.py, make sure npc turns are then skipped
 - Tweak Dungeon generation
-    x less empty space
-    x play around with other algos (messy BSP?)
     - ideally should be a mix between dungeon & tunnels
         - options dungeon (only tunnels & square rooms), caves (only drunk walk), mines (mix of both)
     - use drunk_tunneling to color areas
@@ -24,15 +20,15 @@ CURRENT
 
 UPCOMING
 - rewrite turn_processing lists -> dict
-    - 'messages' : value list containing all messages to display
-- lowering exploration value might not be fun...
+    - write new class "Turn", carrying all relevant information
+        - game as owner
+        - method end() to clean out turn
+        - 'messages' : value list containing all messages to display
+- can lowering exploration value make a comeback?
 - bombs/projectiles exploding after n turns
 - weighted item generation for containers:
     - less chance for each item towards the cap
     - https://stackoverflow.com/questions/14992521/python-weighted-random
-- enable map toggle
-    - change game state
-    - while game state is active, map isn't darkened
 COMBAT
     - reduce ranged damage if enemies are nearby
         -> new fighter attr. "hindered" similar to surrounded but modifies dmg

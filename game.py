@@ -17,6 +17,7 @@ class GameState(Enum):
     SHOW_QU_INVENTORY = auto()
     SHOW_EQUIPMENT = auto()
     SHOW_ITEM = auto()
+    SHOW_MAP = auto()
     NPC_TURN = auto()
     PLAYER_DEAD = auto()
 

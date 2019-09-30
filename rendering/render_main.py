@@ -40,8 +40,6 @@ def render_map_screen(game, fov_map, debug=False):
     if game.state in [GameState.CURSOR_ACTIVE, GameState.CURSOR_TARGETING]:
         draw_entity(game, con, game.cursor, fov_map, debug=debug)
 
-
-
     draw_console_borders(con, color=colors.white)
     render_status_panel(game, game.status_panel, 0, r_cons.STATUS_BAR_Y, r_cons.BOTTOM_PANEL_WIDTH ,
                         r_cons.STATUS_BAR_HEIGHT)
@@ -77,7 +75,10 @@ def draw_tile(game, con, fov_map, tile_x, tile_y, screen_x, screen_y, debug=Fals
     visible = fov_map.fov[tile_y, tile_x] or debug
 
     if visible:
-        color = darken_color_by_fov_distance(game.player, tile.fg_color, tile_x, tile_y, min = 0.3) if not debug else tile.fg_color
+        if debug or game.state == GameState.SHOW_MAP:
+            color = tile.fg_color
+        else:
+            color = darken_color_by_fov_distance(game.player, tile.fg_color, tile_x, tile_y, min = 0.3)
         tcod.console_put_char_ex(con, screen_x, screen_y, tile.char, color, colors.black)
         tile.explored = 50
 
@@ -86,7 +87,8 @@ def draw_tile(game, con, fov_map, tile_x, tile_y, screen_x, screen_y, debug=Fals
         # if  game.state == GameState.PLAYERS_TURN:   # Only active player movement lowers tile exploration state
         #     tile.explored -= randint(0, 1)
         #if game.state == GameStates.PLAYER_RESTING: # Automap is only displayed outside of combat when actively pausing #
-        tcod.console_put_char_ex(con, screen_x, screen_y, tile.char, tile.dark_color, colors.black)
+        color = tile.dark_color if not game.state == GameState.SHOW_MAP else tile.fg_color
+        tcod.console_put_char_ex(con, screen_x, screen_y, tile.char, color, colors.black)
 
 
 def draw_entity(game, con, entity, fov_map, debug=False):
@@ -96,7 +98,7 @@ def draw_entity(game, con, entity, fov_map, debug=False):
         if debug or entity.is_visible(fov_map) or (entity.render_order == RenderOrder.ALWAYS and game.map.tiles[entity.pos].explored > 0):
             if entity.is_visible(fov_map) and entity is not game.cursor and not debug:
                 color = darken_color_by_fov_distance(game.player, entity.color, entity.x, entity.y, min=0.3)
-            elif entity.render_order == RenderOrder.ALWAYS and not debug:
+            elif entity.render_order == RenderOrder.ALWAYS and not debug and not game.state == GameState.SHOW_MAP:
                 color = colors.darkest_gray
             else:
                 color = entity.color
