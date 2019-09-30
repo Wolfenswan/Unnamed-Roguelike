@@ -11,8 +11,8 @@ keys_dict = {
     
     'wait' : '.',
 
-    'down' : '<',
-    'up'   : '>',
+    'down' : '>',
+    'up'   : '<',
     
     # Interaction #
     'get' : 'g',
@@ -25,6 +25,7 @@ keys_dict = {
     'dash' : 't',
     'look' : 's',
     'fire' : 'f',
+    'map'  : 'm',
 
     # general #
     'manual' : 'ß',

@@ -8,7 +8,7 @@ from game import GameState, Game
 from gui.menus import main_menu
 from loader_functions.data_loader import load_game
 from loader_functions.initialize_font import initialize_font
-from loader_functions.initialize_game import initialize_game
+from loader_functions.initialize_game import initialize_game, initialize_map, initialize_objects
 from loader_functions.intro import play_intro
 from turn_processing.input_handling.handle_keys import handle_keys, handle_keys_legacy
 from turn_processing.process_npc_actions import process_npc_actions
@@ -27,6 +27,7 @@ def game_loop(game):
     debug_spawn = None
     fov_reset = False
     fov_recompute = True
+    level_change = None
     final_turn_results = {}
 
     key = tcod.Key()
@@ -72,47 +73,70 @@ def game_loop(game):
         # mouse_action = handle_mouse(mouse)
 
         if action:
-            logging.debug(f'Processing {action}')
+            logging.debug(f'Processing {action}, last turn results: {final_turn_results}')
             # Process player input into turn results #
             player_turn_results = process_player_input(action, game, last_turn_results=final_turn_results)
-            logging.debug(f'Turn {game.turn} player results: {player_turn_results}')
-
+            logging.debug(f'Loop starts with turn {game.turn}, player results: {player_turn_results}')
             # The game exits if player turn results returns False #
             if player_turn_results is False:
                 break
 
             # Process turn results #
+            print('t1', targeting_item)
             processed_turn_results = process_turn_results(player_turn_results, game, game.fov_map)
             logging.debug(f'Turn {game.turn}. State: {game.state}. Processed results: {player_turn_results}')
 
-            # Enemies take turns #
-            if game.state == GameState.ENEMY_TURN:
+            print('t2',targeting_item)
+            cursor = processed_turn_results.get('cursor', False)
+            fov_recompute = processed_turn_results.get('fov_recompute', False)
+            fov_reset = processed_turn_results.get('fov_reset', False)
+            if targeting_item is None:
+                targeting_item = processed_turn_results.get('targeting_item')
+            if debug_spawn is None:
+                debug_spawn = processed_turn_results.get('debug_spawn')
+            level_change = processed_turn_results.get('level_change')
+            print('p', processed_turn_results)
 
+            # Process turn results & prepare for next turn #
+            # if processed_turn_results:
+            #     for turn_result in processed_turn_results:
+            #         fov_recompute = turn_result.get('fov_recompute', False)
+            #         fov_reset = turn_result.get('fov_reset', False)
+            #         targeting_item = turn_result.get('targeting_item')
+            #         debug_spawn = turn_result.get('debug_spawn')
+            #         level_change = turn_result.get('level_change')
+            #         print(level_change)
+            # else:
+            #     fov_recompute = False
+            #     fov_reset = False
+            #     level_change = None
+            #     # variables used for cursor-targeting are reset to None, once game state has changed back to player control
+            #     targeting_item = None if game.state == GameState.PLAYERS_TURN else targeting_item
+            #     debug_spawn = None if game.state == GameState.PLAYERS_TURN else debug_spawn
+
+            # NPCs take turns & advance turn timer #
+            if game.npc_active:
+                new_turn = True
                 process_npc_actions(game)
-
                 for ent in game.entities:
                     ent.proc_every_turn(game, start=False)
 
-                new_turn = True
+            # Level Change #
+            if type(level_change) is int:  # is not None would work as well, but this avoids truthyness-complications
+                game.dlvl += level_change
+                game.entities = [game.player]
+                map = initialize_map(game)
+                game.player.pos = map.rooms[0].ranpos(map)
+                initialize_objects(game)
 
-            # Prepare for next turn #
-            if processed_turn_results:
-                for turn_result in processed_turn_results:
-                    fov_recompute = turn_result.get('fov_recompute', False)
-                    fov_reset = turn_result.get('fov_reset', False)
-                    targeting_item = turn_result.get('targeting_item')
-                    debug_spawn = turn_result.get('debug_spawn')
-            else:
-                fov_recompute = False
-                fov_reset = False
-                # variables used for cursor-targeting are reset to None, once game state has changed back to player control
-                targeting_item = None if game.state == GameState.PLAYERS_TURN else targeting_item
-                debug_spawn = None if game.state == GameState.PLAYERS_TURN else debug_spawn
+            if game.player_active:
+                targeting_item = None
+                debug_spawn = None
 
-            final_turn_results = {'targeting_item': targeting_item,
-                                  'debug_spawn': debug_spawn}
+            final_turn_results = {'targeting_item':targeting_item,'debug_spawn': debug_spawn} # carry over turn results to next loop run
+            print('f', final_turn_results)
 
-            logging.debug(f'Ending turn {game.turn}. State: {game.state}. FOV Reset/Recompute: {fov_reset}/{fov_recompute}')
+            logging.debug(f'Ending loop at turn {game.turn}. State: {game.state}. FOV Reset/Recompute: {fov_reset}/{fov_recompute}')
 
 
 if __name__ == '__main__':

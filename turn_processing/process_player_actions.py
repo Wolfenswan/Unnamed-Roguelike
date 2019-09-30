@@ -22,10 +22,9 @@ def process_player_input(action, game, last_turn_results:Optional[Dict]):
     exit = action.get('exit')
     fullscreen = action.get('fullscreen')
     prepare = action.get('prepare')
-    # drop_inventory = action.get('drop_inventory')
-    # menu_selection = action.get('menu_selection')
     toggle_look = action.get('toggle_look')
     toggle_fire = action.get('toggle_fire')
+    toggle_map = action.get('toggle_map') # TODO implement
 
     turn_results = []
 
@@ -42,6 +41,7 @@ def process_player_input(action, game, last_turn_results:Optional[Dict]):
 
     # Cursor Movement & Targeting #
     if game.state in [GameState.CURSOR_ACTIVE, GameState.CURSOR_TARGETING]:
+        print('1')
         turn_results.extend(process_cursor_interaction(game, action, targeting_item, debug_spawn))
 
     if toggle_look:
@@ -162,7 +162,7 @@ def process_player_interaction(game, action):
                 if player.f.active_weapon is not None:
                     player.f.active_weapon.moveset.cycle_moves(reset=True)
 
-            game.state = GameState.ENEMY_TURN
+            game.state = GameState.NPC_TURN
 
 
     # Passing a turn or interacting #
@@ -322,11 +322,14 @@ def process_cursor_interaction(game, action, targeting_item, debug_spawn):
     confirm = action.get('confirm')
 
     if move:
+        print('2')
         dx, dy = direction
         destination_x = cursor.x + dx
         destination_y = cursor.y + dy
         if fov_map.fov[destination_y, destination_x]:
+            print('3')
             if game.state == GameState.CURSOR_TARGETING:
+                print('4', targeting_item)
                 if player.active_weapon_is_ranged and targeting_item is None: # If player is aiming with a ranged weapon
                     dist = player.distance_to_pos(destination_x, destination_y)
                     if dist == 0 or dist in range(*player.active_weapon.attack_range):

@@ -1,4 +1,6 @@
 CURRENT
+- fix level change FOV crash
+    - move level_change functionality into engine.py, make sure npc turns are then skipped
 - Tweak Dungeon generation
     x less empty space
     x play around with other algos (messy BSP?)
@@ -21,7 +23,16 @@ CURRENT
     - has to return to portal?
 
 UPCOMING
+- rewrite turn_processing lists -> dict
+    - 'messages' : value list containing all messages to display
+- lowering exploration value might not be fun...
 - bombs/projectiles exploding after n turns
+- weighted item generation for containers:
+    - less chance for each item towards the cap
+    - https://stackoverflow.com/questions/14992521/python-weighted-random
+- enable map toggle
+    - change game state
+    - while game state is active, map isn't darkened
 COMBAT
     - reduce ranged damage if enemies are nearby
         -> new fighter attr. "hindered" similar to surrounded but modifies dmg

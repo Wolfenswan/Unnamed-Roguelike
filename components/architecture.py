@@ -18,10 +18,10 @@ class Architecture:
         results = []
         if interacting_ent.pos != arch_entity.pos:
             results = [{'message': Message(f'{interacting_ent.address_color.title()} need to be on top of {arch_entity.address_color}.', category=MessageCategory.OBSERVATION)}]
-        elif arch_entity.char == '<':
-            results = [{'level_change': 1},]
-        elif arch_entity.char == '>':
+        elif arch_entity.char == '<': # up
             results = [{'level_change': -1},]
+        elif arch_entity.char == '>': # down
+            results = [{'level_change': 1},]
         elif arch_entity.char == '0':
             results =[{'message': Message(f'PLACEHOLDER: You leave the Dungeon.', category=MessageCategory.OBSERVATION, type=MessageType.SYSTEM)}]
         return results

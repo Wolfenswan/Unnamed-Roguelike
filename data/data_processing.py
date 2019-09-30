@@ -223,9 +223,9 @@ def gen_npc_from_data(data:Dict, x:int, y:int, game:Game):
     loadouts = data.get(Key.LOADOUTS)
     if loadouts is not None:
         loadout = filter_data_dict(loadouts, game.dlvl)
-        gen_loadout(npc, loadouts[loadout], game)
+        gen_loadout(npc, loadouts[loadout])
     else:
-        gen_loadout(npc, loadout, game)
+        gen_loadout(npc, loadout)
 
     return npc
 
@@ -324,7 +324,7 @@ def gen_architecture_from_data(data:Dict, x:int, y:int):
     return arch
 
 
-def gen_loadout(actor:Entity, loadout:Dict, game:Game):
+def gen_loadout(actor:Entity, loadout:Dict):
     """ creates inventory and equipment for the given actor """
     logging.debug(f'Generating loadout from {loadout} for {actor.name}({actor}).')
     equipment = loadout.get(Key.EQUIPMENT, {})
@@ -333,7 +333,7 @@ def gen_loadout(actor:Entity, loadout:Dict, game:Game):
     for key in equipment.keys():
         kwargs = enum_pairs_to_kwargs(equipment[key].items())
         item = gen_item_from_data(ITEM_DATA.get(key), 0, 0, **kwargs)
-        actor.paperdoll.equip(item, game)
+        actor.paperdoll.equip(item)
 
     for i in backpack:
         item = gen_item_from_data(ITEM_DATA.get(i), 0, 0)

@@ -82,8 +82,9 @@ def draw_tile(game, con, fov_map, tile_x, tile_y, screen_x, screen_y, debug=Fals
         tile.explored = 50
 
     elif tile.explored > 0: #and not game.player.in_combat(game):
-        if  game.state == GameState.PLAYERS_TURN:   # Only active player movement lowers tile exploration state
-            tile.explored -= randint(0, 1)
+        # "forgetting" tiles disabled for now
+        # if  game.state == GameState.PLAYERS_TURN:   # Only active player movement lowers tile exploration state
+        #     tile.explored -= randint(0, 1)
         #if game.state == GameStates.PLAYER_RESTING: # Automap is only displayed outside of combat when actively pausing #
         tcod.console_put_char_ex(con, screen_x, screen_y, tile.char, tile.dark_color, colors.black)
 

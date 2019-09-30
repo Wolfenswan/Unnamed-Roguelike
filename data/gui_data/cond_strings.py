@@ -11,8 +11,8 @@ default_descr = {
     'good': ('It is in a good condition.',
              'You are suprised at its better than average condition',
              ),
-    'legend': ('It is in perfect condition',
-               'You are in awe of its more than pristine condition.'
+    'legend': ('It is in a fantastic condition condition',
+               'It is in a beyond pristine condition.'
                )
 }
 

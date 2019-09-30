@@ -34,7 +34,17 @@ class Paperdoll:
             weapons.append(self.weapon_arm.ranged)
         return weapons
 
-    def equip(self, item_ent, game):
+    def equip(self, item_ent, game=None):
+        """
+        TODO: refactor so game is no longer necessary: return conflicting item, let calling function handle menu
+
+        :param item_ent:
+        :type item_ent:
+        :param game: only required if equip() is allowed to prompt window
+        :type game:
+        :return:
+        :rtype:
+        """
         results = []
         e_type = item_ent.type.name.lower() # Entity.type is a enum member of the ItemType Class.
         e_to = item_ent.item.equipment.e_to
@@ -44,7 +54,7 @@ class Paperdoll:
         equipped_item = getattr(extremity, e_type)
 
         # If new item is two-handed, check if shield arm is occupied #
-        if item_ent.item.equipment.two_handed and self.shield_arm.carried:
+        if item_ent.item.equipment.two_handed and self.shield_arm.carried and game is not None:
             offhand_item = self.shield_arm.carried
             choice = yesno_menu('Remove Offhand Item', f'Remove {offhand_item.name} to equip the two-handed {item_ent.name}?', game)
             if choice:
@@ -54,8 +64,8 @@ class Paperdoll:
                 print('cancelled equipping 2h weapon') # TODO Placeholder
 
         # If new item is shield, check for two-handed weapons #
-        if e_to == 'shield_arm' and self.two_handed_weapons:
-            choice = item_list_menu(self.owner, self.two_handed_weapons, 'Remove Two-Handed Weapon', f'Remove which weapon to equip {item_ent.name}?')
+        if e_to == 'shield_arm' and self.two_handed_weapons and game is not None:
+            choice = item_list_menu(self.owner, self.two_handed_weapons, game,'Remove Two-Handed Weapon', f'Remove which weapon to equip {item_ent.name}?')
             # choice = yesno_menu('Remove Two-Handed Weapon',
             #                     , game)
             if choice:
@@ -64,7 +74,7 @@ class Paperdoll:
                 equipped_item = None
                 print('cancelled equipping shield bc of 2h weapon') # TODO Placeholder
 
-        if equipped_item: # Remove an item in the same spot #
+        if equipped_item and game is not None: # Remove an item in the same spot #
             choice = yesno_menu('Remove Item',f'Unequip your {equipped_item.name}?', game)
             if choice:
                 results.extend(self.dequip(equipped_item))

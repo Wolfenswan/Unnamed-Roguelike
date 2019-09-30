@@ -53,6 +53,7 @@ class BaseAI:
           return results
 
         if not skip_turn:
+            logging.debug(f'{npc} is allowed to act')
             # First check if the npc can see the player #
             if npc.is_visible(fov_map): #tcod.map_is_in_fov(fov_map, npc.x, npc.y):
                 # Consider using a skill #
@@ -60,6 +61,7 @@ class BaseAI:
                 if npc.skills:
                     npc.skills.cooldown()
                     if npc.skills.available and randint(0,100) >= ignore_skills_chance:
+                        logging.debug(f'{npc} attempts to use skill')
                         possible_skills = npc.skills.active(target, game)
                         if possible_skills:
                             skill = choice(possible_skills)
@@ -69,6 +71,7 @@ class BaseAI:
 
                 # If no skill is available or was used, decide on an action, based on behavior #
                 if self.behavior is not None:
+                    logging.debug(f'{npc} acts according to behavior')
                     results.extend(self.behavior.decide_action(target, game))
 
             # If NPC is hidden from FOV, move randomly #

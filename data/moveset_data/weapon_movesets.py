@@ -34,7 +34,7 @@ moveset_spear = {
     },
     3: {
        Key.DESCR: f'A {col1}powerful thrust%%, piercing the target and hitting something behind it.',
-        Key.VERB: 'forcefully thrust',
+        Key.VERB: 'impale',
         Key.DMG_MULTIPL: 1.25,
         Key.EXERT_MULTIPL: 1.25,
         Key.EXTEND_ATTACK: [RelativeDirection.BEHIND]

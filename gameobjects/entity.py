@@ -171,6 +171,7 @@ class Entity:
         if game.debug['detailed_ent_info']:
             if self.fighter is not None:
                 extend_descr += f'\n\nhp:{self.f.hp}/{self.f.max_hp}'
+                extend_descr += f'\n\nsta:{self.f.stamina}/{self.f.max_stamina}'
                 extend_descr += f'\nav:{self.f.defense} (modded:{self.f.modded_defense})'
                 extend_descr += f'\ndmg:{self.f.base_dmg_potential} (modded:{self.f.modded_dmg_potential})'
                 if self.active_weapon is not None:
@@ -192,10 +193,13 @@ class Entity:
 
     @property
     def can_move(self):
-        for state, active in self.effects.items():
-            if active and status_modifiers_data[state].get('can_move', True) is False:
-                return False
-        else: # for...else triggers if the for loop finished without breaking
+        if self.fighter:
+            for state, active in self.effects.items():
+                if active and status_modifiers_data[state].get('can_move', True) is False:
+                    return False
+            else: # for...else triggers if the for loop finished without breaking
+                return True
+        else:
             return True
 
     @property
@@ -411,7 +415,7 @@ class Entity:
     ###############
 
     @property
-    def name_color(self):
+    def name_colored(self):
         return f'%{self.color}%{self.name.title()}%%'
 
     @property

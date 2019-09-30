@@ -43,7 +43,7 @@ class Inventory:
         else:
             results.append({
                 'item_added': item,
-                'message': Message(f'You pick up the %{item.color}%{item.name}%%.', category=MessageCategory.OBSERVATION)
+                'message': Message(f'You pick up the {item.name_colored}.', category=MessageCategory.OBSERVATION)
             })
             self.items.append(item)
 
@@ -72,7 +72,7 @@ class Inventory:
             self.owner.paperdoll.dequip(item)
 
         self.remove(item)
-        results.append({'item_dropped': item, 'message': Message(f'You dropped the {item.name}.')})
+        results.append({'item_dropped': item, 'message': Message(f'You dropped the {item.name_colored}.')})
 
         return results
 
@@ -81,12 +81,15 @@ class Inventory:
         inventory = self.owner.inventory
         qu_inventory = self.owner.qu_inventory
 
-        if item in qu_inventory.items and not inventory.is_full:
-            qu_inventory.remove(item)
-            inventory.add(item)
-            results.append({
-            'item_prepared': item,
-            'message': Message(f'You de-prepare the {item.name}.')})
+        if item in qu_inventory.items:
+            if not inventory.is_full:
+                qu_inventory.remove(item)
+                inventory.add(item)
+                results.append({
+                'item_prepared': item,
+                'message': Message(f'You de-prepare the {item.name_colored}.')})
+            else:
+                results.append({'message': Message(f'Your full inventory prevents you from de-preparing the {item.name_colored}.')})
 
         elif len(qu_inventory) >= qu_inventory.capacity:
             results.append({

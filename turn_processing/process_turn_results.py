@@ -1,18 +1,14 @@
-import tcod
-
 from debug.timer import debug_timer
 from game import GameState
 from gameobjects.block_level import BlockLevel
 from gui.messages import Message
-from loader_functions.initialize_game import initialize_map, initialize_objects
-from rendering.fov_functions import initialize_fov
 
 @debug_timer
 def process_turn_results(player_turn_results, game, fov_map):
     player = game.player
     entities = game.entities
 
-    results = []
+    results = {}
 
     for player_turn_result in player_turn_results:
         message = player_turn_result.get('message')
@@ -30,7 +26,6 @@ def process_turn_results(player_turn_results, game, fov_map):
         waiting = player_turn_result.get('waiting')
         door_entity = player_turn_result.get('door_toggled')
         dead_entity = player_turn_result.get('dead')
-
         level_change = player_turn_result.get('level_change')
 
         # spawn menu #
@@ -60,14 +55,16 @@ def process_turn_results(player_turn_results, game, fov_map):
         if targeting is not None:
             nearest_ent = player.nearest_entity(game.npc_ents, max_dist=targeting.item.useable.on_use_params.get('range',(1,1))[1])
             pos = nearest_ent.pos if nearest_ent is not None else player.pos
-            game.toggle_cursor(pos, state=GameState.CURSOR_TARGETING)
-            results.append({'targeting_item': targeting})
+            game.toggle_cursor(pos, state= GameState.CURSOR_TARGETING)
+            # results['cursor'] = {'pos':pos,'state':GameState.CURSOR_TARGETING}
+            results['targeting_item']= targeting
 
         if targeting_cancelled:
             game.state = GameState.PLAYERS_TURN
-            Message('Targeting cancelled.').add_to_log(game)
+            Message('Targeting cancelled.').add_to_log(game) # TODO Placeholder
 
         if waiting:
+            # TODO move regeneration into its own function
             if player.in_combat(game):
                 if player.f.active_weapon:
                     player.f.active_weapon.moveset.cycle_moves(reset=True) # Waiting resets weapon moves
@@ -81,7 +78,7 @@ def process_turn_results(player_turn_results, game, fov_map):
                     player.f.recover(player.f.max_stamina / 10)
 
         if door_entity is not None:
-            # If the player interacted with a door, the fov map is updated)
+            # If the player interacted with a door, update the fov map
             fov_map.transparent[door_entity.y, door_entity.x] = not door_entity.blocks.get(BlockLevel.SIGHT, False)
             fov_map.walkable[door_entity.y, door_entity.x] = not door_entity.blocks.get(BlockLevel.WALK, False)
 
@@ -92,22 +89,22 @@ def process_turn_results(player_turn_results, game, fov_map):
 
         if spawn_menu_selection is not None:
             game.toggle_cursor((player.x+1,player.y), state=GameState.CURSOR_ACTIVE)
-            results.append({'debug_spawn': spawn_menu_selection})
+            results['debug_spawn']= spawn_menu_selection
 
         if fov_recompute:
-            results.append({'fov_recompute': fov_recompute})
+            results['fov_recompute']= fov_recompute
 
         # Enable enemy turn if at least one of the results is not None
         filtered_enemy_turn_conditions = list(filter(lambda x: x is not None, enemy_turn_on))
-        if level_change is None and len(filtered_enemy_turn_conditions) > 0:
-            game.state = GameState.ENEMY_TURN
+        print(level_change, filtered_enemy_turn_conditions, level_change is None and len(filtered_enemy_turn_conditions) > 0)
+        if len(filtered_enemy_turn_conditions) > 0:
+            game.state = GameState.NPC_TURN
 
-        if level_change is not None: # TODO consider moving into own function or into engine.py
-            game.dlvl += level_change
-            game.entities = [game.player] # TODO should perfomance become an issue, properly clean all objects
-            initialize_map(game)
-            game.player.pos = game.map.rooms[0].ranpos(game.map)
-            initialize_objects(game)
-            results.append({'fov_reset':True})
+        if level_change is not None:
+            # if level_change > 0 and player.same_pos_as(game.stairs_down) or \
+            #         level_change < 0 and player.same_pos_as(game.stairs_up):
+            results['level_change'] = level_change
+            results['fov_reset'] = True
 
+    print('r',results)
     return results

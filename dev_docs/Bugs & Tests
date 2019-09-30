@@ -3,10 +3,13 @@ TESTING:
 - does using stairs still cause fov-related crash (when triggering enemy turn)
 
 BUGS
+- occasional crash on level-change; fov_map not properly initialized?
+    - wrong fov-map? wrong map object?
 - wall_arch can cover same spot (e.g. lichen & chains); feature?
 - line breaks break colorization (straightforward but silly workaround would be color-wrapping each word individually)
 - menus dont close when exited -> overlapping menus
-- containers can be placed on doors -> doors are displayed above barrel
+- walk-blocking containers can be placed on items/doors
+    -> exclusive kwarg needs to be implemented
 - after using stairs, lctrl keeps registering as 'pressed' (despite not being pressed)
     - pressing lctrl resets key handling properly
     - change to </> to use stairs?

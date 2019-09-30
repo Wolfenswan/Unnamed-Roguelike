@@ -27,6 +27,8 @@ def draw_window(title, body, game, options:Optional[List]=None,
                 window_x:Optional[int]=None, window_y:Optional[int]=None, padding_x:Optional[int]=2, padding_y:Optional[int]=2,
                 sort_by = 'str', show_cancel_option=True, forced_width:Optional[int]=None, title_color=colors.white, options_colors=None, clear_screen=False):
 
+    # TODO param game -> root_console
+
     cancel_string = '<ESC TO CANCEL>'
 
     if clear_screen:

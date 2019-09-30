@@ -33,7 +33,7 @@ dmg_targeted = {
 
 explosion = {
         'effect_name': 'explosion',
-        'effect_verbs': ['burns'],
+        'effect_verbs': ['burns', 'scorches'],
         'on_execution': Effect.explosion,
         'on_expl_hit': Effect.direct_damage
 }

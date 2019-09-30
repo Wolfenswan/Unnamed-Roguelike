@@ -1,4 +1,4 @@
-from random import randint
+from random import randint, choice
 
 from components.combat.fighter_util import State
 from gui.messages import Message, MessageCategory, MessageType
@@ -29,7 +29,11 @@ class Effect:
 
     @staticmethod
     def direct_heal(target = None, **kwargs):
-        amount = randint(*kwargs.get('pwr'))
+        percentage = kwargs.get('percentage', False)
+        if not percentage:
+            amount = randint(*kwargs.get('pwr'))
+        else:
+            amount = target.f.max_hp/100 * randint(*kwargs.get('pwr'))
 
         if target is None:
             target = kwargs.get('user')
@@ -59,16 +63,15 @@ class Effect:
         on_hit = kwargs.get('on_proj_hit')
         effect_name = kwargs.get('effect_name', 'projectile')
         effect_verb = kwargs.get('effect_verb', 'hits')
+        projectile = kwargs.get('projectile','*')
+        color = kwargs['used_item'].color
 
         results = []
 
-        animate_projectile(*user.pos, *target_pos, game, char=kwargs.get('projectile','*'))  # TODO add color switch
+        animate_projectile(*user.pos, *target_pos, game, char=projectile,color=color)  # TODO add color switch
 
-        if on_hit is not None:
-            ent = next((ent for ent in game.fighter_ents if ent.pos == target_pos), None)
-            kwargs['target'] = ent
-            kwargs['string'] = effect_name
-            results.extend(on_hit(**kwargs))
+        kwargs['target'] = next((ent for ent in game.fighter_ents if ent.pos == target_pos), None)
+        results.extend(on_hit(**kwargs))
 
         return results
 
@@ -79,7 +82,7 @@ class Effect:
         radius = kwargs.get('radius',3)
         on_hit = kwargs.get('on_expl_hit', Effect.direct_damage)
         effect_name = kwargs.get('effect_name', 'explosion')
-        effect_verb = kwargs.get('effect_verb', 'burns')
+        effect_verb = choice(kwargs['effect_verbs'])
 
         entities = [ent for ent in game.alive_ents if ent.distance_to_pos(*center) <= radius]
         results = []
@@ -108,10 +111,11 @@ class Effect:
 
     @staticmethod
     def entangle(**kwargs):
-        target = kwargs['target']
-        duration = randint(*kwargs['pwr'])
+        target = kwargs.get('target')
+        duration = randint(*kwargs.get('pwr',(0,0)))
 
-        print(duration)
+        if target is not None and target.f is not None:
+            results = target.f.set_effect(State.ENTANGLED, True, duration, msg=True)
+            return results
 
-        results = target.f.set_effect(State.ENTANGLED, True, duration, msg=True)
-        return results
+        return []

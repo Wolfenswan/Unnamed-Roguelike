@@ -31,7 +31,7 @@ def place_uniques(game):
         for k, data in possible_spawns.items():
             room = choice(rooms[1:])
             pos = find_ent_position(room, data, game)
-            ent = gen_entity_at_pos(data, *pos, game)
+            ent = gen_entity_at_pos(data, pos, game)
 
             if ent:
                 del spawn_data[k] # As UNIQUE_DATA wasn't copied, this affects the global dictionary as well

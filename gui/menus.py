@@ -83,7 +83,6 @@ def item_list_menu(entity, item_list, game, title='Inventory', body='Press the k
         options_colors = None
 
     width = len(max(options, key=len)) + 4 if options else 0
-
     draw_window(title, body, game, options=options, window_x=x, window_y=y, forced_width=width, options_colors=options_colors)
 
     choice = menu_loop(wait_for=len(options))

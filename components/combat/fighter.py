@@ -441,8 +441,8 @@ class Fighter:
 
             if melee_attack:
                 if target.is_player:
-                    message = M(f'{target.address_color.title()} block the attack, dazing the {self.owner.name_color}!',
-                                      category=MessageCategory.COMBAT, type=MessageType.COMBAT_GOOD)
+                    message = M(f'{target.address_color.title()} block the attack, dazing the {self.owner.name_colored}!',
+                                category=MessageCategory.COMBAT, type=MessageType.COMBAT_GOOD)
                 else:
                     message = M(f'{self.owner.address_color.title()} blocks your attack, dazing {target.owner.address_color}!',
                                       category=MessageCategory.COMBAT, type=MessageType.COMBAT_BAD)
@@ -513,7 +513,7 @@ class Fighter:
             results.append({'message': M(f'{self.owner.address_color.title()} stop blocking.', type=MessageType.COMBAT_INFO)})
             self.stances[Stance.BLOCKING] = False
         elif self.shield:
-            results.append({'message': M(f'{self.owner.address_color.title()} ready your %{self.shield.color}%{self.shield.name}%%.', type=MessageType.COMBAT_INFO)})
+            results.append({'message': M(f'{self.owner.address_color.title()} ready your {self.shield.name_colored}.', type=MessageType.COMBAT_INFO)})
             self.stances[Stance.BLOCKING] = True
         else:
             results.append({'message': M(f'{self.owner.address_color.title()} need a shield to block.', type=MessageType.COMBAT_INFO)})

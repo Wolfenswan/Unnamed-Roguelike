@@ -14,7 +14,7 @@ use_throw_data = {
         Key.COLOR: colors.dark_gray,
         Key.ON_USE_EFFECT: explosion_targeted,
         Key.ON_USE_PROJECTILE: BOMB_CHAR,
-        Key.ON_USE_PARAMS: {'pwr': (6,10), 'radius': 3, 'range': (1,6)},
+        Key.ON_USE_PARAMS: {'pwr': (8,14), 'radius': 3, 'range': (1,6)},
         Key.RARITY: RarityType.UNCOMMON,
         Key.RARITY_MOD: -5,
         Key.DLVLS: (1, 99)
@@ -27,7 +27,7 @@ use_throw_data = {
         Key.COLOR: colors.dark_red,
         Key.ON_USE_EFFECT: explosion_targeted,
         Key.ON_USE_PROJECTILE: BOMB_CHAR,
-        Key.ON_USE_PARAMS: {'pwr': (4,6), 'radius': 2, 'range': (1,8)},
+        Key.ON_USE_PARAMS: {'pwr': (4,8), 'radius': 2, 'range': (1,8)},
         Key.RARITY: RarityType.COMMON,
         Key.RARITY_MOD: 0,
         Key.DLVLS: (1, 99)
@@ -40,7 +40,7 @@ use_throw_data = {
         Key.COLOR: colors.linen,
         Key.ON_USE_EFFECT: entangle_targeted,
         Key.ON_USE_PROJECTILE: '#',
-        Key.ON_USE_PARAMS: {'pwr': (3,8), 'range': (1,4)},
+        Key.ON_USE_PARAMS: {'pwr': (2,6), 'range': (1,4)},
         Key.RARITY: RarityType.COMMON,
         Key.DLVLS: (1, 99)
     }

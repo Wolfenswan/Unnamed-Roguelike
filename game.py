@@ -17,7 +17,7 @@ class GameState(Enum):
     SHOW_QU_INVENTORY = auto()
     SHOW_EQUIPMENT = auto()
     SHOW_ITEM = auto()
-    ENEMY_TURN = auto()
+    NPC_TURN = auto()
     PLAYER_DEAD = auto()
 
 # Todo dataclass
@@ -115,3 +115,15 @@ class Game:
     def floor_blocking_ents(self):
         blocking_ents = [v for v in self.entities if v.blocks.get(BlockLevel.FLOOR, False)]
         return blocking_ents
+
+    @property
+    def player_active(self):
+        return self.state == GameState.PLAYERS_TURN
+
+    @property
+    def npc_active(self):
+        return self.state == GameState.NPC_TURN
+
+    @property
+    def cursor_active(self):
+        return self.state in [GameState.CURSOR_ACTIVE, GameState.CURSOR_TARGETING]

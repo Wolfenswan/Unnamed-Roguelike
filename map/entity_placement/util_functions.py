@@ -19,8 +19,8 @@ def find_ent_position(room, data, game, allow_exits=True, exclusive=False):
             logging.warning(f'No wall positions found in {room}')
         return pos
     elif blocks.get(BlockLevel.WALK, False):
-        allow_exits = False
-        free_tiles = room.free_tiles(game, allow_exits=allow_exits, filter=(BlockLevel.WALK, BlockLevel.FLOOR))
+        free_tiles = room.free_tiles(game, allow_exits=False, filter=(BlockLevel.WALK, BlockLevel.FLOOR))
+    # TODO exclusive switch to make sure immovable objects (e.g. containers) are not placed on top of items
     else:
         #pos = room.ranpos(game_map) # This is faster but might spawn items on blocking objects
         free_tiles = room.free_tiles(game, allow_exits=allow_exits)

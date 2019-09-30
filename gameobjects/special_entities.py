@@ -24,8 +24,7 @@ from rendering.render_order import RenderOrder
 class Player(Entity):
     """ Class for the player object """
 
-    def __init__(self, name, p_class='generic'):
-        data = act_classes.classes_data[p_class]
+    def __init__(self, name, data):
         hp = randint(*data[Key.MAX_HP])
         stamina = randint(*data[Key.MAX_STAMINA])
         armor = randint(*data[Key.BASE_ARMOR])

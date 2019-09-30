@@ -1,10 +1,10 @@
-from random import randint
+from random import randint, choice
 
 from config_files import cfg
 from config_files import colors
+from data.actor_data import act_classes
 from data.data_keys import Key
 from data.data_processing import gen_loadout
-from data.data_types import Material, Condition, Craftsmanship
 from debug.timer import debug_timer
 from gameobjects.entity import Entity
 from gameobjects.special_entities import Player
@@ -15,6 +15,7 @@ from map.entity_placement.place_items import place_items
 from map.entity_placement.place_uniques import place_uniques
 from map.game_map import GameMap
 from rendering.render_order import RenderOrder
+from rendering.util_functions import print_string
 
 
 @debug_timer
@@ -33,25 +34,11 @@ def initialize_game(game):
 
 def initialize_player(game):
     # Setup the Player character #
-    player = Player('Player')
-    player_loadouts = {
-        'loadout1': {
-            Key.EQUIPMENT: {
-                'sword': {
-                    Key.MATERIAL: (Material.IRON,),
-                    Key.CONDITION: (Condition.NORMAL,),
-                    Key.CRAFTSMANSHIP: (Craftsmanship.POOR,)
-                },
-                'brigandine': {},
-                'round_helmet': {},
-                'belt': {},
-                'round_shield': {}
-            },
-            Key.BACKPACK: ('pot_heal', 'bomb_1', 'net_1', 'torch', 'spear', 'flail', 'bow', 'vest', 'full_helmet')
-        }
-    }
+    p_data = act_classes.classes_data['generic']
+    player = Player('Player', p_data)
 
-    gen_loadout(player, player_loadouts['loadout1'], game)
+    loadout = choice(list(p_data[Key.LOADOUTS].values()))
+    gen_loadout(player, loadout)
     for item_ent in player.inventory.items + player.paperdoll.equipped_items:
         item_ent.item.identify()
 
@@ -68,15 +55,19 @@ def initialize_map(game):
     game.map = GameMap(dwidth, dheight)
     game.map.create_map(cfg.ROOM_MIN_SIZE, cfg.ROOM_MAX_SIZE)
 
+    return game.map
 
 def initialize_objects(game):
     # Add the good stuff #
     place_special_architecture(game)
     place_uniques(game)
-    # place_monsters(game)
-    place_containers(game)
-    place_items(game)
-    # place_generic_architecture(game)
-    # place_doors(game)
+    if not game.debug['prevent_npc_spawning']:
+        place_monsters(game)
+    if not game.debug['prevent_item_spawning']:
+        place_items(game)
+        place_containers(game)
+    if not game.debug['prevent_architecture_spawning']:
+        place_generic_architecture(game)
+        place_doors(game)
 
 

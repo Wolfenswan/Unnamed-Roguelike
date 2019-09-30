@@ -43,7 +43,7 @@ def handle_keys(key_event, game_state):
     return {}
 
 def handle_keys_legacy(key, game_state):
-    logging.debug(f'Handling {key}')
+    logging.debug(f'Handling {key}, with state {game_state}')
 
     # Inputs valid in all game states #
     if key.vk == tcod.KEY_ENTER and key.lalt:
@@ -100,6 +100,10 @@ def handle_player_turn_keys(key):
         return {action: True, 'dir': Direction.DOWN_LEFT.value}
     elif key_char == keys_dict['vim_rdown'] or key.vk == tcod.KEY_KP3:
         return {action: True, 'dir': Direction.DOWN_RIGHT.value}
+    elif key_char == keys_dict['down']:
+        return {'level_change':+1}
+    elif key_char == keys_dict['up']:
+        return {'level_change':-1}
     elif key.vk == tcod.KEY_KP5 or key_char == keys_dict['wait']:
         return {'wait': True}
 
@@ -118,6 +122,8 @@ def handle_player_turn_keys(key):
         return {'toggle_look': True}
     elif key_char == keys_dict['fire']:
         return {'toggle_fire': True}
+    elif key_char == keys_dict['map']:
+        return {'toggle_map': True}
 
     # Item & Inventory Interaction #
     if key_char == keys_dict['get']:
