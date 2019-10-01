@@ -1,4 +1,4 @@
-from data.data_types import Material
+from data.data_enums import Material
 
 material_name_data = {
     Material.OAK: 'oak',

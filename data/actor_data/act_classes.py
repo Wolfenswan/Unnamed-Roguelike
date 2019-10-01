@@ -1,5 +1,4 @@
-from data.data_keys import Key
-from data.data_types import Material, Condition, Craftsmanship
+from data.data_enums import Key, Material, Condition, Craftsmanship
 
 classes_data = {
     'generic': {

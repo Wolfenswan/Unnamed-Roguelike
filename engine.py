@@ -40,7 +40,7 @@ def game_loop(game):
     if game.turn == 1 and not game.debug['no_intro']:
         play_intro(game)
 
-    game.state = GameState.PLAYERS_TURN
+    game.state = GameState.PLAYER_ACTIVE
     game.previous_state = game.state
 
     while not tcod.console_is_window_closed():

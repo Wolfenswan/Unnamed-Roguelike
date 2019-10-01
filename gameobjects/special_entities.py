@@ -11,9 +11,8 @@ from components.combat.fighter import Fighter
 from components.inventory.inventory import Inventory
 from components.skills.skillList import SkillList
 from data.actor_data.npc_summons import spawn_data_summons
-from data.data_keys import Key
+from data.data_enums import Key, MonsterType
 from data.actor_data import act_classes
-from data.data_types import MonsterType
 from data.data_util import enum_pairs_to_kwargs
 from gameobjects.block_level import BlockLevel
 from gameobjects.entity import Entity

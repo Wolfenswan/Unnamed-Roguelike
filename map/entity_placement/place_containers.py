@@ -2,11 +2,10 @@ import logging
 from random import choice, randint
 
 from config_files import cfg
-from data.data_keys import Key
+from data.data_enums import Key, RarityType
 from data.data_processing import gen_architecture_from_data, \
     gen_item_from_data, ITEM_DATA, CONTAINER_DATA
 from data.data_util import filter_data_dict
-from data.data_types import RarityType
 from debug.timer import debug_timer
 from map.entity_placement.util_functions import find_ent_position
 

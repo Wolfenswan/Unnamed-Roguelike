@@ -88,7 +88,7 @@ r"""
 \w+             # the color (either name or Color()
 [(\d,\s)]*      # Optional: The tuple for Color()
 %{1}            # % indicating end of color-code
-[()+:\s\w-]+    # the word or string to color
+[.()+:\s\w-]+    # the word or string to color
 %{2}            # %% indicating end of color-wrapping
 """, re.X)
 
@@ -125,7 +125,6 @@ def dynamic_wrap(string, max_width):
             wrapped.append(' ')
         else:
             wrapped.extend(textwrap.wrap(sub_str, max_width, replace_whitespace=False))
-
     # # Re-add the color-wrapper strings
     if codes:
         for i, line in enumerate(wrapped):

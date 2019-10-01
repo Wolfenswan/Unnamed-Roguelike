@@ -1,4 +1,4 @@
-from data.data_types import BodyType
+from data.data_enums import BodyType
 
 entity_descr_color_data = {
     'effect': 'yellow'

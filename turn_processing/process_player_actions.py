@@ -32,7 +32,7 @@ def process_player_input(action, game, last_turn_results:Optional[Dict]):
     debug_spawn = last_turn_results.get('debug_spawn')
 
     # Player Movement and Interaction #
-    if game.state in [GameState.PLAYERS_TURN, GameState.PLAYER_RESTING]:
+    if game.state in [GameState.PLAYER_ACTIVE, GameState.PLAYER_RESTING]:
         turn_results.extend(process_player_interaction(game, action))
 
     # Inventory Interaction #
@@ -63,7 +63,7 @@ def process_player_input(action, game, last_turn_results:Optional[Dict]):
     # Other #
     if exit:
         if game.state in (GameState.SHOW_INVENTORY, GameState.SHOW_QU_INVENTORY, GameState.CURSOR_ACTIVE, GameState.CURSOR_TARGETING, GameState.SHOW_MAP):
-            game.state = GameState.PLAYERS_TURN
+            game.state = GameState.PLAYER_ACTIVE
         else:
             continue_game = ingame_menu(game, can_save = player.f.hp > 0)
             if continue_game is False:
@@ -167,7 +167,7 @@ def process_player_interaction(game, action):
                 if player.f.active_weapon is not None:
                     player.f.active_weapon.moveset.cycle_moves(reset=True)
 
-            game.state = GameState.NPC_TURN
+            game.state = GameState.NPCS_ACTIVE
 
 
     # Passing a turn or interacting #

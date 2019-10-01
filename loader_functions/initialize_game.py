@@ -4,7 +4,7 @@ from random import randint, choice
 from config_files import cfg
 from config_files import colors
 from data.actor_data import act_classes
-from data.data_keys import Key
+from data.data_enums import Key
 from data.data_processing import gen_loadout
 from debug.timer import debug_timer
 from gameobjects.entity import Entity

@@ -9,8 +9,7 @@ from components.combat.fighter_util import DamagePercentage, AttributePercentage
 from components.statistics import statistics_updater
 from config_files import colors, cfg
 from data.actor_data.act_status_mod import status_modifiers_data
-from data.data_keys import Key
-from data.data_types import ItemType
+from data.data_enums import Key, Mod, ItemType
 from data.gui_data.gui_fighter import hpdmg_string_data, stadmg_string_data, sta_color_data, stadmg_color_data, \
     sta_string_data, hpdmg_color_data, hp_string_data, hp_color_data
 from gameobjects.block_level import BlockLevel
@@ -147,7 +146,7 @@ class Fighter:
 
         # Moveset modifiers #
         if self.active_weapon is not None:
-            modifiers.append(self.active_weapon.moveset.modifier(Key.DMG_MULTIPL))
+            modifiers.append(self.active_weapon.moveset.modifier(Mod.DMG_MULTIPL))
 
         # Status effects #
         for state, active in self.effects.items():
@@ -173,9 +172,9 @@ class Fighter:
         total_defense = self.base_av
         if self.owner.paperdoll is not None:
             for e in self.owner.paperdoll.equipped_items:
-                av = vars(e.item.equipment).get('av')
+                av = vars(e.item.equipment).get(Key.AV)
                 # This extra step is required as av value is set to None for all Equipments during data processing
-                if av:
+                if av is not None:
                     total_defense += av
 
         return total_defense
@@ -186,9 +185,9 @@ class Fighter:
         modifiers = []
         for state, active in self.effects.items():
             if active:
-                modifiers.append(status_modifiers_data[state].get('av_multipl',1))
+                modifiers.append(status_modifiers_data[state].get(Mod.AV_MULTIPL,1))
 
-        modifiers.append(status_modifiers_data[self.surrounded].get('av_multipl',1))
+        modifiers.append(status_modifiers_data[self.surrounded].get(Mod.AV_MULTIPL,1))
 
         # Calculate average modifier
         if len(modifiers) > 0:
@@ -214,9 +213,9 @@ class Fighter:
     def vision(self):
         vision = self.__base_vision
         for e in self.owner.paperdoll.equipped_items:
-            l_radius = vars(e.item.equipment).get('l_radius')
+            l_radius = vars(e.item.equipment).get(Key.L_RADIUS)
             # This extra step is required as l_radius value is set to None for all Equipment during data processing
-            if l_radius:
+            if l_radius is not None:
                 vision += l_radius
         return vision
 
@@ -361,6 +360,8 @@ class Fighter:
     def attack_setup(self, target, game, dmg_mod_multipl:float=1, verb:str='hit', ignore_moveset:bool=False, draw_ranged_projectile:bool=True):
         results = []
         extra_attacks = []
+        exertion_divider = 2 # attack_power / this is the base amount of stamina this attack uses
+        daze_chance = 50 # chance to daze attacker on successful block # TODO dynamically calculated
 
         if self.active_weapon is not None:
             melee_attack = True if self.active_weapon.type == ItemType.MELEE_WEAPON else False
@@ -373,7 +374,7 @@ class Fighter:
         # Apply moveset modifers #
         if ignore_moveset:
             attack_power = choice(self.base_dmg_potential) * dmg_mod_multipl
-            attack_exertion = attack_power / 3
+            attack_exertion = attack_power / exertion_divider
         else:
             if self.active_weapon is not None:
                 move_results = self.active_weapon.moveset.execute(self.owner, target)
@@ -381,7 +382,7 @@ class Fighter:
                 extra_attacks = move_results.get('extra_attacks', [])
 
             attack_power = self.dmg_roll * dmg_mod_multipl
-            attack_exertion = attack_power / 3 * self.active_weapon.moveset.exert_multipl
+            attack_exertion = attack_power / exertion_divider * self.active_weapon.moveset.exert_multipl
             self.active_weapon.moveset.cycle_moves()
 
         # Make sure attacker has enough stamina #
@@ -433,13 +434,13 @@ class Fighter:
 
         if attack_blocked:
             # TODO should attacker also take sta damage?
-            sta_dmg_multipl = self.active_weapon.moveset.modifier(Key.BLOCK_STA_DMG_MULTIPL) # Some weapons afflict a higher stamina damage
+            sta_dmg_multipl = self.active_weapon.moveset.modifier(Mod.BLOCK_STA_DMG_MULTIPL) # Some weapons afflict a higher stamina damage
             sta_dmg = round((attack_power / 2) * sta_dmg_multipl)
             logging.debug(
                 f'{target.name} block exert multiplied by {sta_dmg_multipl} due to {self.owner.name} attack mod')
             results.append(target.f.exert(sta_dmg, 'block'))
 
-            if melee_attack:
+            if melee_attack and randint(0,100) > daze_chance:
                 if target.is_player:
                     message = M(f'{target.address_color.title()} block the attack, dazing the {self.owner.name_colored}!',
                                 category=MessageCategory.COMBAT, type=MessageType.COMBAT_GOOD)
@@ -513,7 +514,7 @@ class Fighter:
             results.append({'message': M(f'{self.owner.address_color.title()} stop blocking.', type=MessageType.COMBAT_INFO)})
             self.stances[Stance.BLOCKING] = False
         elif self.shield:
-            results.append({'message': M(f'{self.owner.address_color.title()} ready your {self.shield.name_colored}.', type=MessageType.COMBAT_INFO)})
+            results.append({'message': M(f'{self.owner.address_color.title()} ready your {self.shield.owner.owner.name_colored}.', type=MessageType.COMBAT_INFO)})
             self.stances[Stance.BLOCKING] = True
         else:
             results.append({'message': M(f'{self.owner.address_color.title()} need a shield to block.', type=MessageType.COMBAT_INFO)})
@@ -575,7 +576,7 @@ class Fighter:
             return 0
         block_def = self.shield.block_def
         #mod = wp_attacktypes_data[attack_type].get(Key.BLOCK_DEF_MULTIP,1)
-        mod = attacking_weapon.moveset.modifier(Key.BLOCK_DEF_MULTIPL)
+        mod = attacking_weapon.moveset.modifier(Mod.BLOCK_DEF_MULTIPL)
         block_def = round(block_def * mod)
         logging.debug(f'{self.owner.name} block def. multiplied by {mod} due to {attacking_weapon}')
 

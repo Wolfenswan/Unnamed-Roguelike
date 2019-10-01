@@ -2,8 +2,7 @@ from components.AI.behavior.queen import Queen
 from components.combat.fighter_util import State
 from config_files import colors
 from data.actor_data.act_skills import skill_generic_slam
-from data.data_keys import Key
-from data.data_types import RarityType
+from data.data_enums import Key, RarityType
 
 npc_data_unique = {
     'queen': {

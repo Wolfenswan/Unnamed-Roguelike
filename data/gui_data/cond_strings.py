@@ -1,5 +1,4 @@
-from data.data_types import Material, ItemType, Condition
-
+from data.data_enums import ItemType, Material, Condition
 
 # Default description strings
 default_descr = {

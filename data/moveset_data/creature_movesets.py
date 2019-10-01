@@ -1,4 +1,4 @@
-from data.data_keys import Key
+from data.data_enums import Key, Mod
 
 moveset_mandibles = {
     Key.DEFAULT: {
@@ -9,11 +9,11 @@ moveset_mandibles = {
     2: {},
     3: {
         Key.VERB: 'nibbles at',
-        Key.DMG_MULTIPL: 0.6
+        Mod.DMG_MULTIPL: 0.6
     },
     4: {
         Key.VERB: 'pierces',
-        Key.AV_MULTIPL: 0,
+        Mod.AV_MULTIPL: 0,
     }
 }
 
@@ -22,7 +22,7 @@ moveset_mandibles_heavy = {
     Key.DEFAULT: {
         Key.RANDOM: True,
         Key.VERBS: ('bites', 'gnaws at'),
-        Key.BLOCK_STA_DMG_MULTIPL: 2
+        Mod.BLOCK_STA_DMG_MULTIPL: 2
     },
 }
 
@@ -36,7 +36,7 @@ moveset_claws = {
 moveset_claws_heavy = {
     **moveset_claws,
     1: {
-        Key.BLOCK_STA_DMG_MULTIPL: 2
+        Mod.BLOCK_STA_DMG_MULTIPL: 2
     }
 }
 

@@ -1,26 +1,25 @@
-from data.data_keys import Key
-from data.data_types import Condition, Craftsmanship
+from data.data_enums import Key, Mod, Condition, Craftsmanship
 
 # Craftsmanship modifiers are added to/substracted from the base stats #
 
 qual_craft_data = {
     'poor_craft': {
         Key.TYPE: Craftsmanship.POOR,
-        Key.DMG_FLAT: -1,
-        Key.AV_FLAT: -1
+        Mod.DMG_FLAT: -1,
+        Mod.AV_FLAT: -1
     },
     'normal_craft': {
         Key.TYPE: Craftsmanship.NORMAL,
     },
     'good_craft': {
         Key.TYPE: Craftsmanship.GOOD,
-        Key.DMG_FLAT: 2,
-        Key.AV_FLAT: 2
+        Mod.DMG_FLAT: 2,
+        Mod.AV_FLAT: 2
     },
     'legendary_craft': {
         Key.TYPE: Craftsmanship.LEGENDARY,
-        Key.DMG_FLAT: 4,
-        Key.AV_FLAT: 4
+        Mod.DMG_FLAT: 4,
+        Mod.AV_FLAT: 4
     },
 }
 
@@ -29,17 +28,17 @@ qual_craft_data = {
 qual_cond_data = {
     'poor_cond': {
         Key.TYPE: Condition.POOR,
-        Key.MOD_MULTIPL: 0.8
+        Mod.MOD_MULTIPL: 0.8
     },
     'normal_cond': {
         Key.TYPE: Condition.NORMAL
     },
     'good_cond': {
         Key.TYPE: Condition.GOOD,
-        Key.MOD_MULTIPL: 1.2
+        Mod.MOD_MULTIPL: 1.2
     },
     'legendary_cond': {
         Key.TYPE: Condition.LEGENDARY,
-        Key.MOD_MULTIPL: 2
+        Mod.MOD_MULTIPL: 2
     }
 }

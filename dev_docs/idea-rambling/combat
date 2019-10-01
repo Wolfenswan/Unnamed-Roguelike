@@ -11,6 +11,7 @@
     - attacking while blocking: shield slam (low damage but chance to daze/stun/push)
         - pushes enemies 1 space away and stuns them for 1 turn (prevents them from closing the gap right away)
         - no damage, only compare STR values? (maybe use shield DEF value as bonus to STR?)
+        - OR simply ignore and dont execute a turn
 
 # Movesets
 - atm further targets take flat half damage (add new modifier to moveset)

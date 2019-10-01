@@ -1,4 +1,4 @@
-from data.data_types import Material, Craftsmanship
+from data.data_enums import Material, Craftsmanship
 
 # Default description strings
 default_descr = {

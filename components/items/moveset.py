@@ -2,7 +2,7 @@ import logging
 from random import choice, randint
 from typing import List
 
-from data.data_keys import Key
+from data.data_enums import Key, Mod
 from map.directions_util import relative_dir, RelativeDirection
 
 
@@ -29,7 +29,7 @@ class Moveset():
 
     @property
     def exert_multipl(self):
-        return self.movelist[self.current_move].get(Key.EXERT_MULTIPL, 1)
+        return self.movelist[self.current_move].get(Mod.MOD_MULTIPL, 1)
 
     @property
     def targets_gui(self):

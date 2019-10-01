@@ -1,6 +1,5 @@
 from config_files import colors
-from data.data_keys import Key
-from data.data_types import Material
+from data.data_enums import Key, Mod, Material
 
 item_material_data = {
     'oak': {
@@ -28,13 +27,13 @@ item_material_data = {
     'iron': {
         Key.TYPE: Material.IRON,
         Key.COLOR: colors.iron,
-        Key.AV_FLAT: 1
+        Mod.AV_FLAT: 1
     },
     'steel': {
         Key.TYPE: Material.STEEL,
         Key.COLOR: colors.steel,
-        Key.DMG_FLAT: 1,
-        Key.AV_FLAT: 2
+        Mod.DMG_FLAT: 1,
+        Mod.AV_FLAT: 2
     },
 
 }

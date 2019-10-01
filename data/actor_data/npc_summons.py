@@ -2,7 +2,7 @@ from components.AI.behavior.simple_melee import Simple
 from components.combat.fighter_util import State
 from config_files import colors
 from data.actor_data.act_skills import skill_hatch
-from data.data_keys import Key
+from data.data_enums import Key
 
 spawn_data_summons = {
     'hatchling_egg': {

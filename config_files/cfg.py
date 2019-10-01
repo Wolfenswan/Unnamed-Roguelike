@@ -8,8 +8,8 @@ DEBUG = {
     'invincibility': True,
     'reveal_map': False,
     'detailed_ent_info': True,
-    'prevent_item_spawning': True, # also prevents containers
-    'prevent_npc_spawning': True,
+    'prevent_item_spawning': False, # also prevents containers
+    'prevent_npc_spawning': False,
     'prevent_architecture_spawning': False, # excluding special objects (e.g. stairs)
 }
 LOGGING = {

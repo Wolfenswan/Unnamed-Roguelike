@@ -17,7 +17,7 @@ from components.inventory.paperdoll import Paperdoll
 from components.items.item import Item
 from components.statistics import Statistics
 from data.actor_data.act_status_mod import status_modifiers_data
-from data.data_types import BodyType, Material, GenericType, MonsterType, ItemType
+from data.data_enums import GenericType, MonsterType, ItemType, Material, BodyType
 from data.gui_data.gui_entity import bodytype_name_data
 from data.gui_data.material_strings import material_name_data
 from data.gui_data.gui_fighter import effects_descr_data

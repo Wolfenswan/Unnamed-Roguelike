@@ -2,8 +2,7 @@ import logging
 from random import randint, choice
 from typing import Dict
 
-from data.data_keys import Key
-from data.data_types import RarityType
+from data.data_enums import Key, RarityType
 from data.shared_data.rarity_mod import rarity_values
 
 

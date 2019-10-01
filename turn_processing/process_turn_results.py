@@ -59,7 +59,7 @@ def process_turn_results(player_turn_results, game, fov_map):
             results['targeting_item']= targeting
 
         if targeting_cancelled:
-            game.state = GameState.PLAYERS_TURN
+            game.state = GameState.PLAYER_ACTIVE
             Message('Targeting cancelled.').add_to_log(game) # TODO Placeholder
 
         if waiting:
@@ -96,7 +96,7 @@ def process_turn_results(player_turn_results, game, fov_map):
         # Enable enemy turn if at least one of the results is not None
         filtered_enemy_turn_conditions = list(filter(lambda x: x is not None, enemy_turn_on))
         if len(filtered_enemy_turn_conditions) > 0:
-            game.state = GameState.NPC_TURN
+            game.state = GameState.NPCS_ACTIVE
 
         if level_change is not None:
             # if level_change > 0 and player.same_pos_as(game.stairs_down) or \

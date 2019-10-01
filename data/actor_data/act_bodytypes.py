@@ -7,8 +7,7 @@
 #     LARGE = auto()
 #     GARGANTUAN = auto()
 #
-from data.data_keys import Key
-from data.data_types import BodyType
+from data.data_enums import Key, Mod, BodyType
 
 bodytype_data = {
     'normal': {
@@ -16,31 +15,31 @@ bodytype_data = {
     },
     'weak_1': {
         Key.TYPE: BodyType.SCRAWNY,
-        Key.STR_MULTIPL: 0.6,
-        Key.AV_MULTIPL: 0.8
+        Mod.STR_MULTIPL: 0.6,
+        Mod.AV_MULTIPL: 0.8
     },
     'weak_2': {
         Key.TYPE: BodyType.TINY,
-        Key.HP_MULTIPL: 0.5,
-        Key.STR_MULTIPL: 0.5
+        Mod.HP_MULTIPL: 0.5,
+        Mod.STR_MULTIPL: 0.5
     },
     'weak_3': {
         Key.TYPE: BodyType.SMALL,
-        Key.HP_MULTIPL: 0.9,
-        Key.STR_MULTIPL: 0.9
+        Mod.HP_MULTIPL: 0.9,
+        Mod.STR_MULTIPL: 0.9
     },
     'strong_1': {
         Key.TYPE: BodyType.LARGE,
-        Key.HP_MULTIPL: 1.2,
-        Key.STR_MULTIPL: 1.2
+        Mod.HP_MULTIPL: 1.2,
+        Mod.STR_MULTIPL: 1.2
     },
     'strong_2': {
         Key.TYPE: BodyType.OBESE,
-        Key.HP_MULTIPL: 1.75
+        Mod.HP_MULTIPL: 1.75
     },
     'super_1': {
         Key.TYPE: BodyType.GARGANTUAN,
-        Key.STR_MULTIPL: 2,
-        Key.HP_MULTIPL: 2.5
+        Mod.STR_MULTIPL: 2,
+        Mod.HP_MULTIPL: 2.5
     }
 }

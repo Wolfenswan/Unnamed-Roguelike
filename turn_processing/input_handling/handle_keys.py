@@ -52,18 +52,18 @@ def handle_keys_legacy(key, game_state):
     elif key.vk == tcod.KEY_ESCAPE:
         # Exit the game
         return {'exit': True}
+    elif chr(key.c) == keys_dict['map']:
+        return {'toggle_map': True}
     elif chr(key.c) == keys_dict['manual'] and key.shift:
         return {'manual': True}
     elif chr(key.c) == keys_dict['spawn'] and key.lalt:
         return {'spawn': True}
-    elif chr(key.c) == keys_dict['map']:
-        return {'toggle_map': True}
     elif chr(key.c) == keys_dict['debug'] and key.lctrl:
         return {'debug': True}
 
 
     # Game state specific inputs #
-    if game_state in [GameState.PLAYERS_TURN, GameState.PLAYER_RESTING, GameState.CURSOR_ACTIVE, GameState.CURSOR_TARGETING]:
+    if game_state in [GameState.PLAYER_ACTIVE, GameState.PLAYER_RESTING, GameState.CURSOR_ACTIVE, GameState.CURSOR_TARGETING]:
         return handle_player_turn_keys(key)
     elif game_state == GameState.PLAYER_DEAD:
         return handle_player_dead_keys(key)

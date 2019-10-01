@@ -5,8 +5,7 @@ from dataclasses import dataclass
 
 from components.items.equipment import Equipment
 from components.items.useable import Useable
-from data.data_keys import Key
-from data.data_types import Craftsmanship, Condition
+from data.data_enums import Key, Condition, Craftsmanship
 from data.gui_data.cond_strings import cond_name_data
 from data.gui_data.craft_strings import craft_name_data
 
@@ -56,7 +55,7 @@ class Item:
             e_c = self.equipment
             
             if e_c.e_to:
-                e_str = e_c.e_to.replace('_',' ')
+                e_str = str(e_c.e_to.name).lower().replace('_',' ')
                 listing += f'\n\n Equips To: %{col}%{e_str.title()}%%'
 
             if e_c.av:

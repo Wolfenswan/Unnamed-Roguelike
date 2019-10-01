@@ -1,7 +1,7 @@
 import logging
 from random import choice
 
-from data.data_keys import Key
+from data.data_enums import Key
 from data.data_processing import NPC_DATA, gen_npc_from_data, ITEM_DATA, gen_item_from_data, ARCHITECTURE_DATA, \
     gen_architecture_from_data, UNIQUE_DATA
 from debug.timer import debug_timer

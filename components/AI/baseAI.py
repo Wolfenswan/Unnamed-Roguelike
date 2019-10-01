@@ -22,7 +22,7 @@ class BaseAI:
 
         ignore_skills_chance = 35 # chance to ignore available skills and move/attack regularly
 
-        logging.debug(f'{npc} is taking turn #{game.turn}')
+        # logging.debug(f'{npc} is taking turn #{game.turn}')
 
         # free_line = game.map.free_line_between_pos(target.x, target.y, npc.x, npc.y, game)
 
@@ -53,7 +53,7 @@ class BaseAI:
           return results
 
         if not skip_turn:
-            logging.debug(f'{npc} is allowed to act')
+            # logging.debug(f'{npc} is allowed to act')
             # First check if the npc can see the player #
             if npc.is_visible(fov_map): #tcod.map_is_in_fov(fov_map, npc.x, npc.y):
                 # Consider using a skill #

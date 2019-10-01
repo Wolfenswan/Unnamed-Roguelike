@@ -8,8 +8,9 @@ from gui.messages import MessageLog
 
 class GameState(Enum):
     GAME_PAUSED = auto()
-    PLAYERS_TURN = auto()
+    PLAYER_ACTIVE = auto()
     PLAYER_RESTING = auto()
+    PLAYER_DEAD = auto()
     CURSOR_ACTIVE = auto()      # Cursor displayed & description window drawn
     CURSOR_TARGETING = auto()   # Cursor displayed & no description window drawn
     EQUIPMENT_ACTIVE = auto()
@@ -18,8 +19,7 @@ class GameState(Enum):
     SHOW_EQUIPMENT = auto()
     SHOW_ITEM = auto()
     SHOW_MAP = auto()
-    NPC_TURN = auto()
-    PLAYER_DEAD = auto()
+    NPCS_ACTIVE = auto()
 
 # Todo dataclass
 class Game:
@@ -119,11 +119,11 @@ class Game:
 
     @property
     def player_active(self):
-        return self.state == GameState.PLAYERS_TURN
+        return self.state == GameState.PLAYER_ACTIVE
 
     @property
     def npc_active(self):
-        return self.state == GameState.NPC_TURN
+        return self.state == GameState.NPCS_ACTIVE
 
     @property
     def cursor_active(self):

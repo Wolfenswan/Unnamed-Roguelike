@@ -1,7 +1,6 @@
 from components.architecture import Architecture
 from config_files import colors
-from data.data_keys import Key
-from data.data_types import RarityType
+from data.data_enums import Key, RarityType
 from gameobjects.block_level import BlockLevel
 from rendering.render_order import RenderOrder
 

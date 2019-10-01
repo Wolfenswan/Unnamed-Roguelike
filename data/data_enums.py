@@ -1,10 +1,10 @@
 from enum import Enum, auto
 
-"""
-All data entries refer to members of the Key class as dictionary keys.
-"""
-
 class Key(Enum):
+    """
+    All keys for data-dictionary entries (exlcuding attribute modifiers, which are defined in Mod.
+    """
+
     # Generic #
     NAME = auto()               # entity's name
     CHAR = auto()               # character to display the entity with
@@ -22,7 +22,7 @@ class Key(Enum):
     EVERY_TURN_START = auto()   # function to run for ent on turn start
     EVERY_TURN_END = auto()     # function to run for ent on turn end
 
-    # Actors #
+    # Actor Attributes, Skills etc. #
     MAX_HP = auto()
     MAX_STAMINA = auto()
     BASE_ARMOR = auto()
@@ -41,7 +41,6 @@ class Key(Enum):
     BODYTYPES = auto()
     GROUP_SIZE = auto()
     FORCED_MOVESET = auto()
-
 
     # Items #
     MATERIAL = auto()
@@ -86,7 +85,10 @@ class Key(Enum):
     ON_INTERACTION = auto()
     WALLS_ONLY = auto()
 
-    # Modifiers #
+class Mod(Enum):
+    """
+    Attribute modifiers used as key-names in the data-dict and accessed mostly by the Fighter component.
+    """
     HP_MULTIPL = auto()
     STR_MULTIPL = auto()
     AV_MULTIPL = auto()
@@ -94,6 +96,96 @@ class Key(Enum):
     BLOCK_STA_DMG_MULTIPL = auto()
     DMG_MULTIPL = auto()
     DMG_FLAT = auto()
+    ARMOR_PIERCING_FLAT = auto()
     AV_FLAT = auto()
     MOD_MULTIPL = auto()
     EXERT_MULTIPL = auto()
+
+
+# ENTITY TYPES #
+
+class GenericType(Enum):
+    DEFAULT = auto()
+    UNIQUE = auto()
+
+class MonsterType(Enum): # Unused at the moment
+    GENERIC = auto()
+    ELITE = auto()
+    LEADER = auto()
+    SUMMON = auto()
+
+class Behavior(Enum):
+    # AI #
+    # To avoid circular imports, these are later used to link to the Behavior of the same Name
+    SIMPLE = auto()
+    RANGED = auto()
+    QUEEN = auto()
+    CONFUSED = auto()
+    SWARM = auto()
+
+class ItemType(Enum):
+    USEABLE = auto()
+    MELEE_WEAPON = auto()
+    RANGED_WEAPON = auto()
+    SHIELD = auto()
+    ARMOR = auto()
+    BELT = auto()
+    MISC = auto()
+
+class ContainerType(Enum):
+    BARREL = auto()
+    CHEST_BASIC = auto()
+
+class RarityType(Enum):
+    COMMON = auto()
+    UNCOMMON = auto()
+    RARE = auto()
+    EXOTIC = auto()
+    LEGENDARY = auto()
+    UNIQUE = auto() # Unique & Forbidden function identically, and only exist to provide distinction in readability
+    FORBIDDEN = auto()
+
+class Material(Enum):
+    OAK = auto()
+    CHITIN = auto()
+    LINEN = auto()
+    COTTON = auto()
+    LEATHER = auto()
+    # BUFF LEATHER
+    IRON = auto()
+    STEEL = auto()
+
+class Element(Enum): # Placeholder at the moment
+    FIRE = auto()
+    WATER = auto()
+    EARTH = auto()
+    AIR = auto()
+    LIGHTNING = auto()
+    ACID = auto()
+
+class Condition(Enum):
+    POOR = auto()
+    NORMAL = auto()
+    GOOD = auto()
+    LEGENDARY = auto()
+
+class EquipTo(Enum):
+    HEAD = auto()
+    TORSO = auto()
+    SHIELD_ARM = auto()
+    WEAPON_ARM = auto()
+
+class Craftsmanship(Enum):
+    POOR = auto()
+    NORMAL = auto()
+    GOOD = auto()
+    LEGENDARY = auto()
+
+class BodyType(Enum):
+    NORMAL = auto()
+    SCRAWNY = auto()
+    OBESE = auto()
+    TINY = auto()
+    SMALL = auto()
+    LARGE = auto()
+    GARGANTUAN = auto()

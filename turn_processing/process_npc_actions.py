@@ -22,4 +22,4 @@ def process_npc_actions(game):
                     if dead_entity.is_player and not game.debug['invincibility']:
                         return GameState.PLAYER_DEAD
     else:
-        return GameState.PLAYERS_TURN
+        return GameState.PLAYER_ACTIVE

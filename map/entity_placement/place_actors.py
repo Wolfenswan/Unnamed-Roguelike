@@ -5,7 +5,7 @@ from random import randint, choice
 
 from config_files import cfg
 #from data.actor_data.test_spawns import spawn_data
-from data.data_keys import Key
+from data.data_enums import Key
 from data.data_processing import gen_npc_from_data, NPC_DATA
 from data.data_util import filter_data_dict, dlvl_filter
 from debug.timer import debug_timer

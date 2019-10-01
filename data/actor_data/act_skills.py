@@ -1,7 +1,7 @@
 from components.combat.fighter_util import State
 from components.skills.skillConditions import SkillCondition
 from components.skills.skills import SkillCharge, SkillSlam, SkillExplodeSelf, SkillEntangle, SkillHatch
-from data.data_keys import Key
+from data.data_enums import Key
 
 """
 Each dictionary refers to a skill class and contains the parameters to customize the instance of each skill accordingly.

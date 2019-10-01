@@ -27,8 +27,7 @@ from components.AI.behavior.swarm import Swarm
 from config_files import colors
 from data.actor_data.act_skills import skill_generic_charge, skill_generic_slam, skill_explode_self, skill_entangle, \
     skill_entangle_timed, skill_hatch
-from data.data_keys import Key
-from data.data_types import RarityType, MonsterType
+from data.data_enums import Key, MonsterType, RarityType
 from data.moveset_data.creature_movesets import moveset_claws_heavy, moveset_mandibles_heavy
 
 _default_values = {

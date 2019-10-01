@@ -1,11 +1,10 @@
-from data.data_keys import Key
-from data.data_types import Material, RarityType, ItemType
-from data.moveset_data.weapon_movesets import moveset_sword, moveset_spear, moveset_flail, moveset_bow
+from data.data_enums import Key, ItemType, RarityType, Material, EquipTo
+from data.moveset_data.weapon_movesets import moveset_sword, moveset_spear, moveset_flail, moveset_bow, moveset_dagger
 
 default_values = {
     Key.CHAR: '\\',
     Key.TYPE: ItemType.MELEE_WEAPON,
-    Key.EQUIP_TO: 'weapon_arm',
+    Key.EQUIP_TO: EquipTo.WEAPON_ARM,
     Key.DLVLS: (1,99)
 }
 
@@ -25,7 +24,7 @@ equ_weapon_data = {
         Key.MATERIAL: (Material.IRON, Material.STEEL),
         Key.DESCR: 'A short and nimble blade, easier to conceal than its larger cousins.',
         Key.DMG_POTENTIAL: (2, 4),
-        Key.MOVESET: moveset_sword,
+        Key.MOVESET: moveset_dagger,
         Key.RARITY: RarityType.COMMON
     },
     'spear': {

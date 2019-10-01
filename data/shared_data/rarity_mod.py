@@ -1,5 +1,5 @@
-from data.data_types import MonsterType, ContainerType, ItemType, GenericType, Material, Condition, \
-    RarityType, Craftsmanship, BodyType
+from data.data_enums import GenericType, MonsterType, ItemType, ContainerType, RarityType, Material, Condition, \
+    Craftsmanship, BodyType
 
 rarity_values = {
     GenericType.DEFAULT: 100,

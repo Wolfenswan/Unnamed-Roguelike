@@ -1,0 +1,12 @@
+- comb-like rooms
+- Puzzle-Room
+    - "Paint" with corpses
+- river, crosses once through map (maybe with source)
+
+Biomes
+    - defined in data:
+        - dlvl range
+        - which algo to use
+        - possible wall & floor colors
+        - entities can also be restricted by biome: (Key.BIOMES: {Biome.ALL: 10, Biome.DUNGEON: 100, Biome.CAVE:0}}; value is %
+        

@@ -34,13 +34,12 @@ class SkillCharge(BaseSkill):
         return results
 
     def execute(self, tx: int, ty: int, game: Game, **kwargs):
-        # TODO attack_string should be defined in their own data file
         user = self.owner
         user.color_bg = None  # Reset the entities bg-color, which the skill preparation had changed
 
         results = []
         results.append({'message': Message(f'The {user.name} charges forward!', category=MessageCategory.OBSERVATION,
-                                           type=MessageType.COMBAT)})
+                                           type=MessageType.COMBAT)}) # TODO attack_string defined in their own data file
         missed = animate_move_to(user, tx, ty, game)
 
         if missed is False: # if a wall is hit during the charge, damage the charging entity

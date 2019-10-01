@@ -16,7 +16,7 @@ from data.actor_data.npc_standard import npc_data_insects
 from data.actor_data.npc_unique import npc_data_unique
 from data.architecture_data.arch_containers import arch_containers_data
 from data.architecture_data.arch_static import arch_static_data
-from data.data_keys import Key
+from data.data_enums import Key, Mod, GenericType, Material, Condition, Craftsmanship, BodyType
 from data.data_util import filter_data_dict, enum_pairs_to_kwargs, merge_dictionaries
 from data.gui_data.craft_strings import craft_descr_data
 from data.actor_data.act_bodytypes import bodytype_data
@@ -28,7 +28,6 @@ from data.item_data.equ_weapons import equ_weapon_data
 from data.item_data.use_targeted import use_throw_data
 from data.item_data.use_self import use_potions_data, use_potions_variants_data
 from data.shared_data.quality_mod import qual_cond_data, qual_craft_data
-from data.data_types import GenericType, Condition, BodyType, Material, Craftsmanship
 from data.shared_data.material_mod import item_material_data
 from data.gui_data.cond_strings import cond_descr_data
 from debug.timer import debug_timer
@@ -198,9 +197,9 @@ def gen_npc_from_data(data:Dict, x:int, y:int, game:Game):
 
     # Setup Fighter component
     # Modify values according to bodytype
-    hp_mod_multipl = bodytype.get(Key.HP_MULTIPL, 1)
-    str_multipl = bodytype.get(Key.STR_MULTIPL, 1)
-    av_mod_multipl = bodytype.get(Key.AV_MULTIPL, 1)
+    hp_mod_multipl = bodytype.get(Mod.HP_MULTIPL, 1)
+    str_multipl = bodytype.get(Mod.STR_MULTIPL, 1)
+    av_mod_multipl = bodytype.get(Mod.AV_MULTIPL, 1)
     hp = round(hp * hp_mod_multipl)
     base_av = round(base_av * av_mod_multipl)
     base_strength = round(base_strength * str_multipl)
@@ -254,24 +253,24 @@ def gen_item_from_data(data:Dict, x:int, y:int, material=False, condition=False,
     if equip_to is not None:
         dmg_potential = data.get(Key.DMG_POTENTIAL)
         if dmg_potential:
-            mat_mod = material.get(Key.DMG_FLAT, 0)
-            craft_mod = craftsmanship.get(Key.DMG_FLAT, 0)
-            cond_mod = condition.get(Key.MOD_MULTIPL, 1)
+            mat_mod = material.get(Mod.DMG_FLAT, 0)
+            craft_mod = craftsmanship.get(Mod.DMG_FLAT, 0)
+            cond_mod = condition.get(Mod.MOD_MULTIPL, 1)
             dmg_potential = (round(max((dmg_potential[0] + mat_mod + craft_mod) * cond_mod, 1)),
                              round(max((dmg_potential[1] + mat_mod + craft_mod) * cond_mod, 1)))
 
         av = data.get(Key.AV)
         if av:
-            mat_mod = material.get(Key.AV_FLAT, 0)
-            craft_mod = craftsmanship.get(Key.AV_FLAT, 0)
-            cond_mod = condition.get(Key.MOD_MULTIPL, 1)
+            mat_mod = material.get(Mod.AV_FLAT, 0)
+            craft_mod = craftsmanship.get(Mod.AV_FLAT, 0)
+            cond_mod = condition.get(Mod.MOD_MULTIPL, 1)
             av += round((max(mat_mod + craft_mod, 1)) * cond_mod)
 
         block_def = data.get(Key.BLOCK_DEF)
         if block_def:
-            mat_mod = material.get(Key.AV_FLAT, 0)
-            craft_mod = craftsmanship.get(Key.AV_FLAT, 0)
-            cond_mod = condition.get(Key.MOD_MULTIPL, 1)
+            mat_mod = material.get(Mod.AV_FLAT, 0)
+            craft_mod = craftsmanship.get(Mod.AV_FLAT, 0)
+            cond_mod = condition.get(Mod.MOD_MULTIPL, 1)
             block_def += round((max(mat_mod + craft_mod, 1)) * cond_mod)
 
         attack_range = data.get(Key.ATTACK_RANGE)

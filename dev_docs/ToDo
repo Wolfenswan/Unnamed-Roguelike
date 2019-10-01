@@ -43,13 +43,14 @@ COMBAT
     - give skills a weight to prefer one over the other
 - GUI work
     - messages displaying same information should be merged (using counters: 'x2')
-    - Highlight "you" in messages with white color
-    Manual
-        - Dynamic scrolling, instead of predefined pages
-    Menus
-        - allow pages in menus, change via left/right or up/down
+    x Highlight "you" in messages with white color
+Manual
+    - Dynamic scrolling, instead of predefined pages
+Menus
+    - allow pages in menus, change via left/right or up/down
 - new static object: steel fence with portcullis parting a room
     - does block walk but not sight/projectile
 Light sources
+    - static torches/lamps
     - add light_source component to entity
     - if range of light_source is in player's FOV, add that area to FOV

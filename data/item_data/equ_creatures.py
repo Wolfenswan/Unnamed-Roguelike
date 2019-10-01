@@ -1,5 +1,4 @@
-from data.data_keys import Key
-from data.data_types import Material, ItemType, RarityType, Element
+from data.data_enums import Key, ItemType, RarityType, Material, Element, EquipTo
 from data.moveset_data.creature_movesets import moveset_mandibles, moveset_claws, moveset_spit
 
 equ_creature_data = {
@@ -7,7 +6,7 @@ equ_creature_data = {
         Key.NAME: 'mandibles',
         Key.MATERIAL: (Material.CHITIN,),
         Key.TYPE: ItemType.MELEE_WEAPON,
-        Key.EQUIP_TO: 'weapon_arm',
+        Key.EQUIP_TO: EquipTo.WEAPON_ARM,
         Key.DMG_POTENTIAL: (4, 8),
         Key.MOVESET: moveset_mandibles,
         Key.RARITY: RarityType.FORBIDDEN,
@@ -17,7 +16,7 @@ equ_creature_data = {
         Key.NAME: 'claws',
         Key.MATERIAL: (Material.CHITIN,),
         Key.TYPE: ItemType.MELEE_WEAPON,
-        Key.EQUIP_TO: 'weapon_arm',
+        Key.EQUIP_TO: EquipTo.WEAPON_ARM,
         Key.DMG_POTENTIAL: (4, 6),
         Key.MOVESET: moveset_claws,
         Key.RARITY: RarityType.FORBIDDEN,
@@ -27,7 +26,7 @@ equ_creature_data = {
         Key.NAME: 'spit',
         Key.MATERIAL: (Material.CHITIN,),
         Key.TYPE: ItemType.RANGED_WEAPON,
-        Key.EQUIP_TO: 'weapon_arm',
+        Key.EQUIP_TO: EquipTo.WEAPON_ARM,
         Key.DMG_POTENTIAL: (6, 6),
         Key.MOVESET: moveset_spit,
         Key.RARITY: RarityType.FORBIDDEN,

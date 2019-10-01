@@ -1,11 +1,10 @@
 from config_files import colors
-from data.data_keys import Key
-from data.data_types import ItemType, Material, RarityType
+from data.data_enums import Key, ItemType, RarityType, Material, EquipTo
 
 default_values = {
     Key.CHAR: ']',
     Key.TYPE: ItemType.ARMOR,
-    Key.EQUIP_TO: 'torso',
+    Key.EQUIP_TO: EquipTo.TORSO,
     Key.DLVLS: (1,99)
 }
 
@@ -43,7 +42,7 @@ equ_armor_data = {
         Key.DESCR: 'A simple, round helmet.',
         Key.RARITY: RarityType.COMMON,
         Key.CHAR: '(',
-        Key.EQUIP_TO: 'head',
+        Key.EQUIP_TO: EquipTo.HEAD,
         Key.AV: 1
     },
     'full_helmet': {
@@ -53,7 +52,7 @@ equ_armor_data = {
         Key.DESCR: 'A large, inflexible helmet.',
         Key.RARITY: RarityType.UNCOMMON,
         Key.CHAR: '(',
-        Key.EQUIP_TO: 'head',
+        Key.EQUIP_TO: EquipTo.HEAD,
         Key.AV: 2,
         Key.L_RADIUS: -1,
     },

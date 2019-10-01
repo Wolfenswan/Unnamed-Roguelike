@@ -1,5 +1,6 @@
 import logging
 
+from data.data_enums import EquipTo
 from gui.menus import yesno_menu, item_list_menu
 from gui.messages import Message
 
@@ -50,7 +51,7 @@ class Paperdoll:
         e_to = item_ent.item.equipment.e_to
         qu_slots = item_ent.item.equipment.qu_slots
 
-        extremity = getattr(self, e_to)
+        extremity = self.get_corresponding_extremity(e_to)
         equipped_item = getattr(extremity, e_type)
 
         # If new item is two-handed, check if shield arm is occupied #
@@ -64,7 +65,7 @@ class Paperdoll:
                 print('cancelled equipping 2h weapon') # TODO Placeholder
 
         # If new item is shield, check for two-handed weapons #
-        if e_to == 'shield_arm' and self.two_handed_weapons and game is not None:
+        if e_to == EquipTo.SHIELD_ARM and self.two_handed_weapons and game is not None:
             choice = item_list_menu(self.owner, self.two_handed_weapons, game,'Remove Two-Handed Weapon', f'Remove which weapon to equip {item_ent.name}?')
             # choice = yesno_menu('Remove Two-Handed Weapon',
             #                     , game)
@@ -88,7 +89,7 @@ class Paperdoll:
             if qu_slots:
                 self.owner.qu_inventory.capacity += qu_slots
 
-            if self.owner.f.active_weapon is None: # If there is no active weapon, set the new weapon as active #
+            if self.owner.f.active_weapon is None and e_to == EquipTo.WEAPON_ARM: # If there is no active weapon, set the new weapon as active #
                 self.owner.f.active_weapon = item_ent
 
             results.append({'item_equipped': item_ent, 'message': Message(f'You equip the {item_ent.name}')})
@@ -101,7 +102,7 @@ class Paperdoll:
         e_type = item_ent.type.name.lower()
         qu_slots = item_ent.item.equipment.qu_slots
 
-        extremity = getattr(self, e_to)
+        extremity = self.get_corresponding_extremity(e_to)
         equipped_item = getattr(extremity, e_type)
 
         if equipped_item:
@@ -128,6 +129,10 @@ class Paperdoll:
 
     def is_equipped(self, item):
         return item in self.equipped_items
+
+    def get_corresponding_extremity(self, enum):
+        e_to_str = str(enum.name).lower()  # using the EquipTo Enum name as a string (EquipTo.WEAPON_ARM -> "weapon_arm")
+        return getattr(self, e_to_str)  # access the corresponding extremity
 
 
 class Head:
