@@ -58,6 +58,6 @@ venv.bak/
 /ToDo
 /dungeon-generation-samples/
 /venv_win/
-/venv_linux/
+/env/
 venv_start.bat
 /docs/
