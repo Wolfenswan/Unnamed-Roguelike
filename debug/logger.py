@@ -6,9 +6,15 @@ import time
 def initialize_logging(debugging=True, cleanup=True):
     """ configures logging """
 
+    logs_to_keep = 3
+    folder = 'logs'
+
+    if not os.path.isdir(f'./{folder}'):
+        os.mkdir(f'./{folder}')
+
     # configure logging
     formatting = '%(asctime)s | %(levelname)s |  %(funcName)s | %(message)s'
-    log_file = f'logs/{time.strftime("%d.%m.%y %Hh%Mm")}.log'
+    log_file = f'{folder}/{time.strftime("%d.%m.%y %Hh%Mm")}.log'
     level = logging.DEBUG if debugging else logging.INFO
     logging.basicConfig(level=level, format=formatting)
 
@@ -27,7 +33,6 @@ def initialize_logging(debugging=True, cleanup=True):
 
     if cleanup:
         last_logs_to_keep = 3
-        folder = 'logs/'
-        for root, dirs, files in os.walk(folder):
+        for root, dirs, files in os.walk(f'./{folder}'):
             for file in files[:-last_logs_to_keep]:
                 os.remove(os.path.join(root, file))

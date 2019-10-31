@@ -1,5 +1,11 @@
 CURRENT
-- generate /logs/ folder if it isn't present (crashes game otherwise)
+x generate /logs/ folder if it isn't present (crashes game otherwise)
+x make sure savefile is properly generated if non-existent
+- ask player for name
+- make savegame name dependent on player name
+    - ask for confirmation if preparing player with same name
+    - load menu shows all existing saves
+        - load menu allows deletion of save games
 - Tweak Dungeon generation
     - ideally should be a mix between dungeon & tunnels
         - options dungeon (only tunnels & square rooms), caves (only drunk walk), mines (mix of both)
