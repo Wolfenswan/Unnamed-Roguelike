@@ -62,3 +62,4 @@ venv.bak/
 start_env.sh
 venv_start.bat
 /docs/
+/activate_env.sh
