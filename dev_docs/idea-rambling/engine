@@ -1,0 +1,13 @@
+- refactor turn_processing lists
+    - create new class "Turn", carrying all relevant information
+        - turn_results.extend() occurences -> Turn.update() method
+        - current dict-values -> attributes
+        - game as owner (game.curr_turn, game.last_turn)
+        - method end() to clean turn
+        - 'messages' : value list containing all messages to display
+- move all message string to single file
+    - refactor all message-related code from GameObject to here?
+- make savegame name dependent on player name
+    - ask for confirmation if preparing player with same name
+    - load menu shows all existing saves
+        - load menu allows deletion of save games

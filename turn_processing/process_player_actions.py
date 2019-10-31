@@ -24,7 +24,7 @@ def process_player_input(action, game, last_turn_results:Optional[Dict]):
     prepare = action.get('prepare')
     toggle_look = action.get('toggle_look')
     toggle_fire = action.get('toggle_fire')
-    toggle_map = action.get('toggle_map') # TODO implement
+    toggle_map = action.get('toggle_map')
 
     turn_results = []
 

@@ -1,7 +1,7 @@
 import tcod
 
 from config_files import cfg, colors
-from gui.menus import menu_loop
+from gui.menus import input_loop
 from rendering.util_functions import setup_console, print_string
 
 
@@ -19,7 +19,7 @@ def display_manual():
 
         while True:
             wait_for = [tcod.KEY_KP4, tcod.KEY_KP6, tcod.KEY_LEFT, tcod.KEY_RIGHT]
-            choice = menu_loop(wait_for = wait_for)
+            choice = input_loop(wait_for = wait_for)
 
             tcod.console_delete(window) # Remove the old window on page change
 

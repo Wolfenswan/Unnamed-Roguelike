@@ -125,13 +125,14 @@ if __name__ == '__main__':
         while True:
             start_game = main_menu(game)
             if start_game == 0:
+                # player_name = input_prompt(game) TODO
                 initialize_game("Player", game)
                 # TODO ask for confirmation if savegame exists
                 break
             elif start_game == 1:
                 try:
                     game = load_game()
-                    initialize_window(game) # consoles need to be reinitialized
+                    initialize_window(game)  # consoles need to be reinitialized
                     break
                 except:
                     # TODO show a file loading error popup

@@ -9,16 +9,16 @@ from rendering.util_functions import pos_on_screen
 from rendering.render_windows import draw_window
 
 
-def menu_loop(wait_for=None, cancel_with_escape=True, sort_by:Union[int,str]='string'):
+def input_loop(wait_for=None, cancel_with_escape=True, sort_by:Union[int, str]= 'string'):
     """
     The loop waits for a key input.
     If wait_for is an integer, it waits for a key that corresponds to an integer in range of (0, wait_for)
     If wait_for is a list of characters or tcod key codes it waits for a key that corresponds to one of the characters or key codes.
 
-    :param wait_for:
-    :type wait_for: int or list
-    :return:
-    :rtype: int or str
+    :param wait_for: whether to wait for any integer, any string or a specific list of inputs
+    :type wait_for: int, str, list
+    :return: int if waiting for int, str if waiting for str or specific list of inputs, True for enter, None for Escape (if cancel_with_escape is True)
+    :rtype: int, str, True, None
     """
     key = tcod.Key()
 
@@ -30,17 +30,20 @@ def menu_loop(wait_for=None, cancel_with_escape=True, sort_by:Union[int,str]='st
         # elif type(wait_for) is dict:
         #     if char.lower() in wait_for.keys():
         #         return wait_for[char]
+        # TODO accept backspace
         elif key.vk == tcod.KEY_KPENTER:
-            return None
+            return True
         elif isinstance(wait_for, int):  # If menu is waiting to receive an index
-            if isinstance(sort_by, str):
+            if isinstance(sort_by, str):  # if sorting is using letters, return index according to letter position
                 index = ord(char) - ord('a')
                 if 0 <= index < wait_for:
                     return index
-            elif isinstance(sort_by, int):
+            elif isinstance(sort_by, int):  # otherwise convert the input into an integer directly
                 index = int(key.c - ord('1'))
                 if 0 <= index < wait_for:
                     return index
+        elif isinstance(wait_for, str):  # If menu is waiting for any string
+            return char.lower()
         elif isinstance(wait_for, list):  # If menu is waiting for a specific key input
             if char.lower() in wait_for:
                 return char
@@ -51,7 +54,7 @@ def menu_loop(wait_for=None, cancel_with_escape=True, sort_by:Union[int,str]='st
 def generic_options_menu(title:str, body:str, options:list, game, sort_by:Union[str, int]='str', cancel_with_escape=True, clear_screen=False):
     window = draw_window(title, body, game, options, show_cancel_option=cancel_with_escape, sort_by=sort_by, clear_screen=clear_screen)
 
-    choice = menu_loop(wait_for=len(options), sort_by=sort_by, cancel_with_escape=cancel_with_escape)
+    choice = input_loop(wait_for=len(options), sort_by=sort_by, cancel_with_escape=cancel_with_escape)
 
     return choice
 
@@ -65,7 +68,7 @@ def yesno_menu(title, body, game):
 
     draw_window(title, body, game, options, window_x=x, window_y=y, forced_width=len(body), sort_by=None)
 
-    choice = menu_loop(wait_for=wait_for)
+    choice = input_loop(wait_for=wait_for)
 
     return True if choice == 'y' else False
 
@@ -85,7 +88,7 @@ def item_list_menu(entity, item_list, game, title='Inventory', body='Press the k
     width = len(max(options, key=len)) + 4 if options else 0
     draw_window(title, body, game, options=options, window_x=x, window_y=y, forced_width=width, options_colors=options_colors)
 
-    choice = menu_loop(wait_for=len(options))
+    choice = input_loop(wait_for=len(options))
 
     if choice is not None:
         return item_list[choice]
@@ -134,7 +137,7 @@ def item_menu(item_ent, game):
     width = min(len(body), round(cfg.SCREEN_WIDTH // 2.5))
     draw_window(title, body, game, options=options, window_x=x, window_y=y, sort_by=None, forced_width=width, title_color=item_ent.color)
 
-    choice = menu_loop(wait_for=wait_for)
+    choice = input_loop(wait_for=wait_for)
 
     return choice
 
@@ -202,3 +205,15 @@ def ingame_menu(game, can_save=True):
             save_game(game)
         return False
     return True
+
+
+def input_prompt(game, title="Input prompt", body="Provide your input and finish with enter"):
+    input_str =''
+    input = input_loop(wait_for=str, cancel_with_escape=False)
+
+    if isinstance(input, str):
+        input_str += input
+    # elif input is backspace: TODO
+    #     input_str[:-1]
+    elif input is True:
+        return input  # Todo confirmation prompt

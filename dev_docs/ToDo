@@ -2,10 +2,7 @@ CURRENT
 x generate /logs/ folder if it isn't present (crashes game otherwise)
 x make sure savefile is properly generated if non-existent
 - ask player for name
-- make savegame name dependent on player name
-    - ask for confirmation if preparing player with same name
-    - load menu shows all existing saves
-        - load menu allows deletion of save games
+
 - Tweak Dungeon generation
     - ideally should be a mix between dungeon & tunnels
         - options dungeon (only tunnels & square rooms), caves (only drunk walk), mines (mix of both)
@@ -26,16 +23,11 @@ x make sure savefile is properly generated if non-existent
     - has to return to portal?
 
 UPCOMING
-- rewrite turn_processing lists -> dict
-    - write new class "Turn", carrying all relevant information
-        - game as owner
-        - method end() to clean out turn
-        - 'messages' : value list containing all messages to display
-- can lowering exploration value make a comeback?
 - bombs/projectiles exploding after n turns
 - weighted item generation for containers:
     - less chance for each item towards the cap
     - https://stackoverflow.com/questions/14992521/python-weighted-random
+
 COMBAT
     - reduce ranged damage if enemies are nearby
         -> new fighter attr. "hindered" similar to surrounded but modifies dmg
@@ -52,6 +44,7 @@ COMBAT
     - messages displaying same information should be merged (using counters: 'x2')
     x Highlight "you" in messages with white color
 Manual
+    - prob. best to rewrite the entire manual system
     - Dynamic scrolling, instead of predefined pages
 Menus
     - allow pages in menus, change via left/right or up/down
@@ -61,3 +54,4 @@ Light sources
     - static torches/lamps
     - add light_source component to entity
     - if range of light_source is in player's FOV, add that area to FOV
+        - use light value falloff
