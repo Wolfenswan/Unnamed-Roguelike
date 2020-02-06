@@ -23,6 +23,8 @@ CURRENT
 COMBAT
 - bombs/projectiles exploding after n turns
 - ranged combat
+    - consider always allowing a ranged weapon, indp. from melee weapon/offhand OR disallow both melee & ranged being two-handed
+    - allow some weapons one-handed (e.g. spear) but give bonus when off-hand is free
     - add reloadable weapons
         - e.g. crossbow, guns
         - EMPTY indicator in GUI

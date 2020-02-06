@@ -295,21 +295,23 @@ def process_inventory_interaction(game, prepare):
                 item_use_choice = 'p'
 
             if item_use_choice:
+                item_interaction_result = None
+
                 if item_use_choice == 'u':
                     item_interaction_result = inventory.use(selected_item_ent, game)
-                    results.extend(item_interaction_result)
                 if item_use_choice == 'e':
                     item_interaction_result = player.paperdoll.equip(selected_item_ent, game)
-                    results.extend(item_interaction_result)
                 if item_use_choice == 'r':
                     item_interaction_result = player.paperdoll.dequip(selected_item_ent)
-                    results.extend(item_interaction_result)
                 if item_use_choice == 'p':
                     item_interaction_result = inventory.prepare(selected_item_ent)
-                    results.extend(item_interaction_result)
                 if item_use_choice == 'd':
                     item_interaction_result = inventory.drop(selected_item_ent)
+
+                if item_interaction_result is not None:
                     results.extend(item_interaction_result)
+                else:
+                    game.state = game.previous_state
             else:
                 game.state = game.previous_state
         else:

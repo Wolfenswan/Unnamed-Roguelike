@@ -56,21 +56,21 @@ def generic_options_menu(title:str, body:str, options:list, game, sort_by:Union[
     return choice
 
 
-def yesno_menu(title, body, game):
+def yesno_menu(title, body, game, cancel_with_escape=True):
     player = game.player
     x, y = pos_on_screen(player.x + 2, player.y - 2, game.player)
 
     options = ['(Y)es', '(N)o']
     wait_for = ['y', 'n']
 
-    draw_window(title, body, game, options, window_x=x, window_y=y, forced_width=len(body), sort_by=None)
+    draw_window(title, body, game, options, window_x=x, window_y=y, forced_width=len(body), sort_by=None, show_cancel_option=cancel_with_escape)
 
-    choice = menu_loop(wait_for=wait_for)
+    choice = menu_loop(wait_for=wait_for, cancel_with_escape=cancel_with_escape)
 
     return True if choice == 'y' else False
 
 
-def item_list_menu(entity, item_list, game, title='Inventory', body='Press the key next to an item to select it.', colorize_options=True):
+def item_list_menu(entity, item_list, game, title='Inventory', body='Press the key next to an item to select it.', colorize_options=True, cancel_with_escape=True):
     # TODO add optional filter
     # TODO allow cycling through filters
 
@@ -83,9 +83,9 @@ def item_list_menu(entity, item_list, game, title='Inventory', body='Press the k
         options_colors = None
 
     width = len(max(options, key=len)) + 4 if options else 0
-    draw_window(title, body, game, options=options, window_x=x, window_y=y, forced_width=width, options_colors=options_colors)
+    draw_window(title, body, game, options=options, window_x=x, window_y=y, forced_width=width, options_colors=options_colors, show_cancel_option=cancel_with_escape)
 
-    choice = menu_loop(wait_for=len(options))
+    choice = menu_loop(wait_for=len(options), cancel_with_escape=cancel_with_escape)
 
     if choice is not None:
         return item_list[choice]

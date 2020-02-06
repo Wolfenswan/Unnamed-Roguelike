@@ -63,39 +63,35 @@ class Paperdoll:
             if choice:
                 results.extend(self.dequip(offhand_item))
             else:
-                equipped_item = None
-                print('cancelled equipping 2h weapon') # TODO Placeholder
+                return None
 
         # If new item is shield, check for two-handed weapons #
         if e_to == EquipTo.SHIELD_ARM and self.two_handed_weapons and game is not None:
-            choice = item_list_menu(self.owner, self.two_handed_weapons, game,'Remove Two-Handed Weapon', f'Remove which weapon to equip {item_ent.name}?')
-            # choice = yesno_menu('Remove Two-Handed Weapon',
-            #                     , game)
-            print(choice)
-            if choice:
-                results.extend(self.dequip(choice))
-            else:
-                equipped_item = None
-                print('cancelled equipping shield bc of 2h weapon') # TODO Placeholder
+            while (len(self.two_handed_weapons) > 0): # loop is required, as both melee and ranged weapon could be two-handed
+                choice = item_list_menu(self.owner, self.two_handed_weapons, game,'Remove Two-Handed Weapon', f'Remove which weapon to equip {item_ent.name}?')
+                if choice:
+                    results.extend(self.dequip(choice))
+                else:
+                    return None
 
-        if equipped_item and game is not None: # Remove an item in the same spot #
+        # After resolving conflicts for two-handed items, remove items occupying the same slot
+        if equipped_item and game is not None:
             choice = yesno_menu('Remove Item',f'Unequip your {equipped_item.name}?', game)
             if choice:
                 results.extend(self.dequip(equipped_item))
-                results.extend(self.equip(item_ent, game))
             else:
-                print('kept') # TODO Placeholder
+                return None
 
-        else: # Equip the new item #
-            setattr(extremity, e_type, item_ent)
-            self.owner.inventory.remove(item_ent)
-            if qu_slots:
-                self.owner.qu_inventory.capacity += qu_slots
+        # After resolving all conflicts, equip new item
+        setattr(extremity, e_type, item_ent)
+        self.owner.inventory.remove(item_ent)
+        if qu_slots:
+            self.owner.qu_inventory.capacity += qu_slots
 
-            if self.owner.f.active_weapon is None and e_to == EquipTo.WEAPON_ARM: # If there is no active weapon, set the new weapon as active #
-                self.owner.f.active_weapon = item_ent
+        if self.owner.f.active_weapon is None and e_to == EquipTo.WEAPON_ARM: # If there is no active weapon, set the new weapon as active #
+            self.owner.f.active_weapon = item_ent
 
-            results.append({'item_equipped': item_ent, 'message': Message(f'You equip the {item_ent.name}')})
+        results.append({'item_equipped': item_ent, 'message': Message(f'You equip the {item_ent.name_colored}.')})
 
         return results
 
