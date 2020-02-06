@@ -191,7 +191,6 @@ def render_message_panel(message_log, title, con, panel_x, panel_y, width, heigh
     setup_console(con, caption=title, borders=True)
 
     current_turn = game.turn
-
     y = 1
     for message in reversed(message_log.messages):
         if current_turn - message.turn <= 1:
@@ -207,8 +206,6 @@ def render_message_panel(message_log, title, con, panel_x, panel_y, width, heigh
         y += 1
 
     con.blit(game.root, panel_x, panel_y, 0, 0, width, height)
-    #tcod.console_blit(con, 0, 0, width, height, 0, panel_x, panel_y)
-
 
 def render_status_panel(game, con, panel_x, panel_y, width, height):
     setup_console(con, fgcolor=colors.light_gray)

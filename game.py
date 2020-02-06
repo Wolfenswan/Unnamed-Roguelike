@@ -1,6 +1,6 @@
 from enum import Enum, auto
 
-from config_files import cfg, colors
+from config_files import colors
 from rendering import render_constants as cons
 from gameobjects.block_level import BlockLevel
 from gui.messages import MessageLog
@@ -62,6 +62,10 @@ class Game:
             self.previous_state = self.state
             self.state = state
             self.cursor.pos = pos
+
+    def clean_logs(self):
+        self.observation_log.clean()
+        self.combat_log.clean()
 
     @property
     def fighter_ents(self):

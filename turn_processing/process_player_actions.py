@@ -47,7 +47,10 @@ def process_player_input(action, game, last_turn_results:Optional[Dict]):
         game.toggle_cursor(player.pos)
 
     if toggle_fire:
-        if player.active_weapon_is_ranged:
+        if player.nearby_enemies_count(game) >= 1:
+            turn_results.append(
+                {'message': Message('PLACEHOLDER: Can not fire with enemies nearby.', type=MessageType.SYSTEM)})
+        elif player.active_weapon_is_ranged:
             nearest_ent = player.nearest_entity(game.npc_ents, max_dist=player.active_weapon.attack_range[1])
             pos = nearest_ent.pos if nearest_ent is not None else player.pos
             game.toggle_cursor(pos, state=GameState.CURSOR_TARGETING)

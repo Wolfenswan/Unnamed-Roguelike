@@ -23,6 +23,7 @@ def initialize_game(player_name, game):
     game.turn = 1
     game.cursor = Entity(0, 0, 'X', colors.white, 'Cursor', render_order=RenderOrder.CURSOR)
     game.projectile = Entity(0, 0, '*', colors.white, 'Projectile', render_order=RenderOrder.NONE)
+    game.clean_logs()
 
     player = initialize_player(player_name)
     map = initialize_map(game)

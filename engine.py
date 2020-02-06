@@ -100,6 +100,7 @@ def game_loop(game):
                 for ent in game.entities:
                     ent.proc_every_turn(game, start=False)
                 game.state = process_npc_actions(game) # set game state to either player turn or player dead
+                new_turn = True
 
             # Level Change #
             if level_change is not None and game.player_active:  # player_active prevents level_change if player was killed while trying to change the level

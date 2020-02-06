@@ -1,4 +1,6 @@
 CURRENT
+- Update Manual
+    - implement dynamic scrolling while at it?
 - Tweak Dungeon generation
     - ideally should be a mix between dungeon & tunnels
         - options dungeon (only tunnels & square rooms), caves (only drunk walk), mines (mix of both)
@@ -18,39 +20,42 @@ CURRENT
     - Items to retrieve (take up spot in inventory)
     - has to return to portal?
 
-UPCOMING
+COMBAT
+- bombs/projectiles exploding after n turns
+- ranged combat
+    - add reloadable weapons
+        - e.g. crossbow, guns
+        - EMPTY indicator in GUI
+        - reload by "waiting"
+    - some weapons can be fired with enemies nearby
+        - e.g. crossbow, guns (but not reloaded)
+
+ENTITIES
+- Ent Placement
+    - Implement the 'exclusive' switch to find_end_position to make sure e.g. chests and barrels are on their own
+- AI Skill
+    - give skills a weight to prefer one over the other
+- steel fence with portcullis parting a room
+    - does block walk but not sight/projectile
+- Light sources
+    - static torches/lamps
+    - add light_source component to entity
+    - if range of light_source is in player's FOV, add that area to FOV
+
+GUI
+    - messages displaying same information should be merged (using counters: 'x2')
+    - allow pages in menus, change via left/right or up/down
+    Manual
+    - Dynamic scrolling, instead of predefined pages
+
+REFACTORING/CODE
+- can lowering exploration value make a comeback?
+- weighted item generation for containers:
+    - less chance for each item towards the cap
+    - https://stackoverflow.com/questions/14992521/python-weighted-random
+    - https://oroboro.com/non-uniform-random-numbers/
 - rewrite turn_processing lists -> dict
     - write new class "Turn", carrying all relevant information
         - game as owner
         - method end() to clean out turn
         - 'messages' : value list containing all messages to display
-- can lowering exploration value make a comeback?
-- bombs/projectiles exploding after n turns
-- weighted item generation for containers:
-    - less chance for each item towards the cap
-    - https://stackoverflow.com/questions/14992521/python-weighted-random
-COMBAT
-    - reduce ranged damage if enemies are nearby
-        -> new fighter attr. "hindered" similar to surrounded but modifies dmg
-            - needs to be displayed in GUI
-        -> or simpler: no ranged possible when enemy nearby?
-            - not ideal for some ranged weapons; then again neither would be hindered
-                - in that case (future!) probably best to apply special rules
-- Ent Placement
-    - Implement the 'exclusive' switch to find_end_position to make sure e.g. chests and barrels are on their own
-- AI Skill
-    x add a randomized aspect when deciding on cooled down skill(s) (35% to ignore skills for now)
-    - give skills a weight to prefer one over the other
-- GUI work
-    - messages displaying same information should be merged (using counters: 'x2')
-    x Highlight "you" in messages with white color
-Manual
-    - Dynamic scrolling, instead of predefined pages
-Menus
-    - allow pages in menus, change via left/right or up/down
-- new static object: steel fence with portcullis parting a room
-    - does block walk but not sight/projectile
-Light sources
-    - static torches/lamps
-    - add light_source component to entity
-    - if range of light_source is in player's FOV, add that area to FOV

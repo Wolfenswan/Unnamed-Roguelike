@@ -79,7 +79,7 @@ def fill_container(container, dlvl, rarity_filter=None, type_filter=None, forced
         possible_items = {k: v for k, v in ITEM_DATA.items() if
                           v.get(Key.TYPE) in type_filter
                           and v.get(Key.RARITY, RarityType.COMMON) in rarity_filter}
-        num_of_items = randint(0, container.inventory.capacity)
+        num_of_items = randint(0, container.inventory.capacity) # TODO replace with weighted randomness so the chance is lower the closer towards the cap
         logging.debug(f'Creating {num_of_items} items (Capacity: {container.inventory.capacity})')
         for i in range(num_of_items):
             key = filter_data_dict(possible_items, dlvl)

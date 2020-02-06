@@ -60,7 +60,7 @@ def process_turn_results(player_turn_results, game, fov_map):
 
         if targeting_cancelled:
             game.state = GameState.PLAYER_ACTIVE
-            Message('Targeting cancelled.').add_to_log(game) # TODO Placeholder
+            Message('#Targeting cancelled#').add_to_log(game) # TODO Placeholder
 
         if waiting:
             # TODO move regeneration into its own function

@@ -1,0 +1,3 @@
+06/02/2020
+- BUG: fixed issues with persistent messages after quitting and then starting a new game
+- TWEAK: can no longer fire ranged weapon with enemies nearby

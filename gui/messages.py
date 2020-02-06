@@ -84,3 +84,6 @@ class MessageLog:
             new_message = Message(line, type = message.type, color = message.color)
             new_message.turn = turn
             self.messages.append(new_message)
+
+    def clean(self):
+        self.messages = []

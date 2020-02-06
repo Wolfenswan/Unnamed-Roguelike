@@ -54,9 +54,11 @@ class Paperdoll:
         extremity = self.get_corresponding_extremity(e_to)
         equipped_item = getattr(extremity, e_type)
 
+        needs_two_hands = item_ent.item.equipment.two_handed
+        offhand_item = self.shield_arm.carried
+
         # If new item is two-handed, check if shield arm is occupied #
-        if item_ent.item.equipment.two_handed and self.shield_arm.carried and game is not None:
-            offhand_item = self.shield_arm.carried
+        if needs_two_hands and offhand_item and game is not None:
             choice = yesno_menu('Remove Offhand Item', f'Remove {offhand_item.name} to equip the two-handed {item_ent.name}?', game)
             if choice:
                 results.extend(self.dequip(offhand_item))
@@ -69,6 +71,7 @@ class Paperdoll:
             choice = item_list_menu(self.owner, self.two_handed_weapons, game,'Remove Two-Handed Weapon', f'Remove which weapon to equip {item_ent.name}?')
             # choice = yesno_menu('Remove Two-Handed Weapon',
             #                     , game)
+            print(choice)
             if choice:
                 results.extend(self.dequip(choice))
             else:
