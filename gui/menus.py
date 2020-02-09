@@ -49,7 +49,7 @@ def menu_loop(wait_for=None, cancel_with_escape=True, sort_by:Union[int,str]='st
 
 
 def generic_options_menu(title:str, body:str, options:list, game, sort_by:Union[str, int]='str', cancel_with_escape=True, clear_screen=False):
-    window = draw_window(title, body, game, options, show_cancel_option=cancel_with_escape, sort_by=sort_by, clear_screen=clear_screen)
+    draw_window(title, body, game, options, show_cancel_option=cancel_with_escape, sort_by=sort_by, clear_screen=clear_screen)
 
     choice = menu_loop(wait_for=len(options), sort_by=sort_by, cancel_with_escape=cancel_with_escape)
 
@@ -141,7 +141,7 @@ def item_menu(item_ent, game):
 
 def options_menu(game):
     choice = generic_options_menu('Game Options', '',
-                                  ['Toggle Fullscreen', 'Change Font', f'Configure Debug Options'], game,
+                                  ['Toggle Fullscreen', 'Change Font', f'Debug Options & Cheats'], game,
                                   sort_by=1, clear_screen=True)
     if choice == 0:
         tcod.console_set_fullscreen(not tcod.console_is_fullscreen())
@@ -163,7 +163,7 @@ def options_menu(game):
 def debug_menu(game, clear=False):
     options = []
     for k, v in game.debug.items():
-        options.append(f'{"Enable" if v is False else "Disable"} {k.replace("_"," ").title()}')
+        options.append(f'{"Enable" if v is False else "Disable"} "{k.replace("_"," ").title()}"')
     choice = generic_options_menu('Debug Options','' , options, game, sort_by=1, clear_screen=clear)
 
     if choice in range(0,len(options)):

@@ -18,7 +18,7 @@ LOGGING = {
 }
 
 # DISPLAY SETTINGS
-SCREEN_WIDTH = 84
+SCREEN_WIDTH = 76 # should be > 70 with Cheepicus 8x8x2
 SCREEN_HEIGHT = 54
 LIMIT_FPS = 30
 
@@ -32,7 +32,7 @@ DUNGEON_MAX_WIDTH = DUNGEON_MIN_WIDTH * 1.2
 DUNGEON_MIN_HEIGHT = SCREEN_HEIGHT * 0.8
 DUNGEON_MAX_HEIGHT = DUNGEON_MIN_HEIGHT * 1.2
 
-# TODO Set this up so they are relative in size to dungeon/room #
+# TODO should be relative in size to dungeon/room #
 ROOM_MAX_SIZE = 15
 ROOM_MIN_SIZE = 4
 

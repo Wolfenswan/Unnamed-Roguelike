@@ -1,3 +1,8 @@
 06/02/2020
 - BUG: fixed issues with persistent messages after quitting and then starting a new game
 - TWEAK: can no longer fire ranged weapon with enemies nearby
+- BUG: fixed issue with equipping two-handed/offhand items
+
+09/02/2020
+- GUI: options are now properly wrapped if they are longer than the max window width
+- GUI: improved manual code. text is now wrapped dynamically, page display is cleaner and pages can be scrolled up & down

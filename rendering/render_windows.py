@@ -51,11 +51,13 @@ def draw_window(title, body, game, options:Optional[List]=None,
             width += 4 # This accounts for the listing points (e.g. (1) <option>)
 
     body_wrapped = dynamic_wrap(body, width - padding_x * 2) #if body != '' else []
+    options_wrapped = [dynamic_wrap(opt, width - padding_x * 2) for opt in options]
 
     # Calculate window height #
     height = padding_y * 2 + len(body_wrapped)
     if options:
-        height += len(options)
+        for opt in options_wrapped:
+            height += len(opt)
         if body_wrapped:
             height += 1 # gap between body-text and options
 
@@ -76,14 +78,17 @@ def draw_window(title, body, game, options:Optional[List]=None,
     # Print options to the window #
     if options:
         letter_index = ord('a')
-        for i, option in enumerate(options):
+        for i, option in enumerate(options_wrapped):
             if isinstance(sort_by, str):
-                line = f'({chr(letter_index)}) {option}'
+                line = f'({chr(letter_index)}) {option[0]}'
                 letter_index += 1  # cycle the alphabet by incrementing the ascii code referencing a letter
             elif isinstance(sort_by, int):
-                line = f'({str(i + 1)}) {option}'
+                line = f'({str(i + 1)}) {option[0]}'
             else:
-                line = option
+                line = option[0]
+            if len(option) > 0: # if the option has been wrapped, add the following lines with sufficient spaces
+                for new_line in option[1:]:
+                    line += '\n    ' + new_line # TODO refactor ugly method to add spaces
             color = options_colors[i] if options_colors else colors.white
             print_string(window, padding_x, i + y, f'{line}', color=color)
 

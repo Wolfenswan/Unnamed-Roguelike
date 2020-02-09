@@ -22,7 +22,7 @@ keys_dict = {
     
     # Toggles #
     'block' : 'r',
-    'dash' : 't',
+    'dash' : 'd',
     'look' : 's',
     'fire' : 'f',
     'map'  : 'm',

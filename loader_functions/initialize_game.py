@@ -34,6 +34,7 @@ def initialize_game(player_name, game):
 
     initialize_objects(game)
 
+
 def initialize_player(name):
     # Setup the Player character #
     p_data = act_classes.classes_data['generic'] # TODO replace with proper class selection

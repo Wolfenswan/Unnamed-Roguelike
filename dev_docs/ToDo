@@ -1,6 +1,6 @@
 CURRENT
-- Update Manual
-    - implement dynamic scrolling while at it?
+- Update/Finish Manual
+- Fullscreen is broken
 - Tweak Dungeon generation
     - ideally should be a mix between dungeon & tunnels
         - options dungeon (only tunnels & square rooms), caves (only drunk walk), mines (mix of both)
@@ -22,6 +22,8 @@ CURRENT
 
 COMBAT
 - bombs/projectiles exploding after n turns
+- mines/traps as items
+    - not triggered by player
 - ranged combat
     - consider always allowing a ranged weapon, indp. from melee weapon/offhand OR disallow both melee & ranged being two-handed
     - allow some weapons one-handed (e.g. spear) but give bonus when off-hand is free

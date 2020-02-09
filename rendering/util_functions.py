@@ -137,12 +137,11 @@ def dynamic_wrap(string, max_width):
     return wrapped
 
 
-def print_string(con, x, y, string, color=None, fgcolor=colors.white, bgcolor=colors.black, color_coefficient=None, alignment=tcod.LEFT, background=tcod.BKGND_DEFAULT):
+def print_string(con, x, y, string, max_length=None, color=None, fgcolor=colors.white, bgcolor=colors.black, color_coefficient=None, alignment=tcod.LEFT, background=tcod.BKGND_DEFAULT):
     """
     Prints a string to tcods console, supporting custom color-code wrappers.
     """
 
-    #logging.debug(f'Printing {string}')
     color_coded_words = COLOR_WRAP_PATTERN.findall(string)
 
     col_ctrls = ()
@@ -175,5 +174,8 @@ def print_string(con, x, y, string, color=None, fgcolor=colors.white, bgcolor=co
 
     if fgcolor and color_coefficient:
         fgcolor = tuple(int(color_coefficient * x) for x in fgcolor)
+
+    if max_length is not None and len(string) > max_length:
+        string = dynamic_wrap(string,max_length)
 
     con.print(x, y, string, fg=fgcolor, alignment=alignment, bg_blend=background)
