@@ -250,6 +250,10 @@ class Entity:
         return self.item.equipment.dmg_potential if self.item is not None and self.item.equipment is not None else None
 
     @property
+    def armor_value(self):
+        return self.item.equipment.av if self.item is not None and self.item.equipment is not None else None
+
+    @property
     def attack_range(self):
         return self.item.equipment.attack_range if self.item is not None and self.item.equipment is not None else None
 

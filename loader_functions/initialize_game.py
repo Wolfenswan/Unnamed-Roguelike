@@ -3,7 +3,7 @@ from random import randint, choice
 
 from config_files import cfg
 from config_files import colors
-from data.actor_data import act_classes
+from data.actor_data import player_classes
 from data.data_enums import Key
 from data.data_processing import gen_loadout
 from debug.timer import debug_timer
@@ -37,7 +37,7 @@ def initialize_game(player_name, game):
 
 def initialize_player(name):
     # Setup the Player character #
-    p_data = act_classes.classes_data['generic'] # TODO replace with proper class selection
+    p_data = player_classes.classes_data['generic'] # TODO replace with proper class selection
     player = Player(name, p_data)
     loadout = choice(list(p_data[Key.LOADOUTS].values()))
     gen_loadout(player, loadout)

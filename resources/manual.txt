@@ -50,9 +50,8 @@ Arrow Keys:
 Left    Right
     Down
 
-Num 5 or . - Wait a turn. Rests outside combat.
-< - descend a flight of stairs
-
+Num 5 or . - Wait a turn.
+                - Outside combat: rest, use stairs
 
 # ACTIONS #
 
@@ -70,10 +69,11 @@ g   - (g)et an item from the ground
 i   - open the (i)nventory
     - select an item to read it's description
         and interact with it
-e   - shows your (e)quipment
+E   - shows your (E)quipment
         - select an item to read it's description
         and interact with it
 p   - (p)repare an item from your inventory, putting it in your quick access belt
+P   - shows your (P)repared items
 1-9 - Use a prepared item
 
 

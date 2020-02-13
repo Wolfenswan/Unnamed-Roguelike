@@ -24,7 +24,7 @@ def set_window_on_screen(window_x, window_y, width, height):
 
 
 def draw_window(title, body, game, options:Optional[List]=None,
-                window_x:Optional[int]=None, window_y:Optional[int]=None, padding_x:Optional[int]=2, padding_y:Optional[int]=2,
+                window_x:Optional[int]=None, window_y:Optional[int]=None, padding_x:Optional[int]=1, padding_y:Optional[int]=2,
                 sort_by = 'str', show_cancel_option=True, forced_width:Optional[int]=None, title_color=colors.white, options_colors=None, clear_screen=False):
 
     # TODO param game -> root_console
@@ -46,18 +46,18 @@ def draw_window(title, body, game, options:Optional[List]=None,
         if show_cancel_option:
             all_strings.append(cancel_string)
         longest_string = max(all_strings, key=len)
-        width = min(len(longest_string), round(cfg.SCREEN_WIDTH // 3)) + padding_x * 2
+        width = min(len(longest_string), round(cfg.SCREEN_WIDTH//2)) + padding_x * 2
         if longest_string in options:
-            width += 4 # This accounts for the listing points (e.g. (1) <option>)
+            width += 4 # This accounts for the listing points (i.e.' (1) <option>')
 
-    body_wrapped = dynamic_wrap(body, width - padding_x * 2) #if body != '' else []
-    options_wrapped = [dynamic_wrap(opt, width - padding_x * 2) for opt in options]
+    body_wrapped = dynamic_wrap(body, width-padding_x*2)
+    options_wrapped = [dynamic_wrap(opt, width-padding_x*2-4) for opt in options] # substract 4 from width as otherwise the listing points break the wrapping
 
     # Calculate window height #
     height = padding_y * 2 + len(body_wrapped)
     if options:
         for opt in options_wrapped:
-            height += len(opt)
+            height += len(opt) # opt is a list of strings
         if body_wrapped:
             height += 1 # gap between body-text and options
 
@@ -77,20 +77,27 @@ def draw_window(title, body, game, options:Optional[List]=None,
 
     # Print options to the window #
     if options:
-        letter_index = ord('a')
-        for i, option in enumerate(options_wrapped):
+        letter_idx = ord('a')
+        line_idx = 0
+        list_counter = 1
+        for option in options_wrapped:
             if isinstance(sort_by, str):
-                line = f'({chr(letter_index)}) {option[0]}'
-                letter_index += 1  # cycle the alphabet by incrementing the ascii code referencing a letter
+                line = f'({chr(letter_idx)}) {option[0]}'
+                letter_idx += 1  # cycle the alphabet by incrementing the ascii code referencing a letter
             elif isinstance(sort_by, int):
-                line = f'({str(i + 1)}) {option[0]}'
+                line = f'({list_counter}) {option[0]}'
             else:
                 line = option[0]
+
+            color = options_colors[line_idx] if options_colors else colors.white
+            print_string(window, padding_x, line_idx + y, f'{line}', color=color)
+            line_idx += 1
+            list_counter += 1
+
             if len(option) > 0: # if the option has been wrapped, add the following lines with sufficient spaces
-                for new_line in option[1:]:
-                    line += '\n    ' + new_line # TODO refactor ugly method to add spaces
-            color = options_colors[i] if options_colors else colors.white
-            print_string(window, padding_x, i + y, f'{line}', color=color)
+                for line in option[1:]:
+                    print_string(window, padding_x, line_idx + y, f'{" " * 4}{line}', color=color)
+                    line_idx += 1
 
     draw_console_borders(window, color=colors.white)
 

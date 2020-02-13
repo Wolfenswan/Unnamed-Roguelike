@@ -130,8 +130,10 @@ def handle_player_turn_keys(key):
         return {'pickup': True}
     elif key_char == keys_dict['inventory']:
         return {'show_inventory': True}
-    elif key_char == keys_dict['equipment'] and key.shift:
+    elif key_char == keys_dict['equip'] and key.shift:
         return {'show_equipment': True}
+    elif key_char == keys_dict['equip'] and not key.shift:
+        return {'equip': True}
     elif key_char == keys_dict['prepare'] and key.shift:
         return {'show_prepared': True}
     elif key_char == keys_dict['prepare'] and not key.shift:

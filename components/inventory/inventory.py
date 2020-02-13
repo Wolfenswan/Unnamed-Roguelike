@@ -29,6 +29,10 @@ class Inventory:
         return len(self) >= self.capacity
 
     @property
+    def equippable_items(self):
+        return [item_e for item_e in self.items if item_e.item.equipment is not None]
+
+    @property
     def useable_items(self):
         return [item_e for item_e in self.items if item_e.item.useable is not None]
 

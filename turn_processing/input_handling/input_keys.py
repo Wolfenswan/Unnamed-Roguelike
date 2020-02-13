@@ -17,8 +17,8 @@ keys_dict = {
     # Interaction #
     'get' : 'g',
     'inventory' : 'i',
-    'equipment' : 'e',
-    'prepare' : 'p',
+    'equip' : 'e', # + shift : show equipped items
+    'prepare' : 'p',   # + shift : show prepared items
     
     # Toggles #
     'block' : 'r',

@@ -22,6 +22,7 @@ def process_player_input(action, game, last_turn_results:Optional[Dict]):
     exit = action.get('exit')
     fullscreen = action.get('fullscreen')
     prepare = action.get('prepare')
+    equip = action.get('equip')
     toggle_look = action.get('toggle_look')
     toggle_fire = action.get('toggle_fire')
     toggle_map = action.get('toggle_map') # TODO implement
@@ -37,7 +38,7 @@ def process_player_input(action, game, last_turn_results:Optional[Dict]):
 
     # Inventory Interaction #
     if game.state in [GameState.SHOW_INVENTORY, GameState.SHOW_QU_INVENTORY, GameState.SHOW_EQUIPMENT]:
-        turn_results.extend(process_inventory_interaction(game, prepare))
+        turn_results.extend(process_inventory_interaction(game, prepare, equip))
 
     # Cursor Movement & Targeting #
     if game.state in [GameState.CURSOR_ACTIVE, GameState.CURSOR_TARGETING]:
@@ -86,6 +87,7 @@ def process_player_interaction(game, action):
     wait = action.get('wait')
     pickup = action.get('pickup')
     prepare = action.get('prepare')
+    equip = action.get('equip')
     quick_use_idx = action.get('quick_use')
     show_inventory = action.get('show_inventory')
     show_equipment = action.get('show_equipment')
@@ -225,7 +227,7 @@ def process_player_interaction(game, action):
         results.extend(qu_results)
 
     # Inventory display #
-    if show_inventory or prepare:
+    if show_inventory or prepare or equip:
         if show_inventory and len(player.inventory) == 0:
             Message('Your inventory is empty.', category=MessageCategory.OBSERVATION).add_to_log(game)
         elif prepare and len(player.inventory.useable_items) > 0:
@@ -260,17 +262,19 @@ def process_player_interaction(game, action):
 
     return results
 
-def process_inventory_interaction(game, prepare):
+def process_inventory_interaction(game, prepare=False, equip=False):
     player = game.player
     selected_item_ent = None
 
     results = []
 
     if game.state == GameState.SHOW_INVENTORY:
-        if not prepare:
-            selected_item_ent = item_list_menu(player, player.inventory, game)
-        else:
+        if prepare:
             selected_item_ent = item_list_menu(player, player.inventory.useable_items, game, body='Prepare which item?')
+        elif equip:
+            selected_item_ent = item_list_menu(player, player.inventory.equippable_items, game, body='Prepare which item?')
+        else:
+            selected_item_ent = item_list_menu(player, player.inventory, game)
 
     elif game.state == GameState.SHOW_EQUIPMENT:
         #render_equipment_window(player.paperdoll.equipped_items, game)

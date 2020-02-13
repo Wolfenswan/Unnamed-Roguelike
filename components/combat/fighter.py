@@ -172,10 +172,8 @@ class Fighter:
         total_defense = self.base_av
         if self.owner.paperdoll is not None:
             for e in self.owner.paperdoll.equipped_items:
-                av = vars(e.item.equipment).get(Key.AV)
-                # This extra step is required as av value is set to None for all Equipments during data processing
-                if av is not None:
-                    total_defense += av
+                if e.armor_value is not None:
+                    total_defense += e.armor_value
 
         return total_defense
     
@@ -193,6 +191,7 @@ class Fighter:
         if len(modifiers) > 0:
             mod = sum(modifiers) / len(modifiers)
 
+        print(self.defense, mod)
         return round(self.defense * mod)
 
     @property

@@ -34,11 +34,12 @@ class GameMap:
         return [tile for tile in self.tiles.values() if tile.blocked]
 
     def create_map(self, room_min_size, room_max_size):
+        drunk_chance = 40 # chance in 100 to do a drunken tunnel instead of a straight one
 
         map_width, map_height = self.width, self.height
         max_rooms = int((map_width / room_min_size) + (map_height / room_min_size))
         self.create_rooms(max_rooms, room_min_size, room_max_size, map_width, map_height, fuzzy=10)
-        Tunneling.create_tunnels(self, randomize=True, drunk_chance=50)
+        Tunneling.create_tunnels(self, randomize=True, drunk_chance=drunk_chance)
 
         # Fill the rest of the map with a pathfinding algorithm
         # algo = choice([Tunneling, DrunkWalk])

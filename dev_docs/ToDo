@@ -1,6 +1,5 @@
 CURRENT
 - Update/Finish Manual
-- Fullscreen is broken
 - Tweak Dungeon generation
     - ideally should be a mix between dungeon & tunnels
         - options dungeon (only tunnels & square rooms), caves (only drunk walk), mines (mix of both)
