@@ -100,6 +100,9 @@ class Mod(Enum):
     AV_FLAT = auto()
     MOD_MULTIPL = auto()
     EXERT_MULTIPL = auto()
+    CAN_MOVE = auto()
+    CAN_ATTACK = auto()
+    SKIP_TURN_CHANCE = auto()
 
 
 # ENTITY TYPES #

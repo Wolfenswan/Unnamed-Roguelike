@@ -319,11 +319,10 @@ class Fighter:
     def exert(self, amount, string='action'):
         self.stamina -= round(amount)
         logging.debug(f'{self.owner.name} exerted by {string} for {amount}')
-        #pronoun = 'Your' if self.owner.isplayer else 'The'
         if self.owner.is_player:
             sta_dmg_string = self.stadmg_string(amount)
             col = self.stadmg_color(amount)
-            message = M(f'{self.owner.address_color.title()} {string} for %{col}%{sta_dmg_string}%% exertion.',
+            message = M(f'{self.owner.possessive_color.title()} {string} causes %{col}%{sta_dmg_string}%% exertion.',
                               category=MessageCategory.OBSERVATION, type=MessageType.COMBAT_INFO)
             return {'message': message}
         return {}
@@ -487,8 +486,8 @@ class Fighter:
         else:
             msg_type = MessageType.COMBAT_BAD if not target.is_player else MessageType.COMBAT_GOOD
             results.append(
-                {'message': M(f'{self.owner.address_color.title()} {attack_string} {target_string} but can not pierce armor.', category=MessageCategory.COMBAT, type=msg_type)})
-            results.append(target.f.exert(power, 'armor deflection'))
+                {'message': M(f'{self.owner.address_color.title()} {attack_string} {target_string} but can not penetrate armor.', category=MessageCategory.COMBAT, type=msg_type)})
+            results.append(target.f.exert(power, 'deflection'))
 
         logging.debug(
             f'{self.owner.name.title()} attacks {target.name.title()} with {power} power against {target.f.defense} defense for {damage} damage. Target has {target.f.stamina} stamina left.)')

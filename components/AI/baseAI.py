@@ -34,7 +34,7 @@ class BaseAI:
             skip_turn = True
 
         elif presence[State.DAZED]:
-            if randint(0,100) <= status_modifiers_data[State.DAZED]['skip_turn_chance']:
+            if randint(0,100) <= status_modifiers_data[State.DAZED][Mod.SKIP_TURN_CHANCE]: # TODO Mod.
                 message = Message(f'PLACEHOLDER: {npc.name} is dazed and skipping turn.')
                 results.append({'message': message})
                 skip_turn = True

@@ -1,4 +1,4 @@
-from data.data_enums import Key
+from data.data_enums import Key, Mod
 
 moveset_heavy = {
     Key.DEFAULT: {

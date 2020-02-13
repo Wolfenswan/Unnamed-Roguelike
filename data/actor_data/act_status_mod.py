@@ -1,31 +1,32 @@
 from components.combat.fighter_util import State, Surrounded
+from data.data_enums import Mod
 
 status_modifiers_data = {
     State.DAZED: {
-        'av_multipl' : 0.75,
-        'dmg_multipl': 0.75,
-        'skip_turn_chance': 15
+        Mod.AV_MULTIPL : 0.75,
+        Mod.DMG_MULTIPL: 0.75,
+        Mod.SKIP_TURN_CHANCE: 15
     },
     State.STUNNED: {
-        'av_multipl' : 0.5,
-        'dmg_multipl' : 0,
-        'skip_turn_chance': 100,
-        'can_attack': False,
-        'can_move': False
+        Mod.AV_MULTIPL : 0.5,
+        Mod.DMG_MULTIPL : 0,
+        Mod.SKIP_TURN_CHANCE: 100,
+        Mod.CAN_ATTACK: False,
+        Mod.CAN_MOVE: False
     },
     State.ENTANGLED: {
-        'skip_turn_chance': 0,
-        'can_move': False
+        Mod.SKIP_TURN_CHANCE: 0,
+        Mod.CAN_MOVE: False
     },
     State.IMMOBILE: {
-        'can_move': False
+        Mod.CAN_MOVE: False
     },
 
     Surrounded.FREE:{},
     Surrounded.THREATENED: {
-        'av_multipl': 0.8
+        Mod.AV_MULTIPL : 0.7
     },
     Surrounded.OVERWHELMED: {
-        'av_multipl': 0.1
+         Mod.AV_MULTIPL : 0.1
     }
 }

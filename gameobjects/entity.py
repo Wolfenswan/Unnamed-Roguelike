@@ -17,7 +17,7 @@ from components.inventory.paperdoll import Paperdoll
 from components.items.item import Item
 from components.statistics import Statistics
 from data.actor_data.act_status_mod import status_modifiers_data
-from data.data_enums import GenericType, MonsterType, ItemType, Material, BodyType
+from data.data_enums import GenericType, MonsterType, ItemType, Material, BodyType, Mod
 from data.gui_data.gui_entity import bodytype_name_data
 from data.gui_data.material_strings import material_name_data
 from data.gui_data.gui_fighter import effects_descr_data
@@ -195,7 +195,7 @@ class Entity:
     def can_move(self):
         if self.fighter:
             for state, active in self.effects.items():
-                if active and status_modifiers_data[state].get('can_move', True) is False:
+                if active and status_modifiers_data[state].get(Mod.CAN_MOVE, True) is False:
                     return False
             else: # for...else triggers if the for loop finished without breaking
                 return True
@@ -206,7 +206,7 @@ class Entity:
     def can_attack(self):
         if self.fighter:
             for state, active in self.effects.items():
-                if active and status_modifiers_data[state].get('can_attack', True) is False:
+                if active and status_modifiers_data[state].get(Mod.CAN_ATTACK, True) is False:
                     return False
             else:   # for...else applies if the for loop finished without breaking
                 return True
@@ -437,6 +437,10 @@ class Entity:
     @property
     def possessive(self):
         return f'{self.address}\'s' if not self.is_player else 'your'
+
+    @property
+    def possessive_color(self):
+        return f'{self.address}\'s' if not self.is_player else f'%{self.color}%your%%'
 
     @property
     def state_verb_present(self):

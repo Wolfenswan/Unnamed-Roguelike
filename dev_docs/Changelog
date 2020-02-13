@@ -13,3 +13,5 @@
 13/02/2020
 - BUG: AV was not properly calculated
 - GUI: (e) now opens menu with only equippable items
+- BUG: Updated act_status_mod to use now Enum system
+- MISC: fixed some strings, tweaked exertion feedback

@@ -230,8 +230,10 @@ def process_player_interaction(game, action):
     if show_inventory or prepare or equip:
         if show_inventory and len(player.inventory) == 0:
             Message('Your inventory is empty.', category=MessageCategory.OBSERVATION).add_to_log(game)
-        elif prepare and len(player.inventory.useable_items) > 0:
+        elif prepare and len(player.inventory.useable_items) <= 0:
             Message('You have no items to prepare.', category=MessageCategory.OBSERVATION).add_to_log(game)
+        elif equip and len(player.inventory.equippable_items) <= 0:
+            Message('You have no items to equip.', category=MessageCategory.OBSERVATION).add_to_log(game)
         else:
             game.previous_state = game.state
             game.state = GameState.SHOW_INVENTORY
@@ -272,7 +274,7 @@ def process_inventory_interaction(game, prepare=False, equip=False):
         if prepare:
             selected_item_ent = item_list_menu(player, player.inventory.useable_items, game, body='Prepare which item?')
         elif equip:
-            selected_item_ent = item_list_menu(player, player.inventory.equippable_items, game, body='Prepare which item?')
+            selected_item_ent = item_list_menu(player, player.inventory.equippable_items, game, body='Equip which item?')
         else:
             selected_item_ent = item_list_menu(player, player.inventory, game)
 
