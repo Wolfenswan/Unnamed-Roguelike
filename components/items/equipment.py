@@ -16,6 +16,7 @@ class Equipment():
     attack_range: Optional[Tuple]
     l_radius: Optional[int]
     two_handed: Optional[bool]
+    one_handed_penalty_mod: Optional[int]  # if a two-handed weapon can be wielded in one hand with penalties
     moveset: Optional[Moveset]
 
     def __repr__(self):
@@ -36,3 +37,7 @@ class Equipment():
     @property
     def color(self):
         return self.owner.owner.color
+
+    @property
+    def two_handed_only(self):
+        return self.two_handed and self.one_handed_penalty_mod is None

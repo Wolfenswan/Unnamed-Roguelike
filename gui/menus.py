@@ -63,7 +63,7 @@ def yesno_menu(title, body, game, cancel_with_escape=True):
     options = ['(Y)es', '(N)o']
     wait_for = ['y', 'n']
 
-    draw_window(title, body, game, options, window_x=x, window_y=y, forced_width=len(body), sort_by=None, show_cancel_option=cancel_with_escape)
+    draw_window(title, body, game, options, window_x=x, window_y=y, sort_by=None, show_cancel_option=cancel_with_escape)
 
     choice = menu_loop(wait_for=wait_for, cancel_with_escape=cancel_with_escape)
 
@@ -131,8 +131,8 @@ def item_menu(item_ent, game):
         options.append('(D)rop')
         wait_for.append('d')
 
-    width = min(len(body), round(cfg.SCREEN_WIDTH // 2.5))
-    draw_window(title, body, game, options=options, window_x=x, window_y=y, sort_by=None, forced_width=width, title_color=item_ent.color)
+    #width = min(len(body), round(cfg.SCREEN_WIDTH // 2.5))
+    draw_window(title, body, game, options=options, window_x=x, window_y=y, sort_by=None, title_color=item_ent.color)
 
     choice = menu_loop(wait_for=wait_for)
 

@@ -44,19 +44,23 @@ class Item:
 
         listing = ''
         col = 'desaturated_lime'
+        e_c = self.equipment
 
         if self.owner.type:
             type_str = self.owner.type.name.replace('_',' ')
-            if self.equipment and self.equipment.two_handed:
-                type_str += ' (Two-Handed)'
             listing += f'\n\n Type: %{col}%{type_str.title()}%%'
 
-        if self.equipment:
-            e_c = self.equipment
-            
+        if e_c:
+
             if e_c.e_to:
                 e_str = str(e_c.e_to.name).lower().replace('_',' ')
                 listing += f'\n\n Equips To: %{col}%{e_str.title()}%%'
+
+            if e_c.two_handed:
+                if e_c.two_handed_only:
+                    listing += f'\n\n Two-Handed: %{col}%Only%%'
+                else:
+                    listing += f'\n\n Two-Handed: %{col}%Optional%%'
 
             if e_c.av:
                  listing += f'\n\n Armor: %{col}%{e_c.av}%%'
@@ -77,7 +81,7 @@ class Item:
                  listing += f'\n\n Light Radius: %{col}%{e_c.l_radius}%%'
 
             if e_c.moveset:
-                listing += f'\n\nThis weapon utilizes %orange%{e_c.moveset.moves} attacks%%:'
+                listing += f'\n\nThis weapon utilizes %orange%{e_c.moveset.moves} attacks%%:\n'
                 for k, v in e_c.moveset.movelist.items():
                     if v.get(Key.DESCR) is not None:
                         listing += f'\n%orange%{k}:%% {v.get(Key.DESCR)}'

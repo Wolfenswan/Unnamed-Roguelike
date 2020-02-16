@@ -35,6 +35,7 @@ equ_weapon_data = {
         Key.CHAR: '|',
         Key.DMG_POTENTIAL: (2,8),
         Key.TWO_HANDED: True,
+        Key.ONE_HANDED_PENALTY_MOD: 0.5, # multiply damage by this amount if wielded only two-handed
         Key.MOVESET: moveset_spear,
         Key.RARITY: RarityType.COMMON
     },

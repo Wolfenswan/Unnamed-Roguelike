@@ -14,4 +14,4 @@
         - OR simply ignore and dont execute a turn
 
 # Movesets
-- atm further targets take flat half damage (add new modifier to moveset)
+- atm further targets take flat half damage (add new get_modifier to moveset)

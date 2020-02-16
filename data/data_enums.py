@@ -64,6 +64,7 @@ class Key(Enum):
     QU_SLOTS = auto()
     L_RADIUS = auto()
     TWO_HANDED = auto()
+    ONE_HANDED_PENALTY_MOD = auto()
     MOVESET = auto()
 
     # Movesets & Skills #
@@ -87,7 +88,7 @@ class Key(Enum):
 
 class Mod(Enum):
     """
-    Attribute modifiers used as key-names in the data-dict and accessed mostly by the Fighter component.
+    Attribute modifiers used as key-names in the data-dict and accessed primarily through the Fighter component.
     """
     HP_MULTIPL = auto()
     STR_MULTIPL = auto()
@@ -97,8 +98,8 @@ class Mod(Enum):
     DMG_MULTIPL = auto()
     DMG_FLAT = auto()
     ARMOR_PIERCING_FLAT = auto()
-    AV_FLAT = auto()
-    MOD_MULTIPL = auto()
+    AV_FLAT = auto()                # adds or substracts a flat amount from the armor value
+    COND_MULTIPL = auto()           # modifies the corresponding primary value of an item, i.e. armor value for armor and damage for weapons.
     EXERT_MULTIPL = auto()
     CAN_MOVE = auto()
     CAN_ATTACK = auto()

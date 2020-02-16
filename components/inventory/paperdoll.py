@@ -28,16 +28,17 @@ class Paperdoll:
 
     @property
     def two_handed_weapons(self):
+        """ Returns a list of two-handed weapons the entity is carrying """
         weapons = []
-        if self.weapon_arm.carried and self.weapon_arm.carried.item.equipment.two_handed:
+        if self.weapon_arm.carried and self.weapon_arm.carried.item.equipment.two_handed_only:
             weapons.append(self.weapon_arm.carried)
-        elif self.weapon_arm.ranged and self.weapon_arm.ranged.item.equipment.two_handed:
+        elif self.weapon_arm.ranged and self.weapon_arm.ranged.item.equipment.two_handed_only:
             weapons.append(self.weapon_arm.ranged)
         return weapons
 
     def equip(self, item_ent, game=None):
         """
-        TODO: refactor so game is no longer necessary: return conflicting item, let calling function handle menu
+        TODO: refactor so game param is no longer necessary: return conflicting item, let calling function handle menu
 
         :param item_ent:
         :type item_ent:
@@ -48,18 +49,19 @@ class Paperdoll:
         """
         results = []
         e_type = item_ent.type.name.lower() # Entity.type is a enum member of the ItemType Class.
-        e_to = item_ent.item.equipment.e_to
-        qu_slots = item_ent.item.equipment.qu_slots
+
+        equip_ent = item_ent.item.equipment
+        e_to = equip_ent.e_to
+        qu_slots = equip_ent.qu_slots
 
         extremity = self.get_corresponding_extremity(e_to)
         equipped_item = getattr(extremity, e_type)
 
-        needs_two_hands = item_ent.item.equipment.two_handed
         offhand_item = self.shield_arm.carried
 
         # If new item is two-handed, check if shield arm is occupied #
-        if needs_two_hands and offhand_item and game is not None:
-            choice = yesno_menu('Remove Offhand Item', f'Remove {offhand_item.name} to equip the two-handed {item_ent.name}?', game)
+        if equip_ent.two_handed_only and offhand_item and game is not None:
+            choice = yesno_menu('Remove Offhand Item', f'Remove {offhand_item.name_colored} to equip the two-handed {item_ent.name_colored}?', game)
             if choice:
                 results.extend(self.dequip(offhand_item))
             else:
@@ -68,7 +70,7 @@ class Paperdoll:
         # If new item is shield, check for two-handed weapons #
         if e_to == EquipTo.SHIELD_ARM and self.two_handed_weapons and game is not None:
             while (len(self.two_handed_weapons) > 0): # loop is required, as both melee and ranged weapon could be two-handed
-                choice = item_list_menu(self.owner, self.two_handed_weapons, game,'Remove Two-Handed Weapon', f'Remove which weapon to equip {item_ent.name}?')
+                choice = item_list_menu(self.owner, self.two_handed_weapons, game,'Remove Two-Handed Weapon', f'Remove which weapon to equip {item_ent.name_colored}?')
                 if choice:
                     results.extend(self.dequip(choice))
                 else:
@@ -76,7 +78,7 @@ class Paperdoll:
 
         # After resolving conflicts for two-handed items, remove items occupying the same slot
         if equipped_item and game is not None:
-            choice = yesno_menu('Remove Item',f'Unequip your {equipped_item.name}?', game)
+            choice = yesno_menu('Remove Item',f'Unequip your {equipped_item.name_colored}?', game)
             if choice:
                 results.extend(self.dequip(equipped_item))
             else:
@@ -122,7 +124,7 @@ class Paperdoll:
 
             results.append({'item_dequipped': item_ent, 'message': Message(f'You remove the {item_ent.name}.')})
         else:
-            logging.error('Trying to dequip something that is not equipped. This should not happen...')
+            logging.error('Trying to dequip something that is not equipped.')
 
         return results
 

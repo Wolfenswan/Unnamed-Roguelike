@@ -265,6 +265,14 @@ class Entity:
     def effects(self):
         return self.f.effects if self.fighter is not None else None
 
+    @property
+    def two_handed(self):
+        return self.item.equipment.two_handed
+
+    @property
+    def two_handed_only(self):
+        return self.item.equipment.two_handed_only
+
     def is_active_weapon(self,ent):
         return self == ent.f.active_weapon
 

@@ -29,7 +29,7 @@ class Moveset():
 
     @property
     def exert_multipl(self):
-        return self.movelist[self.current_move].get(Mod.MOD_MULTIPL, 1)
+        return self.movelist[self.current_move].get(Mod.EXERT_MULTIPL, 1)
 
     @property
     def targets_gui(self):
@@ -79,7 +79,7 @@ class Moveset():
         if self.current_move > self.moves or reset:
             self.current_move = 1
 
-    def modifier(self, modifier_key):
+    def get_modifier(self, modifier_key):
         """ All weapons have various modifiers, with data_keys as names. This function allows to retrieve these values
         by passing a data_key name as argument """
         move = self.movelist[self.current_move]

@@ -144,21 +144,25 @@ class Fighter:
         mod = 1
         modifiers = []
 
-        # Moveset modifiers #
+        # Moveset and two-handed modifiers #
         if self.active_weapon is not None:
-            modifiers.append(self.active_weapon.moveset.modifier(Mod.DMG_MULTIPL))
+            modifiers.append(self.active_weapon.moveset.get_modifier(Mod.DMG_MULTIPL))
+
+            if self.active_weapon.two_handed and self.shield:
+                modifiers.append(self.active_weapon.item.equipment.one_handed_penalty_mod)
 
         # Status effects #
         for state, active in self.effects.items():
             if active:
-                modifiers.append(status_modifiers_data[state].get('dmg_multipl',1))
+                modifiers.append(status_modifiers_data[state].get(Mod.DMG_MULTIPL,1))
 
         # Surrounded modifiers #
-        modifiers.append(status_modifiers_data[self.surrounded].get('dmg_multipl',1))
+        modifiers.append(status_modifiers_data[self.surrounded].get(Mod.DMG_MULTIPL,1))
 
         # Calculate average modifier
         if len(modifiers) > 0:
-            mod = sum(modifiers)/len(modifiers)
+            mod = round(sum(modifiers)/len(modifiers),4)
+            logging.debug(f'Modifiers: {modifiers}; final: {mod}')
 
         return (round(self.base_dmg_potential[0] * mod), round(self.base_dmg_potential[-1] * mod))
 
@@ -435,7 +439,7 @@ class Fighter:
 
         if attack_blocked:
             # TODO should attacker also take sta damage?
-            sta_dmg_multipl = self.active_weapon.moveset.modifier(Mod.BLOCK_STA_DMG_MULTIPL) # Some weapons afflict a higher stamina damage
+            sta_dmg_multipl = self.active_weapon.moveset.get_modifier(Mod.BLOCK_STA_DMG_MULTIPL) # Some weapons afflict a higher stamina damage
             sta_dmg = round((attack_power / 2) * sta_dmg_multipl)
             logging.debug(f'{target.name} block exert multiplied by {sta_dmg_multipl} due to {self.owner.name} attack mod')
             results.append(target.f.exert(sta_dmg, 'block'))
@@ -577,7 +581,7 @@ class Fighter:
             return 0
         block_def = self.shield.block_def
         #mod = wp_attacktypes_data[attack_type].get(Key.BLOCK_DEF_MULTIP,1)
-        mod = attacking_weapon.moveset.modifier(Mod.BLOCK_DEF_MULTIPL)
+        mod = attacking_weapon.moveset.get_modifier(Mod.BLOCK_DEF_MULTIPL)
         block_def = round(block_def * mod)
         logging.debug(f'{self.owner.name} block def. multiplied by {mod} due to {attacking_weapon}')
 

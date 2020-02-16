@@ -28,17 +28,17 @@ qual_craft_data = {
 qual_cond_data = {
     'poor_cond': {
         Key.TYPE: Condition.POOR,
-        Mod.MOD_MULTIPL: 0.8
+        Mod.COND_MULTIPL: 0.8
     },
     'normal_cond': {
         Key.TYPE: Condition.NORMAL
     },
     'good_cond': {
         Key.TYPE: Condition.GOOD,
-        Mod.MOD_MULTIPL: 1.2
+        Mod.COND_MULTIPL: 1.2
     },
     'legendary_cond': {
         Key.TYPE: Condition.LEGENDARY,
-        Mod.MOD_MULTIPL: 2
+        Mod.COND_MULTIPL: 2
     }
 }

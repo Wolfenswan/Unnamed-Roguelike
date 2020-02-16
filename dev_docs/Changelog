@@ -20,4 +20,5 @@
 - AI: Dung Beatles no longer charge if a wall is between player and them
 
 16/02/2020
-- stat tweaks
+- GAMEPLAY: tweaked exertion stats; moved exertion multipliers/divisors to global cfg file
+- ITEMS: added option to wield specific two-handed weapons in one hand (for a penalty)

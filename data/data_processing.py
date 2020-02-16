@@ -242,20 +242,24 @@ def gen_item_from_data(data:Dict, x:int, y:int, material=False, condition=False,
 
     useable_component = None
     if on_use is not None:
-        #targeted = data.get('targeted', False)
-        msg = data.get(Key.ON_USE_MSG, '')
-        charges = data.get(Key.ON_USE_CHARGES, 1)
-        projectile = data.get(Key.ON_USE_PROJECTILE)
-        params = data[Key.ON_USE_PARAMS]
-        useable_component = Useable(on_use_effect = on_use, on_use_msg=msg, projectile=projectile, charges=charges, on_use_params=params)
+        useable_kwargs = {
+            'on_use_effect' : on_use,
+            'on_use_msg' : data.get(Key.ON_USE_MSG, ''),
+            'projectile' : data.get(Key.ON_USE_PROJECTILE),
+            'charges' : data.get(Key.ON_USE_CHARGES, 1),
+            'on_use_params': data[Key.ON_USE_PARAMS]
+        }
+        #useable_component = Useable(on_use_effect = on_use, on_use_msg=msg, projectile=projectile, charges=charges, on_use_params=params)
+        useable_component = Useable(**useable_kwargs)
 
     equipment_component = None
     if equip_to is not None:
+
         dmg_potential = data.get(Key.DMG_POTENTIAL)
         if dmg_potential:
             mat_mod = material.get(Mod.DMG_FLAT, 0)
             craft_mod = craftsmanship.get(Mod.DMG_FLAT, 0)
-            cond_mod = condition.get(Mod.MOD_MULTIPL, 1)
+            cond_mod = condition.get(Mod.COND_MULTIPL, 1)
             dmg_potential = (round(max((dmg_potential[0] + mat_mod + craft_mod) * cond_mod, 1)),
                              round(max((dmg_potential[1] + mat_mod + craft_mod) * cond_mod, 1)))
 
@@ -263,20 +267,16 @@ def gen_item_from_data(data:Dict, x:int, y:int, material=False, condition=False,
         if av:
             mat_mod = material.get(Mod.AV_FLAT, 0)
             craft_mod = craftsmanship.get(Mod.AV_FLAT, 0)
-            cond_mod = condition.get(Mod.MOD_MULTIPL, 1)
+            cond_mod = condition.get(Mod.COND_MULTIPL, 1)
             av += round((max(mat_mod + craft_mod, 1)) * cond_mod)
 
         block_def = data.get(Key.BLOCK_DEF)
         if block_def:
             mat_mod = material.get(Mod.AV_FLAT, 0)
             craft_mod = craftsmanship.get(Mod.AV_FLAT, 0)
-            cond_mod = condition.get(Mod.MOD_MULTIPL, 1)
+            cond_mod = condition.get(Mod.COND_MULTIPL, 1)
             block_def += round((max(mat_mod + craft_mod, 1)) * cond_mod)
 
-        attack_range = data.get(Key.ATTACK_RANGE)
-        qu_slots = data.get(Key.QU_SLOTS)
-        l_radius = data.get(Key.L_RADIUS)
-        two_handed = data.get(Key.TWO_HANDED)
         #attack_type = forced_attacktype if forced_attacktype else data.get(Key.ATTACKTYPE, AttackType.NORMAL)
         if forced_moveset is None:
             moveset = data.get(Key.MOVESET)
@@ -288,9 +288,19 @@ def gen_item_from_data(data:Dict, x:int, y:int, material=False, condition=False,
         else:
             moveset_component = None
 
-        equipment_component = Equipment(equip_to, dmg_potential=dmg_potential, av=av, block_def=block_def, attack_range=attack_range,
-                                        qu_slots=qu_slots, l_radius=l_radius, moveset=moveset_component,
-                                        two_handed=two_handed)
+        equipment_kwargs = {
+            'e_to' : equip_to,
+            'dmg_potential' : dmg_potential,
+            'av' : av,
+            'block_def' : block_def,
+            'attack_range' : data.get(Key.ATTACK_RANGE),
+            'qu_slots' :  data.get(Key.QU_SLOTS),
+            'l_radius' : data.get(Key.L_RADIUS),
+            'moveset' : moveset_component,
+            'two_handed' : data.get(Key.TWO_HANDED),
+            'one_handed_penalty_mod' : data.get(Key.ONE_HANDED_PENALTY_MOD)
+        }
+        equipment_component = Equipment(**equipment_kwargs)
 
     item_component = Item(condition=condition.get(Key.TYPE), craftsmanship=craftsmanship.get(Key.TYPE),
                           useable=useable_component, equipment=equipment_component)

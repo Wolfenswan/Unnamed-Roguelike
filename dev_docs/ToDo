@@ -1,8 +1,6 @@
 CURRENT
 - too easy to dodge donge beatle charge by dashing in straight line away from them
     - let them charge distance + 1? maybe a slight randomization?
-    - BUG: at some angles beetles will still charge past player
-    - BUG: try to charge even if facing wall
 - Update/Finish Manual
 - Tweak Dungeon generation
     - ideally should be a mix between dungeon & tunnels
@@ -22,6 +20,9 @@ CURRENT
             - maybe protected by queen/boss?
     - Items to retrieve (take up spot in inventory)
     - has to return to portal?
+
+ITEMS
+- shoes, rings, backpacks, (shoulders)
 
 COMBAT
 - bombs/projectiles exploding after n turns

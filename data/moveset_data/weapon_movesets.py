@@ -12,13 +12,13 @@ moveset_sword = {
        Key.DESCR: f'A slightly {col1}weaker slash%% from the down left.',
         Key.VERB: 'slash',
         Mod.DMG_MULTIPL: 0.8,
-        Mod.MOD_MULTIPL: 0.8,
+        Mod.EXERT_MULTIPL: 0.8,
     },
     3: {
        Key.DESCR: f'A {col1}forceful thrust%% towards the enemies center.',
         Key.VERB: 'thrust at',
         Mod.DMG_MULTIPL: 1.25,
-        Mod.MOD_MULTIPL: 1.25,
+        Mod.EXERT_MULTIPL: 1.25,
     }
 }
 moveset_dagger = {
@@ -50,7 +50,7 @@ moveset_spear = {
        Key.DESCR: f'A {col1}weak stab%%, preparing further attacks.',
         Key.VERB: 'poke',
         Mod.DMG_MULTIPL: 0.75,
-        Mod.MOD_MULTIPL: 0.75,
+        Mod.EXERT_MULTIPL: 0.75,
     },
     2: {
        Key.DESCR: f"A {col1}standard thrust%%, utilizing the weapon's full potential.",
@@ -60,7 +60,7 @@ moveset_spear = {
        Key.DESCR: f'A {col1}powerful thrust%%, piercing the target and possibly hitting something behind it.',
         Key.VERB: 'impale',
         Mod.DMG_MULTIPL: 1.25,
-        Mod.MOD_MULTIPL: 1.25,
+        Mod.EXERT_MULTIPL: 1.25,
         Key.EXTEND_ATTACK: [RelativeDirection.BEHIND]
     }
 }
@@ -85,7 +85,7 @@ Key.DEFAULT: {Key.VERBS: ('flail',),},
        Key.DESCR: f"A final {col1}overhead crush%% on a single head, ignoring shields.",
         Key.VERB: 'crush',
         Mod.DMG_MULTIPL: 1.25,
-        Mod.MOD_MULTIPL: 1.25,
+        Mod.EXERT_MULTIPL: 1.25,
         Mod.BLOCK_DEF_MULTIPL: 0,
     }
 }
