@@ -12,7 +12,7 @@ def initialize_window(game):
     #game.root = tcod.console.Console(cfg.SCREEN_WIDTH, cfg.SCREEN_HEIGHT)
     # game.con = tcod.console.Console(cons.SCREEN_WIDTH, cons.SCREEN_HEIGHT)
     game.map_panel = tcod.console.Console(cons.MAP_SCREEN_WIDTH, cons.MAP_SCREEN_HEIGHT)
-    game.status_panel = tcod.console.Console(cons.BOTTOM_PANEL_WIDTH, cons.STATUS_BAR_HEIGHT)
+    game.status_panel = tcod.console.Console(cons.STATUS_BAR_WIDTH, cons.STATUS_BAR_HEIGHT)
     game.top_right_panel = tcod.console.Console(cons.SIDE_PANEL_WIDTH, cons.PLAYER_PANEL_HEIGHT)
     game.center_right_panel = tcod.console.Console(cons.SIDE_PANEL_WIDTH, cons.COMBAT_PANEL_HEIGHT)
     game.lower_right_panel = tcod.console.Console(cons.SIDE_PANEL_WIDTH, cons.OBJECT_PANEL_HEIGHT)

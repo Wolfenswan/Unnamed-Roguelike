@@ -6,6 +6,7 @@ from dataclasses import dataclass
 
 from components.combat.fighter_util import State
 from data.actor_data.act_status_mod import status_modifiers_data
+from data.data_enums import Mod
 from gui.messages import Message
 
 
@@ -24,8 +25,6 @@ class BaseAI:
 
         # logging.debug(f'{npc} is taking turn #{game.turn}')
 
-        # free_line = game.map.free_line_between_pos(target.x, target.y, npc.x, npc.y, game)
-
         # First check if turn is entirely skipped
         skip_turn = False
         if presence[State.STUNNED]:
@@ -34,7 +33,7 @@ class BaseAI:
             skip_turn = True
 
         elif presence[State.DAZED]:
-            if randint(0,100) <= status_modifiers_data[State.DAZED][Mod.SKIP_TURN_CHANCE]: # TODO Mod.
+            if randint(0,100) <= status_modifiers_data[State.DAZED][Mod.SKIP_TURN_CHANCE]:
                 message = Message(f'PLACEHOLDER: {npc.name} is dazed and skipping turn.')
                 results.append({'message': message})
                 skip_turn = True

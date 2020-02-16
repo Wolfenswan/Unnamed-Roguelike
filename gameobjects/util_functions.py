@@ -41,10 +41,11 @@ def line_between_pos(x1:int, y1:int, x2:int, y2:int, inclusive=False):
     return pos_list
 
 
-def free_line_between_pos(x1, y1, x2, y2, game:Game, inclusive:bool=False):
+def free_line_between_pos(x1, y1, x2, y2, game:Game, inclusive:bool=False, ignore_ents=False):
     pos_list = line_between_pos(x1, y1, x2, y2, inclusive=inclusive)
+    ents = game.walk_blocking_ents if not ignore_ents else []
     for pos in pos_list:
-        if game.map.is_blocked(*pos, game.walk_blocking_ents):
+        if game.map.is_blocked(*pos, ents):
             return False
     return True
 

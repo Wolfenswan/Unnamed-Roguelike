@@ -15,3 +15,9 @@
 - GUI: (e) now opens menu with only equippable items
 - BUG: Updated act_status_mod to use now Enum system
 - MISC: fixed some strings, tweaked exertion feedback
+
+14/02/2020
+- AI: Dung Beatles no longer charge if a wall is between player and them
+
+16/02/2020
+- stat tweaks

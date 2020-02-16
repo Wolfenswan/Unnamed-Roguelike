@@ -41,7 +41,7 @@ def render_map_screen(game, fov_map, debug=False):
         draw_entity(game, con, game.cursor, fov_map, debug=debug)
 
     draw_console_borders(con, color=colors.white)
-    render_status_panel(game, game.status_panel, 0, r_cons.STATUS_BAR_Y, r_cons.BOTTOM_PANEL_WIDTH ,
+    render_status_panel(game, game.status_panel, 0, r_cons.STATUS_BAR_Y, r_cons.STATUS_BAR_WIDTH,
                         r_cons.STATUS_BAR_HEIGHT)
 
     #game.con.blit(game.map_panel, width=cfg.MAP_SCREEN_WIDTH, height=cfg.MAP_SCREEN_HEIGHT)

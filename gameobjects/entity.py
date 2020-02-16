@@ -431,7 +431,7 @@ class Entity:
         return f'the {self.name}' if not self.is_player else 'you'
 
     @property
-    def address_color(self):
+    def address_colored(self):
         return f'the %{self.color}%{self.name}%%' if not self.is_player else f'%{self.color}%you%%'
 
     @property
@@ -439,7 +439,7 @@ class Entity:
         return f'{self.address}\'s' if not self.is_player else 'your'
 
     @property
-    def possessive_color(self):
+    def possessive_colored(self):
         return f'{self.address}\'s' if not self.is_player else f'%{self.color}%your%%'
 
     @property

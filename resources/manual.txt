@@ -58,6 +58,7 @@ Num 5 or . - Wait a turn.
 r   - (r)aise your shield to block attacks
 d   - prepare yourself to (d)ash/dodge
         - you move two tiles per step but exhaust yourself doing so
+        - dashing into enemies will attempt a tackle, possibly dazing them
 f   - (f)ire an equipped ranged weapon
         - use movement keys to control the cursor
         - enter will confirm the target, ESC will cancel
@@ -114,5 +115,12 @@ limitation on item usage outside of combat.
 \____/\___/|_| |_| |_|_.__/ \__,_|\__|
 
 =======================================
+
+# STATUSES #
+Threatened
+Surrounded
+Entangled
+Dazed
+Stunned
 
 <page 4>

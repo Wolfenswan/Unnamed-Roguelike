@@ -33,13 +33,10 @@ class Effect:
         if target is None:
             target = kwargs.get('user')
         percentage = kwargs.get('percentage', False)
-        print(percentage)
         if not percentage:
             amount = randint(*kwargs.get('pwr'))
         else:
             amount = target.f.max_hp/100 * randint(*kwargs.get('pwr'))
-
-        print(amount)
 
         if target is None:
             target = kwargs.get('user')

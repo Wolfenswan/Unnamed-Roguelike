@@ -53,7 +53,9 @@ CONTAINER_ROOM_DIVISOR = 50 # room width * room height // this
 #SOBJECTS_DUNGEON_FACTOR = 5 # total rooms times this (UNUSED)
 SOBJECTS_ROOM_DIVISOR = 10  # room width * room height // this
 
-# Interaction
+# GAMEPLAY
+ATK_EXERT_DIVISOR = 2 # attack power / this is the base amount of stamina this attack uses
+DEFLECT_EXERT_MULTIPL = 1.5 # attack power * this is the amount of exertion a full armor deflection causes
 DASH_EXERT_MULTIPL = 2.5 # Total AV * this
 
 # FOV

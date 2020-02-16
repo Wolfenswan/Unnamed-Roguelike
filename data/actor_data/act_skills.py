@@ -10,15 +10,15 @@ Each dictionary refers to a skill class and contains the parameters to customize
 skill_generic_charge = {
         Key.SKILL : SkillCharge,
         Key.NAME: 'Charge',
-        Key.ACTIVATE_CONDITIONS : {SkillCondition.distance_to},
-        Key.ACTIVATE_CONDITION_KWARGS: {'min_dist': 2, 'max_dist': 6},
+        Key.ACTIVATE_CONDITIONS : {SkillCondition.distance_to, SkillCondition.free_line_to_target},
+        Key.ACTIVATE_CONDITION_KWARGS: {'min_dist': 2, 'max_dist': 6, 'ignore_ents' : True},
         Key.ON_ACTIVATE_KWARGS: {'delay':1},
-        Key.COOLDOWN_LENGTH: 6
+        Key.COOLDOWN_LENGTH: (5,6)
     }
 
 skill_quick_charge = {
         **skill_generic_charge,
-        Key.COOLDOWN_LENGTH: 3
+        Key.COOLDOWN_LENGTH: (3,3)
     }
 
 skill_generic_slam = {
@@ -27,7 +27,7 @@ skill_generic_slam = {
     Key.ACTIVATE_CONDITIONS : {SkillCondition.distance_to},
     Key.ACTIVATE_CONDITION_KWARGS: {'min_dist': 1, 'max_dist': 1.5},
     Key.ON_ACTIVATE_KWARGS: {'delay':1},
-    Key.COOLDOWN_LENGTH: 4
+    Key.COOLDOWN_LENGTH: (3,4)
 }
 
 skill_explode_self = {
@@ -36,7 +36,7 @@ skill_explode_self = {
     Key.ACTIVATE_CONDITIONS : {SkillCondition.distance_to},
     Key.ACTIVATE_CONDITION_KWARGS: {'min_dist': 1, 'max_dist': 5},
     Key.ON_ACTIVATE_KWARGS: {'delay_min':3, 'delay_max':5, 'radius':4, 'pwr':(20,30)},
-    Key.COOLDOWN_LENGTH: 16
+    Key.COOLDOWN_LENGTH: (10,10)
 }
 
 skill_entangle = {
@@ -45,13 +45,13 @@ skill_entangle = {
     Key.ACTIVATE_CONDITIONS : {SkillCondition.distance_to, SkillCondition.target_state},
     Key.ACTIVATE_CONDITION_KWARGS: {'min_dist': 1, 'max_dist': 1.5,'state': State.ENTANGLED, 'state_condition': False},
     Key.ON_ACTIVATE_KWARGS: {'delay':0},
-    Key.COOLDOWN_LENGTH: 6
+    Key.COOLDOWN_LENGTH: (4,6)
 }
 
 skill_entangle_timed = {
     **skill_entangle,
     Key.ON_ACTIVATE_KWARGS: {'delay': 0, 'duration': 5},
-    Key.COOLDOWN_LENGTH: 8
+    Key.COOLDOWN_LENGTH: (6,8)
     }
 
 skill_hatch = {
@@ -60,5 +60,5 @@ skill_hatch = {
     Key.ACTIVATE_CONDITIONS : {SkillCondition.distance_to,},
     Key.ACTIVATE_CONDITION_KWARGS: {'min_dist': 0, 'max_dist': 8,},
     Key.ON_ACTIVATE_KWARGS: {'delay_min':1,'delay_max':3},
-    Key.COOLDOWN_LENGTH: 1
+    Key.COOLDOWN_LENGTH: (1,2)
 }

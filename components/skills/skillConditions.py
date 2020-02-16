@@ -18,7 +18,8 @@ class SkillCondition:
         actor = kwargs.get('actor')
         target = kwargs.get('target')
         game = kwargs.get('game')
-        free_line_between_pos(*actor.pos, *target.pos, game)
+        ignore_ents = kwargs['ignore_ents']
+        return free_line_between_pos(*actor.pos, *target.pos, game, ignore_ents=ignore_ents)
 
     @staticmethod
     def distance_to(**kwargs):

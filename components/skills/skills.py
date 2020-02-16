@@ -30,7 +30,7 @@ class SkillCharge(BaseSkill):
         user.color_bg = colors.dark_red
         user.actionplan.add_to_queue(execute_in=delay, planned_function=self.execute,
                                      planned_function_args=(tx, ty, game), fixed=True)
-        results.append({'message':Message(f'The {user.name} prepares to charge.', category=MessageCategory.OBSERVATION, type=MessageType.ALERT)})
+        results.append({'message':Message(f'{user.address_colored.title()} prepares to charge.', category=MessageCategory.OBSERVATION, type=MessageType.ALERT)})
         return results
 
     def execute(self, tx: int, ty: int, game: Game, **kwargs):
@@ -38,7 +38,7 @@ class SkillCharge(BaseSkill):
         user.color_bg = None  # Reset the entities bg-color, which the skill preparation had changed
 
         results = []
-        results.append({'message': Message(f'The {user.name} charges forward!', category=MessageCategory.OBSERVATION,
+        results.append({'message': Message(f'{user.address_colored.title()} charges forward!', category=MessageCategory.OBSERVATION,
                                            type=MessageType.COMBAT)}) # TODO attack_string defined in their own data file
         missed = animate_move_to(user, tx, ty, game)
 
@@ -163,7 +163,7 @@ class SkillHatch(BaseSkill):
         #results.extend(self.owner.f.death(game))
         game.map.gib_area(user.x, user.y, randint(2,4), user.color_blood, chunks=True)
         # TODO switch entity stats!
-        msg1 = Message(f'{user.address_color.title()} hatches!', type=type,
+        msg1 = Message(f'{user.address_colored.title()} hatches!', type=type,
                        category=MessageCategory.OBSERVATION)
         self.create_hatchling()
         results = [{'message': msg1}]

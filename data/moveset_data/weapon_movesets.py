@@ -16,7 +16,7 @@ moveset_sword = {
     },
     3: {
        Key.DESCR: f'A {col1}forceful thrust%% towards the enemies center.',
-        Key.VERB: 'thrust',
+        Key.VERB: 'thrust at',
         Mod.DMG_MULTIPL: 1.25,
         Mod.MOD_MULTIPL: 1.25,
     }
@@ -65,7 +65,7 @@ moveset_spear = {
     }
 }
 moveset_flail = {
-Key.DEFAULT: {Key.VERBS: ('flails',),},
+Key.DEFAULT: {Key.VERBS: ('flail',),},
     1: {
        Key.DESCR: f'A {col1}weaker over-head swing%%, to get momentum.',
         Mod.DMG_MULTIPL: 0.5,

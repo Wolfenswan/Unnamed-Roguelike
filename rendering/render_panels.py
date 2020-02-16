@@ -10,13 +10,21 @@ from rendering.util_functions import center_x_for_text, setup_console, print_str
 
 
 def render_panels(game):
+    combat_ready = game.player.visible_enemies(game.npc_ents, game.fov_map)
     render_player_panel(game,game.top_right_panel, r_cons.SIDE_PANEL_X, 0, r_cons.SIDE_PANEL_WIDTH, r_cons.PLAYER_PANEL_HEIGHT)
     #render_status_panel(game, game.status_panel, r_cons.STATUS_BAR_Y, r_cons.BOTTOM_PANEL_WIDTH - 4, r_cons.STATUS_BAR_HEIGHT)
-    color = colors.dark_gray if not game.player.visible_enemies(game.npc_ents, game.fov_map) else colors.dark_red
-    render_enemy_panel(game, game.center_right_panel, r_cons.SIDE_PANEL_X, r_cons.PLAYER_PANEL_HEIGHT, r_cons.SIDE_PANEL_WIDTH,
-                       r_cons.COMBAT_PANEL_HEIGHT, color)
-    render_object_panel(game, game.lower_right_panel, r_cons.SIDE_PANEL_X, r_cons.PLAYER_PANEL_HEIGHT + r_cons.COMBAT_PANEL_HEIGHT, r_cons.SIDE_PANEL_WIDTH,
-                       r_cons.SIDE_PANEL_HEIGHT)
+    #color = colors.dark_gray if not combat_ready else colors.dark_red
+    if combat_ready:
+        render_enemy_panel(game, game.center_right_panel, r_cons.SIDE_PANEL_X, r_cons.PLAYER_PANEL_HEIGHT, r_cons.SIDE_PANEL_WIDTH,
+                       r_cons.COMBAT_PANEL_HEIGHT, colors.dark_red)
+    else:
+        render_object_panel(game, game.center_right_panel, r_cons.SIDE_PANEL_X, r_cons.PLAYER_PANEL_HEIGHT, r_cons.SIDE_PANEL_WIDTH,
+                       r_cons.COMBAT_PANEL_HEIGHT,)
+    # render_object_panel(game, game.lower_right_panel, r_cons.SIDE_PANEL_X, r_cons.PLAYER_PANEL_HEIGHT + r_cons.COMBAT_PANEL_HEIGHT, r_cons.SIDE_PANEL_WIDTH,
+    #                    r_cons.SIDE_PANEL_HEIGHT)
+    # render_message_panel(game.combat_log, 'Combat', game.bottom_center_panel, r_cons.MSG_PANEL2_X, r_cons.BOTTOM_PANEL_Y, r_cons.MSG_PANEL2_WIDTH, r_cons.BOTTOM_PANEL_HEIGHT,  game)
+    # render_message_panel(game.observation_log, 'Observations', game.bottom_left_panel, 0, r_cons.BOTTOM_PANEL_Y,
+    #                      r_cons.MSG_PANEL1_WIDTH, r_cons.BOTTOM_PANEL_HEIGHT, game)
     render_message_panel(game.combat_log, 'Combat', game.bottom_center_panel, r_cons.MSG_PANEL2_X, r_cons.BOTTOM_PANEL_Y, r_cons.MSG_PANEL2_WIDTH, r_cons.BOTTOM_PANEL_HEIGHT,  game)
     render_message_panel(game.observation_log, 'Observations', game.bottom_left_panel, 0, r_cons.BOTTOM_PANEL_Y,
                          r_cons.MSG_PANEL1_WIDTH, r_cons.BOTTOM_PANEL_HEIGHT, game)
@@ -90,8 +98,8 @@ def render_player_panel(game, con, panel_x, panel_y, width, height):
     if player.f.active_weapon is not None:
         print_string(con, 2, y+1,
                      f'ATK: {game.player.f.active_weapon.moveset.current_move}/{game.player.f.active_weapon.moveset.moves}')
+        # todo color depending on if its < or > base damage
         print_string(con, 2, y+2, f'DAM: {game.player.f.modded_dmg_potential[0]}-{game.player.f.modded_dmg_potential[-1]}')
-
 
         # Visualize targets for next attack
         x = 11
@@ -217,13 +225,11 @@ def render_status_panel(game, con, panel_x, panel_y, width, height):
     draw_bar(con, width-bar_width-1, 1, bar_width, f'{game.player.f.stamina_string}', int(game.player.f.stamina), game.player.f.max_stamina,
              game.player.f.stamina_color, colors.darkest_blue)
 
-    draw_quickslots(con, r_cons.MSG_PANEL1_WIDTH, 0, game)
+    draw_quickslots(con, round(r_cons.STATUS_BAR_WIDTH//2)-1, 0, game)
 
     tcod.console_put_char_ex(con, 0, 0, 195, colors.dark_gray, colors.black)
-    tcod.console_put_char_ex(con, width-1, 0, 180, colors.dark_gray, colors.black)
+    #tcod.console_put_char_ex(con, width-1, 0, 180, colors.dark_gray, colors.black)
     con.blit(game.map_panel, panel_x, panel_y, 0, 0, width, height)
-    #tcod.console_print_frame(con, 0, 0, width, height) # TODO can safely be deleted?
-
 
 def draw_bar(panel, x, y, total_width, name, value, maximum, bar_color, back_color):
     bar_width = int(float(value) / maximum * total_width)

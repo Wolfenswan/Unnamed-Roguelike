@@ -1,4 +1,5 @@
 import logging
+from random import randint
 
 from typing import Callable, Dict, Set
 
@@ -13,7 +14,7 @@ class BaseSkill:
     activate_conditions:Set[Callable]
     on_activate_kwargs: Dict = field(default_factory=dict)
     activate_condition_kwargs:Dict = field(default_factory=dict)
-    cooldown_length : int = 0
+    cooldown_length : tuple = (0,0)
     cooldown:int = field(init=False, default=0)
 
     def __str__(self):
@@ -44,8 +45,7 @@ class BaseSkill:
 
     @property
     def is_available(self):
-        available = self.cooldown_length >= 0 and self.cooldown == 0
-        return available
+        return self.cooldown == 0
 
     def is_active(self, target, game:Game):
         for cond in self.activate_conditions:
@@ -57,7 +57,7 @@ class BaseSkill:
 
     def cooldown_skill(self, reset=False):
         if reset:
-            self.cooldown = self.cooldown_length
+            self.cooldown = randint(*self.cooldown_length)
         elif self.cooldown > 0:
             self.cooldown -= 1
         logging.debug(

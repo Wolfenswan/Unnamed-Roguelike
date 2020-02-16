@@ -121,9 +121,10 @@ class GameMap:
         if self.is_wall(x, y):
             return True
 
-        for value in filter:
-            if any((ent.pos == (x, y) and ent.blocks.get(value, False)) for ent in entities_to_consider):
-                return True
+        if len(entities_to_consider) > 0:
+            for value in filter:
+                if any((ent.pos == (x, y) and ent.blocks.get(value, False)) for ent in entities_to_consider):
+                    return True
 
         return False
 
