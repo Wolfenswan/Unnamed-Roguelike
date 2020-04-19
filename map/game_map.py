@@ -3,7 +3,6 @@ from random import choice, randint
 
 from dataclasses import dataclass
 
-from config_files import colors
 from data.data_enums import Key
 from data.map_data.level_types import level_types_data
 from gameobjects.block_level import BlockLevel

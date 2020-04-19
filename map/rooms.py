@@ -1,7 +1,8 @@
 from random import choice, randint
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
+from config_files import cfg
 from debug.timer import debug_timer
 
 
@@ -11,15 +12,22 @@ class Rect:
     y1 : int
     w : int
     h : int
+    containers : list = field(default_factory=list)
+    pos_list : list = field(default_factory=list)
 
     def __post_init__(self):
         self.x2 = self.x1 + self.w
         self.y2 = self.y1 + self.h
+        self.size = self.w * self.h
         self.center = int((self.x1 + self.x2) / 2), int((self.y1 + self.y2) / 2)
-        self.pos_list = []
+        self.max_containers = (randint(0, (round(self.size * cfg.CONTAINER_ROOM_FACTOR))))
         for y in range(self.y1, self.y2):
             for x in range(self.x1, self.x2):
                 self.pos_list.append((x, y))
+
+    def __repr__(self):
+        string = f'Rect{id(self)}'
+        return string
 
     def create(self, game_map, fuzzy=-1):
         # go through the tiles in the rectangle and make them passable

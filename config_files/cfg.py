@@ -45,7 +45,7 @@ ITEMS_ROOM_LIMIT = 0.25 # (room width * room height) * this
 # CONTAINER SETTINGS #
 # TODO put in relation to max items?
 CONTAINER_DUNGEON_FACTOR = 0.7 # total rooms * this
-CONTAINER_ROOM_FACTOR = 0.1 # (room width * room height) * this
+CONTAINER_ROOM_FACTOR = 0.3 # (room width * room height) * this
 
 # STATIC OBJECT SETTINGS #
 #SOBJECTS_DUNGEON_FACTOR = 5 # total rooms times this (UNUSED)

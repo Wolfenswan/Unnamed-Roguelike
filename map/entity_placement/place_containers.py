@@ -20,36 +20,91 @@ def place_containers(game):
     max_containers = int(len(rooms) * cfg.CONTAINER_DUNGEON_FACTOR)
 
     while len(game.container_ents) < max_containers and len(rooms) > 0:
+        if len(game.container_ents) + 1 > max_containers:
+            logging.debug(
+                f'New container would bring dungeon total to {len(game.container_ents) + 1} thus exceed total maximum: ({max_containers})')
+            break
+
         room = choice(rooms)
-        rooms.remove(room)
+        logging.debug(f'Picked {room}.')
+        while len(room.containers) == room.max_containers:
+            logging.debug(f'But {room} has already {len(room.containers)}/{room.max_containers} present.')
+            rooms.remove(room)
+            if len(rooms) == 0:
+                room = None
+                break
+            room = choice(rooms)
+
+        if room is None:
+            logging.debug(f'No more legal rooms available after placing {len(game.container_ents)} containers.')
+            break
+
+        key = filter_data_dict(possible_objects, dlvl)
+        data = possible_objects[key]
+
+        # If the container is a blocking object, get a free tile
+        pos = find_ent_position(room, data, game, exclusive=True)
+        if pos:
+            con = gen_architecture_from_data(data, *pos)
+            fill_container(con, dlvl, rarity_filter=data[Key.CONTENTS_RARITY], type_filter=data[Key.CONTENTS_TYPE],
+                           forced_content=data.get('content_forced'))
+            entities.append(con)
+            room.containers.append(con)
+
+        logging.debug(f'Placed {con.name} in {room} ({len(room.containers)}/{room.max_containers}). {len(game.container_ents)} of {max_containers} placed.')
+
+        # # place up to the allowed maximum of items
+        # max_room_containers = round((room.w * room.h) * cfg.CONTAINER_ROOM_FACTOR)
+        # num_of_containers = (randint(0, (max_room_containers)))
+        #
+        # if num_of_containers > 0:
+        #     logging.debug(f'Placing containers in {room} of size {(room.w * room.h)} and limit of {num_of_containers} (max possible: {max_room_containers})')
+        #
+        #     containers = 0
+        #     for i in range(num_of_containers):
+        #         logging.debug('Creating item #{0} of #{1} total.'.format(containers + 1, num_of_containers))
+        #
+        #         key = filter_data_dict(possible_objects, dlvl)
+        #         data = possible_objects[key]
+        #
+        #         # Check if new container would exceed total limit
+        #         if len(game.container_ents) + 1 > max_containers:
+        #             logging.debug(
+        #                 f'New container would bring dungeon total to {len(game.container_ents)+1} thus exceed total maximum: ({max_containers})')
+        #             break
+        #         # If the container is a blocking object, get a free tile
+        #         pos = find_ent_position(room, data, game, exclusive=True)
+        #         if pos:
+        #             con = gen_architecture_from_data(data, *pos)
+        #             fill_container(con, dlvl, rarity_filter=data[Key.CONTENTS_RARITY], type_filter=data[Key.CONTENTS_TYPE], forced_content=data.get('content_forced'))
+        #             entities.append(con)
 
         # place up to the allowed maximum of items
-        max_room_containers = round((room.w * room.h) * cfg.CONTAINER_ROOM_FACTOR)
-        num_of_containers = (randint(0, (max_room_containers)))
 
-        if num_of_containers > 0:
-            logging.debug(f'Placing containers in {room} of size {(room.w * room.h)} and limit of {num_of_containers} (max possible: {max_room_containers})')
-
-            containers = 0
-            for i in range(num_of_containers):
-                logging.debug('Creating item #{0} of #{1} total.'.format(containers + 1, num_of_containers))
-
-                key = filter_data_dict(possible_objects, dlvl)
-                data = possible_objects[key]
-
-                # Check if new container would exceed total limit
-                if len(game.container_ents) + 1 > max_containers:
-                    logging.debug(
-                        f'New container would bring dungeon total to {len(game.container_ents)+1} thus exceed total maximum: ({max_containers})')
-                    break
-                # If the container is a blocking object, get a free tile
-                pos = find_ent_position(room, data, game, exclusive=True)
-                if pos:
-                    con = gen_architecture_from_data(data, *pos)
-                    fill_container(con, dlvl, rarity_filter=data[Key.CONTENTS_RARITY], type_filter=data[Key.CONTENTS_TYPE], forced_content=data.get('content_forced'))
-                    entities.append(con)
-
-    logging.debug(f'Placed {len(game.container_ents)} (maximum: {max_containers}) items with {len(rooms)} rooms untouched.')
+    #     num_of_containers = (randint(0, (max_room_containers)))
+    #
+    #     if num_of_containers > 0:
+    #         logging.debug(f'Placing containers in {room} of size {(room.w * room.h)} and limit of {num_of_containers} (max possible: {max_room_containers})')
+    #
+    #         containers = 0
+    #         for i in range(num_of_containers):
+    #             logging.debug('Creating item #{0} of #{1} total.'.format(containers + 1, num_of_containers))
+    #
+    #
+    #
+    #             # Check if new container would exceed total limit
+    #             if len(game.container_ents) + 1 > max_containers:
+    #                 logging.debug(
+    #                     f'New container would bring dungeon total to {len(game.container_ents)+1} thus exceed total maximum: ({max_containers})')
+    #                 break
+    #             # If the container is a blocking object, get a free tile
+    #             pos = find_ent_position(room, data, game, exclusive=True)
+    #             if pos:
+    #                 con = gen_architecture_from_data(data, *pos)
+    #                 fill_container(con, dlvl, rarity_filter=data[Key.CONTENTS_RARITY], type_filter=data[Key.CONTENTS_TYPE], forced_content=data.get('content_forced'))
+    #                 entities.append(con)
+    #
+    # logging.debug(f'Placed {len(game.container_ents)} (maximum: {max_containers}) items with {len(rooms)} rooms untouched.')
 
 
 def fill_container(container, dlvl, rarity_filter=None, type_filter=None, forced_content=None):

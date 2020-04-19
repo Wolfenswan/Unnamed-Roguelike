@@ -1,4 +1,6 @@
 CURRENT
+- rewrite container placement
+    -
 - balancing:
     - recovering from 0 sta while fighting is impossible
 - refactor charging algo
