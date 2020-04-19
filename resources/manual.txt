@@ -96,8 +96,22 @@ Alt+Enter - toggle Fullscreen
 ==============================================
 
 # GOAL OF THE GAME #
+tba
 
-# ACTIVE DODGING & BLOCKING #
+# STAMINA & EXHAUSTION #
+Your stamina indicates your current ability to fight, defend yourself and do other actions.
+As you exhaust yourself through doing these actions you fighting abilities will worsen, until ultimately you will be
+unable to do anything.
+Resting, both during and outside of combat, will replenish your stamina, although at a lower rate when enemies are nearby.
+
+# DODGING/DASHING #
+To dash out of harms way, toggle your (d)ashing and move as usual. Your character will attempt to move two spaces.
+If they are intercepted by an enemy attempt a tackle for some light damage, possibly dazing them.
+The exhaustion caused by dashing is primarily governed by the weight of your armor.
+
+# BLOCKING #
+To block an attack you need to (r)aise your shield and anticipate it. A successful block will reduce the damage you take
+and possibly daze the attacker.
 
 # ITEM USAGE DURING COMBAT #
 Items have to be prepared if you want to use them during combat. To do this,

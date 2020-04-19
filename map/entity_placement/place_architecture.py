@@ -22,7 +22,7 @@ def place_generic_architecture(game):
     for room in rooms:
 
         # place up to the allowed maximum of items
-        max_in_room = (room.w * room.h) // cfg.SOBJECTS_ROOM_DIVISOR
+        max_in_room = int((room.w * room.h) // cfg.SOBJECTS_ROOM_DIVISOR)
         num_to_place = (randint(0, max_in_room))
 
         #logging.debug(f'Placing {num_to_place} staticobjects in {rooms} (Max: {max_in_room})')

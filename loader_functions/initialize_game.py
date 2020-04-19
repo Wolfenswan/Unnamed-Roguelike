@@ -53,7 +53,7 @@ def initialize_map(game):
     dwidth = randint(round(cfg.DUNGEON_MIN_WIDTH), round(cfg.DUNGEON_MAX_WIDTH))
     dheight = randint(round(cfg.DUNGEON_MIN_HEIGHT), round(cfg.DUNGEON_MAX_HEIGHT))
     game.map = GameMap(dwidth, dheight)
-    game.map.create_map(cfg.ROOM_MIN_SIZE, cfg.ROOM_MAX_SIZE)
+    game.map.create_level()
 
     return game.map
 

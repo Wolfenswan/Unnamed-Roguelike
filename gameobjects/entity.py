@@ -339,9 +339,9 @@ class Entity:
         else:
             if self.is_player:
                 self.actionplan.process_queue()
-                # TODO Placeholder for proper stamina management (currently flat 1% recovered)
-                if not self.in_combat(game) and not self.f.sta_full and not self.f.stances.get(Stance.DASHING,False):
-                    self.f.recover(self.f.max_stamina / 100)
+                # TODO Placeholder for proper stamina management
+                # if not self.in_combat(game) and not self.f.sta_full and not self.f.stances.get(Stance.DASHING,False):
+                #     self.f.recover(self.f.max_stamina / 50)
             for event in self.every_turn_end:
                 eval(event)
 
@@ -458,7 +458,11 @@ class Entity:
     def state_verb_past(self):
         return self.verb_declination('was')
 
-    def verb_declination(self, verb):
+    def verb_declination(self, phrase):
+
+        phrase = phrase.split(' ')
+        verb = phrase[0]
+
         if verb == 'is':
             if self.is_player:
                 verb = 'are'
@@ -466,9 +470,13 @@ class Entity:
             if self.is_player:
                 verb = 'were'
         elif not self.is_player:
-            if verb[-1] == 'o' or verb[-2:] in ['sh', 'ch', 'tch', 'x', 'z', 'ss'] or (
-                    verb[-1] == 'y' and not verb[-2] in ['a', 'e', 'i', 'o', 'u']):
-                verb += 'es'
+            if verb[-1] == 'o' or verb[-2:] in ['sh', 'ch', 'tch', 'x', 'z', 'ss'] \
+                    or (verb[-1] == 'y' and not verb[-2] in ['a', 'e', 'i', 'o', 'u']):
+                        verb += 'es'
             else:
                 verb += 's'
+
+        phrase[0] = verb
+        verb = ' '.join(phrase)
+
         return verb

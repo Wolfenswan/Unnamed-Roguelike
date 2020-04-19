@@ -27,7 +27,7 @@ def place_items(game):
         room = choice(rooms)
         rooms.remove(room)
         
-        max_room_items = (room.w * room.h) // cfg.ITEMS_ROOM_LIMIT
+        max_room_items = int((room.w * room.h) * cfg.ITEMS_ROOM_LIMIT)
         num_of_items = randint(0, max_room_items)
         if num_of_items > 0:
             logging.debug(f'Placing items in {room} of size {(room.w * room.h)} and limit of {num_of_items} (max possible: {max_room_items})')

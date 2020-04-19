@@ -1,4 +1,5 @@
 from components.combat.fighter_util import State
+from components.effects import Effect
 from components.skills.skillConditions import SkillCondition
 from components.skills.skills import SkillCharge, SkillSlam, SkillExplodeSelf, SkillEntangle, SkillHatch
 from data.data_enums import Key

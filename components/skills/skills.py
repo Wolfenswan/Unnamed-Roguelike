@@ -103,7 +103,7 @@ class SkillExplodeSelf(BaseSkill):
         user.actionplan.add_to_queue(execute_in=delay, planned_function=self.execute,
                                      planned_function_args=(game), fixed=True, exclusive=True)
         results.append({'message': Message(
-            f'The {user.name} is suddenly starting to glow.',
+            f'The {user.name} is suddenly starting to pulsate.',
             category=MessageCategory.OBSERVATION,
             type=MessageType.ALERT)})
         return results
@@ -160,9 +160,7 @@ class SkillHatch(BaseSkill):
 
     def execute(self, game:Game, **kwargs):
         user = self.owner
-        #results.extend(self.owner.f.death(game))
         game.map.gib_area(user.x, user.y, randint(2,4), user.color_blood, chunks=True)
-        # TODO switch entity stats!
         msg1 = Message(f'{user.address_colored.title()} hatches!', type=type,
                        category=MessageCategory.OBSERVATION)
         self.create_hatchling()

@@ -5,6 +5,7 @@ from typing import List, Optional, Dict
 import tcod
 
 from config_files import colors
+from gameobjects.entity import Entity
 from map.entity_placement.util_functions import gen_entity_at_pos
 from debug.timer import debug_timer
 from game import GameState
@@ -363,12 +364,22 @@ def process_cursor_interaction(game, action, targeting_item, debug_spawn):
             if not success:
                 results.append({'message':Message('Illegal position', type=MessageType.SYSTEM)})
         elif player.active_weapon_is_ranged:    # Using a ranged weapon
-            target = entity_at_pos(game.blocking_ents, *cursor.pos)
-            if target is not None and target.fighter is not None:
-                attack_results = player.f.attack_setup(target, game)
-                results.extend(attack_results)
-            else:
-                animate_projectile(*player.pos, *cursor.pos, game, color=colors.beige) # TODO ranged projectile color can later differ by weapon/ammo type
+            # target = entity_at_pos(game.blocking_ents, *cursor.pos)
+            ranged_attack_results = player.f.ranged_attack(cursor.pos, game, draw_projectile=True)
+            results.extend(ranged_attack_results)
+            # result = animate_projectile(*player.pos, *cursor.pos, game, color=colors.beige)
+            # if isinstance(result, Entity) is not None and result.fighter is not None:
+            #     results.extend(player.f.attack_setup(result, game))
+            # else:
+            #     player.f.exert()
+            # results.append({'ranged_attack': True})
+            # todo refactor: always end up attacking
+            # if target is not None and target.fighter is not None:
+            #     attack_results = player.f.attack_setup(target, game)
+            #     results.extend(attack_results)
+            # else:
+            #     # todo return entity if it connects with one; then execute attack -> refactor as if/else is no longer required then
+            #     animate_projectile(*player.pos, *cursor.pos, game, color=colors.beige) # TODO ranged projectile color can later differ by weapon/ammo type
             results.append({'ranged_attack': True})
 
     if exit and (targeting_item or player.active_weapon_is_ranged):

@@ -3,16 +3,16 @@ from data.data_enums import Key, Mod
 moveset_mandibles = {
     Key.DEFAULT: {
         Key.RANDOM: True,
-        Key.VERBS: ('bites', 'gnaws at'),
+        Key.VERBS: ('bite', 'gnaw at'),
     },
     1: {},
     2: {},
     3: {
-        Key.VERB: 'nibbles at',
+        Key.VERB: 'nibble off',
         Mod.DMG_MULTIPL: 0.6
     },
     4: {
-        Key.VERB: 'pierces',
+        Key.VERB: 'pierce',
         Mod.AV_MULTIPL: 0,
     }
 }
@@ -21,14 +21,14 @@ moveset_mandibles_heavy = {
     **moveset_mandibles,
     Key.DEFAULT: {
         Key.RANDOM: True,
-        Key.VERBS: ('bites', 'gnaws at'),
+        Key.VERBS: ('bite', 'gnaw at'),
         Mod.BLOCK_STA_DMG_MULTIPL: 2
     },
 }
 
 moveset_claws = {
     Key.DEFAULT: {
-        Key.VERBS: ('lashes', 'claws', 'rips','rends'),
+        Key.VERBS: ('lash', 'claw', 'rip','rend'),
     },
     1: {},
 }
@@ -42,7 +42,7 @@ moveset_claws_heavy = {
 
 moveset_spit = {
     Key.DEFAULT: {
-        Key.VERBS: ('spits at', 'discharges saliva at'),
+        Key.VERBS: ('spit at', 'discharge at'),
     },
     1: {}
 }

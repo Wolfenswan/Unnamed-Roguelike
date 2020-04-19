@@ -1,6 +1,11 @@
 CURRENT
-- too easy to dodge donge beatle charge by dashing in straight line away from them
-    - let them charge distance + 1? maybe a slight randomization?
+- balancing:
+    - recovering from 0 sta while fighting is impossible
+- refactor charging algo
+- scrollable menus (if > 26 options when using letterordering or > 10 if using numbers)
+- deactivate dashing after movement
+    - make it an option in the menu
+- exhaustion for attacks seems to low; needs tweaking
 - Update/Finish Manual
 - Tweak Dungeon generation
     - ideally should be a mix between dungeon & tunnels
@@ -21,8 +26,15 @@ CURRENT
     - Items to retrieve (take up spot in inventory)
     - has to return to portal?
 
+BUGS
+- dung beatle charge still odd angles
+
 ITEMS
 - shoes, rings, backpacks, (shoulders)
+- abstract weight system: (almost)weightless/light/moderate/heavy/v.heavy
+    - avoids need for number crunching
+    - easy modifiers for exhaustion
+    - bespoke items could be put one category lower
 
 COMBAT
 - bombs/projectiles exploding after n turns
@@ -30,7 +42,6 @@ COMBAT
     - not triggered by player
 - ranged combat
     - consider always allowing a ranged weapon, indp. from melee weapon/offhand OR disallow both melee & ranged being two-handed
-    - allow some weapons one-handed (e.g. spear) but give bonus when off-hand is free
     - add reloadable weapons
         - e.g. crossbow, guns
         - EMPTY indicator in GUI

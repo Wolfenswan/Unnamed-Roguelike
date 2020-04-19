@@ -22,3 +22,7 @@
 16/02/2020
 - GAMEPLAY: tweaked exertion stats; moved exertion multipliers/divisors to global cfg file
 - ITEMS: added option to wield specific two-handed weapons in one hand (for a penalty)
+- MISC: verb declination now supports adverbs
+
+17/02/2020
+- refactored ranged attack system

@@ -7,8 +7,8 @@ from rendering.render_animations import animate_projectile, animate_explosion
 
 class Effect:
     """
-    Effect is an empty class containing only static methods for convenience sakes.
-    All Effect.-functions are result of player or npc interaction with the world either through skill or item usage.
+    Effect contains only static methods for convenience sake.
+    All Effect.-methods are result of player or npc interaction with the world either through skill or item usage.
     """
 
     @staticmethod
@@ -85,7 +85,7 @@ class Effect:
         radius = kwargs.get('radius',3)
         on_hit = kwargs.get('on_expl_hit', Effect.direct_damage)
         effect_name = kwargs.get('effect_name', 'explosion')
-        effect_verb = choice(kwargs['effect_verbs'])
+        effect_verb = choice(kwargs.get('effect_verbs', ['burns', 'scorches']))
 
         entities = [ent for ent in game.alive_ents if ent.distance_to_pos(*center) <= radius]
         results = []

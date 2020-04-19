@@ -24,7 +24,7 @@ def place_containers(game):
         rooms.remove(room)
 
         # place up to the allowed maximum of items
-        max_room_containers = (room.w * room.h) // cfg.CONTAINER_ROOM_DIVISOR
+        max_room_containers = (room.w * room.h) * cfg.CONTAINER_ROOM_FACTOR
         num_of_containers = (randint(0, max_room_containers))
 
         if num_of_containers > 0:

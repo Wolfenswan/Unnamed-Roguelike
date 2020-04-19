@@ -86,6 +86,15 @@ class Key(Enum):
     ON_INTERACTION = auto()
     WALLS_ONLY = auto()
 
+    # Level Creation #
+    ROOM_FUZZY_CHANCE = auto()
+    ROOM_MIN_SIZE = auto()
+    ROOM_MAX_SIZE = auto()
+    DRUNK_TUNNEL_CHANCE = auto()
+    RANDOMIZE_TUNNEL_CONNECTIONS = auto()
+    LEVEL_COLORS = auto()
+
+
 class Mod(Enum):
     """
     Attribute modifiers used as key-names in the data-dict and accessed primarily through the Fighter component.

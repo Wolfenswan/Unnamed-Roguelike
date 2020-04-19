@@ -66,7 +66,7 @@ def process_turn_results(player_turn_results, game, fov_map):
             # TODO move regeneration into its own function
             if player.in_combat(game):
                 if player.f.active_weapon:
-                    player.f.active_weapon.moveset.cycle_moves(reset=True) # Waiting resets weapon moves
+                    player.f.active_weapon.moveset.cycle_moves(reset=True) # Waiting resets weapon moves TODO consider removing
                 if not player.f.sta_full:
                     player.f.recover(player.f.max_stamina / 20)
             else:

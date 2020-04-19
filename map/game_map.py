@@ -4,9 +4,11 @@ from random import choice, randint
 from dataclasses import dataclass
 
 from config_files import colors
+from data.data_enums import Key
+from data.map_data.level_types import level_types_data
 from gameobjects.block_level import BlockLevel
 from map.directions_util import DIRECTIONS_CIRCLE
-from map.algorithms import Tunneling, DrunkWalk
+from map.algorithms import Tunneling
 from map.rooms import Rect
 from map.tile import Tile
 
@@ -33,19 +35,17 @@ class GameMap:
     def wall_tiles(self):
         return [tile for tile in self.tiles.values() if tile.blocked]
 
-    def create_map(self, room_min_size, room_max_size):
-        drunk_chance = 40 # chance in 100 to do a drunken tunnel instead of a straight one
+    def create_level(self):
+        level_type = level_types_data[choice(list(level_types_data.keys()))]
+        room_min_size = level_type[Key.ROOM_MIN_SIZE]
+        room_max_size = level_type[Key.ROOM_MAX_SIZE]
+
+        logging.debug(f'Creating level with data-set:{level_type}')
 
         map_width, map_height = self.width, self.height
         max_rooms = int((map_width / room_min_size) + (map_height / room_min_size))
-        self.create_rooms(max_rooms, room_min_size, room_max_size, map_width, map_height, fuzzy=10)
-        Tunneling.create_tunnels(self, randomize=True, drunk_chance=drunk_chance)
-
-        # Fill the rest of the map with a pathfinding algorithm
-        # algo = choice([Tunneling, DrunkWalk])
-        # algo.make_map(game, max_rooms, room_min_size, room_max_size, map_width, map_height)
-        #DrunkWalk().make_map(self, map_width, map_height)
-        #Tunneling().make_map(self)
+        self.create_rooms(max_rooms, room_min_size, room_max_size, map_width, map_height, fuzzy=level_type[Key.ROOM_FUZZY_CHANCE])
+        Tunneling.create_tunnels(self, randomize=level_type[Key.RANDOMIZE_TUNNEL_CONNECTIONS], drunk_chance=level_type[Key.DRUNK_TUNNEL_CHANCE])
 
         blocked_rooms = [r for r in self.rooms if len(r.exits(self)) == 0]
         if len(blocked_rooms) > 0:
@@ -53,10 +53,26 @@ class GameMap:
             Tunneling.create_tunnels(self, room_list = blocked_rooms, randomize=True)
 
         for i in range(randint(6,15)):
-            color = choice([colors.clay, colors.granite])
+            color = choice(level_type[Key.LEVEL_COLORS])
             self.color_random_area(color)
 
     def create_rooms(self, max_rooms, room_min_size, room_max_size, map_width, map_height, fuzzy=-1):
+        """
+        :param max_rooms: max # of rooms
+        :type max_rooms: int
+        :param room_min_size: min size of room (x*y)
+        :type room_min_size: int
+        :param room_max_size: max size of room (x*y)
+        :type room_max_size: int
+        :param map_width: width of the current map
+        :type map_width: int
+        :param map_height: height of the current map
+        :type map_height: int
+        :param fuzzy: fuzzy sets the chance for a tile to remain a wall that would otherwise a floor when creating a room
+        :type fuzzy: int
+        :return: Nothing
+        :rtype: None
+        """
         for r in range(max_rooms):
             # random width and height
             w = randint(room_min_size, room_max_size)

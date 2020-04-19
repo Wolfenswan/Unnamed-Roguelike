@@ -53,16 +53,19 @@ def animate_projectile(start_x:int, start_y:int, target_x:int, target_y:int, gam
     Creates a temporary projectile and animates its movement from start position to target position.
 
     TODO additonal switches: character
-    TODO doesn't return anything atm. Add return as needed
+
+    :returns: True if flew full path, False if it hit a wall and entity, if it hit an entity
     """
-
-    distance = forced_distance if forced_distance > 0 else distance_between_pos(start_x, start_y, target_x, target_y)
-
+    # distance = forced_distance if forced_distance > 0 else distance_between_pos(start_x, start_y, target_x, target_y)
     projectile = Entity(start_x, start_y, char, color, 'Projectile', render_order=RenderOrder.ALWAYS)
     game.entities.append(projectile)
-    animate_move_to(projectile, target_x, target_y, game, anim_delay = anim_delay, ignore_entities=ignore_entities)
+    result = animate_move_to(projectile, target_x, target_y, game, anim_delay = anim_delay, ignore_entities=ignore_entities)
     game.entities.remove(projectile)
 
+    if isinstance(result, Entity):
+        return result
+    else:
+        return result
 
 def animate_explosion(center_x:int, center_y:int, game:Game, spread:int=3, ignore_walls=False, anim_delay = 0.08, color=colors.flame):
     """

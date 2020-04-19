@@ -162,7 +162,7 @@ class Fighter:
         # Calculate average modifier
         if len(modifiers) > 0:
             mod = round(sum(modifiers)/len(modifiers),4)
-            logging.debug(f'Modifiers: {modifiers}; final: {mod}')
+            #logging.debug(f'Modifiers: {modifiers}; final: {mod}')
 
         return (round(self.base_dmg_potential[0] * mod), round(self.base_dmg_potential[-1] * mod))
 
@@ -358,10 +358,25 @@ class Fighter:
     # ATTACK RELATED FUNCTIONS #
     ############################
 
-    def attack_setup(self, target, game, dmg_mod_multipl:float=1, verb:str='hit', ignore_moveset:bool=False, draw_ranged_projectile:bool=True):
+    def get_attack_power(self, dmg_mod_multipl:float=1, ignore_moveset=False):
+        if ignore_moveset:
+            attack_power = choice(self.base_dmg_potential) * dmg_mod_multipl
+        else:
+            attack_power = self.dmg_roll * dmg_mod_multipl
+        return attack_power
+
+    def get_attack_exertion(self, attack_power, ignore_moveset=False):
+        atk_exertion_divider = cfg.ATK_EXERT_MULTIPL
+        if ignore_moveset:
+            attack_exertion = attack_power / atk_exertion_divider
+        else:
+            attack_exertion = attack_power / atk_exertion_divider * self.active_weapon.moveset.exert_multipl
+        return attack_exertion
+
+    def attack_setup(self, target, game, dmg_mod_multipl:float=1, verb:str='hit', ignore_moveset:bool=False):
         results = []
         extra_attacks = []
-        atk_exertion_divider = cfg.ATK_EXERT_DIVISOR
+        atk_exertion_divider = cfg.ATK_EXERT_MULTIPL
         daze_chance = 50 # chance to daze attacker on successful block # TODO dynamically calculated
 
         if self.active_weapon is not None: # if a weapon is equipped, check the type
@@ -373,64 +388,36 @@ class Fighter:
             ignore_moveset = True
 
         # Apply moveset modifers #
-        if ignore_moveset:
-            attack_power = choice(self.base_dmg_potential) * dmg_mod_multipl
-            attack_exertion = attack_power / atk_exertion_divider
-        else:
-            if self.active_weapon is not None:
-                move_results = self.active_weapon.moveset.execute(self.owner, target)
-                verb = move_results.get('attack_verb', verb)
-                extra_attacks = move_results.get('extra_attacks', [])
-
-            attack_power = self.dmg_roll * dmg_mod_multipl
-            attack_exertion = attack_power / atk_exertion_divider * self.active_weapon.moveset.exert_multipl
+        attack_power = self.get_attack_power(dmg_mod_multipl, ignore_moveset)
+        attack_exertion = self.get_attack_exertion(attack_power, ignore_moveset)
+        if not ignore_moveset and self.active_weapon is not None:
+            move_results = self.active_weapon.moveset.execute(self.owner, target)
+            verb = move_results.get('attack_verb', verb)
+            extra_attacks = move_results.get('extra_attacks', [])
             self.active_weapon.moveset.cycle_moves()
+        # if ignore_moveset:
+        #     attack_power = choice(self.base_dmg_potential) * dmg_mod_multipl
+        #     attack_exertion = attack_power / atk_exertion_divider
+        # else:
+        #     if self.active_weapon is not None:
+        #         move_results = self.active_weapon.moveset.execute(self.owner, target)
+        #         verb = move_results.get('attack_verb', verb)
+        #         extra_attacks = move_results.get('extra_attacks', [])
+        #
+        #     attack_power = self.dmg_roll * dmg_mod_multipl
+        #     attack_exertion = attack_power / atk_exertion_divider * self.active_weapon.moveset.exert_multipl
+        #     self.active_weapon.moveset.cycle_moves()
 
         logging.debug(f'{self.owner.name} prepares to attack {target.name} with base damage {self.base_dmg_potential},'
                       f' (modded {self.modded_dmg_potential}) for a total power of {attack_power} and {attack_exertion}exert')
 
         # Make sure attacker has enough stamina #
         if self.stamina < attack_exertion:
-            message = M(f'You are too exhaused to attack!', category=MessageCategory.COMBAT,
+            message = M(f'You are too exhausted to attack!', category=MessageCategory.COMBAT,
                               type=MessageType.ALERT)
             results.append({'message': message})
             logging.debug(f'Canceling {self}\'s attack: stamina of {self.stamina} too low.')
             return results
-
-        # If the target is out of stamina, attack power is doubled #
-        # TODO remove?
-        if target.f.stamina <= 0 and melee_attack:
-            logging.debug(f'{target} is out of stamina. Doubling {self}\'s atk_power to {attack_power}')
-            attack_power *= 2
-
-        # Ranged attack specific #
-        if ranged_attack:
-            logging.debug(f'{self.owner} is attempting ranged attack at {target}')
-            if not self.owner.free_line_to_ent(target, game): # If the projectile's path to the intended target is obstructed
-                pos_list = line_between_pos(*self.owner.pos, *target.pos) # Get a list of all pos between shooter and target
-                # try:    # Get the first blocking entity from that list # TODO should be obsolete; kept to be sure
-                obstacle = next(entity_at_pos(game.walk_blocking_ents, *pos) for pos in pos_list if entity_at_pos(game.walk_blocking_ents, *pos) is not None)
-                logging.debug(f'{obstacle} is blocking direct los')
-                if randint(0,1): # 50% chance that that entity is hit instead
-                    # TODO chance will later be modified by skill level, attributes etc.
-                    message = M(f'PLACEHOLDER: {self.owner.name} hits {obstacle.name} instead of {target.name}!',
-                                      category=MessageCategory.COMBAT,
-                                      type=MessageType.SYSTEM)
-                    results.append({'message': message})
-                    if obstacle.fighter is not None:
-                        target = obstacle   # Intended target is switched for obstacle
-                    else:
-                        return results # If the obstacle can't be damaged, end the attack here
-                # except:
-                #     # TODO should be obsolete; kept to be sure
-                #     message = M(f'PLACEHOLDER: {self.owner.name} hits a wall instead of {target.name}!',
-                #                       category=MessageCategory.COMBAT,
-                #                       type=MessageType.SYSTEM)
-                #     results.append({'message': message})
-                #     return results
-
-            if draw_ranged_projectile:
-                animate_projectile(*self.owner.pos,*target.pos,game, color=colors.beige) # TODO color and projectile can later be modified by weapon/ammo
 
         # Blocking #
         attack_blocked = False
@@ -481,8 +468,8 @@ class Fighter:
             msg_type = MessageType.COMBAT_BAD if target.is_player else MessageType.COMBAT_INFO
             atk_dmg_string = target.f.hpdmg_string(damage)
             col = target.f.hpdmg_color(damage)
-            results.append({'message': M(
-                f'{self.owner.address_colored.title()} {attack_string} {target_string}, {choice(hpdmg_string_data["verbs"])} %{col}%{atk_dmg_string}%% damage.', category=MessageCategory.COMBAT, type=msg_type)})
+            results.append({'message':
+                M(f'{self.owner.address_colored.title()} {attack_string} {target_string}, {choice(hpdmg_string_data["verbs"])} %{col}%{atk_dmg_string}%% damage.', category=MessageCategory.COMBAT, type=msg_type)})
             results.extend(target.f.take_damage(damage))
 
             # STATISTICS
@@ -498,6 +485,25 @@ class Fighter:
 
         logging.debug(
             f'{self.owner.name.title()} attacks {target.name.title()} with {power} power against {target.f.defense} defense for {damage} damage. Target has {target.f.stamina} stamina left.)')
+        return results
+
+    def ranged_attack(self, target_pos, game, draw_projectile=True):
+        results = []
+        target = None
+
+        if draw_projectile:
+            projectile_result = animate_projectile(*self.owner.pos,*target_pos,game, color=colors.beige) # TODO color and projectile can later be modified by weapon/ammo
+            if not isinstance(projectile_result, bool):
+                target = projectile_result
+                # todo if target.pos != target_pos add some randomness?
+        else:
+            target = entity_at_pos(game.blocking_ents, *target_pos)
+
+        if target is not None and target.fighter is not None:
+            results.extend(self.attack_setup(target,game))
+        else:
+            exertion = self.get_attack_exertion(self.get_attack_power())
+            self.exert(exertion, 'todo') #todo
         return results
 
     def tackle(self, target, game, multipl:float=0.5, duration=2):
