@@ -30,6 +30,8 @@ BUGS
 - dung beatle charge still odd angles
 
 ITEMS
+- add incendiary effect
+    - create "flame" entity; passable but damages
 - shoes, rings, backpacks, (shoulders)
 - abstract weight system: (almost)weightless/light/moderate/heavy/v.heavy
     - avoids need for number crunching

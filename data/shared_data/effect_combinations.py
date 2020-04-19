@@ -45,6 +45,12 @@ explosion_targeted = {
         'on_proj_hit': Effect.explosion
 }
 
+incendiary_targeted = {
+        **explosion,
+        **generic_projectile,
+        'on_proj_hit': Effect.explosion
+        # 'on_proj_hit': Effect.explosion_incendiary
+}
 
 entangle = {
         'effect_name' : 'entangle',

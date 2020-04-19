@@ -1,5 +1,7 @@
 from random import randint, choice
 
+from gameobjects.entity import Entity
+
 from components.combat.fighter_util import State
 from gui.messages import Message, MessageCategory, MessageType
 from rendering.render_animations import animate_projectile, animate_explosion
@@ -101,6 +103,7 @@ class Effect:
                 results.extend(on_hit(**kwargs)) # TODO damage_by_radius with damage falloff by distance from center
 
         return results
+
 
     @staticmethod
     def chained_explosion(**kwargs): # Just a Proof of Concept atm

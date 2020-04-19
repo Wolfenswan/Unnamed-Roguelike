@@ -1,6 +1,6 @@
 from config_files import colors
 from data.data_enums import Key, ItemType, RarityType
-from data.shared_data.effect_combinations import explosion_targeted, explosion, entangle_targeted
+from data.shared_data.effect_combinations import explosion_targeted, explosion, entangle_targeted, incendiary_targeted
 
 BOMB_CHAR = chr(162)
 
@@ -28,6 +28,19 @@ use_throw_data = {
         Key.ON_USE_PROJECTILE: BOMB_CHAR,
         Key.ON_USE_PARAMS: {'pwr': (4,8), 'radius': 2, 'range': (1,8)},
         Key.RARITY: RarityType.COMMON,
+        Key.RARITY_MOD: 0,
+        Key.DLVLS: (1, 99)
+    },
+    'bomb_3': {
+        Key.NAME: 'Incendiary Bomb',
+        Key.DESCR: 'TODO Incendiary Bomb.',
+        Key.TYPE: ItemType.USEABLE,
+        Key.CHAR: BOMB_CHAR,
+        Key.COLOR: colors.light_red,
+        Key.ON_USE_EFFECT: incendiary_targeted,
+        Key.ON_USE_PROJECTILE: BOMB_CHAR,
+        Key.ON_USE_PARAMS: {'pwr': (4,8), 'radius': 2, 'range': (1,8)},
+        Key.RARITY: RarityType.UNCOMMON,
         Key.RARITY_MOD: 0,
         Key.DLVLS: (1, 99)
     },

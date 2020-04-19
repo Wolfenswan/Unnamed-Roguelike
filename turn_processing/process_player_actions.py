@@ -193,7 +193,7 @@ def process_player_interaction(game, action):
             # Option menu is displayed if > 1 item is on the ground
             choice = items[0] if len(items) == 1 else \
                 item_list_menu(player, items, game, title='Select Item', body='Pick up which item?')
-            if choice is not None:
+            if choice is not None and choice is not False:
                 pickup_results = player.inventory.add(choice)
                 results.extend(pickup_results)
         else:

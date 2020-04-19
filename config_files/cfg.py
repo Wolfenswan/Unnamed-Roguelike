@@ -13,7 +13,7 @@ DEBUG = {
     'prevent_architecture_spawning': False, # excluding special objects (e.g. stairs)
 }
 LOGGING = {
-    'debug': False,
+    'debug': True,
     'runtime': True, # times functions
 }
 
@@ -45,7 +45,7 @@ ITEMS_ROOM_LIMIT = 0.25 # (room width * room height) * this
 # CONTAINER SETTINGS #
 # TODO put in relation to max items?
 CONTAINER_DUNGEON_FACTOR = 0.7 # total rooms * this
-CONTAINER_ROOM_FACTOR = 0.5 # (room width * room height) * this
+CONTAINER_ROOM_FACTOR = 0.1 # (room width * room height) * this
 
 # STATIC OBJECT SETTINGS #
 #SOBJECTS_DUNGEON_FACTOR = 5 # total rooms times this (UNUSED)

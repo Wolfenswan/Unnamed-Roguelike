@@ -9,6 +9,7 @@ class Stance(Enum):
 
 class State(Enum):
     DAZED = auto()
+    STAGGERED = auto()
     STUNNED = auto()
     ENTANGLED = auto()
     CONFUSED = auto()
