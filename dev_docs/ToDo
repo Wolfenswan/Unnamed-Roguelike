@@ -1,11 +1,4 @@
 CURRENT
-- balancing:
-    - recovering from 0 sta while fighting is impossible
-- refactor charging algo
-- scrollable menus (if > 26 options when using letterordering or > 10 if using numbers)
-- deactivate dashing after movement
-- exhaustion for attacks seems to low; needs tweaking
-- Update/Finish Manual
 - Tweak Dungeon generation
     - ideally should be a mix between dungeon & tunnels
         - options dungeon (only tunnels & square rooms), caves (only drunk walk), mines (mix of both)
