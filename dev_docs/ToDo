@@ -1,12 +1,9 @@
 CURRENT
-- rewrite container placement
-    -
 - balancing:
     - recovering from 0 sta while fighting is impossible
 - refactor charging algo
 - scrollable menus (if > 26 options when using letterordering or > 10 if using numbers)
 - deactivate dashing after movement
-    - make it an option in the menu
 - exhaustion for attacks seems to low; needs tweaking
 - Update/Finish Manual
 - Tweak Dungeon generation
@@ -29,7 +26,7 @@ CURRENT
     - has to return to portal?
 
 BUGS
-- dung beatle charge still odd angles
+- dung beatle still charge odd angles
 
 ITEMS
 - add incendiary effect

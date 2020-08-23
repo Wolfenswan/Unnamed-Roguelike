@@ -43,9 +43,16 @@ def game_loop(game):
     game.state = GameState.PLAYER_ACTIVE
     game.previous_state = game.state
 
-    while not tcod.console_is_window_closed():
+    # TODO new tcod.event system
+    # action = False
+    # for event in tcod.event.wait():
+    #     if event.type == "QUIT":
+    #         exit()
+    #     elif event.type == "KEYDOWN":
+    #         action = handle_keys(event, game.state)
+
+    while not tcod.console_is_window_closed(): # todo deprecated
         # tcod.sys_set_fps(30)
-        # tcod.sys_check_for_event(tcod.EVENT_KEY_PRESS, key, '')
 
         if fov_reset:
             game.fov_map = initialize_fov(game)
@@ -60,22 +67,14 @@ def game_loop(game):
                 ent.proc_every_turn(game, start=True)
             new_turn = False
 
-        # TODO new tcod.event system
-        # action = False
-        # for event in tcod.event.wait():
-        #     if event.type == "QUIT":
-        #         exit()
-        #     elif event.type == "KEYDOWN":
-        #         action = handle_keys(event, game.state)
-
-        tcod.sys_wait_for_event(tcod.EVENT_KEY_PRESS, key, None, True)
+        tcod.sys_wait_for_event(tcod.EVENT_KEY_PRESS, key, None, True) # todo deprecated
         action = handle_keys_legacy(key, game.state)
         # mouse_action = handle_mouse(mouse)
 
         if action:
             logging.debug(f'Processing {action}, last turn results: {final_turn_results}')
             # Process player input into turn results #
-            # TODO game state should be set in engine.py, not inside the lower functions
+            # TODO ideally game state should be set in engine.py, not in the lower-level functions
             player_turn_results = process_player_input(action, game, last_turn_results=final_turn_results)
             logging.debug(f'Loop starts with turn {game.turn}, player results: {player_turn_results}')
             # The game exits if player turn results returns False #
@@ -83,7 +82,7 @@ def game_loop(game):
                 break
 
             # Process turn results #
-            # TODO game state should be set in engine.py, not inside the lower functions
+            # TODO ideally game state should be set in engine.py, not in the lower-level functions
             processed_turn_results = process_turn_results(player_turn_results, game, game.fov_map)
             logging.debug(f'Turn {game.turn}. State: {game.state}. Processed results: {player_turn_results}')
             fov_recompute = processed_turn_results.get('fov_recompute', False)

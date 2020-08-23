@@ -3,7 +3,7 @@ TESTING:
 - does using stairs still cause fov-related crash (when triggering enemy turn)
 
 BUGS
-- charge attack will occassionally move past player
+- charge attack will occassionally move past player even if they didnt move
 - wall_arch can cover same spot (e.g. lichen & chains); feature?
 - line breaks break colorization (straightforward but silly workaround would be color-wrapping each word individually)
 - menus dont close when exited -> overlapping menus
