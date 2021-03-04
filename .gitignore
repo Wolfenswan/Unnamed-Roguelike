@@ -62,3 +62,4 @@ venv.bak/
 /venv_linux/
 venv_start.bat
 /docs/
+.vscode/

@@ -26,3 +26,8 @@
 
 17/02/2020
 - refactored ranged attack system
+
+04/03/2021
+- ITEMS: added throwing daggers
+- MAPGEN: prep to properly implemented dlvl-sensitive level-generation
+- MISC: some flavor-text tweaks and spelling-fixes
