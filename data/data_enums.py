@@ -202,3 +202,10 @@ class BodyType(Enum):
     SMALL = auto()
     LARGE = auto()
     GARGANTUAN = auto()
+
+
+# Map Generation #
+class LevelType(Enum):
+    DUNGEON = auto()
+    CAVE = auto()
+    MINE = auto()

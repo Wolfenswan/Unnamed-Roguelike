@@ -51,8 +51,7 @@ def game_loop(game):
     #     elif event.type == "KEYDOWN":
     #         action = handle_keys(event, game.state)
 
-    while not tcod.console_is_window_closed(): # todo deprecated
-        # tcod.sys_set_fps(30)
+    while not tcod.console_is_window_closed(): # todo deprecated -> replace with new tcod-system
 
         if fov_reset:
             game.fov_map = initialize_fov(game)
@@ -121,7 +120,7 @@ if __name__ == '__main__':
     initialize_font()
     initialize_window(game)
 
-    while True: # outer loop ensures the game exists to main menu first
+    while True: # outer loop ensures the game exits to main menu first
         while True:
             start_game = main_menu(game)
             if start_game == 0:

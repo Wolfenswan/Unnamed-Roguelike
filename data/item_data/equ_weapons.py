@@ -3,6 +3,7 @@ from data.moveset_data.weapon_movesets import moveset_sword, moveset_spear, move
 
 default_values = {
     Key.CHAR: '\\',
+    Key.DESCR: 'TODO Placeholder',
     Key.TYPE: ItemType.MELEE_WEAPON,
     Key.EQUIP_TO: EquipTo.WEAPON_ARM,
     Key.DLVLS: (1,99)
@@ -13,7 +14,7 @@ equ_weapon_data = {
         **default_values,
         Key.NAME: 'sword',
         Key.MATERIAL: (Material.IRON, Material.STEEL),
-        Key.DESCR: 'Kills enemies and cuts bread. Just make sure to clean it in between.',
+        Key.DESCR: 'Kills enemies and cuts bread. Clean it in between.',
         Key.DMG_POTENTIAL: (4, 6),
         Key.MOVESET: moveset_sword,
         Key.RARITY: RarityType.COMMON
@@ -31,11 +32,11 @@ equ_weapon_data = {
         **default_values,
         Key.NAME: 'spear',
         Key.MATERIAL: (Material.OAK, Material.IRON, Material.STEEL),
-        Key.DESCR: 'Easy to use, yet deadly efficient in the right hands or claws.',
+        Key.DESCR: 'Easy to use, yet efficient in the right hands (or claws).',
         Key.CHAR: '|',
-        Key.DMG_POTENTIAL: (2,8),
+        Key.DMG_POTENTIAL: (2,6),
         Key.TWO_HANDED: True,
-        Key.ONE_HANDED_PENALTY_MOD: 0.5, # multiply damage by this amount if wielded only two-handed
+        Key.ONE_HANDED_PENALTY_MOD: 0.5, # multiply damage by this amount if not wielded two-handed
         Key.MOVESET: moveset_spear,
         Key.RARITY: RarityType.COMMON
     },
@@ -43,7 +44,7 @@ equ_weapon_data = {
         **default_values,
         Key.NAME: 'flail',
         Key.MATERIAL: (Material.IRON, Material.STEEL),
-        Key.DESCR: 'Swing it round, round like a murder tool.',
+        Key.DESCR: 'Shields matter little if you can swing a spiked ball around them.',
         Key.CHAR: '?',
         Key.DMG_POTENTIAL: (2,4),
         Key.MOVESET: moveset_flail,

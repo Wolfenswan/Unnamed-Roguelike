@@ -5,6 +5,7 @@ from rendering.render_order import RenderOrder
 
 def play_intro(game):
     # Proof of Concept intro #
+    # idea: destroy objects hit by explosion
     player = game.player
 
     player.render_order = RenderOrder.BOTTOM

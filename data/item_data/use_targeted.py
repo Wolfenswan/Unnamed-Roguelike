@@ -1,6 +1,6 @@
 from config_files import colors
 from data.data_enums import Key, ItemType, RarityType
-from data.shared_data.effect_combinations import explosion_targeted, explosion, entangle_targeted, incendiary_targeted
+from data.shared_data.effect_combinations import explosion_targeted, explosion, entangle_targeted, incendiary_targeted, dmg_targeted
 
 BOMB_CHAR = chr(162)
 
@@ -53,6 +53,18 @@ use_throw_data = {
         Key.ON_USE_EFFECT: entangle_targeted,
         Key.ON_USE_PROJECTILE: '#',
         Key.ON_USE_PARAMS: {'pwr': (2,6), 'range': (1,4)},
+        Key.RARITY: RarityType.COMMON,
+        Key.DLVLS: (1, 99)
+    },
+    'tdgr_1': {
+        Key.NAME: 'Throwing Dagger',
+        Key.DESCR: 'TODO Throwing Dagger',
+        Key.TYPE: ItemType.USEABLE,
+        Key.CHAR: 't',
+        Key.COLOR: colors.iron,
+        Key.ON_USE_EFFECT: dmg_targeted,
+        Key.ON_USE_PROJECTILE: '-',
+        Key.ON_USE_PARAMS: {'pwr': (1,4), 'range': (1,6),'uses':3},
         Key.RARITY: RarityType.COMMON,
         Key.DLVLS: (1, 99)
     }

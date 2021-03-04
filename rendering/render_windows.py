@@ -119,14 +119,16 @@ def draw_window(title, body, game, options:Optional[List]=None,
 
 
 def render_description_window(game):
-    ent = entity_at_pos(game.npc_ents + game.architecture_ents, *game.cursor.pos)
-    if ent is not None:
-        x, y = pos_on_screen(ent.x - 5, ent.y + 2, game.player)
+    # Todo also add list with items on the floor below the extended description of the highlighted ent.
+    blocking_ent = entity_at_pos(game.walk_blocking_ents, *game.cursor.pos)
+    item_ent = entity_at_pos(game.item_ents, *game.cursor.pos)
+    if blocking_ent is not None:
+        x, y = pos_on_screen(blocking_ent.x - 5, blocking_ent.y + 2, game.player)
 
-        title = f'{ent.full_name}'
-        body = ent.extended_descr(game)
+        title = f'{blocking_ent.full_name}'
+        body = blocking_ent.extended_descr(game)
 
-        draw_window(title, body, game, window_x=x, window_y=y, show_cancel_option=False, title_color=ent.color)
+        draw_window(title, body, game, window_x=x, window_y=y, show_cancel_option=False, title_color=blocking_ent.color)
 
 
 # def render_equipment_window(equipment): # Experimental - Not implemented#

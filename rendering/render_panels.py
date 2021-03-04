@@ -248,7 +248,7 @@ def draw_quickslots(con, x, y, game):
     color = colors.white #colors.panel_inactive
 
     total_slots = player.qu_inventory.capacity
-    width = 3 * total_slots # every slot needs 3 pixels
+    # width = 3 * total_slots # every slot needs 3 pixels
 
     start_x = x - total_slots # r_cons.BOTTOM_PANEL_WIDTH // 2 - width // 2
     #start_x = (cons.SIDE_PANEL_WIDTH // 2 - width // 2) + 2

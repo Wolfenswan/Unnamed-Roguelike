@@ -1,4 +1,11 @@
 CURRENT
+- add descriptions to monsters depending on modifiers (e.g. scrawny: it looks unusually weak for its kind)
+X add throwing dagger
+- add to (s)earch screen: what's on the ground below an actor
+    - standalone window (with no actor is not necessary: would create clutter and the objects window already indictaes objects below cursor with *)
+- add pydispatch to do spawning properly without circular import
+- add dlvl-check to level-generation (implemented in data, needs check in code)
+
 - Tweak Dungeon generation
     - ideally should be a mix between dungeon & tunnels
         - options dungeon (only tunnels & square rooms), caves (only drunk walk), mines (mix of both)
@@ -60,6 +67,7 @@ GUI
     - allow pages in menus, change via left/right or up/down
     Manual
     - Dynamic scrolling, instead of predefined pages
+    - rename STR(ength) to POW(er)?
 
 REFACTORING/CODE
 - can lowering exploration value make a comeback?
@@ -72,3 +80,7 @@ REFACTORING/CODE
         - game as owner
         - method end() to clean out turn
         - 'messages' : value list containing all messages to display
+
+FUTURE
+- add prefab rooms (e.g. for portal enter room)
+- decouple max/min dungeon size from screen width

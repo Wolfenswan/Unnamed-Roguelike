@@ -65,26 +65,29 @@ moveset_spear = {
     }
 }
 moveset_flail = {
-Key.DEFAULT: {Key.VERBS: ('flail',),},
+Key.DEFAULT: {
+    Key.VERBS: ('flail','swing'),
+    Mod.ARMOR_PIERCING_FLAT: 1,
+    },
     1: {
        Key.DESCR: f'A {col1}weaker over-head swing%%, to get momentum.',
-        Mod.DMG_MULTIPL: 0.5,
-        Key.EXTEND_ATTACK: [RelativeDirection.LEFT, RelativeDirection.LEFT_BACK]
+        Mod.DMG_MULTIPL: 0.65,
+        Key.EXTEND_ATTACK: [RelativeDirection.LEFT, RelativeDirection.LEFT_BACK],
     },
     2: {
        Key.DESCR: f'A {col1}slightly stronger swing%%, speeding up the weapon.',
-        Mod.DMG_MULTIPL: 0.85,
-        Key.EXTEND_ATTACK: [RelativeDirection.RIGHT, RelativeDirection.LEFT, RelativeDirection.LEFT_BACK]
+        Mod.DMG_MULTIPL: 1,
+        Key.EXTEND_ATTACK: [RelativeDirection.RIGHT, RelativeDirection.LEFT, RelativeDirection.LEFT_BACK],
     },
     3: {
         Key.DESCR: f"A {col1}standard swing%%, using the weapon's full potential.",
-        Mod.DMG_MULTIPL: 1,
+        Mod.DMG_MULTIPL: 1.25,
         Key.EXTEND_ATTACK: [RelativeDirection.RIGHT, RelativeDirection.LEFT, RelativeDirection.LEFT_BACK]
     },
     4: {
-       Key.DESCR: f"A final {col1}overhead crush%% on a single head, ignoring shields.",
+       Key.DESCR: f"A final, devastating {col1}overhead crush%% on a single head, ignoring any blocking abilities.",
         Key.VERB: 'crush',
-        Mod.DMG_MULTIPL: 1.25,
+        Mod.DMG_MULTIPL: 1.5,
         Mod.EXERT_MULTIPL: 1.25,
         Mod.BLOCK_DEF_MULTIPL: 0,
     }
@@ -99,7 +102,8 @@ moveset_bow = {
        Key.DESCR: f"A {col1}standard draw%%, likely hitting the torso.",
     },
     3: {
-       Key.DESCR: f"A followup, {col1}average shot%%, to prepare for the final target.",
+       Key.DESCR: f"A {col1}followup shot%%, preparing the final shot.",
+       Mod.DMG_MULTIPL: 0.75
     },
     4: {
        Key.DESCR: f"A {col1}devastating head shot%%, aimed right between the eyes.",

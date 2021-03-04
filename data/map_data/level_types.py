@@ -1,9 +1,10 @@
 from config_files import colors
-from data.data_enums import Key
+from data.data_enums import Key, LevelType
 
 level_types_data = {
-    'type_dungeon': {
+    LevelType.DUNGEON: {
         Key.NAME : 'Dungeon',
+        Key.DLVLS: (1,2),
         Key.ROOM_FUZZY_CHANCE : 0,
         Key.DRUNK_TUNNEL_CHANCE : 0,
         Key.RANDOMIZE_TUNNEL_CONNECTIONS : False,
@@ -11,8 +12,9 @@ level_types_data = {
         Key.ROOM_MAX_SIZE : 16,
         Key.LEVEL_COLORS : (colors.granite,colors.stone),
     },
-    'type_cave': {
+    LevelType.CAVE: {
         Key.NAME : 'Cave',
+        Key.DLVLS: (5,6),
         Key.ROOM_FUZZY_CHANCE : 60,
         Key.DRUNK_TUNNEL_CHANCE : 80,
         Key.RANDOMIZE_TUNNEL_CONNECTIONS : True,
@@ -20,8 +22,9 @@ level_types_data = {
         Key.ROOM_MAX_SIZE : 30,
         Key.LEVEL_COLORS : (colors.clay,colors.granite),
     },
-    'type_mine':{
+    LevelType.MINE:{
         Key.NAME : 'Mine',
+        Key.DLVLS: (3,4),
         Key.ROOM_FUZZY_CHANCE : 25,
         Key.DRUNK_TUNNEL_CHANCE : 40,
         Key.RANDOMIZE_TUNNEL_CONNECTIONS : True,

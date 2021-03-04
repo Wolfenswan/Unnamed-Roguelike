@@ -3,7 +3,7 @@ from random import choice, randint
 
 from dataclasses import dataclass
 
-from data.data_enums import Key
+from data.data_enums import Key, LevelType
 from data.map_data.level_types import level_types_data
 from gameobjects.block_level import BlockLevel
 from map.directions_util import DIRECTIONS_CIRCLE
@@ -34,8 +34,11 @@ class GameMap:
     def wall_tiles(self):
         return [tile for tile in self.tiles.values() if tile.blocked]
 
-    def create_level(self):
-        level_type = level_types_data[choice(list(level_types_data.keys()))]
+    def create_level(self, level_id:LevelType=None):
+        if level_id is None:
+            level_id = choice(list(level_types_data.keys()))
+        
+        level_type = level_types_data[level_id]
         room_min_size = level_type[Key.ROOM_MIN_SIZE]
         room_max_size = level_type[Key.ROOM_MAX_SIZE]
 

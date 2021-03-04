@@ -22,7 +22,7 @@ from data.gui_data.gui_entity import bodytype_name_data
 from data.gui_data.material_strings import material_name_data
 from data.gui_data.gui_fighter import effects_descr_data
 from game import Game
-from gameobjects.util_functions import entity_at_pos, free_line_between_pos, distance_between_pos
+from gameobjects.util_functions import entity_at_pos, entities_at_pos, free_line_between_pos, distance_between_pos
 from map.directions_util import direction_between_pos, DIRECTIONS_CIRCLE
 from map.game_map import GameMap
 from rendering.render_order import RenderOrder
@@ -41,6 +41,8 @@ class Entity:
     type : Union[GenericType, ItemType, MonsterType] = field(default=GenericType.DEFAULT)
     blocks : dict = field(default_factory=dict)
     render_order : RenderOrder = field(default=RenderOrder.NONE)
+
+    owner:Optional = None
 
     material: Optional[Material] = None
     bodytype: Optional[BodyType] = None
@@ -154,7 +156,7 @@ class Entity:
         """
         extend_descr = self.descr
         col = 'dark_crimson' # TODO All colors are placeholders
-        if self.fighter is not None and self.active_weapon is not None:
+        if self.fighter is not None and self.active_weapon is not None and self == game.player:
             # if self.f.active_weapon: # TODO add another way to indicate special features of a creatures attack
             #     extend_descr += f'\n\nIt attacks with %{col}%{self.f.active_weapon.item.equipment.attack_type.name.lower()}%% strikes.'
 

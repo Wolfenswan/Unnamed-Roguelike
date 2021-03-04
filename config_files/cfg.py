@@ -8,9 +8,9 @@ DEBUG = {
     'invincibility': False,
     'reveal_map': False,
     'detailed_ent_info': False,
-    'prevent_item_spawning': False, # also prevents containers
+    'prevent_item_spawning': True, # also prevents containers
     'prevent_npc_spawning': False,
-    'prevent_architecture_spawning': False, # excluding special objects (e.g. stairs)
+    'prevent_architecture_spawning': True, # excluding special objects (e.g. stairs)
 }
 LOGGING = {
     'debug': True,
@@ -34,7 +34,7 @@ DUNGEON_MAX_HEIGHT = DUNGEON_MIN_HEIGHT * 2
 
 # NPC SETTINGS #
 GROUPS_MIN_FACTOR = 0.5 # total rooms * this
-GROUPS_MAX_FACTOR = 1.5 # total rooms * this
+GROUPS_MAX_FACTOR = 1 # total rooms * this
 # MONSTERS_DUNGEON_FACTOR = 5 # total rooms * this
 MONSTERS_ROOM_LIMIT = 10 # room width * room height // this
 

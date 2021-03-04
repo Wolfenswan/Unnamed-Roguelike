@@ -41,7 +41,7 @@ npc_data_insects = {
         Key.NAME: 'Roachling',
         Key.CHAR: 'r',
         Key.COLOR: colors.light_amber,
-        Key.DESCR: 'Waddling upright like a clumsy child, the twitching antennae and multitude of jittering legs quickly dispell any passing resemblance.',
+        Key.DESCR: 'Waddling upright like a clumsy child, the twitching antennae and multitude of jittering legs quickly dispel any passing resemblance.',
         Key.MAX_HP: (5, 10),
         Key.MAX_STAMINA: (60, 60),
         Key.BASE_ARMOR: (0, 0),

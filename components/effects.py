@@ -9,12 +9,12 @@ from rendering.render_animations import animate_projectile, animate_explosion
 
 class Effect:
     """
-    Effect contains only static methods for convenience sake.
+    Effect-Class serves as a container for static methods.
     All Effect.-methods are result of player or npc interaction with the world either through skill or item usage.
     """
 
     @staticmethod
-    def direct_damage(target = None, string='hit', ignore_def=False, **kwargs):
+    def direct_damage(target = None, string='attack', ignore_def=False, **kwargs):
         # NOTE: Does currently not take any defenses into account.
         amount = randint(*kwargs.get('pwr'))
         if target is None:
@@ -66,8 +66,8 @@ class Effect:
         user = kwargs['user']
         target_pos = kwargs.get('target_pos')
         on_hit = kwargs.get('on_proj_hit')
-        effect_name = kwargs.get('effect_name', 'projectile')
-        effect_verb = kwargs.get('effect_verb', 'hits')
+        # effect_name = kwargs.get('effect_name', 'projectile')
+        # effect_verb = kwargs.get('effect_verb', 'hits')
         projectile = kwargs.get('projectile','*')
         color = kwargs['used_item'].color
 

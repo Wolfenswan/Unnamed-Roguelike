@@ -23,7 +23,7 @@ def place_monsters(game):
     spawn_data = NPC_DATA
     groups_to_spawn = randint(int(len(rooms) * cfg.GROUPS_MIN_FACTOR),int(len(rooms) * cfg.GROUPS_MAX_FACTOR))
 
-    logging.debug(f'Creating actors for dungeon-level {dlvl}.{groups_to_spawn} groups for {len(rooms)} rooms)')
+    logging.debug(f'Creating actors for dungeon-level {dlvl}. Spawning {groups_to_spawn} groups for {len(rooms)} rooms)')
 
     group_count = 0
     while group_count < groups_to_spawn and len(rooms) > 1:
