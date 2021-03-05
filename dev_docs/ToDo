@@ -1,7 +1,7 @@
 CURRENT
 - add descriptions to monsters depending on modifiers (e.g. scrawny: it looks unusually weak for its kind)
 X add throwing dagger
-- add to (s)earch screen: what's on the ground below an actor
+X add to (s)earch screen: what's on the ground below an actor
     - standalone window (with no actor is not necessary: would create clutter and the objects window already indictaes objects below cursor with *)
 - add pydispatch to do spawning properly without circular import
 - add dlvl-check to level-generation (implemented in data, needs check in code)
@@ -26,7 +26,7 @@ X add throwing dagger
     - has to return to portal?
 
 BUGS
-- dung beatle still charge odd angles
+X dung beatle still charge odd angles
 
 ITEMS
 - add incendiary effect

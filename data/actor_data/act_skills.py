@@ -12,7 +12,7 @@ skill_generic_charge = {
         Key.SKILL : SkillCharge,
         Key.NAME: 'Charge',
         Key.ACTIVATE_CONDITIONS : {SkillCondition.distance_to, SkillCondition.free_line_to_target},
-        Key.ACTIVATE_CONDITION_KWARGS: {'min_dist': 2, 'max_dist': 6, 'ignore_ents' : True},
+        Key.ACTIVATE_CONDITION_KWARGS: {'min_dist': 2, 'max_dist': 5, 'ignore_ents' : True},
         Key.ON_ACTIVATE_KWARGS: {'delay':1},
         Key.COOLDOWN_LENGTH: (5,6)
     }

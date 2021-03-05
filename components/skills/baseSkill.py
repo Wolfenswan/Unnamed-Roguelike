@@ -1,10 +1,7 @@
 import logging
 from random import randint
-
-from typing import Callable, Dict, Set
-
+from typing import Callable, Dict, Set, Optional
 from dataclasses import field, dataclass
-
 from game import Game
 
 
@@ -16,6 +13,8 @@ class BaseSkill:
     activate_condition_kwargs:Dict = field(default_factory=dict)
     cooldown_length : tuple = (0,0)
     cooldown:int = field(init=False, default=0)
+
+    owner:Optional = None
 
     def __str__(self):
         return f'{self.name}:{id(self)} on {self.owner}. Cd: {self.cooldown}/{self.cooldown_length}'

@@ -36,7 +36,7 @@ def animate_move_to(ent, tx:int, ty:int, game:Game, ignore_entities=False, anim_
     """
     The entity will attempt to move to the given target position.
 
-    :returns: True if animation was successful. False if animation was blocked by a wall. Entity if animation was blocked by an entity.
+    :returns: True if animation was successful without collision. False if animation was blocked by a wall. Entity if animation was blocked by an entity.
     """
     while ((ent.x, ent.y) != (tx, ty)):
         dx, dy = ent.direction_to_pos(tx, ty)

@@ -32,11 +32,11 @@ equ_weapon_data = {
         **default_values,
         Key.NAME: 'spear',
         Key.MATERIAL: (Material.OAK, Material.IRON, Material.STEEL),
-        Key.DESCR: 'Easy to use, yet efficient in the right hands (or claws).',
+        Key.DESCR: 'Easy to use, yet efficient in the right hands. It can be wielded with only hand, but will be slightly weaker when doing so.',
         Key.CHAR: '|',
         Key.DMG_POTENTIAL: (2,6),
         Key.TWO_HANDED: True,
-        Key.ONE_HANDED_PENALTY_MOD: 0.5, # multiply damage by this amount if not wielded two-handed
+        Key.ONE_HANDED_PENALTY_MOD: 0.75, # multiply damage by this amount if not wielded two-handed
         Key.MOVESET: moveset_spear,
         Key.RARITY: RarityType.COMMON
     },
@@ -44,7 +44,7 @@ equ_weapon_data = {
         **default_values,
         Key.NAME: 'flail',
         Key.MATERIAL: (Material.IRON, Material.STEEL),
-        Key.DESCR: 'Shields matter little if you can swing a spiked ball around them.',
+        Key.DESCR: 'Shields matter little if you can swing a spiked ball over them.',
         Key.CHAR: '?',
         Key.DMG_POTENTIAL: (2,4),
         Key.MOVESET: moveset_flail,

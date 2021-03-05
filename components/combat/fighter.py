@@ -376,12 +376,12 @@ class Fighter:
     def attack_setup(self, target, game, dmg_mod_multipl:float=1, verb:str='hit', ignore_moveset:bool=False):
         results = []
         extra_attacks = []
-        atk_exertion_divider = cfg.ATK_EXERT_MULTIPL
+        #atk_exertion_divider = cfg.ATK_EXERT_MULTIPL
         daze_chance = 50 # chance to daze attacker on successful block # TODO dynamically calculated
 
         if self.active_weapon is not None: # if a weapon is equipped, check the type
             melee_attack = True if self.active_weapon.type == ItemType.MELEE_WEAPON else False
-            ranged_attack = True if self.active_weapon.type == ItemType.RANGED_WEAPON else False
+            #ranged_attack = True if self.active_weapon.type == ItemType.RANGED_WEAPON else False
         else: # unarmed attack
             melee_attack = True
             ranged_attack = False
@@ -492,7 +492,7 @@ class Fighter:
         target = None
 
         if draw_projectile:
-            projectile_result = animate_projectile(*self.owner.pos,*target_pos,game, color=colors.beige) # TODO color and projectile can later be modified by weapon/ammo
+            projectile_result = animate_projectile(*self.owner.pos, *target_pos, game, color=colors.beige, ignore_entities=False) # TODO color and projectile can later be modified by weapon/ammo
             if not isinstance(projectile_result, bool):
                 target = projectile_result
                 # todo if target.pos != target_pos add some randomness?
@@ -503,7 +503,7 @@ class Fighter:
             results.extend(self.attack_setup(target,game))
         else:
             exertion = self.get_attack_exertion(self.get_attack_power())
-            self.exert(exertion, 'todo') #todo
+            self.exert(exertion, 'attack')
         return results
 
     def tackle(self, target, game, multipl:float=0.5, duration=2):
@@ -581,6 +581,8 @@ class Fighter:
     def block_chance(self, attacking_weapon, damage):
         """
         Returns the chance to block a strike that surpasses an entity's block defense.
+        Chance is calculated by comparing the shield's def. value against the weapon's damage. 
+        Some weapons have modifiers that make blocking them more difficult (-> e.g. halving the base def of the shield)
         It is possible to block up to the double of maximum block defense.
         """
         if self.shield is None:
@@ -589,7 +591,7 @@ class Fighter:
         #mod = wp_attacktypes_data[attack_type].get(Key.BLOCK_DEF_MULTIP,1)
         mod = attacking_weapon.moveset.get_modifier(Mod.BLOCK_DEF_MULTIPL)
         block_def = round(block_def * mod)
-        logging.debug(f'{self.owner.name} block def. multiplied by {mod} due to {attacking_weapon}')
+        logging.debug(f'{self.owner.name} block def. Multiplied by {mod} due to {attacking_weapon}')
 
         if block_def > 0:
             return 101 - ((damage - block_def) / block_def * 100)
@@ -598,7 +600,7 @@ class Fighter:
 
     def average_chance_to_block(self, attacker, debug=False):
         """
-        Utility function for debug information and an entities description window.
+        Utility function for debug information and entity descriptions.
         """
         average = 0
         dmg_range = attacker.f.base_dmg_potential

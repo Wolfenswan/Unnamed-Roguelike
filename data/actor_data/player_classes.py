@@ -3,11 +3,11 @@ from data.data_enums import Key, Material, Condition, Craftsmanship
 classes_data = {
     'generic': {
         Key.NAME : 'generic',
-        Key.MAX_HP : (120, 120),
+        Key.MAX_HP : (100, 100),
         Key.MAX_STAMINA: (200, 200),
         Key.BASE_ARMOR: (0, 0),
-        Key.BASE_STRENGTH: (3, 3),
-        Key.LOADOUTS: { # one loadout is randomly chosen
+        Key.BASE_STRENGTH: (4, 4),
+        Key.LOADOUTS: { # one loadout is chosen randomly
             'loadout1': {
                 Key.EQUIPMENT: {
                     'sword': {},

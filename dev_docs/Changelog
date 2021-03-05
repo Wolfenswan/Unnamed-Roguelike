@@ -33,3 +33,8 @@
 - MISC: some flavor-text tweaks and spelling-fixes
 - GUI: Description window now shows items on the floor if they are hidden by a NPC
 - GUI: Made dynamic wrapping more robust when dealing with longer lists within a single paragraph
+
+05/03/2021
+- MISC: typo fixes
+- BUG: Finally fixed the charging-bug that caused unintended collisions
+- BUG: Ranged attack (AI) was not drawing a projectile

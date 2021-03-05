@@ -15,7 +15,7 @@ spawn_data_summons = {
         Key.MAX_HP: 1,
         Key.MAX_STAMINA: 50,
         Key.BASE_ARMOR: 8,
-        Key.BASE_STRENGTH: 5,
+        Key.BASE_STRENGTH: 0,
         Key.EFFECTS: {
             State.IMMOBILE: True
         },

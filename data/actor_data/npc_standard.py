@@ -32,6 +32,7 @@ from data.moveset_data.creature_movesets import moveset_claws_heavy, moveset_man
 
 _default_values = {
     Key.COLOR_BLOOD: colors.blood_ins,
+    Key.DLVLS: (1, 99),
     Key.TYPE : MonsterType.GENERIC
 }
 
@@ -43,7 +44,7 @@ npc_data_insects = {
         Key.COLOR: colors.light_amber,
         Key.DESCR: 'Waddling upright like a clumsy child, the twitching antennae and multitude of jittering legs quickly dispel any passing resemblance.',
         Key.MAX_HP: (5, 10),
-        Key.MAX_STAMINA: (60, 60),
+        Key.MAX_STAMINA: (100, 100),
         Key.BASE_ARMOR: (0, 0),
         Key.BASE_STRENGTH: (1, 2),
         Key.LOADOUT: {
@@ -53,8 +54,7 @@ npc_data_insects = {
         },
         Key.AI_BEHAVIOR: Swarm,
         Key.BARKS: ('insect',),
-        Key.GROUP_SIZE: (4, 12),
-        Key.DLVLS: (1, 8),
+        Key.GROUP_SIZE: (3, 8),
         Key.RARITY: RarityType.COMMON
     },
     'dung_beetle': {
@@ -64,7 +64,7 @@ npc_data_insects = {
         Key.COLOR: colors.beige,
         Key.DESCR: "About the size of a pony, this giant beetle still acts like an agitated bull.",
         Key.MAX_HP: (12, 24),
-        Key.MAX_STAMINA: (80, 80),
+        Key.MAX_STAMINA: (100, 100),
         Key.BASE_ARMOR: (1, 3),
         Key.BASE_STRENGTH: (3, 5),
         Key.LOADOUT: {
@@ -78,9 +78,8 @@ npc_data_insects = {
         Key.AI_BEHAVIOR: Simple,
         Key.BARKS: ('insect',),
         Key.GROUP_SIZE: (1, 3),
-        Key.DLVLS: (1, 10),
-        Key.RARITY: RarityType.UNCOMMON,
-        Key.RARITY_MOD: +5
+        Key.RARITY: RarityType.COMMON,
+        Key.RARITY_MOD: -5
     },
     'mantis_ogre' : {
         **_default_values,
@@ -90,8 +89,8 @@ npc_data_insects = {
         Key.DESCR: "Certainly not praying, the elongated frame of these creatures belies the power of their claws.",
         Key.MAX_HP: (20, 40),
         Key.MAX_STAMINA: (200, 200),
-        Key.BASE_ARMOR: (2, 5),
-        Key.BASE_STRENGTH: (6, 8),
+        Key.BASE_ARMOR: (2, 4),
+        Key.BASE_STRENGTH: (5, 6),
         Key.LOADOUT: {
             Key.EQUIPMENT:{
                 'ins_claws':{
@@ -103,19 +102,19 @@ npc_data_insects = {
         Key.AI_BEHAVIOR: Simple,
         Key.BARKS: ('insect',),
         Key.GROUP_SIZE: (1, 2),
-        Key.DLVLS: (7, 10),
-        Key.RARITY: RarityType.RARE
+        Key.DLVLS: (3, 6),
+        Key.RARITY: RarityType.UNCOMMON
     },
     'spitting_beetle' : {
         **_default_values,
         Key.NAME: 'Spitting Beetle',
         Key.CHAR: 'b',
         Key.COLOR: colors.light_green,
-        Key.DESCR: "Viscous fluid seeps along tubal appendages attached to it's 'face'.",
+        Key.DESCR: "Viscous fluid seeps along tubal appendages attached to its 'face'.",
         Key.MAX_HP: (6, 8),
-        Key.MAX_STAMINA: (60, 60),
-        Key.BASE_ARMOR: (0, 2),
-        Key.BASE_STRENGTH: (2, 4),
+        Key.MAX_STAMINA: (100, 100),
+        Key.BASE_ARMOR: (0, 1),
+        Key.BASE_STRENGTH: (2, 3),
         Key.LOADOUT: {
             Key.EQUIPMENT:{
                 'ins_ranged':{}
@@ -124,7 +123,7 @@ npc_data_insects = {
         Key.AI_BEHAVIOR: Ranged,
         Key.BARKS: ('insect',),
         Key.GROUP_SIZE: (1, 3),
-        Key.DLVLS: (3, 10),
+        Key.DLVLS: (2, 10),
         Key.RARITY: RarityType.RARE
     },
     'volatile_larva': {
@@ -132,7 +131,7 @@ npc_data_insects = {
         Key.NAME: 'Volatile Larva',
         Key.CHAR: 'l',
         Key.COLOR: colors.light_flame,
-        Key.DESCR: 'Red liquid swirls around in a pulsating bulb.',
+        Key.DESCR: 'Red liquid swirls through its pulsating abdomen.',
         Key.MAX_HP: (1,1),
         Key.MAX_STAMINA: (20,20),
         Key.BASE_ARMOR: (0,0),

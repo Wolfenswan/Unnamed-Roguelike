@@ -8,7 +8,7 @@ from config_files import colors
 from game import Game
 from components.effects import Effect
 from gameobjects.entity import Entity
-from gameobjects.util_functions import entity_at_pos
+from gameobjects.util_functions import entity_at_pos, line_between_pos, direction_between_pos
 from gui.messages import Message, MessageType, MessageCategory
 from rendering.render_animations import animate_move_to
 
@@ -24,32 +24,43 @@ class SkillCharge(BaseSkill):
         delay = kwargs['delay']
         results = []
 
-        d_x, d_y = user.direction_to_ent(target)
-        tx, ty = target.x + d_x, target.y + d_y # The charge leads to the target pos, plus one further step in the respective direction
+        #d_x, d_y = user.direction_to_ent(target)
+        #tx, ty = target.x + d_x, target.y + d_y # The charge leads to the target pos, plus one further step in the respective direction
+        #tx, ty = target.x, target.y
+        pos_list = line_between_pos(*user.pos, *target.pos, include_target=True)
 
         user.color_bg = colors.dark_red
         user.actionplan.add_to_queue(execute_in=delay, planned_function=self.execute,
-                                     planned_function_args=(tx, ty, game), fixed=True)
+                                     planned_function_args=(pos_list, game), fixed=True)
         results.append({'message':Message(f'{user.address_colored.title()} prepares to charge.', category=MessageCategory.OBSERVATION, type=MessageType.ALERT)})
         return results
 
-    def execute(self, tx: int, ty: int, game: Game, **kwargs):
+    def execute(self, pos_list:list, game: Game, **kwargs):
         user = self.owner
         user.color_bg = None  # Reset the entities bg-color, which the skill preparation had changed
 
         results = []
         results.append({'message': Message(f'{user.address_colored.title()} charges forward!', category=MessageCategory.OBSERVATION,
                                            type=MessageType.COMBAT)}) # TODO attack_string defined in their own data file
-        missed = animate_move_to(user, tx, ty, game)
+        anim_completed = animate_move_to(user, *pos_list[-1], game)
 
-        if missed is False: # if a wall is hit during the charge, damage the charging entity
+        # If the animation was completed successfully, without hitting anything, do two more steps in the current direction, overshooting
+        # the target. This is done here, rather than when creating the pos-list during the prep-phase, as adding the overshot too early
+        # will result in a different movement pattern when moving the entity and could prompt unexpected collisions (as the free line of positions
+        # was checked without the overshot )
+        if anim_completed is True:
+            d_x, d_y = direction_between_pos(*pos_list[-2], *pos_list[-1])
+            tx, ty = pos_list[-1][0] + d_x + d_x, pos_list[-1][1] + d_y + d_y
+            anim_completed = animate_move_to(user, tx, ty, game)
+
+        if anim_completed is False: # if a wall is hit during the charge, damage the charging entity
             results.extend(user.f.attack_setup(user, game, dmg_mod_multipl=0.5, verb='hurt', ignore_moveset=True))
-        elif not isinstance(missed, bool): # if missed is not bool, another entity was hit
-            ent = missed
+        elif not isinstance(anim_completed, bool): # if missed is not bool, another entity was hit
+            ent = anim_completed
             if ent.fighter is not None: # if another actor was hit, that actor is damaged
                 results.extend(user.f.attack_setup(ent, game, dmg_mod_multipl=2, verb='gore', ignore_moveset=True))
                 results.extend(ent.f.set_effect(State.DAZED, True, 2))
-            elif ent.architecture is not None: # if architecture was hit, user damages itself
+            elif ent.architecture is not None: # if architecture was hit, user damages themselves
                 results.extend(
                     user.f.attack_setup(user, game, dmg_mod_multipl=0.5, verb='ram', ignore_moveset=True))
         return results

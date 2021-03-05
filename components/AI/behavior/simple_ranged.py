@@ -41,12 +41,12 @@ class Ranged:
                 moved = actor.try_move(*actor.direction_to_pos(*pos), game)
                 if moved is False: # if a pos was found but movement failed, attack anyway
                     logging.debug(f'{actor} could not move to pos, attacking')
-                    results.extend(actor.f.attack_setup(target, game))
+                    results.extend(actor.f.ranged_attack(target.pos, game))
             else: # if no pos with LOS was found nearby, attack anyway
                 logging.debug(f'{actor} has not found a pos nearby with clear line to target, attacking')
-                results.extend(actor.f.attack_setup(target, game))
+                results.extend(actor.f.ranged_attack(target.pos, game))
         else: # if distance is good and free los established, simply attack
             logging.debug(f'{actor} has clear line to target, attacking')
-            results.extend(actor.f.attack_setup(target, game))
+            results.extend(actor.f.ranged_attack(target.pos, game))
 
         return results

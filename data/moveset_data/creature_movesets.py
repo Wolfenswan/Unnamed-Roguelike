@@ -42,7 +42,13 @@ moveset_claws_heavy = {
 
 moveset_spit = {
     Key.DEFAULT: {
+        Key.RANDOM: True,
         Key.VERBS: ('spit at', 'discharge at'),
     },
-    1: {}
+    1: {},
+    2: {},
+    3: {
+        Mod.ARMOR_PIERCING_FLAT : 2,
+        Key.VERB: 'corrode'
+    },
 }
