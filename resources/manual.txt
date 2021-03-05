@@ -8,13 +8,13 @@
 ===============================================================
 
 This game was created as a continuation of the (revised) Roguebasin Roguelike Tutorial.
-By now it has grown into a beast of its own, sporting various gameplay elements that weren't part of the original tutorial.
+By now it has grown into a beast of its own, sporting various gameplay elements that were never introduced during the original tutorial.
 
-As it is still in very early development - in fact, it might never see a proper release - being primarily a pet project of mine,
-there is little in terms of story, balance is probably nonexistent and kinks are expected. Nevertheless, the master branch should always
-be playable.
+As it is still in very early development - in fact, it might never see a proper release, being primarily a pet project of mine.
+There is little in terms of story, balance is probably nonexistent and kinks are expected. Nevertheless, the master branch should always
+be playable in one way or another.
 
-The Roguelike I have in mind would fell and play very familiar to traditional members of the genre (shocker!), while
+The Roguelike I have in mind would feel and play very familiarly to traditional members of the genre (shocker!), while
 making combat somewhat faster, slightly more dynamic and maybe even a bit arcade-like. Examples of this would be dodging and blocking
 being active actions, rather than passive stats.
 
@@ -130,7 +130,10 @@ limitation on item usage outside of combat.
 
 =======================================
 
-# STATUSES #
+# GENERAL #
+tba
+
+# COMBAT STATUS #
 Threatened
 Surrounded
 Entangled

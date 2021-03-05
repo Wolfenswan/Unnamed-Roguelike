@@ -35,7 +35,7 @@ def setup_console(con, caption=None, fgcolor=tcod.white, bgcolor =tcod.black, bo
     if borders:
         draw_console_borders(con, color = bordercolor)
     if caption:
-        print_string(con, 2, 0, caption, color=fgcolor)
+        print_line(con, 2, 0, caption, color=fgcolor)
 
 
 def draw_console_borders(con, width=None, height=None, color=colors.dark_grey, bgcolor=colors.black):
@@ -101,20 +101,22 @@ def dynamic_wrap(string, max_width):
     This function makes sure that textwrap.wrap() does ignore formatting strings
     such as %c and %color% when wrapping words.
 
-    # Todo line breaks through color-wrapped words break colorization (workaround would be color-wrapping each word individually)
+    # BUG line breaks through color-wrapped words break colorization (workaround could be color-wrapping each word individually - but that would be a false positives nightmare)
     """
 
     if len(string) == 0:
         return []
 
-    codes = {}
+    codes = {} # codes makes a temporary copy of all color coded strings, so they can safely be removed before wrapping, then reapplied
     color_coded_words = COLOR_WRAP_PATTERN.findall(string)
+
     for coded_string in color_coded_words:
         color_code = color_code_pattern.match(coded_string)
-        stripped_code = coded_string.replace(color_code.group(),'')
-        stripped_code = stripped_code.replace('%%','')
+        stripped_code = coded_string.replace(color_code.group(),'') # Replace the leading marker, e.g. %dark_red%
+        stripped_code = stripped_code.replace('%%','') # replacing the trailing marker (%%)
         string = string.replace(coded_string,stripped_code) # Remove all color code wrappers from the string
-        codes[stripped_code] = coded_string
+        codes[stripped_code] = coded_string # pair the "bare" string as key with the color-coded string as value
+        codes[f'{stripped_code}#uses'] = codes.get(f'{stripped_code}#uses', 0) + 1 # the name#uses key counts how often the string needs to be replaced. It is neccessary in order to avoid false partial hits in longer paragraphs.
 
     # Split the string at pre-defined line-breaks to preserve indentation.
     split_str = string.split('\n')
@@ -125,19 +127,20 @@ def dynamic_wrap(string, max_width):
             wrapped.append(' ')
         else:
             wrapped.extend(textwrap.wrap(sub_str, max_width, replace_whitespace=False))
-    # # Re-add the color-wrapper strings
+
+    # Re-add the color-wrapped strings
     if codes:
         for i, line in enumerate(wrapped):
             for k in codes.keys():
-                if k in line and codes[k] is not None:
+                if k in line and codes[f'{k}#uses'] > 0:
                     line = line.replace(k, codes[k])
                     wrapped[i] = line
-                    codes[k] = None # This is a workaround to avoid color coding lines with a partial match after the code has been 'used' as intended
-
+                    codes[f'{k}#uses'] -= 0
+    
     return wrapped
 
 
-def print_string(con, x, y, string, max_length=None, color=None, fgcolor=colors.white, bgcolor=colors.black, color_coefficient=None, alignment=tcod.LEFT, background=tcod.BKGND_DEFAULT):
+def print_line(con, x, y, string, max_length=None, color=None, fgcolor=colors.white, bgcolor=colors.black, color_coefficient=None, alignment=tcod.LEFT, background=tcod.BKGND_DEFAULT):
     """
     Prints a string to tcods console, supporting custom color-code wrappers.
     """

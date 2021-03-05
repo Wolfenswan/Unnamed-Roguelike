@@ -18,6 +18,7 @@ class Equipment():
     two_handed: Optional[bool]
     one_handed_penalty_mod: Optional[int]  # if a two-handed weapon can be wielded in one hand with penalties
     moveset: Optional[Moveset]
+    owner:Optional = None
 
     def __repr__(self):
         return f'Equipment:{id(self)} ({self.owner.name})'

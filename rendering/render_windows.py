@@ -5,7 +5,7 @@ import tcod
 
 from config_files import cfg, colors
 from gameobjects.util_functions import entity_at_pos
-from rendering.util_functions import center_x_for_text, draw_console_borders, pos_on_screen, print_string, dynamic_wrap
+from rendering.util_functions import center_x_for_text, draw_console_borders, pos_on_screen, print_line, dynamic_wrap
 
 
 def set_window_on_screen(window_x, window_y, width, height):
@@ -26,8 +26,6 @@ def set_window_on_screen(window_x, window_y, width, height):
 def draw_window(title, body, game, options:Optional[List]=None,
                 window_x:Optional[int]=None, window_y:Optional[int]=None, padding_x:Optional[int]=1, padding_y:Optional[int]=2,
                 sort_by = 'str', show_cancel_option=True, forced_width:Optional[int]=None, title_color=colors.white, options_colors=None, clear_screen=False):
-
-    # TODO param game -> root_console
 
     cancel_string = '<ESC TO CANCEL>'
 
@@ -68,7 +66,7 @@ def draw_window(title, body, game, options:Optional[List]=None,
     y = padding_y
     if body_wrapped:
         for i, line in enumerate(body_wrapped):
-            print_string(window, padding_x, y, line)
+            print_line(window, padding_x, y, line)
             y += 1
             if line.count('\n') > 0:
                 y += 1
@@ -90,25 +88,25 @@ def draw_window(title, body, game, options:Optional[List]=None,
                 line = option[0]
 
             color = options_colors[line_idx] if options_colors else colors.white
-            print_string(window, padding_x, line_idx + y, f'{line}', color=color)
+            print_line(window, padding_x, line_idx + y, f'{line}', color=color)
             line_idx += 1
             list_counter += 1
 
             if len(option) > 0: # if the option has been wrapped, add the following lines with sufficient spaces
                 for line in option[1:]:
-                    print_string(window, padding_x, line_idx + y, f'{" " * 4}{line}', color=color)
+                    print_line(window, padding_x, line_idx + y, f'{" " * 4}{line}', color=color)
                     line_idx += 1
 
     draw_console_borders(window, color=colors.white)
 
     tcod.console_put_char(window, padding_x, 0, tcod.CHAR_TEEW)
-    print_string(window, padding_x+1, 0, f'{title}', color=title_color)
+    print_line(window, padding_x+1, 0, f'{title}', color=title_color)
     tcod.console_put_char(window, padding_x+len(title)+1, 0, tcod.CHAR_TEEE)
 
     if show_cancel_option:
         string = '<ESC TO CANCEL>'
         x = center_x_for_text(width, string)
-        print_string(window, x, height - 1, string)
+        print_line(window, x, height - 1, string)
 
     window_x, window_y = set_window_on_screen(window_x, window_y, width, height)
     window.blit(game.root, window_x, window_y, 0, 0, width, height,)
@@ -119,16 +117,14 @@ def draw_window(title, body, game, options:Optional[List]=None,
 
 
 def render_description_window(game):
-    # Todo also add list with items on the floor below the extended description of the highlighted ent.
-    blocking_ent = entity_at_pos(game.walk_blocking_ents, *game.cursor.pos)
-    item_ent = entity_at_pos(game.item_ents, *game.cursor.pos)
-    if blocking_ent is not None:
-        x, y = pos_on_screen(blocking_ent.x - 5, blocking_ent.y + 2, game.player)
+    ent = entity_at_pos(game.walk_blocking_ents, *game.cursor.pos)
+    if ent is not None:
+        x, y = pos_on_screen(ent.x - 5, ent.y + 2, game.player)
 
-        title = f'{blocking_ent.full_name}'
-        body = blocking_ent.extended_descr(game)
+        title = f'{ent.full_name}'
+        body = ent.extended_descr(game, list_items_underneath = True)
 
-        draw_window(title, body, game, window_x=x, window_y=y, show_cancel_option=False, title_color=blocking_ent.color)
+        draw_window(title, body, game, window_x=x, window_y=y, show_cancel_option=False, title_color=ent.color)
 
 
 # def render_equipment_window(equipment): # Experimental - Not implemented#

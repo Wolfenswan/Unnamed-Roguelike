@@ -146,7 +146,7 @@ class Entity:
 
         return full_name.title()
 
-    def extended_descr(self, game):
+    def extended_descr(self, game, list_items_underneath:bool = False):
         """
 
         :param game: global game entity
@@ -156,7 +156,7 @@ class Entity:
         """
         extend_descr = self.descr
         col = 'dark_crimson' # TODO All colors are placeholders
-        if self.fighter is not None and self.active_weapon is not None and self == game.player:
+        if self.fighter is not None and self.active_weapon is not None and not self.is_player:
             # if self.f.active_weapon: # TODO add another way to indicate special features of a creatures attack
             #     extend_descr += f'\n\nIt attacks with %{col}%{self.f.active_weapon.item.equipment.attack_type.name.lower()}%% strikes.'
 
@@ -183,6 +183,12 @@ class Entity:
                 ext1 = self.architecture.on_interaction.__name__ if self.architecture.on_interaction else None
                 ext2 = self.architecture.on_collision.__name__ if self.architecture.on_collision else None
                 extend_descr += f'\n\ninteract:{ext1}, collision:{ext2}'
+
+        if list_items_underneath:
+            items = self.items_underneath(game)
+            if len(items) > 0:
+                items = [item.name_colored for item in items]
+                extend_descr += f'\n\n Below it are: \n {(", ").join(items)}'
 
         return extend_descr
 
@@ -403,6 +409,9 @@ class Entity:
 
     def nearby_enemies_count(self,game):
         return len(self.surrounding_enemies(game.npc_ents))
+
+    def items_underneath(self, game):
+        return entities_at_pos(game.item_ents, *self.pos)
 
     ########################
     # COMPONENT SHORTHANDS #

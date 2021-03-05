@@ -31,3 +31,5 @@
 - ITEMS: added throwing daggers
 - MAPGEN: prep to properly implemented dlvl-sensitive level-generation
 - MISC: some flavor-text tweaks and spelling-fixes
+- GUI: Description window now shows items on the floor if they are hidden by a NPC
+- GUI: Made dynamic wrapping more robust when dealing with longer lists within a single paragraph

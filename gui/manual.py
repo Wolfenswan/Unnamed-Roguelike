@@ -4,7 +4,7 @@ import tcod
 
 from config_files import cfg, colors
 from gui.menus import menu_loop
-from rendering.util_functions import setup_console, print_string, dynamic_wrap
+from rendering.util_functions import setup_console, print_line, dynamic_wrap
 
 def display_manual():
     """displays the game's manual"""
@@ -64,16 +64,16 @@ def draw_manual_page(pages, index, line, width, height, break_point):
     window.caption = 'Manual'
     setup_console(window, borders=True, bordercolor=colors.darker_red)
 
-    print_string(window, width - len(page_counter) - offset, 0, page_counter)
-    print_string(window, offset, height - offset, '<Directional keys to navigate>')
-    print_string(window, width - 15, height - offset, '<ESC to close>')
+    print_line(window, width - len(page_counter) - offset, 0, page_counter)
+    print_line(window, offset, height - offset, '<Directional keys to navigate>')
+    print_line(window, width - 15, height - offset, '<ESC to close>')
 
     for line_count, paragraph in enumerate(page[line:]):
         line_count += offset
-        print_string(window, 1, line_count, paragraph)
+        print_line(window, 1, line_count, paragraph)
         if line_count + break_point > height:
             breaker = '# MORE #'
-            print_string(window,width//2-len(breaker),line_count+1,breaker,color=colors.grey)
+            print_line(window,width//2-len(breaker),line_count+1,breaker,color=colors.grey)
             break
 
     tcod.console_blit(window, 0, 0, width, height, 0, x, y, 1, 1)

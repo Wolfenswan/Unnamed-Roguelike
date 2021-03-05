@@ -5,12 +5,13 @@ from typing import Tuple, Dict
 
 class Actionplan:
     """
-    Actionplan govers the AI's skill usage and skill execution in future turns. It contains a queueing-system containing
+    Actionplan governs the AI's skill usage and skill execution in future turns. It contains a queueing-system containing
     skill related functions to be executed in x turns. Whenever a function reaches the queue's first position it is executed, usually
     overriding the AI's regular behavior (moving/attacking etc.) by executing a skill.
     """
     def __init__(self):
         self.planned_queue = []
+        self.owner = None
 
     def add_to_queue(self, execute_in:int, planned_function:Callable, planned_function_args:Tuple=None, planned_function_kwargs:Dict=None, fixed:bool=False, exclusive:bool=False):
         """

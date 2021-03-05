@@ -6,7 +6,7 @@ from components.combat.fighter_util import Surrounded
 from config_files import colors
 from rendering import render_constants as r_cons
 from game import GameState
-from rendering.util_functions import center_x_for_text, setup_console, print_string, dynamic_wrap, draw_console_borders
+from rendering.util_functions import center_x_for_text, setup_console, print_line, dynamic_wrap, draw_console_borders
 
 
 def render_panels(game):
@@ -39,18 +39,18 @@ def render_player_panel(game, con, panel_x, panel_y, width, height):
     # Health & Stamina #
     y += 2
     hp_string = f'HIT: %c{player.f.hp}/{player.f.max_hp}%c'
-    print_string(con, 1, y, hp_string, color=game.player.f.hp_color)
+    print_line(con, 1, y, hp_string, color=game.player.f.hp_color)
     hp_diff = player.statistics.hp_change
     if hp_diff != 0:
         col = colors.darker_green if hp_diff > 0 else colors.darker_red
-        print_string(con, len(hp_string)- 2, y, f'(%{col}%{hp_diff}%%)')
+        print_line(con, len(hp_string)- 2, y, f'(%{col}%{hp_diff}%%)')
 
     sta_string = f'STA: %c{player.f.stamina}/{player.f.max_stamina}%c'
-    print_string(con, 1, y+1,  sta_string, color = game.player.f.stamina_color)
+    print_line(con, 1, y+1,  sta_string, color = game.player.f.stamina_color)
     sta_diff = player.statistics.sta_change
     if sta_diff != 0:
         col = colors.lighter_sea if sta_diff > 0 else colors.darker_sea
-        print_string(con, len(sta_string)-2, y+1,  f'(%{col}%{sta_diff}%%)')
+        print_line(con, len(sta_string)-2, y+1,  f'(%{col}%{sta_diff}%%)')
 
     # Effects #
     # TODO can theoretically overflow if there a large number of effects (>6) at once
@@ -58,7 +58,7 @@ def render_player_panel(game, con, panel_x, panel_y, width, height):
     x = 2
     for effect, active in player.effects.items():
         if active:
-            print_string(con, x, y, f'*{effect.name[0]}', color=colors.red)
+            print_line(con, x, y, f'*{effect.name[0]}', color=colors.red)
             x += 3
 
     # Equipment-derived stats #
@@ -66,46 +66,46 @@ def render_player_panel(game, con, panel_x, panel_y, width, height):
     # Defensive Stats #
     surrounded = player.f.surrounded
     if surrounded == Surrounded.THREATENED:
-        print_string(con, 3, y, '*THREATENED*', color=colors.orange)
+        print_line(con, 3, y, '*THREATENED*', color=colors.orange)
     if surrounded == Surrounded.OVERWHELMED:
-        print_string(con, 3, y, '*OVERWHELMED*', color=colors.red)
+        print_line(con, 3, y, '*OVERWHELMED*', color=colors.red)
 
-    print_string(con, 1, y + 1, f'STR: {player.f.strength}')
+    print_line(con, 1, y + 1, f'STR: {player.f.strength}')
     color = colors.white if player.f.modded_defense >= player.f.defense else colors.dark_red
-    print_string(con, 1, y + 2, f'DEF: %c{player.f.modded_defense}%c', color=color)
+    print_line(con, 1, y + 2, f'DEF: %c{player.f.modded_defense}%c', color=color)
 
     color = colors.panel_stat_active if player.f.is_dashing else colors.panel_inactive
-    print_string(con, 9, y + 1, f'DASHING', color=color)
+    print_line(con, 9, y + 1, f'DASHING', color=color)
     #
     if player.f.shield and player.f.shield.block_def:
         col1 = colors.panel_inactive if not player.f.is_blocking else colors.panel_stat_active
         col2 = 'dark_red' if player.f.shield.block_def > player.f.modded_block_def else f'{col1}'
-        print_string(con, 9, y + 2, f'%{col1}%BLOCK:%% %{col2}%{player.f.modded_block_def}%%')
+        print_line(con, 9, y + 2, f'%{col1}%BLOCK:%% %{col2}%{player.f.modded_block_def}%%')
 
     # Weapon #
     y += 4
     if player.f.weapon_melee is not None:
         color = colors.panel_stat_active if player.f.weapon_melee.is_active_weapon(player) else colors.panel_inactive
-        print_string(con, 1, y, f'%c{player.f.weapon_melee.name}%c', color=color)
+        print_line(con, 1, y, f'%c{player.f.weapon_melee.name}%c', color=color)
 
     if player.f.weapon_ranged is not None:
         color = colors.panel_stat_active if player.f.weapon_ranged.is_active_weapon(player) else colors.panel_inactive
         x = 2 + len(player.f.weapon_melee.name) if player.f.weapon_melee is not None else 1
-        print_string(con, x, y,
+        print_line(con, x, y,
                      f'%c{player.f.weapon_ranged.name}%c',
                      color=color)
 
     if player.f.active_weapon is not None:
-        print_string(con, 2, y+1,
+        print_line(con, 2, y+1,
                      f'ATK: {game.player.f.active_weapon.moveset.current_move}/{game.player.f.active_weapon.moveset.moves}')
         # todo color depending on if its < or > base damage
-        print_string(con, 2, y+2, f'DAM: {game.player.f.modded_dmg_potential[0]}-{game.player.f.modded_dmg_potential[-1]}')
+        print_line(con, 2, y+2, f'DAM: {game.player.f.modded_dmg_potential[0]}-{game.player.f.modded_dmg_potential[-1]}')
 
         # Visualize targets for next attack
         x = 11
-        print_string(con, x, y+1, f'TAR:')
+        print_line(con, x, y+1, f'TAR:')
         for i, line in enumerate(player.f.active_weapon.moveset.targets_gui):
-            print_string(con, x + 4, y+i, ''.join(line))
+            print_line(con, x + 4, y+i, ''.join(line))
 
     # # Quick Slots #
     # y = 14
@@ -130,7 +130,7 @@ def render_object_panel(game, con, panel_x, panel_y, width, height):
 
             if y >= con.height - 2:  # If the limit's of the con are reached, cut the con off
                 x = center_x_for_text(width, '~ ~ ~ MORE ~ ~ ~')
-                print_string(con, x, y, '~ ~ ~ MORE ~ ~ ~')
+                print_line(con, x, y, '~ ~ ~ MORE ~ ~ ~')
                 break
 
             # Draw creature name and stats #
@@ -144,7 +144,7 @@ def render_object_panel(game, con, panel_x, panel_y, width, height):
             wrapped_name = dynamic_wrap(f'{ent.full_name}', width - 3)
 
             for i, line in enumerate(wrapped_name):
-                print_string(con, 3+i, y, line, color=ent.color)
+                print_line(con, 3+i, y, line, color=ent.color)
                 y += 2
 
     #tcod.console_blit(con, 0, 0, width, height, 0, panel_x, panel_y)
@@ -167,7 +167,7 @@ def render_enemy_panel(game, con, panel_x, panel_y, width, height, color):
             if y >= con.height - 2:  # If the limit's of the con are reached, cut the con off
                 tcod.console_set_default_foreground(con, colors.white)
                 x = center_x_for_text(width, '~ ~ ~ MORE ~ ~ ~')
-                print_string(con, x, y, '~ ~ ~ MORE ~ ~ ~')
+                print_line(con, x, y, '~ ~ ~ MORE ~ ~ ~')
                 break
 
             char = '*' if ent.pos == game.cursor.pos and game.state in [GameState.CURSOR_ACTIVE, GameState.CURSOR_TARGETING] else f'{ent.char}'
@@ -176,7 +176,7 @@ def render_enemy_panel(game, con, panel_x, panel_y, width, height, color):
             tcod.console_set_default_foreground(con, colors.gray)
             tcod.console_set_color_control(tcod.COLCTRL_1, ent.color, tcod.black)
             tcod.console_put_char_ex(con, 1, y, char, ent.color, tcod.black)
-            print_string(con, 3, y, ent.full_name, color = ent.color)
+            print_line(con, 3, y, ent.full_name, color = ent.color)
             y += 1
             x = 1
             tcod.console_put_char_ex(con, x, y, chr(192), tcod.gray, tcod.black)
@@ -188,7 +188,7 @@ def render_enemy_panel(game, con, panel_x, panel_y, width, height, color):
                 if active:
                     status_line += f' %white%{status.name[0]}%%'
 
-            print_string(con, x+1, y, f'{status_line}')
+            print_line(con, x+1, y, f'{status_line}')
 
             y += 1
 
@@ -210,7 +210,7 @@ def render_message_panel(message_log, title, con, panel_x, panel_y, width, heigh
         else:
             color_coefficient = 0.2
 
-        print_string(con, message_log.x, y, message.text, fgcolor=message.color, color_coefficient=color_coefficient)
+        print_line(con, message_log.x, y, message.text, fgcolor=message.color, color_coefficient=color_coefficient)
         y += 1
 
     con.blit(game.root, panel_x, panel_y, 0, 0, width, height)
@@ -239,7 +239,7 @@ def draw_bar(panel, x, y, total_width, name, value, maximum, bar_color, back_col
     if bar_width > 0:
         panel.draw_rect(x, y, bar_width, 1, 0, bg = bar_color)
 
-    print_string(panel, int(x + total_width / 2), y, f'{name.title()}', alignment = tcod.CENTER, background=tcod.BKGND_NONE)
+    print_line(panel, int(x + total_width / 2), y, f'{name.title()}', alignment = tcod.CENTER, background=tcod.BKGND_NONE)
 
 
 def draw_quickslots(con, x, y, game):

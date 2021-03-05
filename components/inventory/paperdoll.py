@@ -8,19 +8,21 @@ from gui.messages import Message
 class Paperdoll:
     """ The Paperdoll component controls the equipped items of an entity """
 
+    # REFACTOR dataclass
     def __init__(self):
-        # TODO allow various combination of Heads, Arms etc.
+        # FUTURE allow various combination of Heads, Arms etc.
         self.weapon_arm = Arm()
         self.shield_arm = Arm()
         self.head = Head()
         self.torso = Torso()
         self.legs = Legs()
+        self.owner = None
 
     @property
     def equipped_items(self):
         items = []
         for attribute, extremity in self.__dict__.items():
-            if attribute is not 'owner':
+            if attribute != 'owner':
                 for slot, equipped in extremity.__dict__.items():
                     if equipped is not None:
                         items.append(equipped)
